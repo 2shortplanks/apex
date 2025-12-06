@@ -1,6 +1,6 @@
 # Homebrew formula for Apex
 # To use this formula, create a tap:
-#   brew tap ttscoff/apex https://github.com/ttscoff/homebrew-apex
+#   brew tap ttscoff/thelab https://github.com/ttscoff/homebrew-thelab
 # Then install:
 #   brew install apex
 
