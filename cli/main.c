@@ -43,7 +43,7 @@ static void print_usage(const char *program_name) {
 static void print_version(void) {
     printf("Apex %s\n", apex_version_string());
     printf("Copyright (c) 2025 Brett Terpstra\n");
-    printf("Licensed under BSD 2-Clause License\n");
+    printf("Licensed under MIT License\n");
 }
 
 static char *read_file(const char *filename, size_t *len) {

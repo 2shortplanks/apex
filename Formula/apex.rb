@@ -9,7 +9,7 @@ class Apex < Formula
   homepage "https://github.com/ttscoff/apex"
   url "https://github.com/ttscoff/apex.git",
       tag: "v0.1.10",
-      revision: "d82e80354315816fc4bd675fc40bb552e8c6aaf0"
+      revision: "82807d982a88e3c5a2edf50875df389bf3ed7e89"
   version "0.1.10"
   license "MIT"
 
@@ -24,8 +24,10 @@ class Apex < Formula
   def install
     # Create build directory
     mkdir "build" do
-      # Configure with CMake
-      system "cmake", "-S", "..", "-B", ".", "-DCMAKE_BUILD_TYPE=Release"
+      # Configure with CMake (need policy version for cmark-gfm compatibility with newer CMake)
+      system "cmake", "-S", "..", "-B", ".",
+             "-DCMAKE_BUILD_TYPE=Release",
+             "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
       # Build only the CLI executable (not framework)
       system "cmake", "--build", ".", "--target", "apex_cli"
