@@ -44,3 +44,4 @@ build/**/*.make
 .bundle/
 release/
 build-release/
+commit_message.txt

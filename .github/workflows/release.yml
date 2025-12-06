@@ -51,9 +51,6 @@ jobs:
 
     build-linux:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                arch: [amd64, arm64]
         steps:
             - uses: actions/checkout@v4
               with:
@@ -79,10 +76,49 @@ jobs:
                   VERSION: ${{ env.VERSION }}
               run: |
                   cd release
-                  sha256sum apex-${VERSION}-linux-*.tar.gz > apex-${VERSION}-linux-$(uname -m).tar.gz.sha256
+                  sha256sum apex-${VERSION}-linux-*.tar.gz > apex-${VERSION}-linux-x86_64.tar.gz.sha256
                   cat apex-${VERSION}-linux-*.tar.gz.sha256
 
             - name: Upload Linux release
+              uses: softprops/action-gh-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  files: |
+                      release/apex-${{ env.VERSION }}-linux-*.tar.gz
+                      release/apex-${{ env.VERSION }}-linux-*.tar.gz.sha256
+
+    build-linux-arm:
+        runs-on: ubuntu-24.04-arm
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+
+            - name: Set up version
+              id: version
+              run: |
+                  VERSION=${GITHUB_REF#refs/tags/v}
+                  echo "VERSION=$VERSION" >> $GITHUB_ENV
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Version: $VERSION"
+                  echo "$VERSION" > VERSION
+
+            - name: Build Linux ARM binary
+              env:
+                  VERSION: ${{ env.VERSION }}
+              run: |
+                  make release-linux
+
+            - name: Create checksums
+              env:
+                  VERSION: ${{ env.VERSION }}
+              run: |
+                  cd release
+                  sha256sum apex-${VERSION}-linux-*.tar.gz > apex-${VERSION}-linux-aarch64.tar.gz.sha256
+                  cat apex-${VERSION}-linux-*.tar.gz.sha256
+
+            - name: Upload Linux ARM release
               uses: softprops/action-gh-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
