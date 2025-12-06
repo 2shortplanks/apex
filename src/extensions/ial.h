@@ -40,6 +40,12 @@ typedef struct ald_entry {
 } ald_entry;
 
 /**
+ * Preprocess text to separate IAL markers from preceding content
+ * This inserts blank lines before IAL markers so cmark parses them as separate paragraphs
+ */
+char *apex_preprocess_ial(const char *text);
+
+/**
  * Extract ALDs from text (preprocessing)
  * Pattern: {:ref-name: #id .class key="value"}
  */

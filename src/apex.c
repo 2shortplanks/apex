@@ -361,6 +361,16 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
         abbreviations = apex_extract_abbreviations(&text_ptr);
     }
 
+    /* Preprocess IAL markers (insert blank lines before them so cmark parses correctly) */
+    char *ial_preprocessed = NULL;
+    if (options->mode == APEX_MODE_KRAMDOWN || options->mode == APEX_MODE_UNIFIED) {
+        ial_preprocessed = apex_preprocess_ial(text_ptr);
+        if (ial_preprocessed) {
+            if (text_ptr != working_text) free(text_ptr);
+            text_ptr = ial_preprocessed;
+        }
+    }
+
     /* Process file includes before parsing (preprocessing) */
     char *includes_processed = NULL;
     if (options->enable_file_includes) {
@@ -569,6 +579,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     cmark_node_free(document);
     cmark_parser_free(parser);
     free(working_text);
+    if (ial_preprocessed) free(ial_preprocessed);
     if (includes_processed) free(includes_processed);
     if (markers_processed) free(markers_processed);
     if (inline_footnotes_processed) free(inline_footnotes_processed);

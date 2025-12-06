@@ -840,3 +840,98 @@ void apex_process_ial_in_tree(cmark_node *node, ald_entry *alds) {
     cmark_iter_free(iter);
 }
 
+/**
+ * Check if a line is a pure IAL (starts with {: and ends with })
+ */
+static bool is_ial_line(const char *line, size_t len) {
+    const char *p = line;
+    const char *end = line + len;
+
+    /* Skip leading whitespace */
+    while (p < end && isspace((unsigned char)*p)) p++;
+
+    /* Must start with {: */
+    if (p + 2 > end || p[0] != '{' || p[1] != ':') return false;
+
+    /* Find closing } */
+    const char *close = memchr(p + 2, '}', end - (p + 2));
+    if (!close) return false;
+
+    /* Check nothing substantial after the } */
+    const char *after = close + 1;
+    while (after < end && isspace((unsigned char)*after)) after++;
+
+    return (after >= end);
+}
+
+/**
+ * Preprocess text to separate IAL markers from preceding content.
+ * Kramdown allows IAL on the line immediately following content,
+ * but cmark-gfm treats that as part of the same paragraph.
+ * This inserts blank lines before IAL markers.
+ */
+char *apex_preprocess_ial(const char *text) {
+    if (!text) return NULL;
+
+    size_t text_len = strlen(text);
+    /* Worst case: we add a newline before every line */
+    size_t capacity = text_len * 2 + 1;
+    char *output = malloc(capacity);
+    if (!output) return NULL;
+
+    char *out = output;
+    const char *p = text;
+    const char *prev_line_start = NULL;
+    bool prev_line_was_content = false;
+    bool prev_line_was_blank = true;  /* Start as if there was a blank line before */
+
+    while (*p) {
+        /* Find end of current line */
+        const char *line_start = p;
+        const char *line_end = strchr(p, '\n');
+        if (!line_end) {
+            line_end = p + strlen(p);
+        }
+
+        size_t line_len = line_end - line_start;
+
+        /* Check if this line is blank */
+        bool is_blank = true;
+        for (size_t i = 0; i < line_len; i++) {
+            if (!isspace((unsigned char)line_start[i])) {
+                is_blank = false;
+                break;
+            }
+        }
+
+        /* Check if this line is an IAL */
+        bool is_ial = is_ial_line(line_start, line_len);
+
+        /* If this is an IAL and previous line was content (not blank, not IAL),
+         * insert a blank line before it */
+        if (is_ial && prev_line_was_content && !prev_line_was_blank) {
+            *out++ = '\n';
+        }
+
+        /* Copy the line */
+        memcpy(out, line_start, line_len);
+        out += line_len;
+
+        /* Copy the newline if present */
+        if (*line_end == '\n') {
+            *out++ = '\n';
+            p = line_end + 1;
+        } else {
+            p = line_end;
+        }
+
+        /* Track state for next iteration */
+        prev_line_was_blank = is_blank;
+        prev_line_was_content = !is_blank && !is_ial;
+        prev_line_start = line_start;
+    }
+
+    *out = '\0';
+    return output;
+}
+
