@@ -242,6 +242,9 @@ char *apex_process_relaxed_tables(const char *text) {
     size_t text_len = strlen(text);
     if (text_len == 0) return NULL;
 
+    /* Check if input ends with a newline */
+    bool input_ends_with_newline = (text_len > 0 && text[text_len - 1] == '\n');
+
     /* Allocate output buffer (may grow, but start with 2x input size) */
     size_t output_capacity = text_len * 2;
     char *output = malloc(output_capacity);
@@ -358,6 +361,13 @@ char *apex_process_relaxed_tables(const char *text) {
 
                 /* Reset rows */
                 rows_count = 0;
+
+                /* After outputting table, also write the blank line */
+                if (remaining > 0) {
+                    *write++ = '\n';
+                    remaining--;
+                    output_len++;
+                }
             } else {
                 /* No table accumulated, just write the blank line */
                 if (line_len < remaining) {
@@ -992,9 +1002,12 @@ char *apex_process_relaxed_tables(const char *text) {
             remaining -= rows[0].len;
             output_len += rows[0].len;
 
-            *write++ = '\n';
-            remaining--;
-            output_len++;
+            /* Only add newline if input ended with one */
+            if (input_ends_with_newline && remaining > 0) {
+                *write++ = '\n';
+                remaining--;
+                output_len++;
+            }
         } else {
             /* Need to grow buffer */
             size_t new_capacity = output_capacity * 2;
@@ -1014,9 +1027,12 @@ char *apex_process_relaxed_tables(const char *text) {
             remaining -= rows[0].len;
             output_len += rows[0].len;
 
-            *write++ = '\n';
-            remaining--;
-            output_len++;
+            /* Only add newline if input ended with one */
+            if (input_ends_with_newline && remaining > 0) {
+                *write++ = '\n';
+                remaining--;
+                output_len++;
+            }
         }
     }
 

@@ -361,6 +361,13 @@ bool apex_extract_manual_header_id(char **heading_text, char **manual_id_out) {
     if (mmd_start) {
         const char *mmd_end = strchr(mmd_start, ']');
         if (mmd_end && mmd_end > mmd_start + 1) {
+            /* Skip if content starts with % (metadata variable like [%title]) */
+            if (mmd_start[1] == '%') {
+                /* This is a metadata variable, not a header ID */
+                mmd_start = NULL;
+            }
+        }
+        if (mmd_start && mmd_end && mmd_end > mmd_start + 1) {
             /* Check nothing after ] except whitespace */
             const char *after = mmd_end + 1;
             while (*after && isspace((unsigned char)*after)) after++;

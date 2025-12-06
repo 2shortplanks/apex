@@ -118,6 +118,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_metadata_variables = false;
             opts.hardbreaks = false;
             opts.id_format = 0;  /* GFM format (default) */
+            opts.relaxed_tables = false;  /* CommonMark has no tables */
             break;
 
         case APEX_MODE_GFM:
@@ -137,12 +138,14 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_metadata_variables = false;
             opts.hardbreaks = true;  /* GFM treats newlines as hard breaks */
             opts.id_format = 0;  /* GFM format */
+            opts.relaxed_tables = false;  /* GFM uses standard table syntax */
             break;
 
         case APEX_MODE_MULTIMARKDOWN:
             /* MultiMarkdown - metadata, footnotes, tables, etc. */
             opts.enable_tables = true;
             opts.enable_footnotes = true;
+            opts.relaxed_tables = false;  /* MMD uses standard table syntax */
             opts.enable_definition_lists = true;
             opts.enable_smart_typography = true;
             opts.enable_math = true;
@@ -366,7 +369,6 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     if (options->mode == APEX_MODE_KRAMDOWN || options->mode == APEX_MODE_UNIFIED) {
         ial_preprocessed = apex_preprocess_ial(text_ptr);
         if (ial_preprocessed) {
-            if (text_ptr != working_text) free(text_ptr);
             text_ptr = ial_preprocessed;
         }
     }

@@ -342,7 +342,11 @@ static void test_file_includes(void) {
 
     apex_options opts = apex_options_default();
     opts.enable_file_includes = true;
+#ifdef TEST_FIXTURES_DIR
+    opts.base_directory = TEST_FIXTURES_DIR;
+#else
     opts.base_directory = "tests/fixtures/includes";
+#endif
     char *html;
 
     /* Test Marked markdown include */
@@ -491,6 +495,7 @@ static void test_advanced_tables(void) {
 
     apex_options opts = apex_options_default();
     opts.enable_tables = true;
+    opts.relaxed_tables = false;  /* Use standard GFM table syntax for these tests */
     char *html;
 
     /* Test table with caption - detection works but removal/rendering needs work */
@@ -1148,6 +1153,7 @@ static void test_pretty_html(void) {
 
     apex_options opts = apex_options_default();
     opts.pretty = true;
+    opts.relaxed_tables = false;  /* Use standard tables for pretty HTML tests */
     char *html;
 
     /* Test basic pretty formatting */
