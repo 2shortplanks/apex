@@ -118,8 +118,8 @@ release: clean-release
 release-macos:
 	@echo "Building macOS release for version $(VERSION)..."
 	@mkdir -p $(BUILD_DIR)
-	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DBUILD_FRAMEWORK=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
-	@cd $(BUILD_DIR) && make -j$$(sysctl -n hw.ncpu) apex_cli
+	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DBUILD_FRAMEWORK=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Wno-dev ..
+	@cd $(BUILD_DIR) && $(MAKE) -j$$(sysctl -n hw.ncpu) apex_cli
 	@mkdir -p $(RELEASE_DIR)/apex-$(VERSION)-macos-universal
 	@cp $(BUILD_DIR)/apex $(RELEASE_DIR)/apex-$(VERSION)-macos-universal/apex
 	@if [ -n "$(SIGNING_IDENTITY)" ] && [ "$(SIGNING_IDENTITY)" != "none" ]; then \
@@ -133,8 +133,8 @@ release-macos:
 release-linux:
 	@echo "Building Linux release for version $(VERSION)..."
 	@mkdir -p $(BUILD_DIR)
-	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
-	@cd $(BUILD_DIR) && make -j$$(nproc) apex_cli
+	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Wno-dev ..
+	@cd $(BUILD_DIR) && $(MAKE) -j$$(nproc) apex_cli
 	@mkdir -p $(RELEASE_DIR)/apex-$(VERSION)-linux-$(UNAME_M)
 	@cp $(BUILD_DIR)/apex $(RELEASE_DIR)/apex-$(VERSION)-linux-$(UNAME_M)/apex
 	@cd $(RELEASE_DIR) && tar -czf apex-$(VERSION)-linux-$(UNAME_M).tar.gz apex-$(VERSION)-linux-$(UNAME_M)/

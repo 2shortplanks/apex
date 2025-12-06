@@ -26,7 +26,8 @@ jobs:
                   VERSION: ${{ env.VERSION }}
                   SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY || '-' }}
               run: |
-                  make release-macos SIGNING_IDENTITY="${SIGNING_IDENTITY}"
+                  cmake --version
+                  make release-macos SIGNING_IDENTITY="${SIGNING_IDENTITY}" 2>&1 | tee build.log || (tail -100 build.log && exit 1)
 
             - name: Create checksums
               env:
