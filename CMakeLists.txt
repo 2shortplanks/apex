@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(apex VERSION 0.1.4 LANGUAGES C)
+project(apex VERSION 0.1.8 LANGUAGES C)
 
 # Set C standard
 set(CMAKE_C_STANDARD 99)
@@ -69,7 +69,7 @@ set_target_properties(apex PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER include/apex/apex.h
 )
-target_link_libraries(apex libcmark-gfm libcmark-gfm-extensions)
+target_link_libraries(apex libcmark-gfm-extensions libcmark-gfm)
 
 # Build static library
 add_library(apex_static STATIC ${APEX_LIB_SOURCES})
@@ -77,12 +77,12 @@ set_target_properties(apex_static PROPERTIES
     OUTPUT_NAME apex
     PUBLIC_HEADER include/apex/apex.h
 )
-target_link_libraries(apex_static libcmark-gfm_static libcmark-gfm-extensions_static)
+target_link_libraries(apex_static libcmark-gfm-extensions_static libcmark-gfm_static)
 
 # CLI executable
 add_executable(apex_cli cli/main.c)
 set_target_properties(apex_cli PROPERTIES OUTPUT_NAME apex)
-target_link_libraries(apex_cli apex_static)
+target_link_libraries(apex_cli apex_static libcmark-gfm-extensions_static libcmark-gfm_static)
 
 # Installation
 install(TARGETS apex apex_static apex_cli
