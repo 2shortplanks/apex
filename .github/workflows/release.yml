@@ -19,12 +19,14 @@ jobs:
                   VERSION=${GITHUB_REF#refs/tags/v}
                   echo "VERSION=$VERSION" >> $GITHUB_ENV
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "$VERSION" > VERSION
 
             - name: Build macOS universal binary
               env:
                   VERSION: ${{ env.VERSION }}
+                  SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY || '-' }}
               run: |
-                  make release-macos SIGNING_IDENTITY="-"
+                  make release-macos SIGNING_IDENTITY="${SIGNING_IDENTITY}"
 
             - name: Create checksums
               env:
