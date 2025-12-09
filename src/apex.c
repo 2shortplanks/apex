@@ -1,12 +1,8 @@
-/**
- * Apex - Unified Markdown Processor
- * Core implementation
- */
-
 #include "apex/apex.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 /* cmark-gfm headers */
 #include "cmark-gfm.h"
@@ -37,6 +33,137 @@
 
 /* Custom renderer */
 #include "html_renderer.h"
+
+/**
+ * Preprocess angle-bracket autolinks (<http://...>) into explicit links
+ * and convert bare URLs/emails to explicit links so they survive
+ * custom rendering paths.
+ * Skips processing inside code spans (`...`) and code blocks (```...```).
+ */
+static char *apex_preprocess_autolinks(const char *text, const apex_options *options) {
+    if (!text || !options || !options->enable_autolink) return NULL;
+
+    size_t len = strlen(text);
+    /* Worst case: every character becomes part of a [url](url) */
+    size_t cap = len * 4 + 1;
+    char *out = malloc(cap);
+    if (!out) return NULL;
+
+    const char *r = text;
+    char *w = out;
+    bool in_code_block = false;
+    bool in_inline_code = false;
+    int code_block_backticks = 0;  /* Count of consecutive backticks for code blocks */
+
+    while (*r) {
+        /* Track code blocks (```...```) */
+        if (*r == '`') {
+            int backtick_count = 1;
+            const char *p = r + 1;
+            while (*p == '`' && backtick_count < 10) {
+                backtick_count++;
+                p++;
+            }
+
+            if (backtick_count >= 3) {
+                /* Code block marker */
+                if (!in_code_block) {
+                    in_code_block = true;
+                    code_block_backticks = backtick_count;
+                } else if (backtick_count >= code_block_backticks) {
+                    /* End of code block */
+                    in_code_block = false;
+                    code_block_backticks = 0;
+                }
+                /* Copy the backticks */
+                for (int i = 0; i < backtick_count; i++) {
+                    *w++ = *r++;
+                }
+                continue;
+            } else if (backtick_count == 1) {
+                /* Inline code span - toggle state and copy the backtick */
+                in_inline_code = !in_inline_code;
+                *w++ = *r++;
+                continue;
+            } else {
+                /* Multiple backticks but less than 3 - copy them as-is (shouldn't happen in valid markdown) */
+                for (int i = 0; i < backtick_count; i++) {
+                    *w++ = *r++;
+                }
+                continue;
+            }
+        }
+
+        /* Skip processing inside code blocks or inline code */
+        if (in_code_block || in_inline_code) {
+            *w++ = *r++;
+            continue;
+        }
+
+        /* Handle angle-bracket autolink */
+        if (*r == '<') {
+            const char *start = r + 1;
+            const char *end = strchr(start, '>');
+            if (end && start != end) {
+                size_t url_len = (size_t)(end - start);
+                if ((url_len > 6 && strncmp(start, "http://", 7) == 0) ||
+                    (url_len > 7 && strncmp(start, "https://", 8) == 0) ||
+                    (url_len > 7 && strncmp(start, "mailto:", 7) == 0)) {
+                    size_t needed = 2 + url_len + 3 + url_len + 2; /* [url](url) */
+                    if ((size_t)(w - out) + needed + 1 > cap) {
+                        size_t used = (size_t)(w - out);
+                        cap = (used + needed + 1) * 2;
+                        char *new_out = realloc(out, cap);
+                        if (!new_out) { free(out); return NULL; }
+                        out = new_out;
+                        w = out + used;
+                    }
+                    *w++ = '[';
+                    memcpy(w, start, url_len); w += url_len;
+                    *w++ = ']'; *w++ = '(';
+                    memcpy(w, start, url_len); w += url_len;
+                    *w++ = ')';
+                    r = end + 1;
+                    continue;
+                }
+            }
+        }
+
+        /* Handle bare URL or mailto/email */
+        if ((strncmp(r, "http://", 7) == 0 || strncmp(r, "https://", 8) == 0 || strncmp(r, "mailto:", 7) == 0) ||
+            (strchr(r, '@') && (r == text || isspace((unsigned char)r[-1])))) {
+            const char *start = r;
+            /* simple token end: whitespace or angle bracket */
+            const char *end = start;
+            while (*end && !isspace((unsigned char)*end) && *end != '<' && *end != '>') end++;
+            size_t url_len = (size_t)(end - start);
+
+            /* Heuristic: skip if preceded by '(' or '[' (likely already a link) */
+            if (!(r > text && (r[-1] == '(' || r[-1] == '['))) {
+                size_t needed = 2 + url_len + 3 + url_len + 2; /* [url](url) */
+                if ((size_t)(w - out) + needed + 1 > cap) {
+                    size_t used = (size_t)(w - out);
+                    cap = (used + needed + 1) * 2;
+                    char *new_out = realloc(out, cap);
+                    if (!new_out) { free(out); return NULL; }
+                    out = new_out;
+                    w = out + used;
+                }
+                *w++ = '[';
+                memcpy(w, start, url_len); w += url_len;
+                *w++ = ']'; *w++ = '(';
+                memcpy(w, start, url_len); w += url_len;
+                *w++ = ')';
+                r = end;
+                continue;
+            }
+        }
+
+        *w++ = *r++;
+    }
+    *w = '\0';
+    return out;
+}
 
 /**
  * Preprocess alpha list markers (a., b., c. and A., B., C.)
@@ -536,6 +663,9 @@ apex_options apex_options_default(void) {
     /* Superscript and subscript */
     opts.enable_sup_sub = true;  /* Default: enabled in unified mode */
 
+    /* Autolink options */
+    opts.enable_autolink = true;  /* Default: enabled in unified mode */
+
     return opts;
 }
 
@@ -569,6 +699,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.allow_mixed_list_markers = false;  /* CommonMark: current behavior (separate lists) */
             opts.allow_alpha_lists = false;  /* CommonMark: no alpha lists */
             opts.enable_sup_sub = false;  /* CommonMark: no sup/sub */
+            opts.enable_autolink = false;  /* CommonMark: no autolinks */
             break;
 
         case APEX_MODE_GFM:
@@ -593,6 +724,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.allow_mixed_list_markers = false;  /* GFM: current behavior (separate lists) */
             opts.allow_alpha_lists = false;  /* GFM: no alpha lists */
             opts.enable_sup_sub = false;  /* GFM: no sup/sub */
+            opts.enable_autolink = true;  /* GFM: autolinks enabled */
             break;
 
         case APEX_MODE_MULTIMARKDOWN:
@@ -616,6 +748,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.allow_mixed_list_markers = true;  /* MultiMarkdown: inherit type from first item */
             opts.allow_alpha_lists = false;  /* MultiMarkdown: no alpha lists */
             opts.enable_sup_sub = true;  /* MultiMarkdown: support sup/sub */
+            opts.enable_autolink = true;  /* MultiMarkdown: autolinks enabled */
             break;
 
         case APEX_MODE_KRAMDOWN:
@@ -639,6 +772,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.allow_mixed_list_markers = false;  /* Kramdown: current behavior (separate lists) */
             opts.allow_alpha_lists = false;  /* Kramdown: no alpha lists */
             opts.enable_sup_sub = false;  /* Kramdown: no sup/sub */
+            opts.enable_autolink = true;  /* Kramdown: autolinks enabled */
             break;
 
         case APEX_MODE_UNIFIED:
@@ -732,16 +866,18 @@ static void apex_register_extensions(cmark_parser *parser, const apex_options *o
         }
     }
 
-    /* GFM autolink */
-    if (options->mode == APEX_MODE_GFM || options->mode == APEX_MODE_UNIFIED) {
+    /* GFM autolink - enable for GFM and Unified modes if autolink is enabled */
+    if (options->enable_autolink && (options->mode == APEX_MODE_GFM || options->mode == APEX_MODE_UNIFIED)) {
         cmark_syntax_extension *autolink_ext = cmark_find_syntax_extension("autolink");
         if (autolink_ext) {
             cmark_parser_attach_syntax_extension(parser, autolink_ext);
         }
     }
 
-    /* Tag filter (GFM security) */
-    if (options->mode == APEX_MODE_GFM || options->mode == APEX_MODE_UNIFIED) {
+    /* Tag filter (GFM security)
+     * In Unified mode we allow raw HTML/autolinks, so only enable in GFM.
+     */
+    if (options->mode == APEX_MODE_GFM) {
         cmark_syntax_extension *tagfilter_ext = cmark_find_syntax_extension("tagfilter");
         if (tagfilter_ext) {
             cmark_parser_attach_syntax_extension(parser, tagfilter_ext);
@@ -825,6 +961,18 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
 
         /* Extract abbreviations */
         abbreviations = apex_extract_abbreviations(&text_ptr);
+    }
+
+    /* Preprocess autolinks FIRST to convert <https://...> to [https://...](https://...)
+     * This must happen before other processors that might treat angle brackets as HTML
+     * Note: Even with autolink extension enabled, preprocessing ensures compatibility
+     */
+    char *autolinks_processed = NULL;
+    if (options->enable_autolink) {
+        autolinks_processed = apex_preprocess_autolinks(text_ptr, options);
+        if (autolinks_processed) {
+            text_ptr = autolinks_processed;
+        }
     }
 
     /* Preprocess IAL markers (insert blank lines before them so cmark parses correctly) */
@@ -983,9 +1131,14 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
 
     /* Note: Critic Markup is now handled via preprocessing (before parsing) */
 
-    /* Render to HTML (use custom renderer if IAL is enabled) */
+    /* Render to HTML
+     * Unified mode: use standard renderer to preserve autolinks/raw HTML
+     * Kramdown or ALDs: use custom renderer for attributes/IAL
+     */
     char *html;
-    if (alds || options->mode == APEX_MODE_KRAMDOWN || options->mode == APEX_MODE_UNIFIED) {
+    if (options->mode == APEX_MODE_UNIFIED) {
+        html = cmark_render_html(document, cmark_opts, NULL);
+    } else if (alds || options->mode == APEX_MODE_KRAMDOWN) {
         html = apex_render_html_with_attributes(document, cmark_opts);
     } else {
         html = cmark_render_html(document, cmark_opts, NULL);
@@ -1099,6 +1252,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     if (alpha_lists_processed) free(alpha_lists_processed);
     if (relaxed_tables_processed) free(relaxed_tables_processed);
     if (deflist_processed) free(deflist_processed);
+    if (autolinks_processed) free(autolinks_processed);
     if (html_markdown_processed) free(html_markdown_processed);
     if (critic_processed) free(critic_processed);
     apex_free_metadata(metadata);

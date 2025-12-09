@@ -89,6 +89,9 @@ typedef struct {
 
     /* Superscript and subscript */
     bool enable_sup_sub;  /* Support MultiMarkdown-style ^text^ and ~text~ syntax */
+
+    /* Autolink options */
+    bool enable_autolink;  /* Enable autolinking of URLs and email addresses */
 } apex_options;
 
 /**

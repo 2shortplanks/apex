@@ -40,12 +40,18 @@ char *apex_process_highlights(const char *text) {
         /* Look for ==highlight== (not in code, not Critic Markup) */
         /* Skip if preceded by { (Critic Markup) */
         bool is_critic = (read > text && read[-1] == '{');
-        if (!in_code_block && !in_inline_code && !is_critic &&
-            read[0] == '=' && read[1] == '=' && read[2] != '=' && read[2] != '}') {
+        /* A highlight requires ={2}\S where \S is not = to begin */
+        /* Also check that read[2] is not whitespace (to avoid matching == on line by itself) */
+        bool is_valid_highlight_start = (read[0] == '=' && read[1] == '=' &&
+                                         read[2] != '=' && read[2] != '}' &&
+                                         read[2] != '\0' && read[2] != '\n' &&
+                                         read[2] != '\r' && read[2] != ' ' && read[2] != '\t');
+
+        if (!in_code_block && !in_inline_code && !is_critic && is_valid_highlight_start) {
 
             /* Find closing == */
             const char *close = read + 2;
-            while (*close) {
+            while (*close && *close != '\n' && *close != '\r') {
                 if (close[0] == '=' && close[1] == '=' &&
                     (close[2] != '=' || close[-1] == '}')) {  /* Not Critic ==} */
                     break;
@@ -53,38 +59,41 @@ char *apex_process_highlights(const char *text) {
                 close++;
             }
 
-            if (close[0] == '=' && close[1] == '=') {
+            if (*close && close[0] == '=' && close[1] == '=') {
                 /* Found complete ==highlight== */
                 size_t content_len = close - (read + 2);
 
-                /* Write <mark> */
-                const char *open_tag = "<mark>";
-                size_t tag_len = strlen(open_tag);
-                if (tag_len < remaining) {
-                    memcpy(write, open_tag, tag_len);
-                    write += tag_len;
-                    remaining -= tag_len;
-                }
+                /* Ensure there's actual content (not just == on a line by itself) */
+                if (content_len > 0) {
+                    /* Write <mark> */
+                    const char *open_tag = "<mark>";
+                    size_t tag_len = strlen(open_tag);
+                    if (tag_len < remaining) {
+                        memcpy(write, open_tag, tag_len);
+                        write += tag_len;
+                        remaining -= tag_len;
+                    }
 
-                /* Copy highlighted content */
-                if (content_len < remaining) {
-                    memcpy(write, read + 2, content_len);
-                    write += content_len;
-                    remaining -= content_len;
-                }
+                    /* Copy highlighted content */
+                    if (content_len < remaining) {
+                        memcpy(write, read + 2, content_len);
+                        write += content_len;
+                        remaining -= content_len;
+                    }
 
-                /* Write </mark> */
-                const char *close_tag = "</mark>";
-                tag_len = strlen(close_tag);
-                if (tag_len < remaining) {
-                    memcpy(write, close_tag, tag_len);
-                    write += tag_len;
-                    remaining -= tag_len;
-                }
+                    /* Write </mark> */
+                    const char *close_tag = "</mark>";
+                    tag_len = strlen(close_tag);
+                    if (tag_len < remaining) {
+                        memcpy(write, close_tag, tag_len);
+                        write += tag_len;
+                        remaining -= tag_len;
+                    }
 
-                /* Skip past the closing == */
-                read = close + 2;
-                continue;
+                    /* Skip past the closing == */
+                    read = close + 2;
+                    continue;
+                }
             }
         }
 

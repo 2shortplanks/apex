@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 4096
 
@@ -32,6 +33,7 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --no-tables            Disable table support\n");
     fprintf(stderr, "  -o, --output FILE      Write output to FILE instead of stdout\n");
     fprintf(stderr, "  --pretty               Pretty-print HTML with indentation and whitespace\n");
+    fprintf(stderr, "  --[no-]autolink        Enable autolinking of URLs and email addresses\n");
     fprintf(stderr, "  --[no-]relaxed-tables  Enable relaxed table parsing (no separator rows required)\n");
     fprintf(stderr, "  --[no-]sup-sub         Enable MultiMarkdown-style superscript (^text^) and subscript (~text~) syntax\n");
     fprintf(stderr, "  --[no-]unsafe          Allow raw HTML in output (default: true for unified/mmd/kramdown, false for commonmark/gfm)\n");
@@ -94,8 +96,11 @@ static char *read_stdin(size_t *len) {
         return NULL;
     }
 
-    size_t bytes_read;
-    while ((bytes_read = fread(buffer + size, 1, BUFFER_SIZE, stdin)) > 0) {
+    /* Use read() system call directly for better control with pipes */
+    int fd = fileno(stdin);
+    ssize_t bytes_read;
+
+    while ((bytes_read = read(fd, buffer + size, BUFFER_SIZE)) > 0) {
         size += bytes_read;
         if (size + BUFFER_SIZE > capacity) {
             capacity *= 2;
@@ -107,6 +112,13 @@ static char *read_stdin(size_t *len) {
             }
             buffer = new_buffer;
         }
+    }
+
+    /* Check if we encountered an error (not EOF) */
+    if (bytes_read < 0) {
+        free(buffer);
+        fprintf(stderr, "Error: Error reading from stdin\n");
+        return NULL;
     }
 
     buffer[size] = '\0';
@@ -226,6 +238,10 @@ int main(int argc, char *argv[]) {
             options.enable_sup_sub = true;
         } else if (strcmp(argv[i], "--no-sup-sub") == 0) {
             options.enable_sup_sub = false;
+        } else if (strcmp(argv[i], "--autolink") == 0) {
+            options.enable_autolink = true;
+        } else if (strcmp(argv[i], "--no-autolink") == 0) {
+            options.enable_autolink = false;
         } else if (argv[i][0] == '-') {
             fprintf(stderr, "Error: Unknown option '%s'\n", argv[i]);
             print_usage(argv[0]);

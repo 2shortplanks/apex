@@ -212,9 +212,9 @@ static apex_metadata_item *parse_mmd_metadata(const char *text, size_t *consumed
             continue;
         }
 
-        /* Skip lines with Markdown links or images */
-        if (strchr(trimmed, '[') && strchr(trimmed, ']') && strchr(trimmed, '(')) {
-            /* Contains markdown link/image syntax - not metadata */
+        /* Skip lines containing < (HTML tags, autolinks, etc.) */
+        if (strchr(trimmed, '<')) {
+            /* This is HTML/autolink, not metadata */
             if (found_metadata) {
                 *consumed = line_start - text;
                 return items;
@@ -227,6 +227,35 @@ static apex_metadata_item *parse_mmd_metadata(const char *text, size_t *consumed
         /* Parse key: value */
         char *colon = strchr(line, ':');
         if (colon) {
+            /* Check if there's a protocol (http://, https://, mailto:) BEFORE the colon */
+            /* If so, this is likely a URL in the key, not metadata */
+            size_t key_len = (size_t)(colon - line);
+            if (key_len >= 7 && (
+                (key_len >= 7 && strncmp(line, "http://", 7) == 0) ||
+                (key_len >= 8 && strncmp(line, "https://", 8) == 0) ||
+                (key_len >= 7 && strncmp(line, "mailto:", 7) == 0) ||
+                strstr(line, "://") != NULL)) {
+                /* Protocol found before colon - this is a URL, not metadata */
+                if (found_metadata) {
+                    *consumed = line_start - text;
+                    return items;
+                }
+                *consumed = 0;
+                return NULL;
+            }
+
+            /* Check for space after colon (MMD requires "KEY: VALUE" format) */
+            char *after_colon = colon + 1;
+            if (*after_colon != ' ' && *after_colon != '\t') {
+                /* No space after colon - likely not metadata */
+                if (found_metadata) {
+                    *consumed = line_start - text;
+                    return items;
+                }
+                *consumed = 0;
+                return NULL;
+            }
+
             *colon = '\0';
             char *key = trim_whitespace(line);
             char *value = trim_whitespace(colon + 1);
@@ -245,6 +274,29 @@ static apex_metadata_item *parse_mmd_metadata(const char *text, size_t *consumed
                 return NULL;
             }
         } else {
+            /* No colon - check if line contains URLs (bare URLs without angle brackets) */
+            if (strstr(trimmed, "http://") || strstr(trimmed, "https://") || strstr(trimmed, "mailto:")) {
+                /* This is a bare URL, not metadata */
+                if (found_metadata) {
+                    *consumed = line_start - text;
+                    return items;
+                }
+                *consumed = 0;
+                return NULL;
+            }
+
+            /* Skip lines with Markdown links or images */
+            if (strchr(trimmed, '[') && strchr(trimmed, ']') && strchr(trimmed, '(')) {
+                /* Contains markdown link/image syntax - not metadata */
+                if (found_metadata) {
+                    *consumed = line_start - text;
+                    return items;
+                }
+                /* Haven't found metadata yet - this isn't metadata */
+                *consumed = 0;
+                return NULL;
+            }
+
             /* Non-metadata line found (no colon) */
             if (found_metadata) {
                 *consumed = line_start - text;
