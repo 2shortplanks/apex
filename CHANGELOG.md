@@ -2,6 +2,27 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.20] - 2025-12-11
+
+#### NEW
+
+- Added man page generation and installation support. Man pages can be generated from Markdown source using pandoc or go-md2man, with pre-generated man pages included in the repository as fallback. CMake build system now handles man page installation, and Homebrew formula installs the man page.
+- Added comprehensive test suite for MMD 6 features including multi-line setext headers and link/image titles with different quote styles (single quotes, double quotes, parentheses). Tests verify these features work in both MultiMarkdown and unified modes.
+- Added build-test man_page_copy target for man page installation.
+- Added --obfuscate-emails flag to hex-encode mailto links.
+
+#### IMPROVED
+
+- Superscript processing now stops at sentence terminators (. , ; : ! ?) instead of including them in the superscript content. This prevents punctuation from being incorrectly included in superscripts.
+- Enhanced subscript and underline detection logic. The processor now correctly differentiates between subscript (tildes within a word, e.g., H~2~O) and underline (tildes at word boundaries, e.g., ~text~) by checking if tildes are within alphanumeric words or at word boundaries.
+- Expanded test coverage for superscript, subscript, underline, strikethrough, and highlight features with additional edge case tests.
+- Email autolink detection trims trailing punctuation.
+
+#### FIXED
+
+- Autolink now only wraps real URLs/emails instead of every word.
+- Email autolinks now use mailto: hrefs instead of bare text.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
