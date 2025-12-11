@@ -14,6 +14,7 @@
 #include "html.h"
 
 /* Special inline character for wiki links */
+__attribute__((unused))
 static const char WIKI_OPEN_CHAR = '[';
 
 /* Default configuration */
@@ -131,11 +132,14 @@ static char *page_to_url(const char *page, const char *section, wiki_link_config
  * Match function - called when we encounter [
  * Need to check for [[ specifically to avoid conflicting with standard markdown links
  */
+__attribute__((unused))
 static cmark_node *match_wiki_link(cmark_syntax_extension *self,
                                     cmark_parser *parser,
                                     cmark_node *parent,
                                     unsigned char character,
                                     cmark_inline_parser *inline_parser) {
+    (void)self;
+    (void)parent;
     if (character != '[') return NULL;
 
     /* Get current position and remaining input */
@@ -263,7 +267,6 @@ void apex_process_wiki_links_in_tree(cmark_node *node, wiki_link_config *config)
 
         if (url) {
             /* Create new nodes to replace this text node */
-            cmark_node *parent = cmark_node_parent(node);
 
             /* Create link node */
             cmark_node *link = cmark_node_new(CMARK_NODE_LINK);

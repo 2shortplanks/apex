@@ -85,7 +85,7 @@ static apex_attributes *parse_ial_content(const char *content, int len) {
     if (!attrs) return NULL;
 
     char buffer[2048];
-    if (len >= sizeof(buffer)) len = sizeof(buffer) - 1;
+    if (len >= (int)sizeof(buffer)) len = (int)sizeof(buffer) - 1;
     memcpy(buffer, content, len);
     buffer[len] = '\0';
 
@@ -400,7 +400,7 @@ static bool extract_ial_from_text(const char *text, apex_attributes **attrs_out,
 
     /* Check if it's a reference (single word, no special chars) */
     char ref_name[256];
-    if (content_len > 0 && content_len < sizeof(ref_name)) {
+    if (content_len > 0 && content_len < (int)sizeof(ref_name)) {
         memcpy(ref_name, content_start, content_len);
         ref_name[content_len] = '\0';
 
@@ -881,7 +881,6 @@ char *apex_preprocess_ial(const char *text) {
 
     char *out = output;
     const char *p = text;
-    const char *prev_line_start = NULL;
     bool prev_line_was_content = false;
     bool prev_line_was_blank = true;  /* Start as if there was a blank line before */
 
@@ -928,7 +927,6 @@ char *apex_preprocess_ial(const char *text) {
         /* Track state for next iteration */
         prev_line_was_blank = is_blank;
         prev_line_was_content = !is_blank && !is_ial;
-        prev_line_start = line_start;
     }
 
     *out = '\0';

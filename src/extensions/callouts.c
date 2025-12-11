@@ -14,7 +14,7 @@
  */
 static callout_type_t detect_callout_type(const char *type_str, int len) {
     char type_upper[64];
-    if (len >= sizeof(type_upper)) return CALLOUT_NONE;
+    if (len >= (int)sizeof(type_upper)) return CALLOUT_NONE;
 
     /* Convert to uppercase for comparison */
     for (int i = 0; i < len; i++) {
@@ -109,8 +109,6 @@ static bool is_bear_callout(cmark_node *blockquote, callout_type_t *type,
         type_end++;
     }
 
-    /* Now type_end points to either ] or the +/- marker */
-    int type_len_unused = type_len;
     /* Extract title (rest of the line after ] or +/-) */
     const char *title_start = type_end + 1;
     while (*title_start == ' ' || *title_start == '\t') title_start++;

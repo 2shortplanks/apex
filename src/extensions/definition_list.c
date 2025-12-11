@@ -66,6 +66,7 @@ static cmark_node *open_block(cmark_syntax_extension *ext,
                               cmark_node *parent_container,
                               unsigned char *input,
                               int len) {
+    (void)ext;
     if (indented > 3) return NULL; /* Too indented */
 
     int def_indent;
@@ -104,6 +105,8 @@ static int match_block(cmark_syntax_extension *ext,
                       unsigned char *input,
                       int len,
                       cmark_node *container) {
+    (void)ext;
+    (void)parser;
     if (cmark_node_get_type(container) != APEX_NODE_DEFINITION_LIST &&
         cmark_node_get_type(container) != APEX_NODE_DEFINITION_DATA) {
         return 0;
@@ -130,6 +133,7 @@ static int match_block(cmark_syntax_extension *ext,
 static int can_contain(cmark_syntax_extension *ext,
                       cmark_node *node,
                       cmark_node_type child_type) {
+    (void)ext;
     if (cmark_node_get_type(node) == APEX_NODE_DEFINITION_DATA) {
         /* Definition data can contain any block-level content */
         return child_type == CMARK_NODE_PARAGRAPH ||
@@ -159,7 +163,6 @@ char *apex_process_definition_lists(const char *text) {
     size_t remaining = output_capacity;
 
     bool in_def_list = false;
-    bool in_term = false;
     char term_buffer[4096];
     int term_len = 0;
 
@@ -175,6 +178,33 @@ char *apex_process_definition_lists(const char *text) {
         while (p < line_end && (*p == ' ' || *p == '\t')) p++;
         bool is_table_row = (p < line_end && *p == '|');
 
+        /* Check if line is a list item (starts with -, *, +, or number.) */
+        const char *list_check = line_start;
+        int list_spaces = 0;
+        while (list_check < line_end && (*list_check == ' ' || *list_check == '\t') && list_spaces < 4) {
+            list_spaces++;
+            list_check++;
+        }
+        bool is_list_item = false;
+        if (list_check < line_end) {
+            if (*list_check == '-' || *list_check == '*' || *list_check == '+') {
+                /* Check if followed by space or tab */
+                if (list_check + 1 < line_end && (list_check[1] == ' ' || list_check[1] == '\t')) {
+                    is_list_item = true;
+                }
+            } else if (*list_check >= '0' && *list_check <= '9') {
+                /* Check for numbered list (digit followed by . and space) */
+                const char *num_check = list_check;
+                while (num_check < line_end && *num_check >= '0' && *num_check <= '9') {
+                    num_check++;
+                }
+                if (num_check < line_end && *num_check == '.' &&
+                    num_check + 1 < line_end && (num_check[1] == ' ' || num_check[1] == '\t')) {
+                    is_list_item = true;
+                }
+            }
+        }
+
         /* Check if line starts with : (definition) */
         p = line_start;
         int spaces = 0;
@@ -184,7 +214,7 @@ char *apex_process_definition_lists(const char *text) {
         }
 
         bool is_def_line = false;
-        if (!is_table_row && p < line_end && *p == ':' && (p + 1) < line_end &&
+        if (!is_table_row && !is_list_item && p < line_end && *p == ':' && (p + 1) < line_end &&
             (p[1] == ' ' || p[1] == '\t')) {
             is_def_line = true;
         }
@@ -211,10 +241,60 @@ char *apex_process_definition_lists(const char *text) {
                         remaining -= dt_start_len;
                     }
 
-                    if (term_len < remaining) {
+                    /* Parse term text as inline Markdown */
+                    char *term_html = NULL;
+                    if (term_len > 0) {
+                        /* Create temporary buffer for term text */
+                        char *term_text = malloc(term_len + 1);
+                        if (term_text) {
+                            memcpy(term_text, term_buffer, term_len);
+                            term_text[term_len] = '\0';
+
+                            /* Parse as Markdown and render to HTML */
+                            cmark_parser *temp_parser = cmark_parser_new(CMARK_OPT_DEFAULT);
+                            if (temp_parser) {
+                                cmark_parser_feed(temp_parser, term_text, term_len);
+                                cmark_node *doc = cmark_parser_finish(temp_parser);
+                                if (doc) {
+                                    /* Render and extract just the content (strip <p> tags) */
+                                    char *full_html = cmark_render_html(doc, CMARK_OPT_DEFAULT, NULL);
+                                    if (full_html) {
+                                        /* Strip <p> and </p> tags if present */
+                                        char *content_start = full_html;
+                                        if (strncmp(content_start, "<p>", 3) == 0) {
+                                            content_start += 3;
+                                        }
+                                        char *content_end = content_start + strlen(content_start);
+                                        if (content_end > content_start + 4 &&
+                                            strcmp(content_end - 5, "</p>\n") == 0) {
+                                            content_end -= 5;
+                                            *content_end = '\0';
+                                        }
+                                        term_html = strdup(content_start);
+                                        free(full_html);
+                                    }
+                                    cmark_node_free(doc);
+                                }
+                                cmark_parser_free(temp_parser);
+                            }
+                            free(term_text);
+                        }
+                    }
+
+                    /* Write processed HTML or original text */
+                    if (term_html) {
+                        size_t html_len = strlen(term_html);
+                        if (html_len < remaining) {
+                            memcpy(write, term_html, html_len);
+                            write += html_len;
+                            remaining -= html_len;
+                        }
+                        free(term_html);
+                    } else if ((size_t)term_len < remaining) {
+                        /* Fallback to original text if parsing failed */
                         memcpy(write, term_buffer, term_len);
                         write += term_len;
-                        remaining -= term_len;
+                        remaining -= (size_t)term_len;
                     }
 
                     const char *dt_end = "</dt>\n";
@@ -325,10 +405,10 @@ char *apex_process_definition_lists(const char *text) {
             } else {
                 /* Flush any buffered term before writing blank line */
                 if (term_len > 0) {
-                    if (term_len < remaining) {
+                    if ((size_t)term_len < remaining) {
                         memcpy(write, term_buffer, term_len);
                         write += term_len;
-                        remaining -= term_len;
+                        remaining -= (size_t)term_len;
                     }
                     if (remaining > 0) {
                         *write++ = '\n';
@@ -359,10 +439,10 @@ char *apex_process_definition_lists(const char *text) {
 
             /* If we have a buffered term that wasn't used, write it first */
             if (term_len > 0) {
-                if (term_len < remaining) {
+                if ((size_t)term_len < remaining) {
                     memcpy(write, term_buffer, term_len);
                     write += term_len;
-                    remaining -= term_len;
+                    remaining -= (size_t)term_len;
                 }
                 if (remaining > 0) {
                     *write++ = '\n';
@@ -382,6 +462,26 @@ char *apex_process_definition_lists(const char *text) {
                     *write++ = '\n';
                     remaining--;
                 }
+                /* Move to next line and continue */
+                read = line_end;
+                if (*read == '\n') read++;
+                continue;
+            }
+            /* If this is a list item, write it through immediately without buffering */
+            else if (is_list_item) {
+                if (line_length < remaining) {
+                    memcpy(write, line_start, line_length);
+                    write += line_length;
+                    remaining -= line_length;
+                }
+                if (remaining > 0 && *line_end == '\n') {
+                    *write++ = '\n';
+                    remaining--;
+                }
+                /* Move to next line and continue */
+                read = line_end;
+                if (*read == '\n') read++;
+                continue;
             }
             /* Check if line contains IAL syntax - if so, write immediately without buffering */
             else if (strstr(line_start, "{:") != NULL) {
@@ -395,6 +495,27 @@ char *apex_process_definition_lists(const char *text) {
                     *write++ = '\n';
                     remaining--;
                 }
+                /* Move to next line and continue */
+                read = line_end;
+                if (*read == '\n') read++;
+                continue;
+            }
+            /* Check if line is a header (starts with #) - write immediately without buffering */
+            else if (p < line_end && *p == '#') {
+                /* Header - don't buffer it */
+                if (line_length < remaining) {
+                    memcpy(write, line_start, line_length);
+                    write += line_length;
+                    remaining -= line_length;
+                }
+                if (remaining > 0 && *line_end == '\n') {
+                    *write++ = '\n';
+                    remaining--;
+                }
+                /* Move to next line and continue */
+                read = line_end;
+                if (*read == '\n') read++;
+                continue;
             }
             /* Save current line as potential term */
             else if (line_length < sizeof(term_buffer) - 1) {
@@ -434,10 +555,10 @@ char *apex_process_definition_lists(const char *text) {
 
     /* Write any remaining term */
     if (term_len > 0) {
-        if (term_len < remaining) {
+        if ((size_t)term_len < remaining) {
             memcpy(write, term_buffer, term_len);
             write += term_len;
-            remaining -= term_len;
+            remaining -= (size_t)term_len;
         }
         if (remaining > 0) {
             *write++ = '\n';
@@ -455,6 +576,8 @@ char *apex_process_definition_lists(const char *text) {
 static cmark_node *postprocess(cmark_syntax_extension *ext,
                                cmark_parser *parser,
                                cmark_node *root) {
+    (void)ext;
+    (void)parser;
     /* Definition lists are now handled via preprocessing */
     return root;
 }
@@ -467,6 +590,8 @@ static void html_render(cmark_syntax_extension *ext,
                        cmark_node *node,
                        cmark_event_type ev_type,
                        int options) {
+    (void)ext;
+    (void)options;
     cmark_strbuf *html = renderer->html;
 
     if (ev_type == CMARK_EVENT_ENTER) {

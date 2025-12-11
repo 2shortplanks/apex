@@ -79,6 +79,7 @@ static bool has_block_content(const char *content) {
  * Re-parse footnote content as block-level Markdown
  */
 static void reparse_footnote_blocks(cmark_node *footnote_def, cmark_parser *parser) {
+    (void)parser;
     if (!footnote_def) return;
 
     /* Get the footnote content */
@@ -162,8 +163,9 @@ cmark_node *apex_process_advanced_footnotes(cmark_node *root, cmark_parser *pars
  * Postprocess function for the extension
  */
 static cmark_node *postprocess(cmark_syntax_extension *ext,
-                                cmark_parser *parser,
-                                cmark_node *root) {
+                               cmark_parser *parser,
+                               cmark_node *root) {
+    (void)ext;
     return apex_process_advanced_footnotes(root, parser);
 }
 

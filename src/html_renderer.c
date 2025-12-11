@@ -16,6 +16,7 @@
  * Inject attributes into HTML opening tags
  * This postprocesses the HTML output to add attributes stored in user_data
  */
+__attribute__((unused))
 static char *inject_attributes_in_html(const char *html, cmark_node *document) {
     if (!html || !document) return html ? strdup(html) : NULL;
 
@@ -257,49 +258,36 @@ char *apex_render_html_with_attributes(cmark_node *document, int options) {
             /* Determine element type and increment counter */
             cmark_node_type elem_type = 0;
             int elem_idx = -1;
-            bool is_block = false;
 
             if (tag_len == 1 && *tag_start == 'p') {
                 elem_type = CMARK_NODE_PARAGRAPH;
                 elem_idx = html_counters.para_count++;
-                is_block = true;
             } else if (tag_len == 2 && tag_start[0] == 'h' && tag_start[1] >= '1' && tag_start[1] <= '6') {
                 elem_type = CMARK_NODE_HEADING;
                 elem_idx = html_counters.heading_count++;
-                is_block = true;
             } else if (tag_len == 10 && memcmp(tag_start, "blockquote", 10) == 0) {
                 elem_type = CMARK_NODE_BLOCK_QUOTE;
                 elem_idx = html_counters.blockquote_count++;
-                is_block = true;
             } else if (tag_len == 5 && memcmp(tag_start, "table", 5) == 0) {
                 elem_type = CMARK_NODE_TABLE;
                 elem_idx = html_counters.table_count++;
-                is_block = true;
             } else if (tag_len == 2 && (memcmp(tag_start, "ul", 2) == 0 || memcmp(tag_start, "ol", 2) == 0)) {
                 elem_type = CMARK_NODE_LIST;
                 elem_idx = html_counters.list_count++;
-                is_block = true;
             } else if (tag_len == 2 && memcmp(tag_start, "li", 2) == 0) {
                 elem_type = CMARK_NODE_ITEM;
                 elem_idx = html_counters.item_count++;
-                is_block = true;
             } else if (tag_len == 3 && memcmp(tag_start, "pre", 3) == 0) {
                 elem_type = CMARK_NODE_CODE_BLOCK;
                 elem_idx = html_counters.code_count++;
-                is_block = true;
-            } else if (tag_len == 2 && (memcmp(tag_start, "td", 2) == 0 || memcmp(tag_start, "th", 2) == 0)) {
-                /* Table cells handled separately */
-                is_block = false;
             } else if (tag_len == 1 && *tag_start == 'a') {
                 /* Links - inline elements */
                 elem_type = CMARK_NODE_LINK;
                 elem_idx = html_counters.para_count++;
-                is_block = false;  /* Inline element */
             } else if (tag_len == 3 && memcmp(tag_start, "img", 3) == 0) {
                 /* Images - inline elements */
                 elem_type = CMARK_NODE_IMAGE;
                 elem_idx = html_counters.para_count++;
-                is_block = false;  /* Inline element */
             }
 
             /* Check if we should skip this element (marked for removal) */

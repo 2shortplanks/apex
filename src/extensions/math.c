@@ -137,6 +137,8 @@ static cmark_node *match_math_dollar(cmark_syntax_extension *self,
                                       cmark_node *parent,
                                       unsigned char character,
                                       cmark_inline_parser *inline_parser) {
+    (void)self;
+    (void)parent;
     if (character != '$') return NULL;
 
     /* Get current position and remaining input */
@@ -194,11 +196,14 @@ static cmark_node *match_math_dollar(cmark_syntax_extension *self,
 /**
  * Match function for \ character (LaTeX style)
  */
+__attribute__((unused))
 static cmark_node *match_math_backslash(cmark_syntax_extension *self,
                                         cmark_parser *parser,
                                         cmark_node *parent,
                                         unsigned char character,
                                         cmark_inline_parser *inline_parser) {
+    (void)self;
+    (void)parent;
     if (character != '\\') return NULL;
 
     /* Get current position and remaining input */

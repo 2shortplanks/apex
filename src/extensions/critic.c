@@ -31,28 +31,22 @@ static critic_type_t scan_critic_markup(const char *input, int len, int *consume
 
     /* Check type */
     critic_type_t type = CRITIC_NONE;
-    const char *open_marker = NULL;
     const char *close_marker = NULL;
 
     if (input[1] == '+' && input[2] == '+') {
         type = CRITIC_ADD;
-        open_marker = "{++";
         close_marker = "++}";
     } else if (input[1] == '-' && input[2] == '-') {
         type = CRITIC_DEL;
-        open_marker = "{--";
         close_marker = "--}";
     } else if (input[1] == '~' && input[2] == '~') {
         type = CRITIC_SUB;
-        open_marker = "{~~";
         close_marker = "~~}";
     } else if (input[1] == '=' && input[2] == '=') {
         type = CRITIC_HIGHLIGHT;
-        open_marker = "{==";
         close_marker = "==}";
     } else if (input[1] == '>' && input[2] == '>') {
         type = CRITIC_COMMENT;
-        open_marker = "{>>";
         close_marker = "<<}";
     } else {
         return CRITIC_NONE;

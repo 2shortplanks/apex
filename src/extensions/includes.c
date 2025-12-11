@@ -433,7 +433,7 @@ char *apex_process_includes(const char *text, const char *base_dir, int depth) {
                 /* Extract filepath */
                 int filepath_len = filepath_end - filepath_start;
                 char filepath[1024];
-                if (filepath_len > 0 && filepath_len < sizeof(filepath)) {
+                if (filepath_len > 0 && filepath_len < (int)sizeof(filepath)) {
                     memcpy(filepath, filepath_start, filepath_len);
                     filepath[filepath_len] = '\0';
 

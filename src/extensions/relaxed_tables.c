@@ -31,7 +31,6 @@ static int count_columns(const char *line, size_t len) {
     }
 
     bool starts_with_pipe = (start < len && line[start] == '|');
-    bool ends_with_pipe = false;
 
     /* Count pipes */
     for (size_t i = start; i < len; i++) {
@@ -42,13 +41,7 @@ static int count_columns(const char *line, size_t len) {
                 starts_with_pipe = true;
             }
             /* Check if this is the last non-whitespace character */
-            size_t j = i + 1;
-            while (j < len && (line[j] == ' ' || line[j] == '\t')) {
-                j++;
-            }
-            if (j >= len || line[j] == '\n' || line[j] == '\r') {
-                ends_with_pipe = true;
-            }
+            /* Note: ends_with_pipe was set but never used, removed to fix warning */
         }
     }
 
@@ -209,6 +202,7 @@ static char *generate_separator_row(int num_columns, bool starts_with_pipe) {
  * Generate a dummy header row (empty cells) for a given number of columns
  * This will be removed in post-processing
  */
+__attribute__((unused))
 static char *generate_dummy_header_row(int num_columns) {
     if (num_columns < 1) return NULL;
 

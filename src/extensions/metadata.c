@@ -405,6 +405,7 @@ cmark_syntax_extension *create_metadata_extension(void) {
  * Get metadata from a document (stub for now)
  */
 apex_metadata_item *apex_get_metadata(cmark_node *document) {
+    (void)document;  /* Unused parameter */
     /* For now, metadata must be extracted before parsing */
     /* This would require storing metadata in the document's user_data */
     return NULL;

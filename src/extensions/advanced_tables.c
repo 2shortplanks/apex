@@ -333,11 +333,14 @@ cmark_node *apex_process_advanced_tables(cmark_node *root) {
 /**
  * Custom HTML renderer for tables with spans and captions
  */
+__attribute__((unused))
 static void html_render_table(cmark_syntax_extension *ext,
                               struct cmark_html_renderer *renderer,
                               cmark_node *node,
                               cmark_event_type ev_type,
                               int options) {
+    (void)ext;
+    (void)options;
     cmark_strbuf *html = renderer->html;
     cmark_node_type type = cmark_node_get_type(node);
 
@@ -429,6 +432,8 @@ static void html_render_table(cmark_syntax_extension *ext,
 static cmark_node *postprocess(cmark_syntax_extension *ext,
                                cmark_parser *parser,
                                cmark_node *root) {
+    (void)ext;
+    (void)parser;
     return apex_process_advanced_tables(root);
 }
 

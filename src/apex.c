@@ -56,6 +56,7 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
     int code_block_backticks = 0;  /* Count of consecutive backticks for code blocks */
 
     while (*r) {
+        const char *loop_start = r;
         /* Track code blocks (```...```) */
         if (*r == '`') {
             int backtick_count = 1;
@@ -130,8 +131,35 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
         }
 
         /* Handle bare URL or mailto/email */
-        if ((strncmp(r, "http://", 7) == 0 || strncmp(r, "https://", 8) == 0 || strncmp(r, "mailto:", 7) == 0) ||
-            (strchr(r, '@') && (r == text || isspace((unsigned char)r[-1])))) {
+        bool is_url_start = false;
+        bool is_email_start = false;
+
+        if (!isspace((unsigned char)*r)) {
+            /* Check for URL protocols */
+            if (strncmp(r, "http://", 7) == 0 || strncmp(r, "https://", 8) == 0 || strncmp(r, "mailto:", 7) == 0) {
+                is_url_start = true;
+            }
+            /* Check for email address: must start at word boundary and have @ in current token */
+            else if (r == text || isspace((unsigned char)r[-1]) || r[-1] == '(' || r[-1] == '[') {
+                /* Scan forward to find end of current token */
+                const char *token_end = r;
+                while (*token_end && !isspace((unsigned char)*token_end) && *token_end != '<' && *token_end != '>') {
+                    token_end++;
+                }
+                /* Check if @ exists within this token (not just anywhere in text) */
+                const char *at_pos = r;
+                while (at_pos < token_end && *at_pos != '@') {
+                    at_pos++;
+                }
+                /* If @ found within token, and it's not at start/end, it might be an email */
+                if (at_pos < token_end && at_pos > r && (at_pos + 1) < token_end) {
+                    /* Basic validation: has chars before @ and after @ */
+                    is_email_start = true;
+                }
+            }
+        }
+
+        if (is_url_start || is_email_start) {
             const char *start = r;
             /* simple token end: whitespace or angle bracket */
             const char *end = start;
@@ -140,7 +168,8 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
 
             /* Heuristic: skip if preceded by '(' or '[' (likely already a link) */
             /* Also skip if this is a single '#' at start of line (header marker) */
-            if (!(r > text && (r[-1] == '(' || r[-1] == '[')) &&
+            if (url_len > 0 &&
+                !(r > text && (r[-1] == '(' || r[-1] == '[')) &&
                 !(r == text && *r == '#' && (r[1] == ' ' || r[1] == '\t' || r[1] == '\n'))) {
                 size_t needed = 2 + url_len + 3 + url_len + 2; /* [url](url) */
                 if ((size_t)(w - out) + needed + 1 > cap) {
@@ -162,6 +191,11 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
         }
 
         *w++ = *r++;
+
+        /* Safety: ensure we always advance */
+        if (r == loop_start) {
+            r++;
+        }
     }
     *w = '\0';
     return out;
