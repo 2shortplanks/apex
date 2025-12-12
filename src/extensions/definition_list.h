@@ -10,6 +10,7 @@
 #ifndef APEX_DEFINITION_LIST_H
 #define APEX_DEFINITION_LIST_H
 
+#include <stdbool.h>
 #include "cmark-gfm.h"
 #include "cmark-gfm-extension_api.h"
 
@@ -25,8 +26,10 @@ extern cmark_node_type APEX_NODE_DEFINITION_DATA;
 /**
  * Process definition lists via preprocessing
  * Converts : syntax to HTML before main parsing
+ * @param text The markdown text to process
+ * @param unsafe If true, allow raw HTML in output (pass CMARK_OPT_UNSAFE)
  */
-char *apex_process_definition_lists(const char *text);
+char *apex_process_definition_lists(const char *text, bool unsafe);
 
 /**
  * Create and return the definition list extension

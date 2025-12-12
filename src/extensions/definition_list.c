@@ -219,7 +219,7 @@ static int can_contain(cmark_syntax_extension *ext,
  * Process definition lists - convert : syntax to HTML
  * This is a preprocessing approach
  */
-char *apex_process_definition_lists(const char *text) {
+char *apex_process_definition_lists(const char *text, bool unsafe) {
     if (!text) return NULL;
 
     size_t text_len = strlen(text);
@@ -395,13 +395,19 @@ char *apex_process_definition_lists(const char *text) {
                             term_text[offset + term_content_len] = '\0';
 
                             /* Parse as Markdown and render to HTML */
-                            cmark_parser *temp_parser = cmark_parser_new(CMARK_OPT_DEFAULT);
+                            int parser_opts = CMARK_OPT_DEFAULT;
+                            int render_opts = CMARK_OPT_DEFAULT;
+                            if (unsafe) {
+                                parser_opts |= CMARK_OPT_UNSAFE;
+                                render_opts |= CMARK_OPT_UNSAFE;
+                            }
+                            cmark_parser *temp_parser = cmark_parser_new(parser_opts);
                             if (temp_parser) {
                                 cmark_parser_feed(temp_parser, term_text, offset + term_content_len);
                                 cmark_node *doc = cmark_parser_finish(temp_parser);
                                 if (doc) {
                                     /* Render and extract just the content (strip <p> tags) */
-                                    char *full_html = cmark_render_html(doc, CMARK_OPT_DEFAULT, NULL);
+                                    char *full_html = cmark_render_html(doc, render_opts, NULL);
                                     if (full_html) {
                                         /* Strip <p> and </p> tags if present */
                                         char *content_start = full_html;
@@ -506,13 +512,19 @@ char *apex_process_definition_lists(const char *text) {
                     def_text[offset + def_text_len] = '\0';
 
                     /* Parse as Markdown and render to HTML */
-                    cmark_parser *temp_parser = cmark_parser_new(CMARK_OPT_DEFAULT);
+                    int parser_opts = CMARK_OPT_DEFAULT;
+                    int render_opts = CMARK_OPT_DEFAULT;
+                    if (unsafe) {
+                        parser_opts |= CMARK_OPT_UNSAFE;
+                        render_opts |= CMARK_OPT_UNSAFE;
+                    }
+                    cmark_parser *temp_parser = cmark_parser_new(parser_opts);
                     if (temp_parser) {
                         cmark_parser_feed(temp_parser, def_text, offset + def_text_len);
                         cmark_node *doc = cmark_parser_finish(temp_parser);
                         if (doc) {
                             /* Render and extract just the content (strip <p> tags) */
-                            char *full_html = cmark_render_html(doc, CMARK_OPT_DEFAULT, NULL);
+                            char *full_html = cmark_render_html(doc, render_opts, NULL);
                             if (full_html) {
                                 /* Strip <p> and </p> tags if present */
                                 char *content_start = full_html;

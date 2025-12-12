@@ -1331,6 +1331,7 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.allow_mixed_list_markers = true;  /* Unified: inherit type from first item */
             opts.allow_alpha_lists = true;  /* Unified: support alpha lists */
             opts.enable_sup_sub = true;  /* Unified: support sup/sub (default: true) */
+            opts.unsafe = true;  /* Unified mode: allow raw HTML by default */
             break;
     }
 
@@ -1605,7 +1606,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     /* Process definition lists before parsing (preprocessing) */
     char *deflist_processed = NULL;
     if (options->enable_definition_lists) {
-        deflist_processed = apex_process_definition_lists(text_ptr);
+        deflist_processed = apex_process_definition_lists(text_ptr, options->unsafe);
         if (deflist_processed) {
             text_ptr = deflist_processed;
         }
