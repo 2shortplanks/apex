@@ -1333,7 +1333,8 @@ static char *apply_transform(const char *transform_name, const char *options,
                         *out++ = (char)c;
                     } else {
                         /* Encode other characters as entities */
-                        out += sprintf(out, "&#%u;", c);
+                        int written = snprintf(out, 16, "&#%u;", c);
+                        if (written > 0) out += written;
                     }
                     break;
             }
@@ -1361,7 +1362,8 @@ static char *apply_transform(const char *transform_name, const char *options,
             if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
                 *out++ = (char)c;
             } else {
-                out += sprintf(out, "%%%02X", c);
+                int written = snprintf(out, 8, "%%%02X", c);
+                if (written > 0) out += written;
             }
         }
         *out = '\0';

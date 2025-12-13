@@ -34,6 +34,7 @@
 #include "extensions/header_ids.h"
 #include "extensions/relaxed_tables.h"
 #include "extensions/citations.h"
+#include "extensions/index.h"
 
 /* Custom renderer */
 #include "html_renderer.h"
@@ -1251,6 +1252,13 @@ apex_options apex_options_default(void) {
     opts.show_tooltips = false;
     opts.nocite = NULL;
 
+    /* Index options */
+    opts.enable_indices = false;
+    opts.enable_mmark_index_syntax = false;
+    opts.enable_textindex_syntax = false;
+    opts.suppress_index = false;
+    opts.group_index_by_letter = true;
+
     return opts;
 }
 
@@ -1340,6 +1348,9 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_citations = true;  /* MultiMarkdown: citations enabled (if bibliography provided) */
             opts.enable_sup_sub = true;  /* MultiMarkdown: support sup/sub */
             opts.enable_autolink = true;  /* MultiMarkdown: autolinks enabled */
+            opts.enable_indices = true;  /* MultiMarkdown: indices enabled */
+            opts.enable_mmark_index_syntax = true;  /* MultiMarkdown: mmark index syntax */
+            opts.enable_textindex_syntax = false;  /* MultiMarkdown: TextIndex syntax disabled by default */
             break;
 
         case APEX_MODE_KRAMDOWN:
@@ -1380,6 +1391,9 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_sup_sub = true;  /* Unified: support sup/sub (default: true) */
             opts.unsafe = true;  /* Unified mode: allow raw HTML by default */
             opts.enable_citations = true;  /* Unified: citations enabled (if bibliography provided) */
+            opts.enable_indices = true;  /* Unified: indices enabled */
+            opts.enable_mmark_index_syntax = true;  /* Unified: mmark index syntax */
+            opts.enable_textindex_syntax = true;  /* Unified: TextIndex syntax enabled */
             break;
     }
 
@@ -1680,6 +1694,16 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
         citations_processed = apex_process_citations(text_ptr, &citation_registry, options);
         if (citations_processed) {
             text_ptr = citations_processed;
+        }
+    }
+
+    /* Process index entries (preprocessing) */
+    apex_index_registry index_registry = {0};
+    char *indices_processed = NULL;
+    if (options->enable_indices) {
+        indices_processed = apex_process_index_entries(text_ptr, &index_registry, options);
+        if (indices_processed) {
+            text_ptr = indices_processed;
         }
     }
 
@@ -2055,6 +2079,27 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
             }
         }
     }
+
+    /* Render index markers and insert index */
+    if (options->enable_indices && html && index_registry.count > 0) {
+        char *with_index_markers = apex_render_index_markers(html, &index_registry, options);
+        if (with_index_markers) {
+            free(html);
+            html = with_index_markers;
+        }
+
+        /* Insert index at marker or end of document */
+        if (html) {
+            char *with_index = apex_insert_index(html, &index_registry, options);
+            if (with_index) {
+                free(html);
+                html = with_index;
+            }
+        }
+    }
+
+    /* Clean up index registry */
+    apex_free_index_registry(&index_registry);
 
     /* Clean up HTML tag spacing (compress multiple spaces, remove spaces before >) */
     if (html) {

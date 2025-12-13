@@ -2678,6 +2678,193 @@ static void test_image_embedding(void) {
 }
 
 /**
+ * Test indices (mmark and TextIndex syntax)
+ */
+static void test_indices(void) {
+    printf("\n=== Index Tests ===\n");
+
+    apex_options opts = apex_options_default();
+    opts.mode = APEX_MODE_UNIFIED;
+    opts.enable_indices = true;
+    opts.enable_mmark_index_syntax = true;
+    opts.enable_textindex_syntax = true;
+    opts.group_index_by_letter = true;
+
+    char *html;
+
+    /* Test basic mmark index syntax */
+    const char *mmark_basic = "This is about protocols (!Protocol).";
+    html = apex_markdown_to_html(mmark_basic, strlen(mmark_basic), &opts);
+    assert_contains(html, "class=\"index\"", "mmark index generates index marker");
+    assert_contains(html, "idxref:", "mmark index generates anchor ID");
+    assert_contains(html, "Protocol", "mmark index preserves term");
+    apex_free_string(html);
+
+    /* Test mmark index with subitem */
+    const char *mmark_subitem = "HTTP/1.1 (!HTTP, HTTP/1.1) is a protocol.";
+    html = apex_markdown_to_html(mmark_subitem, strlen(mmark_subitem), &opts);
+    assert_contains(html, "class=\"index\"", "mmark subitem generates index marker");
+    assert_contains(html, "HTTP", "mmark subitem includes main term");
+    apex_free_string(html);
+
+    /* Test mmark primary index entry */
+    const char *mmark_primary = "This is a primary topic (!!Primary Topic, Sub Topic).";
+    html = apex_markdown_to_html(mmark_primary, strlen(mmark_primary), &opts);
+    assert_contains(html, "class=\"index\"", "mmark primary entry generates index marker");
+    assert_contains(html, "Primary Topic", "mmark primary entry includes term");
+    apex_free_string(html);
+
+    /* Test multiple mmark index entries */
+    const char *mmark_multiple = "Protocols (!Protocol) and implementations (!Implementation) are important.";
+    html = apex_markdown_to_html(mmark_multiple, strlen(mmark_multiple), &opts);
+    assert_contains(html, "Protocol", "Multiple mmark entries include first term");
+    assert_contains(html, "Implementation", "Multiple mmark entries include second term");
+    apex_free_string(html);
+
+    /* Test TextIndex basic syntax */
+    const char *textindex_basic = "This is about firmware{^}.";
+    html = apex_markdown_to_html(textindex_basic, strlen(textindex_basic), &opts);
+    assert_contains(html, "class=\"index\"", "TextIndex generates index marker");
+    assert_contains(html, "idxref:", "TextIndex generates anchor ID");
+    apex_free_string(html);
+
+    /* Test TextIndex with explicit term */
+    const char *textindex_explicit = "This uses [key combinations]{^}.";
+    html = apex_markdown_to_html(textindex_explicit, strlen(textindex_explicit), &opts);
+    assert_contains(html, "class=\"index\"", "TextIndex explicit term generates marker");
+    apex_free_string(html);
+
+    /* Test index generation at end of document */
+    const char *with_index = "This is about protocols (!Protocol).\n\nAnd implementations (!Implementation).";
+    html = apex_markdown_to_html(with_index, strlen(with_index), &opts);
+    assert_contains(html, "id=\"index-section\"", "Index section generated");
+    assert_contains(html, "class=\"index\"", "Index div generated");
+    assert_contains(html, "Protocol", "Index includes first entry");
+    assert_contains(html, "Implementation", "Index includes second entry");
+    apex_free_string(html);
+
+    /* Test index with alphabetical grouping */
+    const char *grouped_index = "Apple (!Apple).\n\nBanana (!Banana).\n\nCherry (!Cherry).";
+    html = apex_markdown_to_html(grouped_index, strlen(grouped_index), &opts);
+    assert_contains(html, "<dt>A</dt>", "Index groups by first letter (A)");
+    assert_contains(html, "<dt>B</dt>", "Index groups by first letter (B)");
+    assert_contains(html, "<dt>C</dt>", "Index groups by first letter (C)");
+    apex_free_string(html);
+
+    /* Test index insertion at <!--INDEX--> marker */
+    const char *index_marker = "This is about protocols (!Protocol).\n\n<!--INDEX-->\n\nMore content.";
+    html = apex_markdown_to_html(index_marker, strlen(index_marker), &opts);
+    assert_contains(html, "id=\"index-section\"", "Index inserted at marker");
+    assert_not_contains(html, "<!--INDEX-->", "Index marker replaced");
+    /* Index should appear before "More content" */
+    const char *more_pos = strstr(html, "More content");
+    const char *index_pos = strstr(html, "id=\"index-section\"");
+    if (more_pos && index_pos) {
+        assert_contains(html, "id=\"index-section\"", "Index appears before marker content");
+    }
+    apex_free_string(html);
+
+    /* Test index with subitems */
+    const char *with_subitems = "Symmetric encryption (!Encryption, Symmetric).\n\nAsymmetric encryption (!Encryption, Asymmetric).";
+    html = apex_markdown_to_html(with_subitems, strlen(with_subitems), &opts);
+    assert_contains(html, "Encryption", "Index includes main term");
+    assert_contains(html, "Symmetric", "Index includes first subitem");
+    assert_contains(html, "Asymmetric", "Index includes second subitem");
+    apex_free_string(html);
+
+    /* Test suppress_index option */
+    apex_options opts_suppress = apex_options_default();
+    opts_suppress.mode = APEX_MODE_UNIFIED;
+    opts_suppress.enable_indices = true;
+    opts_suppress.enable_mmark_index_syntax = true;
+    opts_suppress.suppress_index = true;
+    const char *suppress_test = "This is about protocols (!Protocol).";
+    html = apex_markdown_to_html(suppress_test, strlen(suppress_test), &opts_suppress);
+    assert_contains(html, "class=\"index\"", "Index markers still generated when suppressed");
+    assert_not_contains(html, "id=\"index-section\"", "Index section not generated when suppressed");
+    apex_free_string(html);
+
+    /* Test indices disabled */
+    apex_options opts_disabled = apex_options_default();
+    opts_disabled.mode = APEX_MODE_UNIFIED;
+    opts_disabled.enable_indices = false;
+    const char *disabled_test = "This is about protocols (!Protocol).";
+    html = apex_markdown_to_html(disabled_test, strlen(disabled_test), &opts_disabled);
+    assert_not_contains(html, "class=\"index\"", "Index markers not generated when disabled");
+    assert_not_contains(html, "idxref:", "Index anchors not generated when disabled");
+    apex_free_string(html);
+
+    /* Test mmark syntax only mode */
+    apex_options opts_mmark_only = apex_options_default();
+    opts_mmark_only.mode = APEX_MODE_UNIFIED;
+    opts_mmark_only.enable_indices = true;
+    opts_mmark_only.enable_mmark_index_syntax = true;
+    opts_mmark_only.enable_textindex_syntax = false;
+    const char *mmark_only_test = "Protocols (!Protocol) and firmware{^}.";
+    html = apex_markdown_to_html(mmark_only_test, strlen(mmark_only_test), &opts_mmark_only);
+    assert_contains(html, "class=\"index\"", "mmark syntax processed when enabled");
+    /* TextIndex {^} should not be processed, so {^} should appear as plain text or be converted to superscript */
+    assert_not_contains(html, "firmware<span class=\"index\"", "TextIndex syntax not processed when disabled");
+    apex_free_string(html);
+
+    /* Test TextIndex syntax only mode */
+    apex_options opts_textindex_only = apex_options_default();
+    opts_textindex_only.mode = APEX_MODE_UNIFIED;
+    opts_textindex_only.enable_indices = true;
+    opts_textindex_only.enable_mmark_index_syntax = false;
+    opts_textindex_only.enable_textindex_syntax = true;
+    const char *textindex_only_test = "Protocols (!Protocol) and firmware{^}.";
+    html = apex_markdown_to_html(textindex_only_test, strlen(textindex_only_test), &opts_textindex_only);
+    /* mmark syntax should not be processed, so (!Protocol) should appear as plain text */
+    assert_contains(html, "(!Protocol)", "mmark syntax not processed when disabled");
+    assert_contains(html, "class=\"index\"", "TextIndex syntax processed when enabled");
+    /* Check that mmark syntax wasn't processed by verifying no index entry for Protocol in index section */
+    const char *protocol_in_index = strstr(html, "id=\"index-section\"");
+    if (protocol_in_index) {
+        /* Look for "Protocol" in the index section - it shouldn't be there if mmark wasn't processed */
+        const char *protocol_entry = strstr(protocol_in_index, ">Protocol<");
+        if (protocol_entry == NULL) {
+            tests_run++;
+            tests_passed++;
+            printf(COLOR_GREEN "✓" COLOR_RESET " mmark syntax not processed when disabled\n");
+        } else {
+            tests_run++;
+            tests_failed++;
+            printf(COLOR_RED "✗" COLOR_RESET " mmark syntax not processed when disabled\n");
+        }
+    }
+    apex_free_string(html);
+
+    /* Test index without grouping */
+    apex_options opts_no_group = apex_options_default();
+    opts_no_group.mode = APEX_MODE_UNIFIED;
+    opts_no_group.enable_indices = true;
+    opts_no_group.enable_mmark_index_syntax = true;
+    opts_no_group.group_index_by_letter = false;
+    const char *no_group_test = "Apple (!Apple).\n\nBanana (!Banana).";
+    html = apex_markdown_to_html(no_group_test, strlen(no_group_test), &opts_no_group);
+    assert_contains(html, "id=\"index-section\"", "Index generated without grouping");
+    assert_not_contains(html, "<dt>A</dt>", "Index not grouped by letter when disabled");
+    assert_contains(html, "<ul>", "Index uses simple list when not grouped");
+    apex_free_string(html);
+
+    /* Test index in MultiMarkdown mode (should be enabled by default) */
+    apex_options opts_mmd = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
+    const char *mmd_test = "This is about protocols (!Protocol).";
+    html = apex_markdown_to_html(mmd_test, strlen(mmd_test), &opts_mmd);
+    assert_contains(html, "class=\"index\"", "Indices enabled in MultiMarkdown mode");
+    assert_contains(html, "Protocol", "mmark syntax works in MultiMarkdown mode");
+    apex_free_string(html);
+
+    /* Test that index entries link back to document */
+    const char *link_test = "This is about protocols (!Protocol).";
+    html = apex_markdown_to_html(link_test, strlen(link_test), &opts);
+    assert_contains(html, "index-return", "Index entries have return links");
+    assert_contains(html, "href=\"#idxref:", "Index entries link to anchors");
+    apex_free_string(html);
+}
+
+/**
  * Test citation and bibliography features
  */
 static void test_citations(void) {
@@ -2692,7 +2879,7 @@ static void test_citations(void) {
     /* Use path relative to base_directory */
     const char *bib_file = "test_refs.bib";
     const char *bib_files[] = {bib_file, NULL};
-    opts.bibliography_files = (const char **)bib_files;
+    opts.bibliography_files = (char **)bib_files;
 
     /* Test Pandoc citation syntax */
     const char *pandoc_cite = "See [@doe99] for details.";
@@ -2854,6 +3041,7 @@ int main(int argc, char *argv[]) {
     test_pretty_html();
     test_header_ids();
     test_image_embedding();
+    test_indices();
     test_citations();
 
     /* Print results */

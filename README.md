@@ -48,6 +48,15 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **CSL style support**: Citation Style Language (CSL) files for custom citation formatting
 - **Mode support**: Citations enabled in MultiMarkdown and unified modes
 
+### Indices
+
+- **mmark syntax**: `(!item)`, `(!item, subitem)`, `(!!item, subitem)` for primary entries
+- **TextIndex syntax**: `{^}`, `[term]{^}`, `{^params}` for flexible indexing
+- **Automatic index generation**: Index automatically generated at end of document or at `<!--INDEX-->` marker
+- **Alphabetical sorting**: Entries sorted alphabetically with optional grouping by first letter
+- **Hierarchical sub-items**: Support for nested index entries
+- **Mode support**: Indices enabled by default in MultiMarkdown and unified modes
+
 ### Critic Markup
 
 - **Change tracking**: Additions (`{++text++}`), deletions (`{--text--}`), substitutions (`{~~old~>new~~}`)
@@ -145,6 +154,9 @@ apex input.md --mode kramdown
 - `--bibliography FILE` - Bibliography file (BibTeX, CSL JSON, or CSL YAML) - can be used multiple times
 - `--csl FILE` - Citation style file (CSL format)
 - `--link-citations` - Link citations to bibliography entries
+- `--indices` - Enable index processing (mmark and TextIndex syntax)
+- `--no-indices` - Disable index processing
+- `--no-index` - Suppress index generation (markers still created)
 
 ## Documentation
 

@@ -755,8 +755,9 @@ char *apex_process_includes(const char *text, const char *base_dir, apex_metadat
 
                         if (file_type == FILE_TYPE_IMAGE) {
                             /* Image: create ![](path) */
-                            to_insert = malloc(strlen(filepath) + 10);
-                            if (to_insert) sprintf(to_insert, "![](%s)\n", filepath);
+                            size_t buf_size = strlen(filepath) + 10;
+                            to_insert = malloc(buf_size);
+                            if (to_insert) snprintf(to_insert, buf_size, "![](%s)\n", filepath);
                         } else if (file_type == FILE_TYPE_CSV || file_type == FILE_TYPE_TSV) {
                             /* CSV/TSV: convert to table */
                             to_insert = apex_csv_to_table(content, file_type == FILE_TYPE_TSV);
@@ -764,8 +765,9 @@ char *apex_process_includes(const char *text, const char *base_dir, apex_metadat
                             /* Code: wrap in fenced code block */
                             const char *ext = strrchr(filepath, '.');
                             const char *lang = ext ? ext + 1 : "";
-                            to_insert = malloc(strlen(content) + strlen(lang) + 20);
-                            if (to_insert) sprintf(to_insert, "\n```%s\n%s\n```\n", lang, content);
+                            size_t buf_size = strlen(content) + strlen(lang) + 20;
+                            to_insert = malloc(buf_size);
+                            if (to_insert) snprintf(to_insert, buf_size, "\n```%s\n%s\n```\n", lang, content);
                         } else {
                             /* Text/Markdown: process and include */
                             /* Extract metadata from transcluded file */

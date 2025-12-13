@@ -106,6 +106,13 @@ typedef struct {
     bool link_citations;  /* Link citations to bibliography entries */
     bool show_tooltips;  /* Show tooltips on citations */
     const char *nocite;  /* Comma-separated citation keys to include without citing, or "*" for all */
+
+    /* Index options */
+    bool enable_indices;  /* Enable index processing */
+    bool enable_mmark_index_syntax;  /* Enable mmark (!item) syntax */
+    bool enable_textindex_syntax;  /* Enable TextIndex {^} syntax */
+    bool suppress_index;  /* Suppress index output */
+    bool group_index_by_letter;  /* Group index entries by first letter */
 } apex_options;
 
 /**

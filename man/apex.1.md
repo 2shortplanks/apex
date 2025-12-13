@@ -154,6 +154,24 @@ Citation syntax is supported in MultiMarkdown and unified modes:
 
 Bibliography is inserted at the `<!-- REFERENCES -->` marker or appended to the end of the document if no marker is found.
 
+## Indices
+
+**--indices**
+:   Enable index processing. Supports both mmark and TextIndex syntax. Default: enabled in MultiMarkdown and unified modes.
+
+**--no-indices**
+:   Disable index processing.
+
+**--no-index**
+:   Suppress index generation at the end of the document. Index markers are still created in the document, but the index section is not generated.
+
+Index syntax is supported in MultiMarkdown and unified modes:
+
+- **mmark syntax**: `(!item)`, `(!item, subitem)`, `(!!item, subitem)` for primary entries
+- **TextIndex syntax**: `word{^}`, `[term]{^}`, `{^params}`
+
+The index is automatically generated at the end of the document or at the `<!--INDEX-->` marker if present. Entries are sorted alphabetically and can be grouped by first letter.
+
 ## General Options
 
 **-h**, **--help**

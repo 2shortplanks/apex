@@ -48,6 +48,9 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --base-dir DIR         Base directory for resolving relative paths (for images, includes, wiki links)\n");
     fprintf(stderr, "  --bibliography FILE     Bibliography file (BibTeX, CSL JSON, or CSL YAML) - can be used multiple times\n");
     fprintf(stderr, "  --csl FILE              Citation style file (CSL format)\n");
+    fprintf(stderr, "  --indices               Enable index processing (mmark and TextIndex syntax)\n");
+    fprintf(stderr, "  --no-indices            Disable index processing\n");
+    fprintf(stderr, "  --no-index              Suppress index generation (markers still created)\n");
     fprintf(stderr, "  --no-bibliography       Suppress bibliography output\n");
     fprintf(stderr, "  --link-citations       Link citations to bibliography entries\n");
     fprintf(stderr, "  --show-tooltips         Show tooltips on citations\n");
@@ -318,6 +321,14 @@ int main(int argc, char *argv[]) {
             options.link_citations = true;
         } else if (strcmp(argv[i], "--show-tooltips") == 0) {
             options.show_tooltips = true;
+        } else if (strcmp(argv[i], "--indices") == 0) {
+            options.enable_indices = true;
+            options.enable_mmark_index_syntax = true;
+            options.enable_textindex_syntax = true;
+        } else if (strcmp(argv[i], "--no-indices") == 0) {
+            options.enable_indices = false;
+        } else if (strcmp(argv[i], "--no-index") == 0) {
+            options.suppress_index = true;
         } else if (strcmp(argv[i], "--meta-file") == 0) {
             if (++i >= argc) {
                 fprintf(stderr, "Error: --meta-file requires an argument\n");
@@ -470,9 +481,11 @@ int main(int argc, char *argv[]) {
                 }
 
                 if (needs_quotes) {
-                    yaml_pos += sprintf(yaml_buf + yaml_pos, "%s: \"%s\"\n", item->key, item->value);
+                    int written = snprintf(yaml_buf + yaml_pos, yaml_size - yaml_pos, "%s: \"%s\"\n", item->key, item->value);
+                    if (written > 0) yaml_pos += written;
                 } else {
-                    yaml_pos += sprintf(yaml_buf + yaml_pos, "%s: %s\n", item->key, item->value);
+                    int written = snprintf(yaml_buf + yaml_pos, yaml_size - yaml_pos, "%s: %s\n", item->key, item->value);
+                    if (written > 0) yaml_pos += written;
                 }
                 item = item->next;
             }
