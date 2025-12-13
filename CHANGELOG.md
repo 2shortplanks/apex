@@ -2,6 +2,47 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.23] - 2025-12-12
+
+### Changed
+
+- Remove remote image embedding support (curl dependency removed)
+
+### New
+
+- Add metadata variable transforms with [%key:transform] syntax
+- Add --transforms and --no-transforms flags to enable/disable transforms
+- Add 19 text transforms: upper, lower, title, capitalize, trim, slug, replace (with regex support), substring, truncate, default, html_escape, basename, urlencode, urldecode, prefix, suffix, remove, repeat, reverse, format, length, pad, contains
+- Add array transforms: split, join, first, last, slice
+- Add date/time transform: strftime with date parsing
+- Add transform chaining support (multiple transforms separated by colons)
+- Add --meta-file flag to load metadata from external files (YAML, MMD, or Pandoc format, auto-detected)
+- Add --meta KEY=VALUE flag to set metadata from command line (supports multiple flags and comma-separated pairs)
+- Add metadata merging with proper precedence: command-line > document > file
+- Add --embed-images flag to embed local images as base64 data URLs in HTML output
+- Add --base-dir flag to set base directory for resolving relative paths (images, includes, wiki links)
+- Add automatic base directory detection from input file directory when reading from file
+- Add base64 encoding utility for image data
+- Add MIME type detection from file extensions (supports jpg, png, gif, webp, svg, bmp, ico)
+- Add image embedding function that processes HTML and replaces local image src attributes with data URLs
+- Add test suite for image embedding functionality
+
+### Improved
+
+- Wiki link scanner now processes all links in a text node in a single pass instead of recursively processing one at a time, significantly improving performance for documents with multiple wiki links per text node.
+- Added early-exit optimization to skip wiki link AST traversal entirely when no wiki link markers are present in the document.
+- Improve error handling in transform execution to return original value instead of NULL on failure
+- Add comprehensive test coverage for all transforms including edge cases
+- Relative path resolution for images now uses base_directory option
+- Base directory is automatically set from input file location when not specified
+
+### Fixed
+
+- Fix bracket handling in regex patterns - properly match closing brackets in [%...] syntax when patterns contain brackets
+- Fix YAML metadata parsing to strip quotes from quoted string values
+- Raw HTML tags and comments are now preserved in definition lists by default in unified mode. Previously, HTML content in definition list definitions was being replaced with "raw HTML omitted" even when using --unsafe or in unified mode.
+- Unified mode now explicitly sets unsafe=true by default to ensure raw HTML is allowed.
+
 ## [0.1.20] - 2025-12-11
 
 #### NEW
@@ -225,6 +266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 - Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.23]: https://github.com/ttscoff/apex/releases/tag/v0.1.23
 [0.1.20]: https://github.com/ttscoff/apex/releases/tag/v0.1.20
 [0.1.19]: https://github.com/ttscoff/apex/releases/tag/v0.1.19
 [0.1.18]: https://github.com/ttscoff/apex/releases/tag/v0.1.18
