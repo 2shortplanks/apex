@@ -217,7 +217,7 @@ GitHub Flavored Markdown tables:
 
 ```markdown
 | Header 1 | Header 2 |
-|----------|----------|
+| -------- | -------- |
 | Cell 1   | Cell 2   |
 ```
 
@@ -363,18 +363,18 @@ Multiple marker formats:
 
 **Rowspan** (cells spanning multiple rows):
 ```markdown
-| A | B |
-|---|---|
-| C | D |
-| ^^ | E |
+| A   | B   |
+| --- | --- |
+| C   | D   |
+| ^^  | E   |
 ```
 Cell C spans 2 rows (using `^^` marker).
 
 **Colspan** (cells spanning multiple columns):
 ```markdown
-| A | B | C |
-|---|---|---|
-| D |   |   |
+| A   | B   | C   |
+| --- | --- | --- |
+| D   |     |     |
 ```
 Empty cells merge with previous cell.
 
@@ -382,9 +382,9 @@ Empty cells merge with previous cell.
 ```markdown
 [Table Caption]
 
-| A | B |
-|---|---|
-| C | D |
+| A   | B   |
+| --- | --- |
+| C   | D   |
 ```
 
 ### Special Markers
@@ -437,7 +437,7 @@ Options:
   --no-footnotes         Disable footnote support
   --no-smart             Disable smart typography
   --no-math              Disable math support
-  --enable-includes      Enable file inclusion
+  --[no-]includes       Enable file inclusion (enabled by default in unified mode)
   --hardbreaks           Treat newlines as hard breaks
   -h, --help             Show help
   -v, --version          Show version

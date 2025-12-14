@@ -96,13 +96,18 @@ brew install ttscoff/thelab/apex
 git clone https://github.com/ttscoff/apex.git
 cd apex
 git submodule update --init --recursive
-cmake -S . -B build
-cmake --build build
+make build
 ```
 
 The `apex` binary will be in the `build/` directory.
 
-**Note:** You must run `cmake -S . -B build` first to configure the project and generate the build cache. Then use `cmake --build build` to compile. If you get a "could not load cache" error, it means the configuration step hasn't been run yet.
+To install the built binary and libraries system-wide:
+
+```bash
+make install
+```
+
+**Note:** The `make build` command runs both `cmake -S . -B build` (to configure the project) and `cmake --build build` (to compile). If you prefer to run cmake commands directly, you can use those instead.
 
 ## Basic Usage
 

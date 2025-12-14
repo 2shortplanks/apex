@@ -42,7 +42,7 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "Usage: %s [options] [file]\n\n", program_name);
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "  --accept               Accept all Critic Markup changes (apply edits)\n");
-    fprintf(stderr, "  --enable-includes      Enable file inclusion\n");
+    fprintf(stderr, "  --[no-]includes        Enable file inclusion (enabled by default in unified mode)\n");
     fprintf(stderr, "  --hardbreaks           Treat newlines as hard breaks\n");
     fprintf(stderr, "  -h, --help             Show this help message\n");
     fprintf(stderr, "  --header-anchors        Generate <a> anchor tags instead of header IDs\n");
@@ -222,8 +222,10 @@ int main(int argc, char *argv[]) {
             options.enable_smart_typography = false;
         } else if (strcmp(argv[i], "--no-math") == 0) {
             options.enable_math = false;
-        } else if (strcmp(argv[i], "--enable-includes") == 0) {
+        } else if (strcmp(argv[i], "--includes") == 0) {
             options.enable_file_includes = true;
+        } else if (strcmp(argv[i], "--no-includes") == 0) {
+            options.enable_file_includes = false;
         } else if (strcmp(argv[i], "--hardbreaks") == 0) {
             options.hardbreaks = true;
         } else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--standalone") == 0) {

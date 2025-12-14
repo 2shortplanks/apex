@@ -2,6 +2,65 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.25] - 2025-12-13
+
+### New
+
+- Add citation processing with support for Pandoc, MultiMarkdown, and mmark syntaxes
+- Add bibliography loading from BibTeX, CSL JSON, and CSL YAML formats
+- Add --bibliography CLI option to specify bibliography files (can be used multiple times)
+- Add --csl CLI option to specify citation style file
+- Add --no-bibliography CLI option to suppress bibliography output
+- Add --link-citations CLI option to link citations to bibliography entries
+- Add --show-tooltips CLI option for citation tooltips
+- Add bibliography generation and insertion at <!-- REFERENCES --> marker
+- Add support for bibliography specified in document metadata
+- Added missing docs and man page for citation support
+- Add support for transclude base metadata to control file transclusion paths
+- Add Base Header Level and HTML Header Level metadata to adjust heading levels
+- Add CSS metadata to link external stylesheets in standalone HTML documents
+- Add HTML Header and HTML Footer metadata to inject custom HTML
+- Add Language metadata to set HTML lang attribute in standalone documents
+- Add Quotes Language metadata to control smart quote styles (French, German, Spanish, etc.)
+- Add --css CLI flag as alias for --style with metadata override precedence
+- Add metadata key normalization: case-insensitive matching with spaces removed (e.g., "HTML Header Level" matches "htmlheaderlevel")
+- Add index extension supporting mmark syntax (!item), (!item, subitem), and (!!item, subitem) for primary entries
+- Add TextIndex syntax support with {^}, [term]{^}, and {^params} patterns
+- Add automatic index generation at end of document or at <!--INDEX--> marker
+- Add alphabetical sorting and optional grouping by first letter for index entries
+- Add hierarchical sub-item support in generated index
+- Add --indices CLI flag to enable index processing
+- Add --no-indices CLI flag to disable index processing
+- Add --no-index CLI flag to suppress index generation while keeping markers
+- Add comprehensive test suite with 40 index tests covering both syntaxes
+
+### Improved
+
+- Only process citations when bibliography is actually provided for better performance
+- Add comprehensive tests for MultiMarkdown metadata keys
+- Add comprehensive performance profiling system (APEX_PROFILE=1) to measure processing time for all extensions and CLI operations
+- Add early exit checks for IAL processing when no {: markers are present
+- Add early exit checks for index processing when no index patterns are found
+- Add early exit checks for citation processing when no citation patterns are found
+- Add early exit checks for definition list processing when no : patterns are found
+- Optimize alpha lists postprocessing with single-pass algorithm replacing O(n*m) strstr() loops
+- Add early exit check for alpha lists postprocessing when no markers are present
+- Optimize file I/O by using fwrite() with known length instead of fputs()
+- Add markdown syntax detection in definition lists to skip parser creation for plain text
+- Optimize definition lists by selectively extracting only needed reference definitions instead of prepending all
+- Add profiling instrumentation for all preprocessing, parsing, rendering, and post-processing steps
+- Add profiling instrumentation for CLI operations (file I/O, metadata processing)
+
+### Fixed
+
+- Prevent autolinking of @ symbols in citation syntax (e.g., [@key])
+- Handle HTML comments in autolinker to preserve citation placeholders
+- Fix quote language adjustment to handle Unicode curly quotes in addition to HTML entities
+- Fix bibliography_files assignment to remove unnecessary cast
+- Fix heap-buffer-overflow in html_renderer.c when writing null terminator (allocate capacity+1)
+- Fix use-after-free in ial.c by deferring node unlinking until after iteration completes
+- Fix buffer overflow in definition_list.c HTML entity escaping (correct length calculation for &amp; and &quot;)
+
 ## [0.1.24] - 2025-12-13
 
 ### New
@@ -291,6 +350,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 - Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.25]: https://github.com/ttscoff/apex/releases/tag/v0.1.25
 [0.1.24]: https://github.com/ttscoff/apex/releases/tag/v0.1.24
 [0.1.23]: https://github.com/ttscoff/apex/releases/tag/v0.1.23
 [0.1.20]: https://github.com/ttscoff/apex/releases/tag/v0.1.20

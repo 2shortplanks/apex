@@ -48,8 +48,8 @@ If no file is specified, **apex** reads from stdin.
 **--reject**
 :   Reject all Critic Markup changes (revert edits).
 
-**--enable-includes**
-:   Enable file inclusion.
+**--includes**, **--no-includes**
+:   Enable or disable file inclusion. Enabled by default in unified mode.
 
 **--meta-file** *FILE*
 :   Load metadata from an external file. Auto-detects format: YAML (starts with `---`), MultiMarkdown (key: value pairs), or Pandoc (starts with `%`). Metadata from the file is merged with document metadata, with document metadata taking precedence.
