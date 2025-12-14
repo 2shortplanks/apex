@@ -2,6 +2,24 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.26] - 2025-12-14
+
+### Changed
+
+- Change `--enable-includes` to `--[no-]includes`, allowing `--no-includes` to disable includes in unified mode and shortening the flag
+- Integrate metadata-to-options application into CLI after metadata merging
+- Preserve bibliography files array when metadata mode resets options structure
+
+### New
+
+- Add apex_apply_metadata_to_options() function to apply metadata values to apex_options structure
+- Support controlling boolean flags via metadata (indices, wikilinks, includes, relaxed-tables, alpha-lists, mixed-lists, sup-sub, autolink, transforms, unsafe, tables, footnotes, smart, math, ids, header-anchors, embed-images, link-citations, show-tooltips, suppress-bibliography, suppress-index, group-index-by-letter, obfuscate-emails, pretty, standalone, hardbreaks)
+- Support controlling string options via metadata (bibliography, csl, title, style/css, id-format, base-dir, mode)
+- Boolean metadata values accept true/false, yes/no, or 1/0 (case-insensitive, downcased)
+- String metadata values used directly for options that take arguments
+- Metadata mode option resets options to mode defaults before applying other metadata
+- Comprehensive tests for metadata control of command line options
+
 ## [0.1.25] - 2025-12-13
 
 ### New
@@ -350,6 +368,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 - Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.26]: https://github.com/ttscoff/apex/releases/tag/v0.1.26
 [0.1.25]: https://github.com/ttscoff/apex/releases/tag/v0.1.25
 [0.1.24]: https://github.com/ttscoff/apex/releases/tag/v0.1.24
 [0.1.23]: https://github.com/ttscoff/apex/releases/tag/v0.1.23
