@@ -7,7 +7,9 @@
 
 Apex is a unified Markdown processor that combines the best features from CommonMark, GitHub Flavored Markdown (GFM), MultiMarkdown, Kramdown, and Marked. One processor to rule them all.
 
-<!--GITHUB-->![](apex-header-2-rb@2x.webp)<!--END GITHUB-->
+<!--GITHUB-->
+![](apex-header-2-rb@2x.webp)
+<!--END GITHUB-->
 
 <!--JEKYLL {% img alignright /uploads/2025/12/apexicon.png 300 300 "Apex Icon" %}-->There are so many variations of Markdown, extending its features in all kinds of ways. But picking one flavor means giving up the features of another flavor. So I'm building Apex with the goal of making all of the most popular features of various processors available in one tool.
 
@@ -39,8 +41,8 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **Metadata variables**: Insert metadata values with `[%key]` syntax
 - **Metadata transforms**: Transform metadata values with `[%key:transform]` syntax - supports case conversion, string manipulation, regex replacement, date formatting, and more. See [Metadata Transforms](https://github.com/ttscoff/apex/wiki/Metadata-Transforms) for complete documentation
 - **Metadata control of options**: Control command-line options via metadata - set boolean flags (`indices: false`, `wikilinks: true`) and string options (`bibliography: refs.bib`, `title: My Document`, `wikilink-space: dash`, `wikilink-extension: html`) directly in document metadata for per-document configuration
-- **Table of Contents**: Automatic TOC generation with depth control (`<!--TOC-->`, `{{TOC}}`)
-- **File includes**: Three syntaxes (Marked `<<[file]`, MultiMarkdown `{{file}}`, iA Writer `/file`)
+- **Table of Contents**: Automatic TOC generation with depth control using HTML (`<!--TOC-->`), MMD (`{{TOC}}` / `{{TOC:2-4}}`), and Kramdown `{:toc}` markers. Headings marked with `{:.no_toc}` are excluded from the generated TOC.
+- **File includes**: Three syntaxes (Marked `<<[file]`, MultiMarkdown `{{file}}`, iA Writer `/file`), with support for address ranges and wildcard/glob patterns such as `{{file.*}}`, `{{*.md}}`, and `{{c?de.py}}`.
 - **CSV/TSV support**: Automatic table conversion from CSV and TSV files
 - **Inline Attribute Lists (IAL)**: Kramdown-style attributes `{: #id .class}`
 - **Special markers**: Page breaks (`<!--BREAK-->`), autoscroll pauses (`<!--PAUSE:N-->`), end-of-block markers
