@@ -459,7 +459,7 @@ int main(int argc, char *argv[]) {
 
     /* Handle plugin listing/installation commands before normal conversion */
     if (list_plugins || install_plugin_id) {
-        const char *dir_url = "https://raw.githubusercontent.com/ApexMarkdown/plugins/refs/heads/main/apex-plugins.json";
+        const char *dir_url = "https://raw.githubusercontent.com/ApexMarkdown/apex-plugins/refs/heads/main/apex-plugins.json";
         apex_remote_plugin_list *plist = apex_remote_fetch_directory(dir_url);
         if (!plist) {
             fprintf(stderr, "Error: failed to fetch plugin directory from %s\n", dir_url);
