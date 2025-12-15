@@ -67,6 +67,8 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --[no-]transforms      Enable metadata variable transforms [%%key:transform] (enabled by default in unified mode)\n");
     fprintf(stderr, "  --[no-]unsafe          Allow raw HTML in output (default: true for unified/mmd/kramdown, false for commonmark/gfm)\n");
     fprintf(stderr, "  --[no-]wikilinks       Enable wiki link syntax [[PageName]] (disabled by default)\n");
+    fprintf(stderr, "  --wikilink-space MODE  Space replacement for wiki links: dash, none, underscore, space (default: dash)\n");
+    fprintf(stderr, "  --wikilink-extension EXT  File extension to append to wiki links (e.g., html, md)\n");
     fprintf(stderr, "  --embed-images         Embed local images as base64 data URLs in HTML output\n");
     fprintf(stderr, "  --base-dir DIR         Base directory for resolving relative paths (for images, includes, wiki links)\n");
     fprintf(stderr, "  --bibliography FILE     Bibliography file (BibTeX, CSL JSON, or CSL YAML) - can be used multiple times\n");
@@ -300,6 +302,29 @@ int main(int argc, char *argv[]) {
             options.enable_wiki_links = true;
         } else if (strcmp(argv[i], "--no-wikilinks") == 0) {
             options.enable_wiki_links = false;
+        } else if (strcmp(argv[i], "--wikilink-space") == 0) {
+            if (++i >= argc) {
+                fprintf(stderr, "Error: --wikilink-space requires an argument (dash, none, underscore, or space)\n");
+                return 1;
+            }
+            if (strcmp(argv[i], "dash") == 0) {
+                options.wikilink_space = 0;
+            } else if (strcmp(argv[i], "none") == 0) {
+                options.wikilink_space = 1;
+            } else if (strcmp(argv[i], "underscore") == 0) {
+                options.wikilink_space = 2;
+            } else if (strcmp(argv[i], "space") == 0) {
+                options.wikilink_space = 3;
+            } else {
+                fprintf(stderr, "Error: --wikilink-space must be one of: dash, none, underscore, space\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "--wikilink-extension") == 0) {
+            if (++i >= argc) {
+                fprintf(stderr, "Error: --wikilink-extension requires an argument\n");
+                return 1;
+            }
+            options.wikilink_extension = argv[i];
         } else if (strcmp(argv[i], "--transforms") == 0) {
             options.enable_metadata_transforms = true;
         } else if (strcmp(argv[i], "--no-transforms") == 0) {

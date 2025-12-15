@@ -1287,6 +1287,10 @@ apex_options apex_options_default(void) {
     opts.suppress_index = false;
     opts.group_index_by_letter = true;
 
+    /* Wiki link options */
+    opts.wikilink_space = 0;  /* Default: dash (0=dash, 1=none, 2=underscore, 3=space) */
+    opts.wikilink_extension = NULL;  /* Default: no extension */
+
     return opts;
 }
 
@@ -1393,7 +1397,10 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_task_lists = false;
             opts.enable_attributes = true;
             opts.enable_callouts = false;
-            opts.enable_marked_extensions = false;
+            /* Enable Marked-style extensions (including TOC) so that
+             * Kramdown documents can use <!--TOC--> and {:toc} syntax
+             * for table-of-contents generation. */
+            opts.enable_marked_extensions = true;
             opts.enable_file_includes = false;
             opts.enable_metadata_variables = false;
             opts.enable_metadata_transforms = false;
@@ -1934,7 +1941,12 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     if (options->enable_wiki_links) {
         /* Fast path: skip AST walk if no wiki link markers present */
         if (strstr(text_ptr, "[[") != NULL) {
-            apex_process_wiki_links_in_tree(document, NULL);
+            /* Create wiki link configuration from options */
+            wiki_link_config wiki_config;
+            wiki_config.base_path = "";
+            wiki_config.extension = options->wikilink_extension ? options->wikilink_extension : "";
+            wiki_config.space_mode = (wikilink_space_mode_t)options->wikilink_space;
+            apex_process_wiki_links_in_tree(document, &wiki_config);
         }
     }
 

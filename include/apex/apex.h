@@ -113,6 +113,10 @@ typedef struct {
     bool enable_textindex_syntax;  /* Enable TextIndex {^} syntax */
     bool suppress_index;  /* Suppress index output */
     bool group_index_by_letter;  /* Group index entries by first letter */
+
+    /* Wiki link options */
+    int wikilink_space;  /* Space replacement: 0=dash, 1=none, 2=underscore, 3=space */
+    const char *wikilink_extension;  /* File extension to append (e.g., "html") */
 } apex_options;
 
 /**

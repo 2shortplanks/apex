@@ -46,9 +46,17 @@ Accept all Critic Markup changes (apply edits).
 .TP
 \f[B]\[en]reject\f[R]
 Reject all Critic Markup changes (revert edits).
+ .TP
+\f[B]\[en]includes\f[R], \f[B]\[en]no\-includes\f[R]
+Enable or disable file inclusion.
+Enabled by default in unified mode.
 .TP
-\f[B]\[en]enable\-includes\f[R]
-Enable file inclusion.
+\f[B]\[en]transforms\f[R], \f[B]\[en]no\-transforms\f[R]
+Enable or disable metadata variable transforms (\f[CR][%key:transform]\f[R]).
+When enabled, metadata values can be transformed (case conversion, string
+manipulation, regex replacement, date formatting, etc.) when inserted into
+the document.
+Enabled by default in unified mode.
 .TP
 \f[B]\[en]meta\-file\f[R] \f[I]FILE\f[R]
 Load metadata from an external file.
@@ -90,6 +98,30 @@ Generate \f[CR]<a>\f[R] anchor tags instead of header IDs.
 \f[B]\[en]wikilinks\f[R], \f[B]\[en]no\-wikilinks\f[R]
 Enable wiki link syntax \f[CR][[PageName]]\f[R].
 Default: disabled.
+.TP
+\f[B]\[en]wikilink\-space\f[R] \f[I]MODE\f[R]
+Control how spaces in wiki link page names are handled in the generated
+URL.
+\f[I]MODE\f[R] must be one of:
+\- \f[CR]dash\f[R] \- Convert spaces to dashes: \f[CR][[Home Page]]\f[R]
+  \[->] \f[CR]href="Home\-Page"\f[R]
+\- \f[CR]none\f[R] \- Remove spaces: \f[CR][[Home Page]]\f[R] \[->]
+  \f[CR]href="HomePage"\f[R]
+\- \f[CR]underscore\f[R] \- Convert spaces to underscores:
+  \f[CR][[Home Page]]\f[R] \[->] \f[CR]href="Home_Page"\f[R]
+\- \f[CR]space\f[R] \- Keep spaces (rendered as \f[CR]%20\f[R] in HTML):
+  \f[CR][[Home Page]]\f[R] \[->] \f[CR]href="Home%20Page"\f[R]
+.RS
+.PP
+Default: \f[CR]dash\f[R].
+.RE
+.TP
+\f[B]\[en]wikilink\-extension\f[R] \f[I]EXT\f[R]
+Add a file extension to wiki link URLs.
+The extension is automatically prefixed with a dot if not provided.
+For example, \f[CR]\-\-wikilink\-extension html\f[R] creates
+\f[CR]href="Page.html"\f[R] and \f[CR]\-\-wikilink\-extension .html\f[R]
+also creates \f[CR]href="Page.html"\f[R].
 .SS Header ID Format
 .TP
 \f[B]\[en]id\-format\f[R] \f[I]FORMAT\f[R]

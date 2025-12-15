@@ -43,19 +43,28 @@ static header_item *collect_headers(cmark_node *node, header_item **tail) {
 
     /* Check if current node is a header */
     if (cmark_node_get_type(node) == CMARK_NODE_HEADING) {
-        header_item *item = malloc(sizeof(header_item));
-        if (item) {
-            item->level = cmark_node_get_heading_level(node);
-            item->text = apex_extract_heading_text(node);
-            item->id = NULL;  /* Will be set later with format */
-            item->next = NULL;
+        /* Skip headings marked with the Kramdown-style ".no_toc" class.
+         * The IAL processor stores attributes as a raw HTML attribute
+         * string in the node's user_data, e.g. id="..." class="a b no_toc".
+         * If we see "no_toc" in the attribute string, we exclude this
+         * heading from the generated table of contents.
+         */
+        const char *attrs = (const char *)cmark_node_get_user_data(node);
+        if (!(attrs && strstr(attrs, "no_toc") != NULL)) {
+            header_item *item = malloc(sizeof(header_item));
+            if (item) {
+                item->level = cmark_node_get_heading_level(node);
+                item->text = apex_extract_heading_text(node);
+                item->id = NULL;  /* Will be set later with format */
+                item->next = NULL;
 
-            if (*tail) {
-                (*tail)->next = item;
-            } else {
-                headers = item;
+                if (*tail) {
+                    (*tail)->next = item;
+                } else {
+                    headers = item;
+                }
+                *tail = item;
             }
-            *tail = item;
         }
     }
 

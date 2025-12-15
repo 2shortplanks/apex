@@ -544,6 +544,101 @@ static void test_wiki_links(void) {
     html = apex_markdown_to_html("[[Page#Section]]", 16, &opts);
     assert_contains(html, "#Section", "Wiki link with section");
     apex_free_string(html);
+
+    /* Test space mode: dash (default) */
+    opts.wikilink_space = 0;  /* dash */
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home-Page\">Home Page</a>", "Wiki link space mode: dash");
+    apex_free_string(html);
+
+    /* Test space mode: none */
+    opts.wikilink_space = 1;  /* none */
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"HomePage\">Home Page</a>", "Wiki link space mode: none");
+    apex_free_string(html);
+
+    /* Test space mode: underscore */
+    opts.wikilink_space = 2;  /* underscore */
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home_Page\">Home Page</a>", "Wiki link space mode: underscore");
+    apex_free_string(html);
+
+    /* Test space mode: space (URL-encoded as %20) */
+    opts.wikilink_space = 3;  /* space */
+    opts.wikilink_extension = NULL;  /* Reset extension */
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home%20Page\">Home Page</a>", "Wiki link space mode: space (URL-encoded)");
+    apex_free_string(html);
+
+    /* Test extension without leading dot */
+    opts.wikilink_space = 0;  /* dash (default) */
+    opts.wikilink_extension = "html";
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home-Page.html\">Home Page</a>", "Wiki link with extension (no leading dot)");
+    apex_free_string(html);
+
+    /* Test extension with leading dot */
+    opts.wikilink_extension = ".html";
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home-Page.html\">Home Page</a>", "Wiki link with extension (with leading dot)");
+    apex_free_string(html);
+
+    /* Test extension with section */
+    opts.wikilink_extension = "html";
+    html = apex_markdown_to_html("[[Home Page#Section]]", 21, &opts);
+    assert_contains(html, "<a href=\"Home-Page.html#Section\">Home Page</a>", "Wiki link with extension and section");
+    apex_free_string(html);
+
+    /* Test extension with display text */
+    {
+        apex_options test_opts = apex_options_default();
+        test_opts.enable_wiki_links = true;
+        test_opts.wikilink_space = 0;  /* dash */
+        test_opts.wikilink_extension = "html";
+        html = apex_markdown_to_html("[[Home Page|Main]]", 18, &test_opts);
+        assert_contains(html, "<a href=\"Home-Page.html\">Main</a>", "Wiki link with extension and display text");
+        apex_free_string(html);
+    }
+
+    /* Test space mode none with extension */
+    opts.wikilink_space = 1;  /* none */
+    opts.wikilink_extension = "md";
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"HomePage.md\">Home Page</a>", "Wiki link space mode none with extension");
+    apex_free_string(html);
+
+    /* Test space mode underscore with extension */
+    opts.wikilink_space = 2;  /* underscore */
+    opts.wikilink_extension = "html";
+    html = apex_markdown_to_html("[[Home Page]]", 13, &opts);
+    assert_contains(html, "<a href=\"Home_Page.html\">Home Page</a>", "Wiki link space mode underscore with extension");
+    apex_free_string(html);
+
+    /* Test multiple spaces with dash mode */
+    {
+        apex_options test_opts = apex_options_default();
+        test_opts.enable_wiki_links = true;
+        test_opts.wikilink_space = 0;  /* dash */
+        test_opts.wikilink_extension = NULL;
+        html = apex_markdown_to_html("[[My Home Page]]", 16, &test_opts);
+        assert_contains(html, "<a href=\"My-Home-Page\">My Home Page</a>", "Wiki link multiple spaces with dash");
+        apex_free_string(html);
+    }
+
+    /* Test multiple spaces with none mode */
+    {
+        apex_options test_opts = apex_options_default();
+        test_opts.enable_wiki_links = true;
+        test_opts.wikilink_space = 1;  /* none */
+        test_opts.wikilink_extension = NULL;
+        html = apex_markdown_to_html("[[My Home Page]]", 16, &test_opts);
+        assert_contains(html, "<a href=\"MyHomePage\">My Home Page</a>", "Wiki link multiple spaces with none");
+        apex_free_string(html);
+    }
+
+    /* Reset options */
+    opts.wikilink_extension = NULL;
+    opts.wikilink_space = 0;  /* dash (default) */
 }
 
 /**

@@ -18,11 +18,19 @@
 extern "C" {
 #endif
 
+/* Space replacement modes for wiki links */
+typedef enum {
+    WIKILINK_SPACE_DASH = 0,      /* Convert spaces to dashes: "Home Page" -> "Home-Page" */
+    WIKILINK_SPACE_NONE = 1,      /* Remove spaces: "Home Page" -> "HomePage" */
+    WIKILINK_SPACE_UNDERSCORE = 2, /* Convert spaces to underscores: "Home Page" -> "Home_Page" */
+    WIKILINK_SPACE_SPACE = 3      /* Keep spaces: "Home Page" -> "Home Page" */
+} wikilink_space_mode_t;
+
 /* Configuration for wiki link behavior */
 typedef struct {
     const char *base_path;      /* Base path for wiki links (e.g., "/wiki/") */
     const char *extension;      /* File extension to append (e.g., ".html") */
-    bool spaces_to_underscores; /* Convert spaces to underscores in URLs */
+    wikilink_space_mode_t space_mode; /* How to handle spaces in page names */
 } wiki_link_config;
 
 /**

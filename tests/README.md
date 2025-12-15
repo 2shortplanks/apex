@@ -9,7 +9,7 @@ cd /path/to/apex
 
 ## Test Coverage
 
-**Total Tests**: 138
+**Total Tests**: 623
 **Status**: All passing ✓
 **Coverage**: 95% of implemented features
 
@@ -25,8 +25,11 @@ cd /path/to/apex
    - YAML, MMD, Pandoc formats
    - Variable replacement (`[%key]`)
 
-4. **Wiki Links** (3 tests)
+4. **Wiki Links** (15 tests)
    - Basic links, display text, sections
+   - Space modes: dash, none, underscore, space
+   - Extension handling (with/without leading dot)
+   - Combinations of space modes and extensions
 
 5. **Math Support** (4 tests)
    - Inline and display math

@@ -1,5 +1,5 @@
 <!--README-->
-[![Version: <!--VER-->0.1.26<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.26<!--END VER-->-528c9e)](https://github.com/ttscoff/apex/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: <!--VER-->0.1.26<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.26<!--END VER-->-528c9e)](https://github.com/ttscoff/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!--GITHUB-->
 # Apex
@@ -28,7 +28,7 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **Strikethrough**: `~~text~~` syntax from GFM
 - **Smart typography**: Automatic conversion of quotes, dashes, ellipses, and more
 - **Math support**: LaTeX math expressions with `$...$` (inline) and `$$...$$` (display)
-- **Wiki links**: `[[Page Name]]` and `[[Page Name|Display Text]]` syntax
+- **Wiki links**: `[[Page Name]]`, `[[Page Name|Display Text]]`, and `[[Page Name#Section]]` syntax with configurable link targets via `--wikilink-space` and `--wikilink-extension`
 - **Abbreviations**: Three syntaxes (classic MMD, MMD 6 reference, MMD 6 inline)
 - **Callouts**: Bear/Obsidian-style callouts with collapsible support (`> [!NOTE]`, `> [!WARNING]`, etc.)
 - **GitHub emoji**: 350+ emoji support (`:rocket:`, `:heart:`, etc.)
@@ -38,7 +38,7 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **Metadata blocks**: YAML front matter, MultiMarkdown metadata, and Pandoc title blocks
 - **Metadata variables**: Insert metadata values with `[%key]` syntax
 - **Metadata transforms**: Transform metadata values with `[%key:transform]` syntax - supports case conversion, string manipulation, regex replacement, date formatting, and more. See [Metadata Transforms](https://github.com/ttscoff/apex/wiki/Metadata-Transforms) for complete documentation
-- **Metadata control of options**: Control command-line options via metadata - set boolean flags (`indices: false`, `wikilinks: true`) and string options (`bibliography: refs.bib`, `title: My Document`) directly in document metadata for per-document configuration
+- **Metadata control of options**: Control command-line options via metadata - set boolean flags (`indices: false`, `wikilinks: true`) and string options (`bibliography: refs.bib`, `title: My Document`, `wikilink-space: dash`, `wikilink-extension: html`) directly in document metadata for per-document configuration
 - **Table of Contents**: Automatic TOC generation with depth control (`<!--TOC-->`, `{{TOC}}`)
 - **File includes**: Three syntaxes (Marked `<<[file]`, MultiMarkdown `{{file}}`, iA Writer `/file`)
 - **CSV/TSV support**: Automatic table conversion from CSV and TSV files
@@ -177,6 +177,9 @@ apex input.md --mode kramdown
 - `--indices` - Enable index processing (mmark and TextIndex syntax)
 - `--no-indices` - Disable index processing
 - `--no-index` - Suppress index generation (markers still created)
+- `--wikilinks` - Enable wiki link syntax `[[Page]]`, `[[Page|Display]]`, and `[[Page#Section]]`
+- `--wikilink-space MODE` - Control how spaces in wiki link page names are converted (`dash`, `none`, `underscore`, `space`; default: `dash`)
+- `--wikilink-extension EXT` - File extension to append to wiki link URLs (e.g. `html`, `md`)
 
 ### All Options
 

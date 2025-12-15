@@ -21,7 +21,7 @@ static const char WIKI_OPEN_CHAR = '[';
 static wiki_link_config default_config = {
     .base_path = "",
     .extension = "",
-    .spaces_to_underscores = false
+    .space_mode = WIKILINK_SPACE_DASH  /* Default: convert spaces to dashes */
 };
 
 /**
@@ -91,9 +91,14 @@ static void parse_wiki_link(const char *content, int len,
 static char *page_to_url(const char *page, const char *section, wiki_link_config *config) {
     if (!page) return NULL;
 
-    size_t url_len = strlen(config->base_path) + strlen(page) +
+    /* Default configuration if none provided */
+    if (!config) config = &default_config;
+
+    /* Calculate URL length - worst case: all spaces become dashes/underscores */
+    size_t page_len = strlen(page);
+    size_t url_len = strlen(config->base_path) + page_len +
                      (section ? strlen(section) + 1 : 0) +
-                     strlen(config->extension) + 10;
+                     (config->extension ? strlen(config->extension) : 0) + 10;
 
     char *url = malloc(url_len);
     if (!url) return NULL;
@@ -104,18 +109,37 @@ static char *page_to_url(const char *page, const char *section, wiki_link_config
     strcpy(p, config->base_path);
     p += strlen(config->base_path);
 
-    /* Add page name (converting spaces if needed) */
+    /* Add page name (converting spaces based on mode) */
     for (const char *s = page; *s; s++) {
-        if (*s == ' ' && config->spaces_to_underscores) {
-            *p++ = '_';
+        if (*s == ' ') {
+            switch (config->space_mode) {
+                case WIKILINK_SPACE_DASH:
+                    *p++ = '-';
+                    break;
+                case WIKILINK_SPACE_NONE:
+                    /* Skip space - don't add anything */
+                    break;
+                case WIKILINK_SPACE_UNDERSCORE:
+                    *p++ = '_';
+                    break;
+                case WIKILINK_SPACE_SPACE:
+                    *p++ = ' ';
+                    break;
+            }
         } else {
             *p++ = *s;
         }
     }
 
-    /* Add extension */
-    strcpy(p, config->extension);
-    p += strlen(config->extension);
+    /* Add extension (with leading dot if provided) */
+    if (config->extension && config->extension[0] != '\0') {
+        /* If extension doesn't start with dot, add one */
+        if (config->extension[0] != '.') {
+            *p++ = '.';
+        }
+        strcpy(p, config->extension);
+        p += strlen(config->extension);
+    }
 
     /* Add section anchor */
     if (section) {

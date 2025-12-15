@@ -938,23 +938,112 @@ char *apex_preprocess_ial(const char *text) {
         /* Check if this line is an IAL */
         bool is_ial = is_ial_line(line_start, line_len);
 
-        /* If this is an IAL and previous line was content (not blank, not IAL),
-         * insert a blank line before it */
-        if (is_ial && prev_line_was_content && !prev_line_was_blank) {
-            *out++ = '\n';
+        /* Special case: Kramdown-style TOC marker "{:toc ...}".
+         *
+         * In Kramdown/Jekyll, a pure IAL paragraph containing only "{:toc}"
+         * (optionally with additional parameters) is replaced with a
+         * generated table of contents. We map this syntax to Apex's
+         * existing TOC marker "<!--TOC ...-->" so it is handled by the
+         * TOC extension.
+         */
+        bool handled_toc_marker = false;
+        if (is_ial) {
+            const char *q = line_start;
+            const char *end = line_start + line_len;
+
+            /* Skip leading whitespace */
+            while (q < end && isspace((unsigned char)*q)) q++;
+
+            /* Must start with "{:" */
+            if (q + 2 <= end && q[0] == '{' && q[1] == ':') {
+                q += 2;
+
+                /* Find closing '}' */
+                const char *close = memchr(q, '}', (size_t)(end - q));
+                if (close) {
+                    /* Extract and trim inner content */
+                    const char *inner_start = q;
+                    const char *inner_end = close;
+                    while (inner_start < inner_end && isspace((unsigned char)*inner_start)) {
+                        inner_start++;
+                    }
+                    while (inner_end > inner_start && isspace((unsigned char)inner_end[-1])) {
+                        inner_end--;
+                    }
+
+                    if (inner_start < inner_end) {
+                        /* Check for leading "toc" (case-insensitive) */
+                        const char *toc_start = inner_start;
+                        const char *toc_end = toc_start + 3;
+                        if ((size_t)(inner_end - inner_start) >= 3 &&
+                            (toc_start[0] == 't' || toc_start[0] == 'T') &&
+                            (toc_start[1] == 'o' || toc_start[1] == 'O') &&
+                            (toc_start[2] == 'c' || toc_start[2] == 'C') &&
+                            (toc_end == inner_end || isspace((unsigned char)*toc_end))) {
+                            /* Everything after "toc" (including any whitespace) is
+                             * treated as TOC options and passed through to the
+                             * marker. This allows syntax like "{:toc max=3 min=2}". */
+                            const char *options_start = toc_end;
+                            while (options_start < inner_end &&
+                                   isspace((unsigned char)*options_start)) {
+                                options_start++;
+                            }
+
+                            /* If this is a TOC marker, optionally insert a blank
+                             * line before it to keep block structure consistent
+                             * with normal IAL handling. */
+                            if (prev_line_was_content && !prev_line_was_blank) {
+                                *out++ = '\n';
+                            }
+
+                            /* Build "<!--TOC [options]-->" */
+                            const char *marker_prefix = "<!--TOC";
+                            size_t prefix_len = strlen(marker_prefix);
+                            memcpy(out, marker_prefix, prefix_len);
+                            out += prefix_len;
+
+                            if (options_start < inner_end) {
+                                *out++ = ' ';
+                                size_t opts_len = (size_t)(inner_end - options_start);
+                                memcpy(out, options_start, opts_len);
+                                out += opts_len;
+                            }
+
+                            *out++ = '-';
+                            *out++ = '-';
+                            *out++ = '>';
+
+                            /* Preserve original newline if present */
+                            if (*line_end == '\n') {
+                                *out++ = '\n';
+                            }
+
+                            handled_toc_marker = true;
+                        }
+                    }
+                }
+            }
         }
 
-        /* Copy the line */
-        memcpy(out, line_start, line_len);
-        out += line_len;
+        if (!handled_toc_marker) {
+            /* If this is an IAL and previous line was content (not blank, not IAL),
+             * insert a blank line before it */
+            if (is_ial && prev_line_was_content && !prev_line_was_blank) {
+                *out++ = '\n';
+            }
 
-        /* Copy the newline if present */
-        if (*line_end == '\n') {
-            *out++ = '\n';
-            p = line_end + 1;
-        } else {
-            p = line_end;
+            /* Copy the line */
+            memcpy(out, line_start, line_len);
+            out += line_len;
+
+            /* Copy the newline if present */
+            if (*line_end == '\n') {
+                *out++ = '\n';
+            }
         }
+
+        /* Advance input pointer */
+        p = (*line_end == '\n') ? line_end + 1 : line_end;
 
         /* Track state for next iteration */
         prev_line_was_blank = is_blank;

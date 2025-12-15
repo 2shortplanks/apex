@@ -2275,6 +2275,26 @@ void apex_apply_metadata_to_options(apex_metadata_item *metadata, apex_options *
             }
         } else if (strcasecmp(key, "base-dir") == 0 || strcasecmp(key, "base_dir") == 0) {
             options->base_directory = value;
+        } else if (strcasecmp(key, "wikilink-space") == 0 || strcasecmp(key, "wikilink_space") == 0) {
+            /* Convert string to enum: dash=0, none=1, underscore=2, space=3 */
+            char *lower = strdup(value);
+            if (lower) {
+                for (char *p = lower; *p; p++) {
+                    *p = (char)tolower((unsigned char)*p);
+                }
+                if (strcmp(lower, "dash") == 0) {
+                    options->wikilink_space = 0;
+                } else if (strcmp(lower, "none") == 0) {
+                    options->wikilink_space = 1;
+                } else if (strcmp(lower, "underscore") == 0) {
+                    options->wikilink_space = 2;
+                } else if (strcmp(lower, "space") == 0) {
+                    options->wikilink_space = 3;
+                }
+                free(lower);
+            }
+        } else if (strcasecmp(key, "wikilink-extension") == 0 || strcasecmp(key, "wikilink_extension") == 0) {
+            options->wikilink_extension = value;
         }
 
         item = item->next;

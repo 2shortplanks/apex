@@ -51,6 +51,9 @@ If no file is specified, **apex** reads from stdin.
 **--includes**, **--no-includes**
 :   Enable or disable file inclusion. Enabled by default in unified mode.
 
+**--transforms**, **--no-transforms**
+::   Enable or disable metadata variable transforms (`[%key:transform]`). When enabled, metadata values can be transformed (case conversion, string manipulation, regex replacement, date formatting, etc.) when inserted into the document. Enabled by default in unified mode.
+
 **--meta-file** *FILE*
 :   Load metadata from an external file. Auto-detects format: YAML (starts with `---`), MultiMarkdown (key: value pairs), or Pandoc (starts with `%`). Metadata from the file is merged with document metadata, with document metadata taking precedence. Metadata can also control command-line options (see METADATA CONTROL OF OPTIONS below).
 
@@ -109,6 +112,19 @@ If no file is specified, **apex** reads from stdin.
 
 **--obfuscate-emails**
 :   Obfuscate email links and text using HTML entities (hex-encoded).
+
+**--wikilink-space** *MODE*
+::   Control how spaces in wiki link page names are handled in the generated URL. **MODE** must be one of:
+
+    - `dash` - Convert spaces to dashes: `[[Home Page]]` → `href="Home-Page"`
+    - `none` - Remove spaces: `[[Home Page]]` → `href="HomePage"`
+    - `underscore` - Convert spaces to underscores: `[[Home Page]]` → `href="Home_Page"`
+    - `space` - Keep spaces (rendered as `%%20` in HTML): `[[Home Page]]` → `href="Home%20Page"`
+
+    Default: `dash`.
+
+**--wikilink-extension** *EXT*
+::   Add a file extension to wiki link URLs. The extension is automatically prefixed with a dot if not provided. For example, `--wikilink-extension html` creates `href="Page.html"` and `--wikilink-extension .html` also creates `href="Page.html"`.
 
 ## Image Embedding
 
@@ -247,7 +263,7 @@ Most command-line options can be controlled via document metadata, allowing diff
 `indices`, `wikilinks`, `includes`, `relaxed-tables`, `alpha-lists`, `mixed-lists`, `sup-sub`, `autolink`, `transforms`, `unsafe`, `tables`, `footnotes`, `smart`, `math`, `ids`, `header-anchors`, `embed-images`, `link-citations`, `show-tooltips`, `suppress-bibliography`, `suppress-index`, `group-index-by-letter`, `obfuscate-emails`, `pretty`, `standalone`, `hardbreaks`
 
 **Supported string options:**
-`bibliography`, `csl`, `title`, `style` (or `css`), `id-format`, `base-dir`, `mode`
+`bibliography`, `csl`, `title`, `style` (or `css`), `id-format`, `base-dir`, `mode`, `wikilink-space`, `wikilink-extension`
 
 **Example YAML front matter:**
 ```
