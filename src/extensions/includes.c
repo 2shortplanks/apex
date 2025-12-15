@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <strings.h>
 #include <regex.h>
+#include <glob.h>
 
 /**
  * Read file contents
@@ -615,43 +616,92 @@ static char *extract_lines(const char *content, address_spec_t *spec) {
 }
 
 /**
- * Resolve wildcard path (file.* -> file.html, file.md, etc.)
- * Tries extensions in order: .html, .md, .txt, .tex
+ * Resolve wildcard path.
+ *
+ * Supported patterns:
+ * - Legacy "file.*" patterns:
+ *   - Preferentially resolve to file.html, file.md, file.txt, file.tex (in that order)
+ * - General globbing using standard shell-style patterns:
+ *   - '*' and '?' wildcards
+ *   - Character classes '[]'
+ *   - Brace expansion '{a,b}.md', '*.{html,md}' where supported by the platform
+ *
+ * The path is resolved relative to base_dir (or current directory) before globbing.
+ * Returns a newly-allocated path string or NULL if no match is found.
  */
 char *apex_resolve_wildcard(const char *filepath, const char *base_dir) {
     if (!filepath) return NULL;
 
-    /* Check if this is a wildcard */
+    /* Fast path: legacy "file.*" handling with explicit extension preference.
+     * Only trigger this when the pattern ends with ".*" and contains no
+     * other glob characters. This preserves the documented MMD-style
+     * wildcard behavior while allowing more general globbing for
+     * patterns like "*.c" or "{intro,part1}.md".
+     */
     const char *wildcard = strstr(filepath, ".*");
-    if (!wildcard) {
-        /* Not a wildcard, return as-is */
-        return resolve_path(filepath, base_dir);
-    }
+    bool has_other_glob = (strpbrk(filepath, "*?[{") != NULL &&
+                           !(wildcard && wildcard[1] == '\0'));
 
-    /* Extract base filename (before .*) */
-    size_t base_len = wildcard - filepath;
-    char base_filename[1024];
-    if (base_len >= sizeof(base_filename)) return NULL;
+    if (wildcard && !has_other_glob) {
+        /* Extract base filename (before .*) */
+        size_t base_len = (size_t)(wildcard - filepath);
+        char base_filename[1024];
+        if (base_len >= sizeof(base_filename)) return NULL;
 
-    memcpy(base_filename, filepath, base_len);
-    base_filename[base_len] = '\0';
+        memcpy(base_filename, filepath, base_len);
+        base_filename[base_len] = '\0';
 
-    /* Try common extensions */
-    const char *extensions[] = {".html", ".md", ".txt", ".tex", NULL};
+        /* Try common extensions in preferred order */
+        const char *extensions[] = {".html", ".md", ".txt", ".tex", NULL};
 
-    for (int i = 0; extensions[i]; i++) {
-        char test_path[1024];
-        snprintf(test_path, sizeof(test_path), "%s%s", base_filename, extensions[i]);
+        for (int i = 0; extensions[i]; i++) {
+            char test_path[1024];
+            snprintf(test_path, sizeof(test_path), "%s%s", base_filename, extensions[i]);
 
-        char *resolved = resolve_path(test_path, base_dir);
-        if (resolved && apex_file_exists(resolved)) {
-            return resolved;
+            char *resolved = resolve_path(test_path, base_dir);
+            if (resolved && apex_file_exists(resolved)) {
+                return resolved;
+            }
+            free(resolved);
         }
-        free(resolved);
+
+        /* No match found for legacy pattern, fall through to globbing
+         * so that users can still benefit from more general patterns
+         * if they mixed syntax.
+         */
     }
 
-    /* No match found, return NULL */
-    return NULL;
+    /* General case: use glob() to resolve shell-style patterns
+     * (supports *, ?, [], and optionally brace expansion).
+     */
+    if (strpbrk(filepath, "*?[{") != NULL) {
+        char *pattern_path = resolve_path(filepath, base_dir);
+        if (!pattern_path) return NULL;
+
+        glob_t results;
+        int flags = 0;
+#ifdef GLOB_BRACE
+        /* Enable brace expansion where available (BSD/macOS, some libcs) */
+        if (strchr(pattern_path, '{') || strchr(pattern_path, '}')) {
+            flags |= GLOB_BRACE;
+        }
+#endif
+
+        int rc = glob(pattern_path, flags, NULL, &results);
+        free(pattern_path);
+
+        if (rc == 0 && results.gl_pathc > 0 && results.gl_pathv[0]) {
+            char *match = strdup(results.gl_pathv[0]);
+            globfree(&results);
+            return match;
+        }
+
+        globfree(&results);
+        return NULL;
+    }
+
+    /* No wildcard characters - behave like resolve_path */
+    return resolve_path(filepath, base_dir);
 }
 
 /**

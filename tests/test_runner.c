@@ -841,6 +841,11 @@ static void test_file_includes(void) {
     assert_contains(html, "Included Content", "MMD transclusion works");
     apex_free_string(html);
 
+    /* Test MMD wildcard transclusion: file.* (legacy behavior) */
+    html = apex_markdown_to_html("Include: {{simple.*}}", 22, &opts);
+    assert_contains(html, "Included Content", "MMD wildcard file.* resolves to simple.md");
+    apex_free_string(html);
+
     /* Test CSV to table conversion */
     html = apex_markdown_to_html("Data:\n\n<<[data.csv]\n\nEnd", 24, &opts);
     assert_contains(html, "<table>", "CSV converts to table");
@@ -866,6 +871,20 @@ static void test_file_includes(void) {
     assert_contains(html, "def hello", "Code included");
     apex_free_string(html);
 
+    /* Test glob wildcard: *.md (should resolve to one of the .md fixtures) */
+    html = apex_markdown_to_html("{{*.md}}", 10, &opts);
+    if (strstr(html, "Included Content") != NULL ||
+        strstr(html, "Nested Content") != NULL) {
+        tests_passed++;
+        tests_run++;
+        printf(COLOR_GREEN "✓" COLOR_RESET " Glob wildcard *.md resolves to a Markdown file\n");
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Glob wildcard *.md did not resolve correctly\n");
+    }
+    apex_free_string(html);
+
     /* Test MMD address syntax - line range */
     html = apex_markdown_to_html("{{simple.md}}[3,5]", 20, &opts);
     assert_contains(html, "This is a simple", "Line range includes line 3");
@@ -885,6 +904,11 @@ static void test_file_includes(void) {
     html = apex_markdown_to_html("{{code.py}}[1,3;prefix=\"C: \"]", 30, &opts);
     assert_contains(html, "C: def hello()", "Prefix applied to included lines");
     assert_contains(html, "C:     print", "Prefix applied to all lines");
+    apex_free_string(html);
+
+    /* Test glob wildcard with single-character ?: c?de.py should resolve to code.py */
+    html = apex_markdown_to_html("{{c?de.py}}", 12, &opts);
+    assert_contains(html, "def hello", "? wildcard resolves to code.py");
     apex_free_string(html);
 
     /* Test Marked address syntax - line range */
