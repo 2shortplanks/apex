@@ -264,7 +264,7 @@ standalone: true
 ---
 ```
 
-This allows you to process multiple files with `apex *.md` and have each file use its own configuration. You can also use `--meta-file` to specify a shared configuration file that applies to all processed files.
+This allows you to process multiple files with `apex *.md` and have each file use its own configuration. You can also use `--meta-file` to specify a shared configuration file that applies to all processed files. If no `--meta-file` is given, Apex will automatically look for `$XDG_CONFIG_HOME/apex/config.yml` (or `~/.config/apex/config.yml` when `XDG_CONFIG_HOME` is not set) and, if found, load it as if it were passed via `--meta-file`.
 
 ## Documentation
 

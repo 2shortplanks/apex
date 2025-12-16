@@ -715,9 +715,10 @@ char *apex_plugins_run_text_phase(apex_plugin_manager *manager,
         }
 
         if (p->handler_command) {
-            /* Temporarily set APEX_PLUGIN_DIR for this plugin, if available */
+            /* Temporarily set APEX_PLUGIN_DIR, APEX_SUPPORT_DIR, and APEX_FILE_PATH for this plugin */
             char *old_dir = NULL;
             char *old_support = NULL;
+            char *old_file_path = NULL;
 
             const char *prev_dir = getenv("APEX_PLUGIN_DIR");
             if (prev_dir) {
@@ -734,6 +735,16 @@ char *apex_plugins_run_text_phase(apex_plugin_manager *manager,
             if (p->support_dir) {
                 setenv("APEX_SUPPORT_DIR", p->support_dir, 1);
             }
+
+            /* APEX_FILE_PATH: full path to input file, or base dir / empty for stdin */
+            const char *prev_file = getenv("APEX_FILE_PATH");
+            if (prev_file) {
+                old_file_path = strdup(prev_file);
+            }
+            const char *file_path = (options && options->input_file_path)
+                                      ? options->input_file_path
+                                      : "";
+            setenv("APEX_FILE_PATH", file_path, 1);
 
             next = apex_run_external_plugin_command(p->handler_command,
                                                     phase_name,
@@ -763,6 +774,14 @@ char *apex_plugins_run_text_phase(apex_plugin_manager *manager,
                 }
             } else if (old_support) {
                 free(old_support);
+            }
+
+            /* Restore previous APEX_FILE_PATH */
+            if (old_file_path) {
+                setenv("APEX_FILE_PATH", old_file_path, 1);
+                free(old_file_path);
+            } else {
+                unsetenv("APEX_FILE_PATH");
             }
         } else if (p->has_regex) {
             next = apply_regex_replacement(p, current);

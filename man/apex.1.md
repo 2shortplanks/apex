@@ -55,7 +55,7 @@ If no file is specified, **apex** reads from stdin.
 ::   Enable or disable metadata variable transforms (`[%key:transform]`). When enabled, metadata values can be transformed (case conversion, string manipulation, regex replacement, date formatting, etc.) when inserted into the document. Enabled by default in unified mode.
 
 **--meta-file** *FILE*
-:   Load metadata from an external file. Auto-detects format: YAML (starts with `---`), MultiMarkdown (key: value pairs), or Pandoc (starts with `%`). Metadata from the file is merged with document metadata, with document metadata taking precedence. Metadata can also control command-line options (see METADATA CONTROL OF OPTIONS below).
+:   Load metadata from an external file. Auto-detects format: YAML (starts with `---`), MultiMarkdown (key: value pairs), or Pandoc (starts with `%`). Metadata from the file is merged with document metadata, with document metadata taking precedence. Metadata can also control command-line options (see METADATA CONTROL OF OPTIONS below). If no `--meta-file` is provided, Apex will automatically load `$XDG_CONFIG_HOME/apex/config.yml` (or `~/.config/apex/config.yml` when `XDG_CONFIG_HOME` is not set) if it exists, as if it were passed via `--meta-file`.
 
 **--meta** *KEY=VALUE*
 :   Set a metadata key-value pair. Can be used multiple times. Supports comma-separated pairs (e.g., `--meta KEY1=value1,KEY2=value2`). Values can be quoted to include spaces and special characters. Command-line metadata takes precedence over both file and document metadata. Metadata can also control command-line options (see METADATA CONTROL OF OPTIONS below).

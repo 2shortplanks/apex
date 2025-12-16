@@ -118,6 +118,11 @@ typedef struct {
     /* Wiki link options */
     int wikilink_space;  /* Space replacement: 0=dash, 1=none, 2=underscore, 3=space */
     const char *wikilink_extension;  /* File extension to append (e.g., "html") */
+
+    /* Source file information for plugins */
+    /* When Apex is invoked on a file, this is the full path to that file. */
+    /* When reading from stdin, this is either the base directory (if set) or empty. */
+    const char *input_file_path;
 } apex_options;
 
 /**

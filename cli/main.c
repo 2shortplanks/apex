@@ -200,7 +200,8 @@ int main(int argc, char *argv[]) {
     const char *output_file = NULL;
     const char *meta_file = NULL;
     apex_metadata_item *cmdline_metadata = NULL;
-    char *allocated_base_dir = NULL;  /* Track if we allocated base_directory */
+    char *allocated_base_dir = NULL;      /* Track if we allocated base_directory */
+    char *allocated_input_file_path = NULL;  /* Track if we allocate input_file_path */
 
     /* Bibliography files (NULL-terminated array) */
     char **bibliography_files = NULL;
@@ -467,6 +468,40 @@ int main(int argc, char *argv[]) {
         } else {
             /* Assume it's the input file */
             input_file = argv[i];
+        }
+    }
+
+    /* If no explicit --meta-file was provided, look for a default config:
+     *   1. $XDG_CONFIG_HOME/apex/config.yml
+     *   2. ~/.config/apex/config.yml
+     *
+     * If found, treat it as if the user had passed:
+     *   --meta-file ~/.config/apex/config.yml
+     * (or the XDG path), i.e. normal external metadata with the usual
+     * precedence rules (file < document < command-line).
+     */
+    if (!meta_file) {
+        const char *xdg = getenv("XDG_CONFIG_HOME");
+        char path[1024];
+        const char *candidate = NULL;
+
+        if (xdg && *xdg) {
+            snprintf(path, sizeof(path), "%s/apex/config.yml", xdg);
+            candidate = path;
+        } else {
+            const char *home = getenv("HOME");
+            if (home && *home) {
+                snprintf(path, sizeof(path), "%s/.config/apex/config.yml", home);
+                candidate = path;
+            }
+        }
+
+        if (candidate) {
+            FILE *fp = fopen(candidate, "r");
+            if (fp) {
+                fclose(fp);
+                meta_file = candidate;
+            }
         }
     }
 
@@ -753,6 +788,22 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /* Set input_file_path for plugins (APEX_FILE_PATH) */
+    if (input_file) {
+        /* When a file is provided, use the original path (as passed in) */
+        options.input_file_path = input_file;
+    } else {
+        /* When reading from stdin:
+         * - Prefer an explicit base_directory, if set.
+         * - Otherwise, leave input_file_path empty (plugins see APEX_FILE_PATH="").
+         */
+        if (options.base_directory && options.base_directory[0] != '\0') {
+            options.input_file_path = options.base_directory;
+        } else {
+            options.input_file_path = NULL;
+        }
+    }
+
     /* Read input */
     size_t input_len;
     char *markdown;
@@ -947,6 +998,7 @@ int main(int argc, char *argv[]) {
     /* Cleanup */
     if (enhanced_markdown) free(enhanced_markdown);
     free(markdown);
+    if (allocated_input_file_path) free(allocated_input_file_path);
     if (file_metadata) apex_free_metadata(file_metadata);
     if (doc_metadata) apex_free_metadata(doc_metadata);
     if (cmdline_metadata) apex_free_metadata(cmdline_metadata);

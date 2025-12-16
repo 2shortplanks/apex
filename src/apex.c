@@ -1642,6 +1642,9 @@ apex_options apex_options_default(void) {
     opts.wikilink_space = 0;  /* Default: dash (0=dash, 1=none, 2=underscore, 3=space) */
     opts.wikilink_extension = NULL;  /* Default: no extension */
 
+    /* Source file information (used by plugins via APEX_FILE_PATH) */
+    opts.input_file_path = NULL;
+
     return opts;
 }
 
