@@ -123,6 +123,33 @@ make install
 
 **Note:** The default `make` command runs both `cmake -S . -B build` (to configure the project) and `cmake --build build` (to compile). If you prefer to run cmake commands directly, you can use those instead.
 
+#### Building the macOS Framework
+
+To build the macOS framework (for use in Xcode projects), use CMake with the framework target:
+
+```bash
+# Configure with framework support (enabled by default on macOS)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+# For universal binary (arm64 + x86_64):
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+# Build the framework
+cmake --build build --target apex_framework
+
+# Install the framework (defaults to /Library/Frameworks, requires sudo)
+sudo cmake --install build
+# Or to install to a custom location (no sudo needed):
+cmake --install build --prefix ./install
+```
+
+The framework will be installed with:
+- The `apex.h` header in `Apex.framework/Headers/`
+- The required `libcmark-gfm` and `libcmark-gfm-extensions` dylibs bundled in `Apex.framework/Frameworks/`
+- All dylib paths properly configured for use in Xcode projects
+
+**Note:** The `CMAKE_POLICY_VERSION_MINIMUM=3.5` flag is required for compatibility with newer CMake versions when building cmark-gfm as a subdirectory.
+
 ### Pre-built Binaries
 
 Download pre-built binaries from the [latest release](https://github.com/ApexMarkdown/apex/releases/latest). Binaries are available for:

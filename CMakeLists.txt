@@ -1,4 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
+# Set policy version minimum for compatibility with newer CMake versions
+# This is especially important for cmark-gfm subdirectory
+if(POLICY CMP0000)
+    cmake_policy(SET CMP0000 NEW)
+endif()
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "Minimum CMake policy version" FORCE)
+
 project(apex VERSION 0.1.29 LANGUAGES C)
 
 # Set C standard
@@ -185,9 +192,95 @@ if(APPLE)
         else()
             target_link_libraries(apex_framework libcmark-gfm libcmark-gfm-extensions)
         endif()
+
+        # Install framework
+        # Use absolute path /Library/Frameworks (standard macOS framework location)
+        # Users can override with CMAKE_INSTALL_PREFIX if needed
+        if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR CMAKE_INSTALL_PREFIX STREQUAL "/usr/local")
+            set(FRAMEWORK_INSTALL_DIR "/Library/Frameworks")
+        else()
+            set(FRAMEWORK_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/Library/Frameworks")
+        endif()
+
         install(TARGETS apex_framework
-            FRAMEWORK DESTINATION /Library/Frameworks
+            FRAMEWORK DESTINATION ${FRAMEWORK_INSTALL_DIR}
+            PUBLIC_HEADER DESTINATION ${FRAMEWORK_INSTALL_DIR}/Apex.framework/Headers
         )
+
+        # Explicitly install the header file into the framework Headers directory
+        # (PUBLIC_HEADER doesn't automatically install into frameworks)
+        install(FILES include/apex/apex.h
+            DESTINATION ${FRAMEWORK_INSTALL_DIR}/Apex.framework/Headers
+        )
+
+        # Post-install script to copy dylibs into framework and fix install names
+        # This runs after the framework is installed
+        install(CODE "
+            # Determine framework location (same logic as above)
+            if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR CMAKE_INSTALL_PREFIX STREQUAL \"/usr/local\")
+                set(FRAMEWORK_INSTALL_DIR \"/Library/Frameworks\")
+            else()
+                set(FRAMEWORK_INSTALL_DIR \"\${CMAKE_INSTALL_PREFIX}/Library/Frameworks\")
+            endif()
+            set(FRAMEWORK_DIR \"\${FRAMEWORK_INSTALL_DIR}/Apex.framework\")
+            set(FRAMEWORK_FRAMEWORKS_DIR \"\${FRAMEWORK_DIR}/Frameworks\")
+            set(FRAMEWORK_BINARY \"\${FRAMEWORK_DIR}/Apex\")
+            set(BUILD_DIR \"${CMAKE_BINARY_DIR}\")
+
+            # Create Frameworks directory inside the framework
+            file(MAKE_DIRECTORY \"\${FRAMEWORK_FRAMEWORKS_DIR}\")
+
+            # Find dylibs in build directory
+            file(GLOB CMARK_GFM_DYLIB_BUILD \"\${BUILD_DIR}/vendor/cmark-gfm/src/libcmark-gfm*.dylib\")
+            file(GLOB CMARK_GFM_EXTENSIONS_DYLIB_BUILD \"\${BUILD_DIR}/vendor/cmark-gfm/extensions/libcmark-gfm-extensions*.dylib\")
+
+            # Copy and fix cmark-gfm dylib
+            if(CMARK_GFM_DYLIB_BUILD)
+                get_filename_component(CMARK_GFM_NAME \"\${CMARK_GFM_DYLIB_BUILD}\" NAME)
+                set(CMARK_GFM_DEST \"\${FRAMEWORK_FRAMEWORKS_DIR}/\${CMARK_GFM_NAME}\")
+                file(COPY \"\${CMARK_GFM_DYLIB_BUILD}\" DESTINATION \"\${FRAMEWORK_FRAMEWORKS_DIR}\")
+                # Fix install name
+                execute_process(
+                    COMMAND install_name_tool -id \"@rpath/Apex.framework/Frameworks/\${CMARK_GFM_NAME}\" \"\${CMARK_GFM_DEST}\"
+                    RESULT_VARIABLE RESULT
+                    ERROR_QUIET
+                )
+                # Fix framework binary reference
+                execute_process(
+                    COMMAND install_name_tool -change \"@rpath/\${CMARK_GFM_NAME}\" \"@rpath/Apex.framework/Frameworks/\${CMARK_GFM_NAME}\" \"\${FRAMEWORK_BINARY}\"
+                    RESULT_VARIABLE RESULT
+                    ERROR_QUIET
+                )
+            endif()
+
+            # Copy and fix cmark-gfm-extensions dylib
+            if(CMARK_GFM_EXTENSIONS_DYLIB_BUILD)
+                get_filename_component(CMARK_GFM_EXTENSIONS_NAME \"\${CMARK_GFM_EXTENSIONS_DYLIB_BUILD}\" NAME)
+                set(CMARK_GFM_EXTENSIONS_DEST \"\${FRAMEWORK_FRAMEWORKS_DIR}/\${CMARK_GFM_EXTENSIONS_NAME}\")
+                file(COPY \"\${CMARK_GFM_EXTENSIONS_DYLIB_BUILD}\" DESTINATION \"\${FRAMEWORK_FRAMEWORKS_DIR}\")
+                # Fix install name
+                execute_process(
+                    COMMAND install_name_tool -id \"@rpath/Apex.framework/Frameworks/\${CMARK_GFM_EXTENSIONS_NAME}\" \"\${CMARK_GFM_EXTENSIONS_DEST}\"
+                    RESULT_VARIABLE RESULT
+                    ERROR_QUIET
+                )
+                # Fix framework binary reference
+                execute_process(
+                    COMMAND install_name_tool -change \"@rpath/\${CMARK_GFM_EXTENSIONS_NAME}\" \"@rpath/Apex.framework/Frameworks/\${CMARK_GFM_EXTENSIONS_NAME}\" \"\${FRAMEWORK_BINARY}\"
+                    RESULT_VARIABLE RESULT
+                    ERROR_QUIET
+                )
+                # Fix cmark-gfm-extensions to reference cmark-gfm from within framework
+                if(CMARK_GFM_DYLIB_BUILD)
+                    get_filename_component(CMARK_GFM_NAME \"\${CMARK_GFM_DYLIB_BUILD}\" NAME)
+                    execute_process(
+                        COMMAND install_name_tool -change \"@rpath/\${CMARK_GFM_NAME}\" \"@rpath/Apex.framework/Frameworks/\${CMARK_GFM_NAME}\" \"\${CMARK_GFM_EXTENSIONS_DEST}\"
+                        RESULT_VARIABLE RESULT
+                        ERROR_QUIET
+                    )
+                endif()
+            endif()
+        ")
     endif()
 endif()
 
