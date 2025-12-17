@@ -434,10 +434,12 @@ char *apex_render_html_with_attributes(cmark_node *document, int options) {
                             /* For inline elements (img, a), inject before the closing > or /> */
                             /* Find the closing > for this tag */
                             const char *close_pos = tag_end;
+                            bool is_self_closing = false;
                             if (*close_pos == '>') {
                                 /* Check if it's a self-closing tag /> */
                                 if (close_pos > tag_name_end && close_pos[-1] == '/') {
                                     inject_point = close_pos - 1; /* Before /> */
+                                    is_self_closing = true;
                                 } else {
                                     inject_point = close_pos; /* Before > */
                                 }
@@ -446,37 +448,76 @@ char *apex_render_html_with_attributes(cmark_node *document, int options) {
                                 inject_point = tag_name_end;
                                 while (*inject_point && isspace((unsigned char)*inject_point) && *inject_point != '>') inject_point++;
                             }
+
+                            /* Copy up to injection point (but for self-closing tags, don't include the space before /) */
+                            size_t prefix_len;
+                            if (is_self_closing && inject_point > read && inject_point[-1] == ' ') {
+                                /* Don't copy the space before / - we'll add it back after attributes */
+                                prefix_len = inject_point - read - 1;
+                            } else {
+                                prefix_len = inject_point - read;
+                            }
+
+                            if (prefix_len < remaining && prefix_len > 0) {
+                                memcpy(write, read, prefix_len);
+                                write += prefix_len;
+                                remaining -= prefix_len;
+                            }
+
+                            /* Add space before attributes if needed (unless we're right before > or /) */
+                            if (*inject_point != '>' && *inject_point != '/') {
+                                if (remaining > 0) {
+                                    *write++ = ' ';
+                                    remaining--;
+                                }
+                            }
+
+                            /* Inject attributes */
+                            size_t attr_len = strlen(matching->attrs);
+                            if (attr_len <= remaining) {
+                                memcpy(write, matching->attrs, attr_len);
+                                write += attr_len;
+                                remaining -= attr_len;
+                            }
+
+                            /* For self-closing tags, ensure space before / */
+                            if (is_self_closing && remaining > 0) {
+                                *write++ = ' ';
+                                remaining--;
+                            }
+
+                            read = inject_point;
                         } else {
                             /* For block elements, inject after tag name */
                             inject_point = tag_name_end;
                             while (*inject_point && isspace((unsigned char)*inject_point)) inject_point++;
-                        }
 
-                        /* Copy up to injection point */
-                        size_t prefix_len = inject_point - read;
-                        if (prefix_len < remaining) {
-                            memcpy(write, read, prefix_len);
-                            write += prefix_len;
-                            remaining -= prefix_len;
-                        }
-
-                        /* Add space before attributes if needed (unless we're right before >) */
-                        if (*inject_point != '>' && *inject_point != '/') {
-                            if (remaining > 0) {
-                                *write++ = ' ';
-                                remaining--;
+                            /* Copy up to injection point */
+                            size_t prefix_len = inject_point - read;
+                            if (prefix_len < remaining) {
+                                memcpy(write, read, prefix_len);
+                                write += prefix_len;
+                                remaining -= prefix_len;
                             }
-                        }
 
-                        /* Inject attributes */
-                        size_t attr_len = strlen(matching->attrs);
-                        if (attr_len <= remaining) {
-                            memcpy(write, matching->attrs, attr_len);
-                            write += attr_len;
-                            remaining -= attr_len;
-                        }
+                            /* Add space before attributes if needed */
+                            if (*inject_point != '>') {
+                                if (remaining > 0) {
+                                    *write++ = ' ';
+                                    remaining--;
+                                }
+                            }
 
-                        read = inject_point;
+                            /* Inject attributes */
+                            size_t attr_len = strlen(matching->attrs);
+                            if (attr_len <= remaining) {
+                                memcpy(write, matching->attrs, attr_len);
+                                write += attr_len;
+                                remaining -= attr_len;
+                            }
+
+                            read = inject_point;
+                        }
                         continue;
                     }
                 }
