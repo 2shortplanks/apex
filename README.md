@@ -1,5 +1,5 @@
 
-[![Version: 0.1.35](https://img.shields.io/badge/Version-0.1.35-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: 0.1.36](https://img.shields.io/badge/Version-0.1.36-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 # Apex
@@ -8,7 +8,7 @@
 Apex is a unified Markdown processor that combines the best features from CommonMark, GitHub Flavored Markdown (GFM), MultiMarkdown, Kramdown, and Marked. One processor to rule them all.
 
 
-![](apex-header-2-rb@2x.webp?2)
+![](apex-header-2-rb@2x.webp)
 
 
 There are so many variations of Markdown, extending its features in all kinds of ways. But picking one flavor means giving up the features of another flavor. So I'm building Apex with the goal of making all of the most popular features of various processors available in one tool.
@@ -204,7 +204,7 @@ apex input.md --mode kramdown
 ### All Options
 
 ```
-Apex Markdown Processor v0.1.34
+Apex Markdown Processor v0.1.36
 One Markdown processor to rule them all
 
 Usage: build/apex [options] [file]

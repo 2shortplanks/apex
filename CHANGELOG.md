@@ -2,6 +2,50 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.37] - 2025-12-17
+
+### Changed
+
+- Image attributes are mode-dependent: work in Unified and MultiMarkdown modes only
+- URL encoding is mode-dependent: works in Unified, MultiMarkdown, and Kramdown modes
+- Improved caption detection to check all table rows for caption markers, not just the last row, to handle cases where captions come after tfoot rows.
+
+### New
+
+- Support for MultiMarkdown-style image attributes in unified and MultiMarkdown modes
+- Inline image attributes: ![alt](url width=300 style="float:left" "title")
+- Reference-style image attributes: ![][ref] with [ref]: url width=300
+- Automatic URL encoding for links with spaces in unified, MultiMarkdown, and Kramdown modes
+- URLs with spaces are automatically percent-encoded (e.g., "path with spaces.png" becomes "path%20with%20spaces.png")
+- Added support for MultiMarkdown-style image attributes in reference-style images. Reference definitions can now include attributes: [img1]: image.png width=300 style="float:left"
+- Added support for inline image attributes: ![alt](url width=300 style="...")
+- Added automatic URL encoding for all link URLs (images and regular links). URLs with spaces are automatically percent-encoded (e.g., "path to/image.png" becomes "path%20to/image.png")
+- Added detection and removal of table alignment separator rows that were incorrectly being rendered as table rows.
+- Added test cases for table captions appearing before and after tables.
+- Added support for tfoot sections in tables using `===` row markers. Rows containing `===` markers are now placed in `<tfoot>` sections, and all subsequent rows after the first `===` row are also placed in tfoot.
+- Added comprehensive table feature tests that validate rowspan,
+
+### Improved
+
+- Improved attribute injection in HTML renderer to correctly place attributes before closing > or /> in img and link tags
+- Enhanced URL parsing to distinguish between spaces within URLs vs spaces before attributes using forward-scanning pattern detection
+- Self-closing img tags now consistently use " />" (space before slash) when attributes are injected, matching the format used by cmark-gfm for img tags without injected attributes
+- Rowspan and colspan attribute handling now properly appends to existing attributes instead of replacing them, allowing multiple attributes to coexist on table cells.
+- Alignment rows (rows containing only '' characters) are now detected and marked for removal, preventing them from appearing in HTML output.
+
+### Fixed
+
+- Fixed bug where image prefix "![" was incorrectly removed during preprocessing of expanded reference-style images
+- URL encoding now only encodes unsafe characters (space, control chars, non-ASCII). Valid URL characters like /, :, ?, #, ~, etc. are preserved and no longer incorrectly encoded.
+- Titles in links and images are now correctly detected and excluded from URL encoding. Supports quoted titles ("title", 'title') and parentheses titles ((title)). URLs with parentheses (like Wikipedia links) are correctly distinguished from titles based on whether a space precedes the opening parenthesis.
+- Reference-style images with attributes now render correctly. Reference definitions with image attributes are removed from output, while those without attributes are preserved (with URL encoding) so cmark can resolve the references.
+- Spacing between attributes in HTML output. Attributes injected into img and link tags now have proper spacing, preventing malformed HTML like alt="text"width="100".
+- Table attributes now render correctly with proper spacing. Fixed missing space in table tag when id attribute immediately follows (e.g., <tableid="..." now renders as <table id="...").
+- Rowspan and colspan injection now works correctly in all cases. Fixed bug where table tracking variables weren't set when fixing missing space in table tag (e.g., <tableid="..."), causing row and cell processing to be skipped. Table tracking is now properly initialized even when correcting tag spacing.
+- Captions after tables were not being detected when tables had IAL attributes, as IAL processing replaced the caption data stored in user_data. Added fallback logic to check for caption paragraphs directly in the AST when user_data lookup fails.
+- Rows containing only `===` markers are now properly skipped entirely rather than rendering as empty cells in tfoot sections.
+- Caption paragraphs before tables are now properly removed,
+
 ## [0.1.36] - 2025-12-16
 
 ### Fixed
@@ -500,6 +544,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 - Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.37]: https://github.com/ttscoff/apex/releases/tag/v0.1.37
 [0.1.36]: https://github.com/ttscoff/apex/releases/tag/v0.1.36
 [0.1.35]: https://github.com/ttscoff/apex/releases/tag/v0.1.35
 [0.1.34]: https://github.com/ttscoff/apex/releases/tag/v0.1.34
