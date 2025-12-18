@@ -22,7 +22,7 @@ Apex is a unified Markdown processor that combines the best features from Common
 
 ### Markdown Extensions
 
-- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan, colspan, captions)
+- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan via `^^`, colspan via empty cells/`<<`, and captions before/after tables, including Pandoc-style `Table: Caption`)
 - **Relaxed tables**: Support for tables without separator rows (Kramdown-style)
 - **Footnotes**: Three syntaxes supported (reference-style, Kramdown inline, MultiMarkdown inline)
 - **Definition lists**: Kramdown-style definition lists with Markdown content support
