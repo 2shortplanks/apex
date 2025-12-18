@@ -131,6 +131,14 @@ typedef struct {
      */
     char **script_tags;  /* NULL-terminated array of script tag strings (may be NULL for none) */
 
+    /* Stylesheet embedding options */
+    /* When true and a stylesheet path is provided, Apex will attempt to
+     * read the CSS file and embed it directly into a <style> block in the
+     * document head instead of emitting a <link rel="stylesheet"> tag.
+     * This is typically enabled via the CLI --embed-css flag.
+     */
+    bool embed_stylesheet;
+
     /* Source file information for plugins */
     /* When Apex is invoked on a file, this is the full path to that file. */
     /* When reading from stdin, this is either the base directory (if set) or empty. */

@@ -101,6 +101,7 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --reject               Reject all Critic Markup changes (revert edits)\n");
     fprintf(stderr, "  -s, --standalone       Generate complete HTML document (with <html>, <head>, <body>)\n");
     fprintf(stderr, "  --css FILE, --style FILE  Link to CSS file in document head (requires --standalone, overrides CSS metadata)\n");
+    fprintf(stderr, "  --embed-css            Embed CSS file contents into a <style> tag in the document head (used with --css)\n");
     fprintf(stderr, "  --script VALUE         Inject <script> tags before </body> (standalone) or at end of HTML (snippet).\n");
     fprintf(stderr, "                          VALUE can be a path, URL, or shorthand (mermaid, mathjax, katex). Can be used multiple times or as a comma-separated list.\n");
     fprintf(stderr, "  --title TITLE          Document title (requires --standalone, default: \"Document\")\n");
@@ -425,6 +426,8 @@ int main(int argc, char *argv[]) {
             }
             options.stylesheet_path = argv[i];
             options.standalone = true;  /* Imply standalone if CSS is specified */
+        } else if (strcmp(argv[i], "--embed-css") == 0) {
+            options.embed_stylesheet = true;
         } else if (strcmp(argv[i], "--script") == 0) {
             if (++i >= argc) {
                 fprintf(stderr, "Error: --script requires an argument\n");

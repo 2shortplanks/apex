@@ -1803,6 +1803,9 @@ apex_options apex_options_default(void) {
     /* Script injection options */
     opts.script_tags = NULL;
 
+    /* Stylesheet embedding options */
+    opts.embed_stylesheet = false;
+
     /* Source file information (used by plugins via APEX_FILE_PATH) */
     opts.input_file_path = NULL;
 
@@ -3021,6 +3024,95 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
 
         if (footer_with_scripts) {
             free(footer_with_scripts);
+        }
+
+        /* If requested, replace stylesheet link with embedded CSS contents */
+        if (html && css_path && local_opts.embed_stylesheet) {
+            /* Attempt to read CSS file from css_path, falling back to base_directory/css_path */
+            char *css_content = NULL;
+            size_t css_len = 0;
+
+            /* Helper lambda-like block to read file into memory */
+            {
+                FILE *css_fp = fopen(css_path, "rb");
+                if (!css_fp && local_opts.base_directory && local_opts.base_directory[0] != '\0') {
+                    /* Try base_directory + "/" + css_path */
+                    size_t base_len = strlen(local_opts.base_directory);
+                    size_t path_len = strlen(css_path);
+                    size_t full_len = base_len + 1 + path_len + 1;
+                    char *full_path = malloc(full_len);
+                    if (full_path) {
+                        snprintf(full_path, full_len, "%s/%s", local_opts.base_directory, css_path);
+                        css_fp = fopen(full_path, "rb");
+                        free(full_path);
+                    }
+                }
+
+                if (css_fp) {
+                    if (fseek(css_fp, 0, SEEK_END) == 0) {
+                        long fsize = ftell(css_fp);
+                        if (fsize >= 0 && fsize < 10 * 1024 * 1024) { /* 10MB safety limit */
+                            rewind(css_fp);
+                            css_content = malloc((size_t)fsize + 1);
+                            if (css_content) {
+                                css_len = fread(css_content, 1, (size_t)fsize, css_fp);
+                                css_content[css_len] = '\0';
+                            }
+                        }
+                    }
+                    fclose(css_fp);
+                }
+            }
+
+            if (css_content && css_len > 0) {
+                /* Build the exact link line we expect from apex_wrap_html_document */
+                char link_line[2048];
+                int link_n = snprintf(link_line, sizeof(link_line),
+                                      "  <link rel=\"stylesheet\" href=\"%s\">\n",
+                                      css_path);
+                if (link_n > 0 && (size_t)link_n < sizeof(link_line)) {
+                    char *pos = strstr(html, link_line);
+                    if (pos) {
+                        size_t html_len = strlen(html);
+                        size_t link_len = (size_t)link_n;
+                        const char *style_prefix = "  <style>\n";
+                        const char *style_suffix = "\n  </style>\n";
+                        size_t prefix_len = strlen(style_prefix);
+                        size_t suffix_len = strlen(style_suffix);
+
+                        size_t new_len = html_len - link_len + prefix_len + css_len + suffix_len;
+                        char *embedded = malloc(new_len + 1);
+                        if (embedded) {
+                            size_t before_len = (size_t)(pos - html);
+                            memcpy(embedded, html, before_len);
+                            size_t offset = before_len;
+
+                            memcpy(embedded + offset, style_prefix, prefix_len);
+                            offset += prefix_len;
+
+                            memcpy(embedded + offset, css_content, css_len);
+                            offset += css_len;
+
+                            memcpy(embedded + offset, style_suffix, suffix_len);
+                            offset += suffix_len;
+
+                            size_t after_len = html_len - before_len - link_len;
+                            if (after_len > 0) {
+                                memcpy(embedded + offset, pos + link_len, after_len);
+                                offset += after_len;
+                            }
+
+                            embedded[offset] = '\0';
+                            free(html);
+                            html = embedded;
+                        }
+                    }
+                }
+            }
+
+            if (css_content) {
+                free(css_content);
+            }
         }
     } else if (html && scripts_html) {
         /* Snippet mode: append scripts to the end of the HTML fragment */

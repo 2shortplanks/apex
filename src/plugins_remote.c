@@ -82,20 +82,6 @@ static char *apex_remote_fetch_json(const char *url) {
     return buf;
 }
 
-/* Helper: trim leading/trailing whitespace */
-static void apex_remote_trim(char *s) {
-    if (!s) return;
-    char *start = s;
-    while (*start == ' ' || *start == '\t' || *start == '\n' || *start == '\r') start++;
-    if (start != s) memmove(s, start, strlen(start) + 1);
-    size_t len = strlen(s);
-    while (len > 0 &&
-           (s[len - 1] == ' ' || s[len - 1] == '\t' ||
-            s[len - 1] == '\n' || s[len - 1] == '\r')) {
-        s[--len] = '\0';
-    }
-}
-
 /* Very small JSON helper: extract string value for a key from an object snippet.
  * Assumes JSON is well-formed and keys/values are double-quoted.
  */
