@@ -14,13 +14,13 @@ This table combines both rowspan and colspan features:
 
 Use `^^` to merge cells vertically (rowspan):
 
-| Name    | Department  | Project  | Status |
-| ------- | ----------- | -------- | ------ |
-| Alice   | Engineering | Alpha    | Active |
-| ^^      | ^^          | Beta     | ^^     |
-| ^^      | ^^          | Gamma    | ^^     |
-| Bob     | Marketing   | Campaign | Active |
-| Charlie | Sales       | Q4       | Active |
+| Name  | Department  | Project  | Status |
+| ----- | ----------- | -------- | ------ |
+| Frank | Malarkey    | Alpha    | Active |
+| ^^    | ^^          | Beta     | ^^     |
+| ^^    | ^^          | Gamma    | ^^     |
+| Ron   | Advertising | Campaign | Active |
+| Chuck | Hooliganism | Q4       | Active |
 
 ---
 
@@ -33,17 +33,17 @@ Use `^^` to merge cells vertically (rowspan):
 
 
 
-| h1  |  h2   | h3  |
-| --- | :---: | --- |
-| d1  |  d2   | d3  |
-| d1  |  d2   | d3  |
-| === |  ===  | === |
-| d-4 |  d-5  | d-6 |
+| h1  | h2  | h3  |
+| --- | :-: | --- |
+| d1  | d2  | d3  |
+| d1  | d2  | d3  |
+| === | === | === |
+| d-4 | d-5 | d-6 |
 [table with footer]
 
-| h1  |  h2   | h3  |
-| --- | :---: | --- |
-| d1  |  d2   | d3  |
-| d1  |  d2   | d3  |
+| h1  | h2  | h3  |
+| --- | :-: | --- |
+| d1  | d2  | d3  |
+| d1  | d2  | d3  |
 
 Table: Table with Pandoc caption

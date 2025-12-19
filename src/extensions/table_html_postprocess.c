@@ -21,6 +21,7 @@ typedef struct cell_attr {
     int row_index;
     int col_index;
     char *attributes;  /* e.g. " rowspan=\"2\"" or " data-remove=\"true\"" */
+    char *cell_text;  /* Store cell content for content-based matching */
     struct cell_attr *next;
 } cell_attr;
 
@@ -153,6 +154,7 @@ static cell_attr *collect_table_cell_attributes(cmark_node *document) {
                         attr->row_index = row_index;
                         attr->col_index = col_index;
                         attr->attributes = strdup(attrs);
+                        attr->cell_text = cell_text ? strdup(cell_text) : NULL;
                         attr->next = list;
                         list = attr;
 
@@ -425,6 +427,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
         while (attrs) {
             cell_attr *next = attrs->next;
             free(attrs->attributes);
+            if (attrs->cell_text) free(attrs->cell_text);
             free(attrs);
             attrs = next;
         }
@@ -466,6 +469,9 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
      * being rowspanned in that column. When we see a ^^ cell, we increment its rowspan. */
     cell_attr *active_rowspan_cells[50];  /* One per column */
     for (int i = 0; i < 50; i++) active_rowspan_cells[i] = NULL;
+
+    /* Track the previous cell's matching status to check for colspan */
+    cell_attr *prev_cell_matching = NULL;
 
     while (*read) {
         /* Ensure we have space (realloc if needed) */
@@ -711,6 +717,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
         } else if (in_table && strncmp(read, "<tr>", 4) == 0) {
             row_idx++;
             col_idx = 0;
+            prev_cell_matching = NULL;  /* Reset previous cell matching for new row */
 
             /* Map HTML row index to AST row index.
              * HTML rows skip separator rows (which are marked for removal in AST).
@@ -770,19 +777,77 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                     }
                 }
 
+                /* Check if this column is covered by an active rowspan from a previous row.
+                 * If a previous row has a cell with rowspan that's still active (spans to this row),
+                 * then this column won't render a new <td> tag in this HTML row. */
+                bool covered_by_rowspan = false;
+                if (renders_new_cell && row_idx > 0) {
+                    /* Check all previous HTML rows to see if any have a rowspan covering this column */
+                    for (int prev_html_row = 0; prev_html_row < row_idx; prev_html_row++) {
+                        /* Map previous HTML row to AST row */
+                        int prev_ast_row = -1;
+                        int prev_html_row_count = -1;
+                        for (int r = 0; r < 100; r++) {
+                            bool has_non_removed = false;
+                            for (all_cell *c = all_cells; c; c = c->next) {
+                                if (c->table_index == table_idx &&
+                                    c->row_index == r &&
+                                    !c->is_removed) {
+                                    has_non_removed = true;
+                                    break;
+                                }
+                            }
+                            if (has_non_removed) {
+                                prev_html_row_count++;
+                                if (prev_html_row_count == prev_html_row) {
+                                    prev_ast_row = r;
+                                    break;
+                                }
+                            }
+                        }
+                        if (prev_ast_row >= 0) {
+                            /* Check if this AST row has a cell at orig_col with rowspan that spans to current row */
+                            for (cell_attr *a = attrs; a; a = a->next) {
+                                if (a->table_index == table_idx &&
+                                    a->row_index == prev_ast_row &&
+                                    a->col_index == orig_col &&
+                                    strstr(a->attributes, "rowspan=")) {
+                                    int rowspan_val = 1;
+                                    sscanf(strstr(a->attributes, "rowspan="), "rowspan=\"%d\"", &rowspan_val);
+                                    /* Check if this rowspan spans to the current HTML row */
+                                    int rows_spanned = row_idx - prev_html_row;
+                                    if (rows_spanned < rowspan_val) {
+                                        covered_by_rowspan = true;
+                                        fprintf(stderr, "[DEBUG HTML] Row %d, orig_col %d: Covered by rowspan from row %d (AST %d), rowspan=%d, rows_spanned=%d\n",
+                                                row_idx, orig_col, prev_html_row, prev_ast_row, rowspan_val, rows_spanned);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (covered_by_rowspan) break;
+                        }
+                    }
+                }
+
                 /* Do NOT include columns occupied by rowspans from previous rows,
                  * because they don't generate new <td> tags in this HTML row */
 
-                if (renders_new_cell) {
+                if (renders_new_cell && !covered_by_rowspan) {
                     row_col_mapping[row_col_mapping_size++] = orig_col;
                 }
             }
 
-            fprintf(stderr, "[DEBUG HTML] Row %d mapping: ", row_idx);
+            fprintf(stderr, "[DEBUG HTML] Row %d mapping (size=%d): ", row_idx, row_col_mapping_size);
             for (int i = 0; i < row_col_mapping_size; i++) {
                 fprintf(stderr, "html_pos=%d->orig_col=%d ", i, row_col_mapping[i]);
             }
             fprintf(stderr, "\n");
+            /* Also print the actual array values for debugging */
+            fprintf(stderr, "[DEBUG HTML] Row %d mapping array: [", row_idx);
+            for (int i = 0; i < 10 && i < row_col_mapping_size; i++) {
+                fprintf(stderr, "%d,", row_col_mapping[i]);
+            }
+            fprintf(stderr, "]\n");
 
             /* Store the mapping in a way we can access it during cell processing */
             /* We'll use a simple approach: store it in a static array keyed by table_idx and row_idx */
@@ -797,10 +862,11 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
              * To use a caption after a table, include a blank line between the table and caption.
              */
 
-            /* Check if this row should be in tfoot */
+            /* Check if this row should be in tfoot.
+             * tfoot_rows are stored with AST row indices, so we need to check ast_row_idx. */
             current_row_is_tfoot = false;
             for (tfoot_row *t = tfoot_rows; t; t = t->next) {
-                if (t->table_index == table_idx && t->row_index == row_idx) {
+                if (t->table_index == table_idx && t->row_index == ast_row_idx) {
                     current_row_is_tfoot = true;
                     break;
                 }
@@ -863,6 +929,51 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
             if (total_cells_in_row > 0 && total_cells_in_row == removed_cells_in_row) {
                 should_skip_row = true;
                 fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - all cells removed\n", row_idx, ast_row_idx);
+            }
+            /* Also check if this row contains === markers by checking the AST row directly.
+             * This handles cases where the row mapping might have issues. */
+            if (!should_skip_row && current_row_is_tfoot) {
+                /* Check if any cells in current AST row contain === */
+                bool has_equals = false;
+                for (cell_attr *a = attrs; a; a = a->next) {
+                    if (a->table_index == table_idx && a->row_index == ast_row_idx &&
+                        strstr(a->attributes, "data-remove")) {
+                        if (a->cell_text) {
+                            const char *text = a->cell_text;
+                            while (*text && isspace((unsigned char)*text)) text++;
+                            if (text[0] == '=' && text[1] == '=' && text[2] == '=') {
+                                has_equals = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                /* If this row contains === markers, skip it */
+                if (has_equals) {
+                    should_skip_row = true;
+                    fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - contains === markers\n", row_idx, ast_row_idx);
+                } else {
+                    /* Also check previous AST row in case row mapping is off */
+                    if (ast_row_idx > 0) {
+                        int prev_ast_row = ast_row_idx - 1;
+                        for (cell_attr *a = attrs; a; a = a->next) {
+                            if (a->table_index == table_idx && a->row_index == prev_ast_row &&
+                                strstr(a->attributes, "data-remove") && a->cell_text) {
+                                const char *text = a->cell_text;
+                                while (*text && isspace((unsigned char)*text)) text++;
+                                if (text[0] == '=' && text[1] == '=' && text[2] == '=') {
+                                    has_equals = true;
+                                    /* If previous row has === and this is first tfoot row, this HTML row is the === row */
+                                    if (row_idx <= 3) {
+                                        should_skip_row = true;
+                                        fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - previous AST row %d has === markers, this is first tfoot row\n", row_idx, ast_row_idx, prev_ast_row);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             if (should_skip_row) {
                 /* Skip the opening <tr> tag and everything until </tr> */
@@ -970,22 +1081,129 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
             int target_original_col = -1;
             if (col_idx < row_col_mapping_size) {
                 target_original_col = row_col_mapping[col_idx];
+            } else {
+                fprintf(stderr, "[DEBUG HTML] WARNING: col_idx=%d >= row_col_mapping_size=%d\n", col_idx, row_col_mapping_size);
             }
 
-            fprintf(stderr, "[DEBUG HTML] Processing cell at html_pos=%d, orig_col=%d, content='%.50s'\n",
-                    col_idx, target_original_col, cell_preview);
+            fprintf(stderr, "[DEBUG HTML] Processing cell at html_pos=%d, orig_col=%d (mapping[%d]=%d), content='%.50s'\n",
+                    col_idx, target_original_col, col_idx, col_idx < row_col_mapping_size ? row_col_mapping[col_idx] : -1, cell_preview);
 
-            /* Find matching attribute using the mapped original column index and AST row index */
+            /* Find matching attribute using the mapped original column index and AST row index.
+             * Also verify that the cell content matches to avoid matching cells that are covered
+             * by rowspans from previous rows.
+             *
+             * If no match found in current row, also check the previous AST row in case of row
+             * detection issues (e.g., when a cell with rowspan is processed in the wrong HTML row).
+             *
+             * For tfoot rows with === markers, also check the previous AST row since the row mapping
+             * might skip the === row if all its cells are marked for removal. */
             cell_attr *matching = NULL;
             if (target_original_col >= 0) {
+                /* First, try to match in the current AST row */
                 for (cell_attr *a = attrs; a; a = a->next) {
                     if (a->table_index == table_idx &&
                         a->row_index == ast_row_idx &&
                         a->col_index == target_original_col) {
-                        matching = a;
-                        fprintf(stderr, "[DEBUG HTML] Matched: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
-                                table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col, a->attributes);
-                        break;
+                        /* Verify content matches to avoid matching cells covered by rowspans from previous rows */
+                        bool content_matches = true;
+                        if (a->cell_text && cell_preview[0] != '\0') {
+                            /* Compare cell content - trim whitespace for comparison */
+                            const char *attr_text = a->cell_text;
+                            const char *html_text = cell_preview;
+                            /* Skip leading whitespace */
+                            while (*attr_text && isspace((unsigned char)*attr_text)) attr_text++;
+                            while (*html_text && isspace((unsigned char)*html_text)) html_text++;
+                            /* Compare (case-sensitive, but we can make it more lenient if needed) */
+                            content_matches = (strncmp(attr_text, html_text, strlen(attr_text)) == 0 &&
+                                             (html_text[strlen(attr_text)] == '\0' || isspace((unsigned char)html_text[strlen(attr_text)])));
+                        }
+                        if (content_matches) {
+                            matching = a;
+                            fprintf(stderr, "[DEBUG HTML] Matched: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
+                                    table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col, a->attributes);
+                            break;
+                        } else {
+                            fprintf(stderr, "[DEBUG HTML] Position match but content mismatch: attr='%s' vs html='%s', skipping\n",
+                                    a->cell_text ? a->cell_text : "", cell_preview);
+                        }
+                    }
+                }
+
+                /* If no match found in current row, also check the previous AST row.
+                 * This is especially important for tfoot rows with === markers, where the row mapping
+                 * might skip the === row if all its cells are marked for removal. */
+                if (!matching && ast_row_idx > 0) {
+                    for (cell_attr *a = attrs; a; a = a->next) {
+                        if (a->table_index == table_idx &&
+                            a->row_index == ast_row_idx - 1 &&
+                            a->col_index == target_original_col &&
+                            strstr(a->attributes, "data-remove")) {
+                            /* Check if content matches (for === cells) */
+                            bool content_matches = true;
+                            if (a->cell_text && cell_preview[0] != '\0') {
+                                const char *attr_text = a->cell_text;
+                                const char *html_text = cell_preview;
+                                while (*attr_text && isspace((unsigned char)*attr_text)) attr_text++;
+                                while (*html_text && isspace((unsigned char)*html_text)) html_text++;
+                                content_matches = (strncmp(attr_text, html_text, strlen(attr_text)) == 0 &&
+                                                 (html_text[strlen(attr_text)] == '\0' || isspace((unsigned char)html_text[strlen(attr_text)])));
+                            }
+                            if (content_matches) {
+                                matching = a;
+                                fprintf(stderr, "[DEBUG HTML] Matched in previous AST row (tfoot fallback): table=%d, row=%d (AST %d->%d), col=%d, attrs='%s'\n",
+                                        table_idx, row_idx, ast_row_idx - 1, ast_row_idx, target_original_col, a->attributes);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                /* If no match found in current row, try the previous AST row as a fallback.
+                 * This handles cases where row detection is off by one. We try matching by
+                 * column position in the previous row. This is safe because:
+                 * 1. We only do this if there's no match in the current row
+                 * 2. We match by column position, not content (works for all tables)
+                 * 3. This is a fallback for row detection issues, not the primary matching method
+                 *
+                 * IMPORTANT: Don't match empty cells - they should be removed, not matched to previous row cells. */
+                if (!matching && row_idx > 0 && target_original_col >= 0 && cell_preview[0] != '\0') {
+                    int prev_html_row = row_idx - 1;
+                    int prev_ast_row = -1;
+                    int prev_html_row_count = -1;
+                    for (int r = 0; r < 100; r++) {
+                        bool has_non_removed = false;
+                        for (all_cell *c = all_cells; c; c = c->next) {
+                            if (c->table_index == table_idx &&
+                                c->row_index == r &&
+                                !c->is_removed) {
+                                has_non_removed = true;
+                                break;
+                            }
+                        }
+                        if (has_non_removed) {
+                            prev_html_row_count++;
+                            if (prev_html_row_count == prev_html_row) {
+                                prev_ast_row = r;
+                                break;
+                            }
+                        }
+                    }
+                    if (prev_ast_row >= 0) {
+                        /* Try to match in previous AST row. Check both target_original_col and target_original_col-1
+                         * because column mapping might be off by one due to rowspan issues.
+                         * IMPORTANT: Don't match cells marked for removal - they shouldn't be in the previous row. */
+                        for (cell_attr *a = attrs; a; a = a->next) {
+                            if (a->table_index == table_idx &&
+                                a->row_index == prev_ast_row &&
+                                (a->col_index == target_original_col ||
+                                 (target_original_col > 0 && a->col_index == target_original_col - 1)) &&
+                                !strstr(a->attributes, "data-remove")) {  /* Don't match removed cells */
+                                matching = a;
+                                fprintf(stderr, "[DEBUG HTML] Matched in previous row (fallback): table=%d, row=%d->%d (AST %d->%d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
+                                        table_idx, prev_html_row, row_idx, prev_ast_row, ast_row_idx, a->col_index, col_idx, target_original_col, a->attributes);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -1013,7 +1231,37 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                 }
             }
 
-            if ((matching && strstr(matching->attributes, "data-remove")) || is_rowspan_marker) {
+            /* Check if this cell should be removed:
+             * 1. If it's matched and marked for removal
+             * 2. If it contains "^^" (rowspan marker)
+             * 3. If it's empty and the previous cell in the same row has colspan (empty cells after colspan should be removed) */
+            bool should_remove_cell = false;
+            if (matching && strstr(matching->attributes, "data-remove")) {
+                should_remove_cell = true;
+            } else if (is_rowspan_marker) {
+                should_remove_cell = true;
+            } else if (cell_preview[0] == '\0' && prev_cell_matching) {
+                /* Check if previous cell has colspan.
+                 * If the previous cell has colspan > 1, and this empty cell is
+                 * at the next column position, it should be removed (it's the cell that was merged). */
+                if (strstr(prev_cell_matching->attributes, "colspan")) {
+                    int colspan_val = 1;
+                    if (strstr(prev_cell_matching->attributes, "colspan=")) {
+                        sscanf(strstr(prev_cell_matching->attributes, "colspan="), "colspan=\"%d\"", &colspan_val);
+                    }
+                    /* If the previous cell has colspan > 1, and this empty cell is
+                     * at the next column position, it should be removed */
+                    if (colspan_val > 1) {
+                        /* Check if this cell is at the next column after the previous cell */
+                        int prev_col = prev_cell_matching->col_index;
+                        if (target_original_col == prev_col + 1 || target_original_col == prev_col) {
+                            should_remove_cell = true;
+                        }
+                    }
+                }
+            }
+
+            if (should_remove_cell) {
                 /* Skip this entire cell (including for tfoot rows - === rows are skipped entirely) */
                 /* Note: Removed cells are not rendered by the HTML renderer, so we shouldn't see them here.
                  * But if we do (e.g., from cmark-gfm before our processing), skip them.
@@ -1032,6 +1280,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                 if (strncmp(read, close_tag, 5) == 0) read += 5;
 
                 col_idx++;  /* Increment to match column index from collection (counts all cells) */
+                prev_cell_matching = NULL;  /* Reset previous cell matching for removed cells */
                 continue;
             } else if (matching && (strstr(matching->attributes, "rowspan") || strstr(matching->attributes, "colspan"))) {
                 /* Copy opening tag */
@@ -1048,10 +1297,12 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                     *write++ = *read++;
                 }
                 col_idx++;
+                prev_cell_matching = matching;  /* Track this cell for next cell's colspan check */
                 continue;
             }
 
             col_idx++;
+            prev_cell_matching = matching;  /* Track this cell for next cell's colspan check */
         }
 
         /* Copy character */
@@ -1072,6 +1323,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     while (attrs) {
         cell_attr *next = attrs->next;
         free(attrs->attributes);
+        if (attrs->cell_text) free(attrs->cell_text);
         free(attrs);
         attrs = next;
     }
