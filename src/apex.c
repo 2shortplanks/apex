@@ -3294,6 +3294,7 @@ char *apex_wrap_html_document(const char *content, const char *title, const char
             "    table { border-collapse: collapse; width: 100%%; }\n"
             "    th, td { border: 1px solid #ddd; padding: 0.5rem; }\n"
             "    th { background: #f5f5f5; }\n"
+            "    tfoot td { background: #e8e8e8; }\n"
             "    .page-break { page-break-after: always; }\n"
             "    .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }\n"
             "    .callout-note { border-color: #3b82f6; background: #eff6ff; }\n"

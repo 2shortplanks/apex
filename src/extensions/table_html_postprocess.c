@@ -157,9 +157,6 @@ static cell_attr *collect_table_cell_attributes(cmark_node *document) {
                         attr->cell_text = cell_text ? strdup(cell_text) : NULL;
                         attr->next = list;
                         list = attr;
-
-                        fprintf(stderr, "[DEBUG HTML] Collecting: table=%d, row=%d, col=%d, cell='%s', attrs='%s'\n",
-                                table_index, row_index, col_index, cell_text ? cell_text : "", attrs);
                     }
                 }
                 /* Count all cells (including removed ones) to match the column indices
@@ -750,8 +747,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                 ast_row_idx = row_idx;
             }
 
-            fprintf(stderr, "[DEBUG HTML] HTML row %d maps to AST row %d\n", row_idx, ast_row_idx);
-
             /* Pre-calculate which original columns will be visible in this row's HTML.
              * This creates a mapping: HTML position -> original column index.
              * IMPORTANT: Only include columns that render NEW <td> tags in this HTML row.
@@ -771,8 +766,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                         !c->is_removed) {
                         /* This column has a new cell in the current row */
                         renders_new_cell = true;
-                        fprintf(stderr, "[DEBUG HTML] Row %d (AST %d), orig_col %d: Found new cell in all_cells (row=%d, col=%d)\n",
-                                row_idx, ast_row_idx, orig_col, c->row_index, c->col_index);
                         break;
                     }
                 }
@@ -818,8 +811,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                                     int rows_spanned = row_idx - prev_html_row;
                                     if (rows_spanned < rowspan_val) {
                                         covered_by_rowspan = true;
-                                        fprintf(stderr, "[DEBUG HTML] Row %d, orig_col %d: Covered by rowspan from row %d (AST %d), rowspan=%d, rows_spanned=%d\n",
-                                                row_idx, orig_col, prev_html_row, prev_ast_row, rowspan_val, rows_spanned);
                                         break;
                                     }
                                 }
@@ -836,18 +827,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                     row_col_mapping[row_col_mapping_size++] = orig_col;
                 }
             }
-
-            fprintf(stderr, "[DEBUG HTML] Row %d mapping (size=%d): ", row_idx, row_col_mapping_size);
-            for (int i = 0; i < row_col_mapping_size; i++) {
-                fprintf(stderr, "html_pos=%d->orig_col=%d ", i, row_col_mapping[i]);
-            }
-            fprintf(stderr, "\n");
-            /* Also print the actual array values for debugging */
-            fprintf(stderr, "[DEBUG HTML] Row %d mapping array: [", row_idx);
-            for (int i = 0; i < 10 && i < row_col_mapping_size; i++) {
-                fprintf(stderr, "%d,", row_col_mapping[i]);
-            }
-            fprintf(stderr, "]\n");
 
             /* Store the mapping in a way we can access it during cell processing */
             /* We'll use a simple approach: store it in a static array keyed by table_idx and row_idx */
@@ -922,13 +901,10 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                     }
                 }
             }
-            fprintf(stderr, "[DEBUG HTML] Row %d (AST %d): total_cells=%d, removed_cells=%d\n",
-                    row_idx, ast_row_idx, total_cells_in_row, removed_cells_in_row);
             /* If all cells in this row are marked for removal, skip the entire row */
             /* This applies to both regular rows and tfoot rows that are pure === markers */
             if (total_cells_in_row > 0 && total_cells_in_row == removed_cells_in_row) {
                 should_skip_row = true;
-                fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - all cells removed\n", row_idx, ast_row_idx);
             }
             /* Also check if this row contains === markers by checking the AST row directly.
              * This handles cases where the row mapping might have issues. */
@@ -951,7 +927,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                 /* If this row contains === markers, skip it */
                 if (has_equals) {
                     should_skip_row = true;
-                    fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - contains === markers\n", row_idx, ast_row_idx);
                 } else {
                     /* Also check previous AST row in case row mapping is off */
                     if (ast_row_idx > 0) {
@@ -966,7 +941,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                                     /* If previous row has === and this is first tfoot row, this HTML row is the === row */
                                     if (row_idx <= 3) {
                                         should_skip_row = true;
-                                        fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - previous AST row %d has === markers, this is first tfoot row\n", row_idx, ast_row_idx, prev_ast_row);
                                     }
                                     break;
                                 }
@@ -1081,12 +1055,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
             int target_original_col = -1;
             if (col_idx < row_col_mapping_size) {
                 target_original_col = row_col_mapping[col_idx];
-            } else {
-                fprintf(stderr, "[DEBUG HTML] WARNING: col_idx=%d >= row_col_mapping_size=%d\n", col_idx, row_col_mapping_size);
             }
-
-            fprintf(stderr, "[DEBUG HTML] Processing cell at html_pos=%d, orig_col=%d (mapping[%d]=%d), content='%.50s'\n",
-                    col_idx, target_original_col, col_idx, col_idx < row_col_mapping_size ? row_col_mapping[col_idx] : -1, cell_preview);
 
             /* Find matching attribute using the mapped original column index and AST row index.
              * Also verify that the cell content matches to avoid matching cells that are covered
@@ -1119,12 +1088,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                         }
                         if (content_matches) {
                             matching = a;
-                            fprintf(stderr, "[DEBUG HTML] Matched: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
-                                    table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col, a->attributes);
                             break;
-                        } else {
-                            fprintf(stderr, "[DEBUG HTML] Position match but content mismatch: attr='%s' vs html='%s', skipping\n",
-                                    a->cell_text ? a->cell_text : "", cell_preview);
                         }
                     }
                 }
@@ -1150,8 +1114,6 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                             }
                             if (content_matches) {
                                 matching = a;
-                                fprintf(stderr, "[DEBUG HTML] Matched in previous AST row (tfoot fallback): table=%d, row=%d (AST %d->%d), col=%d, attrs='%s'\n",
-                                        table_idx, row_idx, ast_row_idx - 1, ast_row_idx, target_original_col, a->attributes);
                                 break;
                             }
                         }
@@ -1199,18 +1161,11 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                                  (target_original_col > 0 && a->col_index == target_original_col - 1)) &&
                                 !strstr(a->attributes, "data-remove")) {  /* Don't match removed cells */
                                 matching = a;
-                                fprintf(stderr, "[DEBUG HTML] Matched in previous row (fallback): table=%d, row=%d->%d (AST %d->%d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
-                                        table_idx, prev_html_row, row_idx, prev_ast_row, ast_row_idx, a->col_index, col_idx, target_original_col, a->attributes);
                                 break;
                             }
                         }
                     }
                 }
-            }
-
-            if (!matching && target_original_col >= 0) {
-                fprintf(stderr, "[DEBUG HTML] No match found for: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d)\n",
-                        table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col);
             }
 
             /* Also check if this cell contains "^^" (rowspan marker) - these should be removed */
