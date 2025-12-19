@@ -45,6 +45,63 @@ typedef struct para_to_remove {
     struct para_to_remove *next;
 } para_to_remove;
 
+/* Structure to track all cells (for mapping calculation) */
+typedef struct all_cell {
+    int table_index;
+    int row_index;
+    int col_index;
+    bool is_removed;  /* true if marked with data-remove */
+    struct all_cell *next;
+} all_cell;
+
+/**
+ * Walk AST and collect all cells (for mapping calculation)
+ */
+static all_cell *collect_all_cells(cmark_node *document) {
+    all_cell *list = NULL;
+
+    cmark_iter *iter = cmark_iter_new(document);
+    cmark_event_type ev_type;
+
+    int table_index = -1; /* Track which table we're in */
+    int row_index = -1;  /* Start at -1, will increment to 0 on first row */
+    int col_index = 0;
+
+    while ((ev_type = cmark_iter_next(iter)) != CMARK_EVENT_DONE) {
+        cmark_node *node = cmark_iter_get_node(iter);
+        cmark_node_type type = cmark_node_get_type(node);
+
+        if (ev_type == CMARK_EVENT_ENTER) {
+            if (type == CMARK_NODE_TABLE) {
+                table_index++;  /* New table */
+                row_index = -1;  /* Reset row index for new table */
+            } else if (type == CMARK_NODE_TABLE_ROW) {
+                row_index++;  /* Increment for each row */
+                col_index = 0;
+            } else if (type == CMARK_NODE_TABLE_CELL) {
+                char *attrs = (char *)cmark_node_get_user_data(node);
+                bool is_removed = (attrs && strstr(attrs, "data-remove"));
+
+                /* Store ALL cells for mapping calculation */
+                all_cell *cell = malloc(sizeof(all_cell));
+                if (cell) {
+                    cell->table_index = table_index;
+                    cell->row_index = row_index;
+                    cell->col_index = col_index;
+                    cell->is_removed = is_removed;
+                    cell->next = list;
+                    list = cell;
+                }
+
+                col_index++;
+            }
+        }
+    }
+
+    cmark_iter_free(iter);
+    return list;
+}
+
 /**
  * Walk AST and collect cells with attributes
  */
@@ -85,6 +142,10 @@ static cell_attr *collect_table_cell_attributes(cmark_node *document) {
             } else if (type == CMARK_NODE_TABLE_CELL) {
                 char *attrs = (char *)cmark_node_get_user_data(node);
                 if (attrs) {
+                    /* Get cell content for debugging */
+                    cmark_node *text_node = cmark_node_first_child(node);
+                    const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+
                     /* Store this cell's attributes */
                     cell_attr *attr = malloc(sizeof(cell_attr));
                     if (attr) {
@@ -94,8 +155,15 @@ static cell_attr *collect_table_cell_attributes(cmark_node *document) {
                         attr->attributes = strdup(attrs);
                         attr->next = list;
                         list = attr;
+
+                        fprintf(stderr, "[DEBUG HTML] Collecting: table=%d, row=%d, col=%d, cell='%s', attrs='%s'\n",
+                                table_index, row_index, col_index, cell_text ? cell_text : "", attrs);
                     }
                 }
+                /* Count all cells (including removed ones) to match the column indices
+                 * used in advanced_tables.c when finding target cells for rowspan.
+                 * The HTML renderer will remove cells with data-remove, but we need to
+                 * match based on the original column positions. */
                 col_index++;
             }
         }
@@ -328,6 +396,9 @@ static tfoot_row *collect_tfoot_rows(cmark_node *document) {
 char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     if (!html || !document) return (char *)html;
 
+    /* Collect all cells (for mapping calculation) */
+    all_cell *all_cells = collect_all_cells(document);
+
     /* Collect all cells with attributes */
     cell_attr *attrs = collect_table_cell_attributes(document);
 
@@ -345,7 +416,12 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     size_t capacity = strlen(html) * 2;
     char *output = malloc(capacity);
     if (!output) {
-        /* Clean up and return original */
+        /* Clean up */
+        while (all_cells) {
+            all_cell *next = all_cells->next;
+            free(all_cells);
+            all_cells = next;
+        }
         while (attrs) {
             cell_attr *next = attrs->next;
             free(attrs->attributes);
@@ -372,6 +448,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     size_t written = 0;
     int table_idx = -1; /* Track which table we're in */
     int row_idx = -1;
+    int ast_row_idx = -1;  /* AST row index corresponding to current HTML row */
     int col_idx = 0;
     int para_idx = -1;  /* Track paragraph index */
     bool in_table = false;
@@ -379,6 +456,16 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     bool in_tbody = false;  /* Track if we're currently in tbody */
     bool in_tfoot = false;  /* Track if we're currently in tfoot */
     bool current_row_is_tfoot = false;  /* Track if current row is a tfoot row */
+
+    /* Pre-calculated mapping for current row: HTML position -> original column index */
+    int row_col_mapping[50];  /* row_col_mapping[html_pos] = original_col_index */
+    int row_col_mapping_size = 0;
+
+    /* Track active rowspan cells per column (inspired by Jekyll Spaceship approach).
+     * active_rowspan_cells[col] points to the cell_attr for the cell that's currently
+     * being rowspanned in that column. When we see a ^^ cell, we increment its rowspan. */
+    cell_attr *active_rowspan_cells[50];  /* One per column */
+    for (int i = 0; i < 50; i++) active_rowspan_cells[i] = NULL;
 
     while (*read) {
         /* Ensure we have space (realloc if needed) */
@@ -625,6 +712,82 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
             row_idx++;
             col_idx = 0;
 
+            /* Map HTML row index to AST row index.
+             * HTML rows skip separator rows (which are marked for removal in AST).
+             * So we need to find the AST row that corresponds to this HTML row. */
+            ast_row_idx = -1;
+            int html_row_count = -1;  /* Start at -1, will be 0 for header */
+            for (int r = 0; r < 100; r++) {  /* Check up to 100 AST rows */
+                /* Check if this AST row has any non-removed cells */
+                bool has_non_removed = false;
+                for (all_cell *c = all_cells; c; c = c->next) {
+                    if (c->table_index == table_idx &&
+                        c->row_index == r &&
+                        !c->is_removed) {
+                        has_non_removed = true;
+                        break;
+                    }
+                }
+                /* If this AST row has non-removed cells, it appears in HTML */
+                if (has_non_removed) {
+                    html_row_count++;
+                    if (html_row_count == row_idx) {
+                        ast_row_idx = r;
+                        break;
+                    }
+                }
+            }
+
+            if (ast_row_idx == -1) {
+                /* Fallback: use row_idx directly (shouldn't happen) */
+                ast_row_idx = row_idx;
+            }
+
+            fprintf(stderr, "[DEBUG HTML] HTML row %d maps to AST row %d\n", row_idx, ast_row_idx);
+
+            /* Pre-calculate which original columns will be visible in this row's HTML.
+             * This creates a mapping: HTML position -> original column index.
+             * IMPORTANT: Only include columns that render NEW <td> tags in this HTML row.
+             * Columns occupied by rowspans from previous rows should NOT be included,
+             * because they don't generate new <td> tags in this row. */
+            row_col_mapping_size = 0;
+
+            /* For each original column, check if it renders a NEW cell in this HTML row */
+            for (int orig_col = 0; orig_col < 50 && row_col_mapping_size < 50; orig_col++) {
+                bool renders_new_cell = false;
+
+                /* Check if this column has a non-removed cell in current AST row */
+                for (all_cell *c = all_cells; c; c = c->next) {
+                    if (c->table_index == table_idx &&
+                        c->row_index == ast_row_idx &&
+                        c->col_index == orig_col &&
+                        !c->is_removed) {
+                        /* This column has a new cell in the current row */
+                        renders_new_cell = true;
+                        fprintf(stderr, "[DEBUG HTML] Row %d (AST %d), orig_col %d: Found new cell in all_cells (row=%d, col=%d)\n",
+                                row_idx, ast_row_idx, orig_col, c->row_index, c->col_index);
+                        break;
+                    }
+                }
+
+                /* Do NOT include columns occupied by rowspans from previous rows,
+                 * because they don't generate new <td> tags in this HTML row */
+
+                if (renders_new_cell) {
+                    row_col_mapping[row_col_mapping_size++] = orig_col;
+                }
+            }
+
+            fprintf(stderr, "[DEBUG HTML] Row %d mapping: ", row_idx);
+            for (int i = 0; i < row_col_mapping_size; i++) {
+                fprintf(stderr, "html_pos=%d->orig_col=%d ", i, row_col_mapping[i]);
+            }
+            fprintf(stderr, "\n");
+
+            /* Store the mapping in a way we can access it during cell processing */
+            /* We'll use a simple approach: store it in a static array keyed by table_idx and row_idx */
+            /* Actually, let's use a simpler approach: process cells immediately using this mapping */
+
             /* Note: Captions immediately following tables (with no blank line) are not supported.
              * When a caption like [Caption] appears on the line immediately after a table, cmark-gfm
              * parses it as a table row rather than a paragraph, making it difficult to detect and extract
@@ -682,21 +845,24 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
             /* For tfoot rows that are pure === markers (all cells marked), skip the entire row */
             /* For tfoot rows with actual content, render them normally */
             bool should_skip_row = false;
-            /* Count cells in this row that are marked for removal */
-            int cells_in_row = 0;
-            int cells_to_remove = 0;
-            for (cell_attr *a = attrs; a; a = a->next) {
-                if (a->table_index == table_idx && a->row_index == row_idx) {
-                    cells_in_row++;
-                    if (strstr(a->attributes, "data-remove")) {
-                        cells_to_remove++;
+            /* Count ALL cells in this row (using all_cells) to see if any are non-removed */
+            int total_cells_in_row = 0;
+            int removed_cells_in_row = 0;
+            for (all_cell *c = all_cells; c; c = c->next) {
+                if (c->table_index == table_idx && c->row_index == ast_row_idx) {
+                    total_cells_in_row++;
+                    if (c->is_removed) {
+                        removed_cells_in_row++;
                     }
                 }
             }
+            fprintf(stderr, "[DEBUG HTML] Row %d (AST %d): total_cells=%d, removed_cells=%d\n",
+                    row_idx, ast_row_idx, total_cells_in_row, removed_cells_in_row);
             /* If all cells in this row are marked for removal, skip the entire row */
             /* This applies to both regular rows and tfoot rows that are pure === markers */
-            if (cells_in_row > 0 && cells_in_row == cells_to_remove) {
+            if (total_cells_in_row > 0 && total_cells_in_row == removed_cells_in_row) {
                 should_skip_row = true;
+                fprintf(stderr, "[DEBUG HTML] Skipping row %d (AST %d) - all cells removed\n", row_idx, ast_row_idx);
             }
             if (should_skip_row) {
                 /* Skip the opening <tr> tag and everything until </tr> */
@@ -787,17 +953,73 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
 
         /* Check for cell opening tags */
         if (in_row && (strncmp(read, "<td", 3) == 0 || strncmp(read, "<th", 3) == 0)) {
-            /* Find matching attribute (match table_idx, row_idx, AND col_idx) */
-            cell_attr *matching = NULL;
-            for (cell_attr *a = attrs; a; a = a->next) {
-                if (a->table_index == table_idx && a->row_index == row_idx && a->col_index == col_idx) {
-                    matching = a;
-                    break;
+            /* Extract cell content for debugging */
+            const char *cell_start = read;
+            char cell_preview[100] = {0};
+            const char *content_start = strchr(read, '>');
+            if (content_start) {
+                const char *content_end = strstr(content_start + 1, "</td>");
+                if (!content_end) content_end = strstr(content_start + 1, "</th>");
+                if (content_end && content_end - content_start - 1 < 99) {
+                    strncpy(cell_preview, content_start + 1, content_end - content_start - 1);
+                    cell_preview[content_end - content_start - 1] = '\0';
                 }
             }
 
-            if (matching && strstr(matching->attributes, "data-remove")) {
+            /* Use pre-calculated mapping: HTML position -> original column index */
+            int target_original_col = -1;
+            if (col_idx < row_col_mapping_size) {
+                target_original_col = row_col_mapping[col_idx];
+            }
+
+            fprintf(stderr, "[DEBUG HTML] Processing cell at html_pos=%d, orig_col=%d, content='%.50s'\n",
+                    col_idx, target_original_col, cell_preview);
+
+            /* Find matching attribute using the mapped original column index and AST row index */
+            cell_attr *matching = NULL;
+            if (target_original_col >= 0) {
+                for (cell_attr *a = attrs; a; a = a->next) {
+                    if (a->table_index == table_idx &&
+                        a->row_index == ast_row_idx &&
+                        a->col_index == target_original_col) {
+                        matching = a;
+                        fprintf(stderr, "[DEBUG HTML] Matched: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d), attrs='%s'\n",
+                                table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col, a->attributes);
+                        break;
+                    }
+                }
+            }
+
+            if (!matching && target_original_col >= 0) {
+                fprintf(stderr, "[DEBUG HTML] No match found for: table=%d, row=%d (AST %d), col=%d (html_pos=%d, orig_col=%d)\n",
+                        table_idx, row_idx, ast_row_idx, target_original_col, col_idx, target_original_col);
+            }
+
+            /* Also check if this cell contains "^^" (rowspan marker) - these should be removed */
+            /* Check both the preview and the actual content in the HTML */
+            bool is_rowspan_marker = (strstr(cell_preview, "^^") != NULL);
+            if (!is_rowspan_marker) {
+                /* Also check the actual HTML content for "^^" */
+                const char *content_check = strstr(read, ">");
+                if (content_check) {
+                    const char *close_check = strstr(content_check + 1, "</td>");
+                    if (!close_check) close_check = strstr(content_check + 1, "</th>");
+                    if (close_check && close_check - content_check - 1 < 100) {
+                        char check_buf[100];
+                        strncpy(check_buf, content_check + 1, close_check - content_check - 1);
+                        check_buf[close_check - content_check - 1] = '\0';
+                        is_rowspan_marker = (strstr(check_buf, "^^") != NULL);
+                    }
+                }
+            }
+
+            if ((matching && strstr(matching->attributes, "data-remove")) || is_rowspan_marker) {
                 /* Skip this entire cell (including for tfoot rows - === rows are skipped entirely) */
+                /* Note: Removed cells are not rendered by the HTML renderer, so we shouldn't see them here.
+                 * But if we do (e.g., from cmark-gfm before our processing), skip them.
+                 * Also remove cells containing "^^" (rowspan markers) even if they're not matched.
+                 * We still increment col_idx to match the column index used when collecting attributes
+                 * (which counts all cells including removed ones). */
                 bool is_th = strncmp(read, "<th", 3) == 0;
                 const char *close_tag = is_th ? "</th>" : "</td>";
 
@@ -809,7 +1031,7 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
                 while (*read && strncmp(read, close_tag, 5) != 0) read++;
                 if (strncmp(read, close_tag, 5) == 0) read += 5;
 
-                col_idx++;
+                col_idx++;  /* Increment to match column index from collection (counts all cells) */
                 continue;
             } else if (matching && (strstr(matching->attributes, "rowspan") || strstr(matching->attributes, "colspan"))) {
                 /* Copy opening tag */
@@ -838,6 +1060,13 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document) {
     }
 
     *write = '\0';
+
+    /* Clean up all_cells list */
+    while (all_cells) {
+        all_cell *next = all_cells->next;
+        free(all_cells);
+        all_cells = next;
+    }
 
     /* Clean up attributes list */
     while (attrs) {

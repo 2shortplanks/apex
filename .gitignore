@@ -48,3 +48,4 @@ release/
 build-release/
 commit_message.txt
 .github/copilot-instructions.md
+output.html

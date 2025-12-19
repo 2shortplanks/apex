@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <stdio.h>
 
 /**
  * Check if a cell should span (is empty or contains <<)
@@ -168,16 +169,27 @@ static void process_table_spans(cmark_node *table) {
     cmark_node *prev_row = NULL;
     bool is_first_row = true; /* Track header row */
     bool in_tfoot_section = false; /* Track if we've entered tfoot section */
+    int row_idx = -1; /* Track current row index for debugging */
+
+    /* Track active rowspan cells per column (inspired by Jekyll Spaceship).
+     * active_rowspan[col] points to the cell node that's currently being rowspanned in that column.
+     * When we see a ^^ cell, we merge it with the active cell for that column.
+     * This persists across rows - when a regular cell appears, it becomes the new active cell.
+     * Initialize all to NULL at the start of each table. */
+    cmark_node *active_rowspan[50] = {NULL};  /* One per column, max 50 columns, persists across rows */
 
     while (row) {
         if (cmark_node_get_type(row) == CMARK_NODE_TABLE_ROW) {
             /* Skip span processing for header row */
             if (is_first_row) {
                 is_first_row = false;
+                row_idx = 0;
                 prev_row = row;
                 row = cmark_node_next(row);
                 continue;
             }
+
+            row_idx++; /* Increment row index for data rows */
 
             /* Check if this row is a tfoot row (contains ===) */
             /* Once we encounter a tfoot row, all subsequent rows are in tfoot */
@@ -272,8 +284,23 @@ static void process_table_spans(cmark_node *table) {
             cmark_node *prev_cell = NULL;
             int col_index = 0;
 
+            fprintf(stderr, "[DEBUG] Processing row %d\n", row_idx);
+
+            /* Note: We don't initialize active_rowspan here because it persists across rows.
+             * When we process the first data row, active_rowspan will be NULL for all columns,
+             * so ^^ cells will find cells from prev_row and set them as active.
+             * Regular cells in subsequent rows will update active_rowspan as they're processed. */
+
             while (cell) {
                 if (cmark_node_get_type(cell) == CMARK_NODE_TABLE_CELL) {
+                    /* Get cell content for debugging */
+                    cmark_node *text_node = cmark_node_first_child(cell);
+                    const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+                    bool is_rowspan = is_rowspan_cell(cell);
+                    bool is_colspan = is_colspan_cell(cell);
+                    fprintf(stderr, "[DEBUG] Row %d, col %d: Processing cell '%s' (is_rowspan=%d, is_colspan=%d)\n",
+                            row_idx, col_index, cell_text ? cell_text : "", is_rowspan, is_colspan);
+
                     /* Check for colspan */
                     if (is_colspan_cell(cell)) {
                         /* Find the first non-empty cell going backwards (skip cells marked for removal) */
@@ -319,43 +346,42 @@ static void process_table_spans(cmark_node *table) {
                         }
                     }
                     /* Check for rowspan */
-                    else if (is_rowspan_cell(cell) && prev_row) {
-                        /* Find cell in previous row at same column index */
-                        /* If that cell is also marked for removal, we need to find the original cell */
-                        cmark_node *target_row = prev_row;
-                        cmark_node *target_cell = NULL;
+                    else if (is_rowspan_cell(cell) && col_index < 50) {
+                        /* Use Jekyll Spaceship approach: merge with active rowspan cell for this column.
+                         * If there's an active rowspan cell, increment its rowspan.
+                         * Otherwise, find the cell in the previous row and make it active. */
+                        cmark_node *target_cell = active_rowspan[col_index];
 
-                        /* Walk backwards through rows until we find a non-removed cell at this column */
-                        while (target_row && !target_cell) {
-                            cmark_node *candidate = cmark_node_first_child(target_row);
+                        fprintf(stderr, "[DEBUG] Row %d, col %d: Found ^^ cell, active_rowspan[%d] = %s\n",
+                                row_idx, col_index, col_index, target_cell ? "SET" : "NULL");
+
+                        /* If no active cell, find one in the previous row */
+                        if (!target_cell && prev_row) {
+                            cmark_node *candidate = cmark_node_first_child(prev_row);
                             int prev_col = 0;
 
-                            /* Find cell at col_index in this row */
+                            /* Find cell at col_index in the previous row */
                             while (candidate) {
                                 if (cmark_node_get_type(candidate) == CMARK_NODE_TABLE_CELL) {
                                     if (prev_col == col_index) {
                                         /* Check if this cell is marked for removal */
                                         char *cand_attrs = (char *)cmark_node_get_user_data(candidate);
                                         if (!cand_attrs || !strstr(cand_attrs, "data-remove")) {
-                                            /* Found a real cell (not marked for removal) */
+                                            /* Found a real cell (not marked for removal) at this column index */
                                             target_cell = candidate;
+                                            active_rowspan[col_index] = candidate;  /* Make it active */
+
+                                            /* Get cell content for debugging */
+                                            cmark_node *text_node = cmark_node_first_child(candidate);
+                                            const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+                                            fprintf(stderr, "[DEBUG] Row %d, col %d: Found target from prev_row: '%s', setting active_rowspan[%d]\n",
+                                                    row_idx, col_index, cell_text ? cell_text : "", col_index);
                                         }
-                                        /* Found the cell at this column index - break regardless */
                                         break;
                                     }
                                     prev_col++;
                                 }
                                 candidate = cmark_node_next(candidate);
-                            }
-
-                            /* If not found, try previous row */
-                            if (!target_cell) {
-                                /* Find previous table row */
-                                cmark_node *prev_sibling = cmark_node_previous(target_row);
-                                while (prev_sibling && cmark_node_get_type(prev_sibling) != CMARK_NODE_TABLE_ROW) {
-                                    prev_sibling = cmark_node_previous(prev_sibling);
-                                }
-                                target_row = prev_sibling;
                             }
                         }
 
@@ -367,6 +393,12 @@ static void process_table_spans(cmark_node *table) {
                             if (prev_attrs && strstr(prev_attrs, "rowspan=")) {
                                 sscanf(strstr(prev_attrs, "rowspan="), "rowspan=\"%d\"", &current_rowspan);
                             }
+
+                            /* Get cell content for debugging */
+                            cmark_node *text_node = cmark_node_first_child(target_cell);
+                            const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+                            fprintf(stderr, "[DEBUG] Row %d, col %d: Incrementing rowspan for '%s' from %d to %d\n",
+                                    row_idx, col_index, cell_text ? cell_text : "", current_rowspan, current_rowspan + 1);
 
                             /* Increment rowspan - append or replace */
                             char new_attrs[256];
@@ -385,6 +417,31 @@ static void process_table_spans(cmark_node *table) {
                         char *existing = (char *)cmark_node_get_user_data(cell);
                         if (existing) free(existing);
                         cmark_node_set_user_data(cell, strdup(" data-remove=\"true\""));
+                    }
+
+                    /* If this is a regular cell (not rowspan), it becomes the new active cell for this column.
+                     * This happens AFTER processing rowspan cells, so regular cells replace the previous active cell.
+                     * This is the Jekyll Spaceship approach: regular cells become the new active cells.
+                     *
+                     * IMPORTANT: We set this AFTER processing the cell, so that when we process ^^ cells
+                     * in the NEXT row, they will use the correct active cell from THIS row. */
+                    if (!is_rowspan_cell(cell)) {
+                        char *cell_attrs = (char *)cmark_node_get_user_data(cell);
+                        if (!cell_attrs || !strstr(cell_attrs, "data-remove")) {
+                            /* Get previous active cell content for debugging */
+                            cmark_node *prev_active_cell = active_rowspan[col_index];
+                            cmark_node *prev_text_node = prev_active_cell ? cmark_node_first_child(prev_active_cell) : NULL;
+                            const char *prev_text = prev_text_node ? cmark_node_get_literal(prev_text_node) : "NULL";
+
+                            /* This is a regular cell, so it becomes the new active cell for this column */
+                            active_rowspan[col_index] = cell;
+
+                            /* Get cell content for debugging */
+                            cmark_node *text_node = cmark_node_first_child(cell);
+                            const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+                            fprintf(stderr, "[DEBUG] Row %d, col %d: Regular cell '%s' -> setting active_rowspan[%d] (was: '%s')\n",
+                                    row_idx, col_index, cell_text ? cell_text : "", col_index, prev_text ? prev_text : "");
+                        }
                     }
 
                     prev_cell = cell;

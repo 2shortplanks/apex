@@ -12,6 +12,18 @@ This table combines both rowspan and colspan features:
 
 ---
 
+Use `^^` to merge cells vertically (rowspan):
+
+| Name    | Department  | Project  | Status |
+| ------- | ----------- | -------- | ------ |
+| Alice   | Engineering | Alpha    | Active |
+| ^^      | ^^          | Beta     | ^^     |
+| ^^      | ^^          | Gamma    | ^^     |
+| Bob     | Marketing   | Campaign | Active |
+| Charlie | Sales       | Q4       | Active |
+
+---
+
 
 | Department  | Employee | Q1-Q2 Average | Q3  | Q4  | Overall |
 | ----------- | -------- | ------------- | --- | --- | ------- |

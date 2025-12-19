@@ -429,30 +429,47 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     size_t text_len = strlen(text);
 
     /* Quick scan: check if any definition list patterns exist before processing */
-    /* Simple scan for : followed by space/tab/newline (fastest check) */
+    /* Definition lists start with : (after up to 3 spaces or blockquote) */
     bool has_def_list_pattern = false;
     const char *p = text;
-    const char *end = text + text_len - 1;  /* -1 to safely check p[1] */
+    const char *end = text + text_len;
 
     while (p < end) {
-        if (*p == ':' && (p[1] == ' ' || p[1] == '\t' || p[1] == '\n')) {
-            /* Found : followed by space/tab/newline - likely a definition marker */
-            /* Quick check: is it at start of line or after whitespace/blockquote? */
-            const char *before = p;
-            while (before > text && before[-1] != '\n') {
-                char prev = before[-1];
-                if (prev != ' ' && prev != '\t' && prev != '>') {
-                    break;  /* Found non-whitespace before :, skip */
-                }
-                before--;
+        /* Look for start of line (beginning of text or after newline) */
+        if (p == text || p[-1] == '\n') {
+            const char *line_start = p;
+            const char *check = p;
+            int spaces = 0;
+
+            /* Skip up to 3 leading spaces */
+            while (spaces < 3 && check < end && *check == ' ') {
+                spaces++;
+                check++;
             }
-            /* If at start of text or after newline, it's a definition */
-            if (before == text || before[-1] == '\n') {
+
+            /* Skip blockquote prefix (>) */
+            while (check < end && *check == '>') {
+                check++;
+                /* Skip optional space after > */
+                if (check < end && (*check == ' ' || *check == '\t')) {
+                    check++;
+                }
+            }
+
+            /* Check if this line starts with : followed by space/tab */
+            if (check < end && *check == ':' && (check + 1) < end && (check[1] == ' ' || check[1] == '\t')) {
                 has_def_list_pattern = true;
                 break;
             }
+
+            /* Move to next line */
+            while (p < end && *p != '\n') {
+                p++;
+            }
+            if (p < end) p++; /* Skip the newline */
+        } else {
+            p++;
         }
-        p++;
     }
 
     /* Early exit if no definition list patterns found */
@@ -501,6 +518,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     int term_len = 0;
     bool term_has_blockquote = false;  /* Track if buffered term has blockquote prefix */
     int term_blockquote_depth = 0;  /* Track blockquote depth of buffered term */
+    bool found_any_def_list = false;  /* Track if we actually created any definition lists */
 
     const char *prev_read_pos = NULL;
     int iteration_count = 0;
@@ -591,14 +609,19 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         }
 
         bool is_def_line = false;
+        /* Only check for definition line if it's not a table row or list item */
+        /* Definition lines must start with : (after whitespace/blockquote), not contain : */
         if (!is_table_row && !is_list_item && p < line_end && *p == ':' && (p + 1) < line_end &&
             (p[1] == ' ' || p[1] == '\t')) {
+            /* Double-check: make sure : is at the start of the line content (after whitespace/blockquote) */
+            /* p already points after whitespace and blockquote, so if *p == ':', it's a definition line */
             is_def_line = true;
         }
 
         if (is_def_line) {
             /* Definition line */
             if (!in_def_list) {
+                found_any_def_list = true;  /* We're creating a definition list */
                 /* Check if this definition list is in a blockquote context */
                 in_blockquote_context = has_blockquote_prefix || term_has_blockquote;
                 /* Use the maximum depth from current line or buffered term */
@@ -1069,8 +1092,49 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
                 term_len = 0;
             }
 
+            /* Check if line is a header (starts with #) - check BEFORE other checks */
+            const char *header_check = line_start;
+            while (header_check < line_end && (*header_check == ' ' || *header_check == '\t')) {
+                header_check++;
+            }
+            bool is_header = (header_check < line_end && *header_check == '#');
+
             /* If this is a table row, write it through immediately without buffering */
             if (is_table_row) {
+                size_t needed = line_length + (*line_end == '\n' ? 1 : 0);
+                /* Need needed + 1 for null terminator */
+                ENSURE_SPACE(needed + 1);
+                memcpy(write, line_start, line_length);
+                write += line_length;
+                remaining -= line_length;
+                if (*line_end == '\n' && remaining > 0) {
+                    *write++ = '\n';
+                    remaining--;
+                }
+                /* Move to next line and continue */
+                const char *old_read_continue = read;
+                read = line_end;
+                if (*read == '\n') read++;
+                /* Safety: ensure we advanced */
+                if (read <= old_read_continue) {
+                    /* We're stuck - break instead of continue */
+                    break;
+                }
+                continue;
+            }
+            /* If this is a header, write it through immediately without buffering */
+            else if (is_header) {
+                /* But first, flush any buffered term that wasn't used */
+                if (term_len > 0) {
+                    size_t term_needed = (size_t)term_len + 2;
+                    ENSURE_SPACE(term_needed);
+                    memcpy(write, term_buffer, term_len);
+                    write += term_len;
+                    remaining -= (size_t)term_len;
+                    *write++ = '\n';
+                    remaining--;
+                    term_len = 0;
+                }
                 size_t needed = line_length + (*line_end == '\n' ? 1 : 0);
                 /* Need needed + 1 for null terminator */
                 ENSURE_SPACE(needed + 1);
@@ -1139,32 +1203,8 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
                 }
                 continue;
             }
-            /* Check if line is a header (starts with #) - write immediately without buffering */
-            else if (p < line_end && *p == '#') {
-                /* Header - don't buffer it */
-                size_t needed = line_length + (*line_end == '\n' ? 1 : 0);
-                /* Need needed + 1 for null terminator */
-                ENSURE_SPACE(needed + 1);
-                memcpy(write, line_start, line_length);
-                write += line_length;
-                remaining -= line_length;
-                if (*line_end == '\n' && remaining > 0) {
-                    *write++ = '\n';
-                    remaining--;
-                }
-                /* Move to next line and continue */
-                const char *old_read_continue = read;
-                read = line_end;
-                if (*read == '\n') read++;
-                /* Safety: ensure we advanced */
-                if (read <= old_read_continue) {
-                    /* We're stuck - break instead of continue */
-                    break;
-                }
-                continue;
-            }
             /* Save current line as potential term */
-            else if (line_length < sizeof(term_buffer) - 1) {
+            if (line_length < sizeof(term_buffer) - 1) {
                 /* Check if line has blockquote prefix and count depth */
                 const char *term_check = line_start;
                 while (term_check < line_end && (*term_check == ' ' || *term_check == '\t')) term_check++;
@@ -1277,6 +1317,17 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         write = output + used;
         remaining = output_capacity - used;
     }
+    /* Safety check: if we processed but didn't actually create any definition lists,
+     * return NULL to use original text. This handles cases where the early exit
+     * incorrectly detected a pattern but no definition lists were actually created. */
+    if (!found_any_def_list) {
+        /* No definition lists were created - if we processed but didn't create any DLs,
+         * something went wrong. Return NULL to use original text. */
+        free(output);
+        free(ref_definitions);
+        return NULL;
+    }
+
     *write = '\0';
 
     #undef ENSURE_SPACE
@@ -1285,7 +1336,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     if (write == output) {
         free(output);
         free(ref_definitions);
-        return strdup(text);
+        return NULL;  /* Return NULL to indicate no processing was done */
     }
 
     return output;
