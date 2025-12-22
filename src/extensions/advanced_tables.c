@@ -200,13 +200,12 @@ static void process_table_spans(cmark_node *table) {
                 cmark_node_set_user_data(row, strdup(" data-tfoot=\"true\""));
             }
 
-            /* If this row is a tfoot row (either === or after ===), process it */
-            if (is_tfoot_row(row) || in_tfoot_section) {
-
-                /* Mark === cells for removal (they'll be rendered as empty cells) */
-                /* Only do this if this row actually contains === (the === row itself) */
-                if (is_tfoot_row(row)) {
-                    cmark_node *cell = cmark_node_first_child(row);
+            /* If this row is the === separator row, mark its cells for removal.
+             * We no longer skip processing for tfoot rows entirely, so that colspan
+             * logic can still run on footer rows. Rowspan logic will simply not
+             * trigger unless ^^ markers are present. */
+            if (is_tfoot_row(row)) {
+                cmark_node *cell = cmark_node_first_child(row);
                 while (cell) {
                     if (cmark_node_get_type(cell) == CMARK_NODE_TABLE_CELL) {
                         cmark_node *text_node = cmark_node_first_child(cell);
@@ -232,12 +231,6 @@ static void process_table_spans(cmark_node *table) {
                     }
                     cell = cmark_node_next(cell);
                 }
-                }
-                /* Don't skip the row - continue processing but don't update prev_row for rowspan */
-                /* (tfoot rows shouldn't participate in rowspan calculations) */
-                prev_row = row;
-                row = cmark_node_next(row);
-                continue;
             }
 
             /* Check if this row only contains '—' cells (separator row or empty row) */
