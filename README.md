@@ -1,5 +1,5 @@
 
-[![Version: 0.1.38](https://img.shields.io/badge/Version-0.1.38-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: 0.1.39](https://img.shields.io/badge/Version-0.1.39-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 # Apex
@@ -22,8 +22,10 @@ There are so many variations of Markdown, extending its features in all kinds of
 
 ### Markdown Extensions
 
-- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan via `^^`, colspan via empty cells/`<<`, and captions before/after tables, including Pandoc-style `Table: Caption`)
+- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan via `^^`, colspan via empty cells/`<<`, captions before/after tables including Pandoc-style `Table: Caption`, and individual cell alignment using colons `:Left`, `Right:`, `:Center:`)
+- **Table caption positioning**: Control caption placement with `--captions above` or `--captions below` (default: below)
 - **Relaxed tables**: Support for tables without separator rows (Kramdown-style)
+- **Headerless tables**: Support for tables that start with alignment rows (separator rows) without header rows; column alignment is automatically applied
 - **Footnotes**: Three syntaxes supported (reference-style, Kramdown inline, MultiMarkdown inline)
 - **Definition lists**: Kramdown-style definition lists with Markdown content support
 - **Task lists**: GitHub-style checkboxes (`- [ ]` and `- [x]`)
@@ -44,6 +46,8 @@ There are so many variations of Markdown, extending its features in all kinds of
 - **Metadata control of options**: Control command-line options via metadata - set boolean flags (`indices: false`, `wikilinks: true`) and string options (`bibliography: refs.bib`, `title: My Document`, `wikilink-space: dash`, `wikilink-extension: html`) directly in document metadata for per-document configuration
 - **Table of Contents**: Automatic TOC generation with depth control using HTML (`<!--TOC-->`), MMD (`{{TOC}}` / `{{TOC:2-4}}`), and Kramdown `{:toc}` markers. Headings marked with `{:.no_toc}` are excluded from the generated TOC.
 - **File includes**: Three syntaxes (Marked `<<[file]`, MultiMarkdown `{{file}}`, iA Writer `/file`), with support for address ranges and wildcard/glob patterns such as `{{file.*}}`, `{{*.md}}`, and `{{c?de.py}}`.
+- **Markdown combiner (`--combine`)**: Concatenate one or more Markdown files into a single Markdown stream, expanding all include syntaxes. When a `SUMMARY.md` file is provided, Apex treats it as a GitBook-style index and combines the linked files in order???perfect for building books, multi-file indices, and shared tables of contents that can then be piped back into Apex for final rendering.
+- **MultiMarkdown merge (`--mmd-merge`)**: Read one or more mmd_merge-style index files and stitch their referenced documents into a single Markdown stream. Each non-empty, non-comment line specifies a file to include; indentation with tabs or four-space groups shifts all headings in that file down by one level per indent, mirroring the original `mmd_merge.pl` behavior. Output is raw Markdown that can be piped into Apex (e.g., `apex --mmd-merge index.txt | apex --mode mmd`).
 - **CSV/TSV support**: Automatic table conversion from CSV and TSV files
 - **Inline Attribute Lists (IAL)**: Kramdown-style attributes `{: #id .class}`
 - **Special markers**: Page breaks (`<!--BREAK-->`), autoscroll pauses (`<!--PAUSE:N-->`), end-of-block markers
@@ -84,6 +88,7 @@ There are so many variations of Markdown, extending its features in all kinds of
 - **Pretty-print**: Formatted HTML with proper indentation for readability
 - **Header ID generation**: Automatic or manual header IDs with multiple format options (GFM, MMD, Kramdown)
 - **Header anchors**: Option to generate `<a>` anchor tags instead of header IDs
+- **ARIA accessibility**: Add ARIA labels and accessibility attributes (`--aria`) for better screen reader support, including aria-label on TOC navigation, role attributes on figures and tables, and aria-describedby linking tables to their captions
 
 ### Advanced Features
 
@@ -188,9 +193,11 @@ apex input.md --mode kramdown
 - `--title TITLE` - Document title (requires `--standalone`)
 - `--relaxed-tables` - Enable relaxed table parsing (default in unified/kramdown modes)
 - `--no-relaxed-tables` - Disable relaxed table parsing
+- `--captions POSITION` - Table caption position: `above` or `below` (default: `below`)
 - `--id-format FORMAT` - Header ID format: `gfm`, `mmd`, or `kramdown`
 - `--no-ids` - Disable automatic header ID generation
 - `--header-anchors` - Generate `<a>` anchor tags instead of header IDs
+- `--aria` - Add ARIA labels and accessibility attributes to HTML output
 - `--bibliography FILE` - Bibliography file (BibTeX, CSL JSON, or CSL YAML) - can be used multiple times
 - `--csl FILE` - Citation style file (CSL format)
 - `--link-citations` - Link citations to bibliography entries
@@ -204,62 +211,79 @@ apex input.md --mode kramdown
 ### All Options
 
 ```
-Apex Markdown Processor v0.1.38
+Apex Markdown Processor v0.1.39
 One Markdown processor to rule them all
 
+Project homepage: https://github.com/ApexMarkdown/apex
+
 Usage: build/apex [options] [file]
+       build/apex --combine [files...]
+       build/apex --mmd-merge [index files...]
 
 Options:
   --accept               Accept all Critic Markup changes (apply edits)
-  --[no-]includes        Enable file inclusion (enabled by default in unified mode)
-  --hardbreaks           Treat newlines as hard breaks
-  -h, --help             Show this help message
-  --header-anchors        Generate <a> anchor tags instead of header IDs
-  --id-format FORMAT      Header ID format: gfm (default), mmd, or kramdown
-                          (modes auto-set format; use this to override in unified mode)
   --[no-]alpha-lists     Support alpha list markers (a., b., c. and A., B., C.)
-  --[no-]mixed-lists     Allow mixed list markers at same level (inherit type from first item)
-  -m, --mode MODE        Processor mode: commonmark, gfm, mmd, kramdown, unified (default)
-  --meta-file FILE       Load metadata from external file (YAML, MMD, or Pandoc format)
-  --meta KEY=VALUE       Set metadata key-value pair (can be used multiple times, supports quotes and comma-separated pairs)
-  --no-footnotes         Disable footnote support
-  --no-ids                Disable automatic header ID generation
-  --no-math              Disable math support
-  --no-smart             Disable smart typography
-  --no-tables            Disable table support
-  -o, --output FILE      Write output to FILE instead of stdout
-  --pretty               Pretty-print HTML with indentation and whitespace
   --[no-]autolink        Enable autolinking of URLs and email addresses
-  --obfuscate-emails     Obfuscate email links/text using HTML entities
-  --[no-]plugins         Enable or disable external/plugin processing (default: off)
-  --list-plugins         List installed plugins and available plugins from the remote directory
-  --install-plugin ID    Install plugin by id from directory, or by Git URL/GitHub shorthand (user/repo)
-  --uninstall-plugin ID  Uninstall a locally installed plugin by id
-  --[no-]relaxed-tables  Enable relaxed table parsing (no separator rows required)
-  --[no-]sup-sub         Enable MultiMarkdown-style superscript (^text^) and subscript (~text~) syntax
-  --[no-]transforms      Enable metadata variable transforms [%key:transform] (enabled by default in unified mode)
-  --[no-]unsafe          Allow raw HTML in output (default: true for unified/mmd/kramdown, false for commonmark/gfm)
-  --[no-]wikilinks       Enable wiki link syntax [[PageName]] (disabled by default)
-  --wikilink-space MODE  Space replacement for wiki links: dash, none, underscore, space (default: dash)
-  --wikilink-extension EXT  File extension to append to wiki links (e.g., html, md)
-  --embed-images         Embed local images as base64 data URLs in HTML output
   --base-dir DIR         Base directory for resolving relative paths (for images, includes, wiki links)
   --bibliography FILE     Bibliography file (BibTeX, CSL JSON, or CSL YAML) - can be used multiple times
+  --captions POSITION    Table caption position: above or below (default: below)
+  --combine              Concatenate Markdown files (expanding includes) into a single Markdown stream
+                         When a SUMMARY.md file is provided, treat it as a GitBook index and combine
+                         the linked files in order. Output is raw Markdown suitable for piping back into Apex.
   --csl FILE              Citation style file (CSL format)
-  --indices               Enable index processing (mmark and TextIndex syntax)
-  --no-indices            Disable index processing
-  --no-index              Suppress index generation (markers still created)
-  --no-bibliography       Suppress bibliography output
-  --link-citations       Link citations to bibliography entries
-  --show-tooltips         Show tooltips on citations
-  --reject               Reject all Critic Markup changes (revert edits)
-  -s, --standalone       Generate complete HTML document (with <html>, <head>, <body>)
   --css FILE, --style FILE  Link to CSS file in document head (requires --standalone, overrides CSS metadata)
   --embed-css            Embed CSS file contents into a <style> tag in the document head (used with --css)
+  --embed-images         Embed local images as base64 data URLs in HTML output
+  --hardbreaks           Treat newlines as hard breaks
+  --header-anchors        Generate <a> anchor tags instead of header IDs
+  -h, --help             Show this help message
+  --id-format FORMAT      Header ID format: gfm (default), mmd, or kramdown
+                          (modes auto-set format; use this to override in unified mode)
+  --[no-]includes        Enable file inclusion (enabled by default in unified mode)
+  --indices               Enable index processing (mmark and TextIndex syntax)
+  --install-plugin ID    Install plugin by id from directory, or by Git URL/GitHub shorthand (user/repo)
+  --link-citations       Link citations to bibliography entries
+  --list-plugins         List installed plugins and available plugins from the remote directory
+  --uninstall-plugin ID  Uninstall plugin by id
+  --meta KEY=VALUE       Set metadata key-value pair (can be used multiple times, supports quotes and comma-separated pairs)
+  --meta-file FILE       Load metadata from external file (YAML, MMD, or Pandoc format)
+  --[no-]mixed-lists     Allow mixed list markers at same level (inherit type from first item)
+  --mmd-merge            Merge files from one or more mmd_merge-style index files into a single Markdown stream
+                         Index files list document parts line-by-line; indentation controls header level shifting.
+  -m, --mode MODE        Processor mode: commonmark, gfm, mmd, kramdown, unified (default)
+  --no-bibliography       Suppress bibliography output
+  --no-footnotes         Disable footnote support
+  --no-ids                Disable automatic header ID generation
+  --no-indices            Disable index processing
+  --no-index              Suppress index generation (markers still created)
+  --no-math              Disable math support
+  --aria                  Add ARIA labels and accessibility attributes to HTML output
+  --no-plugins            Disable external/plugin processing
+  --no-relaxed-tables    Disable relaxed table parsing
+  --no-smart             Disable smart typography
+  --no-sup-sub           Disable superscript/subscript syntax
+  --no-tables            Disable table support
+  --no-transforms        Disable metadata variable transforms
+  --no-unsafe            Disable raw HTML in output
+  --no-wikilinks         Disable wiki link syntax
+  --obfuscate-emails     Obfuscate email links/text using HTML entities
+  -o, --output FILE      Write output to FILE instead of stdout
+  --plugins              Enable external/plugin processing
+  --pretty               Pretty-print HTML with indentation and whitespace
+  --reject               Reject all Critic Markup changes (revert edits)
+  --[no-]relaxed-tables  Enable or disable relaxed table parsing (no separator rows required)
   --script VALUE         Inject <script> tags before </body> (standalone) or at end of HTML (snippet).
                           VALUE can be a path, URL, or shorthand (mermaid, mathjax, katex). Can be used multiple times or as a comma-separated list.
+  --show-tooltips         Show tooltips on citations
+  -s, --standalone       Generate complete HTML document (with <html>, <head>, <body>)
+  --[no-]sup-sub         Enable or disable MultiMarkdown-style superscript (^text^) and subscript (~text~) syntax
   --title TITLE          Document title (requires --standalone, default: "Document")
+  --[no-]transforms      Enable or disable metadata variable transforms [%key:transform]
+  --[no-]unsafe          Allow or disallow raw HTML in output
   -v, --version          Show version information
+  --[no-]wikilinks       Enable or disable wiki link syntax [[PageName]]
+  --wikilink-space MODE  Space replacement for wiki links: dash, none, underscore, space (default: dash)
+  --wikilink-extension EXT  File extension to append to wiki links (e.g., html, md)
 
 If no file is specified, reads from stdin.
 ```

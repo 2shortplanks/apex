@@ -2,20 +2,66 @@
 
 All notable changes to Apex will be documented in this file.
 
-## [0.1.40] - 2025-12-20
+## [0.1.40] - 2025-12-23
+
+### Changed
+
+- Table captions now default to below the table instead of above
+- Tfoot row detection in AST now separates the logic for marking the === row itself versus rows that come after it, improving accuracy of tfoot section identification.
+- Disallow using --combine and --mmd-merge together to avoid ambiguous multi-file behavior
+- Update CSV include and inline table handling so both share the same CSV-to-table conversion and alignment behavior
 
 ### New
 
-- Added inline table support for converting CSV/TSV text to Markdown tables
-- Support for ` ```table ` fenced code blocks that automatically convert CSV/TSV content to tables
-- Support for `<!--TABLE-->` markers that convert following CSV/TSV content to tables
-- Automatic delimiter detection: tabs detected as TSV, commas detected as CSV
-- Blocks without detected delimiters are left unchanged as regular code blocks
+- Added --captions option to control caption position (above or below)
+- Added default CSS styling for figcaption elements in standalone output (centered, bold, 0.8em)
+- Added CSS styling for table figures to align captions with tables (fit-content width)
+- Support for tables that start with alignment rows (separator rows) without header rows. Column alignment specified in the separator row is automatically applied to all data columns.
+- Support for individual cell alignment in tables using colons, similar to Jekyll Spaceship. Cells can be aligned independently with :Text (left), Text: (right), or :Text: (center). Colons are removed from output and alignment is applied via CSS text-align styles.
+- Support per-cell alignment markers inside table cells
+- Support multiline table cells using trailing backslash markers
+- Support header and footer colspans based on empty cells
+- Add --combine CLI mode to concatenate Markdown files with include expansion and GitBook-style SUMMARY.md index support.
+- Add --mmd-merge CLI mode to merge MultiMarkdown index files into a single Markdown stream
+- Support indentation-based header level shifting when merging mmd_merge index entries
+- Support inline CSV/TSV tables using ```table fenced blocks with automatic CSV/TSV delimiter detection
+- Support <!--TABLE--> markers that convert following CSV/TSV lines into Markdown tables until a blank line
+- Add --aria command-line option to enable ARIA labels and accessibility attributes in HTML output
+- Add aria-label="Table of contents" to TOC navigation elements when --aria is enabled
+- Add role="figure" to figure elements when --aria is enabled
+- Add role="table" to table elements when --aria is enabled
+- Generate id attributes for figcaption elements in table figures when --aria is enabled
+- Add aria-describedby attributes linking tables to their captions when --aria is enabled
 
 ### Improved
 
-- CSV/TSV conversion now works inline within documents, not just from file includes
-- Delimiter detection handles mixed content gracefully by checking for tabs first, then commas
+- Removed unused variables to eliminate compiler warnings
+- Empty thead sections from headerless tables are now removed from HTML output instead of rendering empty header cells.
+- Table row mapping now better handles the relationship between HTML row indices and AST row indices, accounting for separator rows that are removed from HTML output.
+- Added safeguards to prevent rows that should be in tbody from being skipped, including protection for the first few rows (header and first two data rows) when a === separator is present.
+- Make table captions positionable above or below tables
+- Center and style figcaptions in standalone HTML output
+- Support optional alignment keyword rows (left, right, center, auto) and headless tables for both included CSV files and inline CSV/TSV data
+- Preserve ```table fences without commas or tabs by leaving them as code blocks so users can show literal CSV/TSV without conversion
+
+### Fixed
+
+- Removed unused variable 'row_idx' from advanced_tables.c to eliminate compiler warnings.
+- Rows before the === separator are now correctly placed in tbody instead of being incorrectly placed in tfoot or skipped entirely. The fix includes HTML position verification to ensure rows that appear before the === row in the rendered HTML are always in tbody, regardless of AST marking.
+- Prevent === separator rows from appearing as table content
+- Ensure footer rows render in tfoot without losing body rows
+- Preserve legitimate empty cells such as missing Q4 values
+- Apply ^^ rowspans correctly for all table sections
+- Apply ^^ rowspans correctly across table sections without leaking into unrelated rows
+- Support footer colspans so footer cells can span multiple columns like headers and body rows
+- Preserve legitimate empty table cells that are not part of colspans or rowspans
+- KaTeX auto-render now properly configures delimiters and manually renders math spans to prevent plain text from appearing after rendered equations
+- Relaxed table header conversion now only runs when relaxed_tables option is enabled
+- HTML document wrapping now strips existing </body></html> tags to prevent duplicates when content already contains them
+- KaTeX auto-render now properly configures delimiters and manually renders math spans to prevent plain text from appearing after rendered equations
+- Relaxed table header conversion now only runs when relaxed_tables option is enabled
+- HTML document wrapping now strips existing </body></html> tags to prevent duplicates when content already contains them
+- Table captions appearing after their tables now correctly link via aria-describedby attributes
 
 ## [0.1.39] - 2025-12-19
 
