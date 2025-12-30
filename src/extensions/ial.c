@@ -589,25 +589,38 @@ static bool process_span_ial(cmark_node *para, ald_entry *alds) {
         return false;
     }
 
-    /* Find the inline element before this text node */
+    /* Find the inline element immediately before this IAL text node */
+    /* Walk backwards from the IAL text node to find the immediately preceding inline element */
     cmark_node *target = NULL;
-    for (cmark_node *child = cmark_node_first_child(para); child; child = cmark_node_next(child)) {
-        if (child == last_child) break;  /* Reached the IAL text */
-        target = child;  /* Keep track of last non-IAL child */
+    cmark_node *prev = cmark_node_previous(last_child);
+
+    /* Skip over any text nodes to find the actual inline element */
+    while (prev) {
+        cmark_node_type prev_type = cmark_node_get_type(prev);
+        if (prev_type == CMARK_NODE_LINK ||
+            prev_type == CMARK_NODE_IMAGE ||
+            prev_type == CMARK_NODE_EMPH ||
+            prev_type == CMARK_NODE_STRONG ||
+            prev_type == CMARK_NODE_CODE) {
+            target = prev;
+            break;
+        }
+        /* If it's a text node, continue walking backwards */
+        if (prev_type == CMARK_NODE_TEXT) {
+            prev = cmark_node_previous(prev);
+            continue;
+        }
+        /* If it's some other node type, stop - IAL can't apply to it */
+        break;
     }
 
     if (!target) {
-        return false;  /* No target element found */
+        return false;  /* No valid inline element found */
     }
 
-    /* Check if target is a valid inline element for IAL */
-    cmark_node_type target_type = cmark_node_get_type(target);
-    if (target_type != CMARK_NODE_LINK &&
-        target_type != CMARK_NODE_IMAGE &&
-        target_type != CMARK_NODE_EMPH &&
-        target_type != CMARK_NODE_STRONG &&
-        target_type != CMARK_NODE_CODE) {
-        return false;  /* Not a supported inline element */
+    /* Verify that the target is actually a child of this paragraph */
+    if (cmark_node_parent(target) != para) {
+        return false;  /* Target is not in this paragraph - something went wrong */
     }
 
     /* Extract attributes from IAL */

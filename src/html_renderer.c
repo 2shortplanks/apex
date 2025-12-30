@@ -405,9 +405,19 @@ char *apex_render_html_with_attributes(cmark_node *document, int options) {
                     /* Try fingerprint match first (works for both block and inline) */
                     if (a->text_fingerprint && fp_idx > 0 &&
                         strncmp(a->text_fingerprint, html_fingerprint, 50) == 0) {
-                        matching = a;
-                        used[idx] = true;
-                        break;
+                        /* For links and images, also check element_index to handle duplicate URLs */
+                        if (elem_type == CMARK_NODE_LINK || elem_type == CMARK_NODE_IMAGE) {
+                            if (a->element_index == elem_idx) {
+                                matching = a;
+                                used[idx] = true;
+                                break;
+                            }
+                        } else {
+                            /* For other elements, fingerprint match is sufficient */
+                            matching = a;
+                            used[idx] = true;
+                            break;
+                        }
                     }
 
                     /* Fall back to index match if no fingerprint */
