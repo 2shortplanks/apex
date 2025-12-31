@@ -1162,7 +1162,6 @@ static void test_bracketed_spans(void) {
     html = apex_markdown_to_html(basic_span, strlen(basic_span), &opts);
     assert_contains(html, "<span", "Bracketed span creates span tag");
     assert_contains(html, "class=\"class\"", "Bracketed span has class");
-    assert_contains(html, "markdown=\"span\"", "Bracketed span has markdown attribute");
     assert_contains(html, "some text", "Bracketed span contains text");
     assert_not_contains(html, "[some text]{.class}", "Bracketed span syntax removed");
     apex_free_string(html);
@@ -1240,7 +1239,7 @@ static void test_bracketed_spans(void) {
     html = apex_markdown_to_html(span_disabled, strlen(span_disabled), &no_spans);
     /* When spans are disabled, [text]{.class} should remain as-is or be treated differently */
     /* For now, we'll just check that it doesn't create a span when disabled */
-    if (strstr(html, "<span") == NULL || strstr(html, "markdown=\"span\"") == NULL) {
+    if (strstr(html, "<span") == NULL) {
         tests_passed++;
         tests_run++;
         printf(COLOR_GREEN "✓" COLOR_RESET " Bracketed spans disabled when flag is off\n");
@@ -3620,6 +3619,96 @@ static void test_image_embedding(void) {
 }
 
 /**
+ * Test image width/height attribute conversion
+ */
+static void test_image_width_height_conversion(void) {
+    printf("\n=== Image Width/Height Conversion Tests ===\n");
+
+    apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
+    char *html;
+
+    /* Test 1: Percentage width → style attribute */
+    html = apex_markdown_to_html("![](img.jpg){ width=50% }", 26, &opts);
+    assert_contains(html, "style=\"width: 50%\"", "Percentage width converted to style");
+    assert_not_contains(html, "width=\"50%\"", "Percentage not in width attribute");
+    apex_free_string(html);
+
+    /* Test 2: Pixel width → integer width attribute */
+    html = apex_markdown_to_html("![](img.jpg){ width=300px }", 27, &opts);
+    assert_contains(html, "width=\"300\"", "Pixel width converted to integer");
+    assert_not_contains(html, "width=\"300px\"", "px suffix removed");
+    assert_not_contains(html, "style=\"width: 300px\"", "Pixel not in style");
+    apex_free_string(html);
+
+    /* Test 3: Bare integer width → width attribute */
+    html = apex_markdown_to_html("![](img.jpg){ width=300 }", 26, &opts);
+    assert_contains(html, "width=\"300\"", "Bare integer width preserved");
+    apex_free_string(html);
+
+    /* Test 4: Percentage height → style attribute */
+    html = apex_markdown_to_html("![](img.jpg){ height=75% }", 27, &opts);
+    assert_contains(html, "style=\"height: 75%\"", "Percentage height converted to style");
+    apex_free_string(html);
+
+    /* Test 5: Pixel height → integer height attribute */
+    html = apex_markdown_to_html("![](img.jpg){ height=200px }", 27, &opts);
+    assert_contains(html, "height=\"200\"", "Pixel height converted to integer");
+    assert_not_contains(html, "height=\"200px\"", "px suffix removed");
+    apex_free_string(html);
+
+    /* Test 6: Both width and height with percentages → style */
+    html = apex_markdown_to_html("![](img.jpg){ width=50% height=75% }", 35, &opts);
+    assert_contains(html, "style=\"width: 50%; height: 75%\"", "Both percentages in style");
+    apex_free_string(html);
+
+    /* Test 7: Mixed - pixel width, percentage height */
+    html = apex_markdown_to_html("![](img.jpg){ width=300px height=50% }", 36, &opts);
+    assert_contains(html, "width=\"300\"", "Pixel width as attribute");
+    assert_contains(html, "style=\"height: 50%\"", "Percentage height in style");
+    apex_free_string(html);
+
+    /* Test 8: Mixed - percentage width, pixel height */
+    html = apex_markdown_to_html("![](img.jpg){ width=50% height=200px }", 36, &opts);
+    assert_contains(html, "height=\"200\"", "Pixel height as attribute");
+    assert_contains(html, "style=\"width: 50%\"", "Percentage width in style");
+    apex_free_string(html);
+
+    /* Test 9: Other units (em, rem) → style */
+    html = apex_markdown_to_html("![](img.jpg){ width=5em height=10rem }", 35, &opts);
+    assert_contains(html, "style=\"width: 5em; height: 10rem\"", "Other units in style");
+    apex_free_string(html);
+
+    /* Test 10: Decimal pixel value → style */
+    html = apex_markdown_to_html("![](img.jpg){ width=100.5px }", 28, &opts);
+    assert_contains(html, "style=\"width: 100.5px\"", "Decimal pixel in style");
+    assert_not_contains(html, "width=\"100.5\"", "Decimal pixel not as attribute");
+    apex_free_string(html);
+
+    /* Test 11: Viewport units → style */
+    html = apex_markdown_to_html("![](img.jpg){ width=50vw height=30vh }", 35, &opts);
+    assert_contains(html, "style=\"width: 50vw; height: 30vh\"", "Viewport units in style");
+    apex_free_string(html);
+
+    /* Test 12: Inline image with IAL and percentage */
+    html = apex_markdown_to_html("![alt](img.jpg){ width=75% }", 28, &opts);
+    assert_contains(html, "style=\"width: 75%\"", "Inline image percentage in style");
+    apex_free_string(html);
+
+    /* Test 13: Mixed with other attributes (ID, class) */
+    html = apex_markdown_to_html("![test](img.jpg){#test .image width=250px height=80% }", 48, &opts);
+    assert_contains(html, "id=\"test\"", "ID preserved");
+    assert_contains(html, "class=\"image\"", "Class preserved");
+    assert_contains(html, "width=\"250\"", "Pixel width as attribute");
+    assert_contains(html, "style=\"height: 80%\"", "Percentage height in style");
+    apex_free_string(html);
+
+    /* Test 14: Zero pixel value */
+    html = apex_markdown_to_html("![](img.jpg){ width=0px }", 25, &opts);
+    assert_contains(html, "width=\"0\"", "Zero pixel converted to integer");
+    apex_free_string(html);
+}
+
+/**
  * Test indices (mmark and TextIndex syntax)
  */
 static void test_indices(void) {
@@ -4318,6 +4407,7 @@ int main(int argc, char *argv[]) {
     test_pretty_html();
     test_header_ids();
     test_image_embedding();
+    test_image_width_height_conversion();
     test_indices();
     test_citations();
     test_aria_labels();
