@@ -304,7 +304,17 @@ endif()
 enable_testing()
 
 # Test runner executable
-add_executable(apex_test_runner tests/test_runner.c)
+add_executable(apex_test_runner
+    tests/test_helpers.c
+    tests/test_runner.c
+    tests/test_basic.c
+    tests/test_metadata.c
+    tests/test_links.c
+    tests/test_tables.c
+    tests/test_ial.c
+    tests/test_extensions.c
+    tests/test_output.c
+)
 target_link_libraries(apex_test_runner apex_static)
 target_compile_definitions(apex_test_runner PRIVATE TEST_FIXTURES_DIR="${CMAKE_SOURCE_DIR}/tests/fixtures/includes")
 

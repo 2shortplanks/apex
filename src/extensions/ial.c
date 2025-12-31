@@ -572,11 +572,9 @@ static char *attributes_to_html(apex_attributes *attrs) {
 
     /* Check for existing style attribute to merge with */
     const char *existing_style = NULL;
-    int style_attr_index = -1;
     for (int i = 0; i < attrs->attr_count; i++) {
         if (strcmp(attrs->keys[i], "style") == 0) {
             existing_style = attrs->values[i];
-            style_attr_index = i;
             break;
         }
     }
@@ -1987,11 +1985,14 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                         /* Check for IAL syntax after closing paren: {#id .class} or { width=50% } */
                         const char *ial_end_pos = NULL;
                         const char *after_paren = paren_end + 1;
-                        if (do_image_attrs && after_paren[0] == '{') {
+                        /* Skip whitespace before checking for IAL, but keep original position for skipping */
+                        const char *check_pos = after_paren;
+                        while (check_pos[0] == ' ' || check_pos[0] == '\t') check_pos++;
+                        if (do_image_attrs && check_pos[0] == '{') {
                             /* Find the closing brace */
-                            const char *ial_end = strchr(after_paren + 1, '}');
+                            const char *ial_end = strchr(check_pos + 1, '}');
                             if (ial_end) {
-                                char second_char = after_paren[1];
+                                char second_char = check_pos[1];
                                 /* Check if it's a valid IAL format: {: or {# or {. or { (with space/attributes) */
                                 bool is_ial = false;
                                 const char *content_start = NULL;
@@ -1999,13 +2000,13 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                                 if (second_char == ':' || second_char == '#' || second_char == '.') {
                                     /* Kramdown/Pandoc IAL format: {: or {# or {. */
                                     is_ial = true;
-                                    content_start = (second_char == ':') ? after_paren + 2 : after_paren + 1;
+                                    content_start = (second_char == ':') ? check_pos + 2 : check_pos + 1;
                                 } else if (second_char == ' ' || second_char == '\t' ||
                                           (second_char >= 'a' && second_char <= 'z') ||
                                           (second_char >= 'A' && second_char <= 'Z')) {
                                     /* Pandoc-style: { width=50% } or {key=val} */
                                     is_ial = true;
-                                    content_start = after_paren + 1;
+                                    content_start = check_pos + 1;
                                 }
 
                                 if (is_ial && content_start) {
@@ -2029,11 +2030,19 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                                             } else {
                                                 attrs = ial_attrs;
                                             }
-                                            ial_end_pos = ial_end;
                                         } else if (ial_attrs) {
                                             apex_free_attributes(ial_attrs);
                                         }
+                                        /* Always skip IAL syntax even if parsing failed, to prevent it appearing in output */
+                                        ial_end_pos = ial_end;
+                                    } else {
+                                        /* Empty IAL - still skip it */
+                                        ial_end_pos = ial_end;
                                     }
+                                } else {
+                                    /* Not a valid IAL format, but if it looks like one (starts with { and ends with }), skip it anyway */
+                                    /* This handles edge cases where parsing might fail but we still want to skip the syntax */
+                                    ial_end_pos = ial_end;
                                 }
                             }
                         }
@@ -2131,12 +2140,19 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
 
                                 /* Skip IAL if it was found and processed */
                                 if (ial_end_pos) {
+                                    /* Skip from after_paren (which includes any whitespace before IAL) to after the closing brace */
+                                    /* ial_end_pos points to the closing '}', so we skip to after it */
                                     read = ial_end_pos + 1;
                                 } else {
                                     read = paren_end + 1;
                                 }
                             } else {
-                                read = paren_end;
+                                /* No closing paren found, but still need to skip IAL if present */
+                                if (ial_end_pos) {
+                                    read = ial_end_pos + 1;
+                                } else {
+                                    read = paren_end;
+                                }
                             }
                             free(encoded_url);
                             if (attrs) apex_free_attributes(attrs);
@@ -2212,6 +2228,14 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                             }
 
                             /* Check if it's attributes (for images) */
+                            /* Check for IAL syntax: { */
+                            if (do_image_attrs && *after_space == '{') {
+                                /* Found IAL syntax - URL ends before this space */
+                                attr_start = after_space;
+                                url_end = p;
+                                break;
+                            }
+                            /* Check for key= pattern (inline attributes) */
                             if (do_image_attrs && looks_like_attribute_start(after_space, line_end)) {
                                 /* This looks like attributes */
                                 attr_start = after_space;
@@ -2238,6 +2262,8 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                         /* Extract attributes if present */
                         apex_attributes *attrs = NULL;
                         const char *title_end = NULL;
+                        char *title_text = NULL;
+                        bool found_ial = false;
                         if (attr_start && do_image_attrs) {
                             const char *attr_end = p;
                             while (*attr_end && *attr_end != '\n' && *attr_end != '\r') attr_end++;
@@ -2259,6 +2285,15 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                                     title_close++;
                                 }
                                 if (title_close < line_end && *title_close == quote) {
+                                    /* Extract title text */
+                                    size_t title_len = title_close - title_start;
+                                    if (title_len > 0) {
+                                        title_text = malloc(title_len + 1);
+                                        if (title_text) {
+                                            memcpy(title_text, title_start, title_len);
+                                            title_text[title_len] = '\0';
+                                        }
+                                    }
                                     title_end = title_close + 1;
                                 }
                             }
@@ -2311,10 +2346,71 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                                                         attrs = merged;
                                                     }
                                                     title_end = ial_end + 1; /* Update end position to skip IAL */
+                                                    found_ial = true;
+                                            } else if (ial_attrs) {
+                                                apex_free_attributes(ial_attrs);
+                                                title_end = ial_end + 1;
+                                                found_ial = true;
+                                            } else {
+                                                /* Even if parsing failed, skip the IAL syntax to prevent it appearing in output */
+                                                title_end = ial_end + 1;
+                                                found_ial = true;
+                                            }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            /* Also check for IAL directly after URL if no title was found */
+                            if (!title_end && do_image_attrs && url_end < line_end) {
+                                const char *after_url = url_end;
+                                while (after_url < line_end && (*after_url == ' ' || *after_url == '\t')) after_url++;
+
+                                if (after_url < line_end && *after_url == '{') {
+                                    /* Find the closing brace */
+                                    const char *ial_end = strchr(after_url + 1, '}');
+                                    if (ial_end && ial_end <= line_end) {
+                                        char second_char = after_url[1];
+                                        bool is_ial = false;
+                                        const char *content_start = NULL;
+
+                                        if (second_char == ':' || second_char == '#' || second_char == '.') {
+                                            is_ial = true;
+                                            content_start = (second_char == ':') ? after_url + 2 : after_url + 1;
+                                        } else if (second_char == ' ' || second_char == '\t' ||
+                                                  (second_char >= 'a' && second_char <= 'z') ||
+                                                  (second_char >= 'A' && second_char <= 'Z')) {
+                                            is_ial = true;
+                                            content_start = after_url + 1;
+                                        }
+
+                                        if (is_ial && content_start) {
+                                            int content_len = ial_end - content_start;
+                                            if (content_len > 0) {
+                                                apex_attributes *ial_attrs = parse_ial_content(content_start, content_len);
+                                                if (!ial_attrs || (ial_attrs->attr_count == 0 && !ial_attrs->id && ial_attrs->class_count == 0)) {
+                                                    if (ial_attrs) apex_free_attributes(ial_attrs);
+                                                    ial_attrs = parse_image_attributes(content_start, content_len);
+                                                }
+
+                                                if (ial_attrs && (ial_attrs->attr_count > 0 || ial_attrs->id || ial_attrs->class_count > 0)) {
+                                                    attrs = ial_attrs;
+                                                    title_end = ial_end + 1;
+                                                    found_ial = true;
                                                 } else if (ial_attrs) {
                                                     apex_free_attributes(ial_attrs);
+                                                    title_end = ial_end + 1;
+                                                    found_ial = true;
+                                                } else {
+                                                    title_end = ial_end + 1;
+                                                    found_ial = true;
                                                 }
+                                            } else {
+                                                title_end = ial_end + 1;
                                             }
+                                        } else {
+                                            title_end = ial_end + 1;
                                         }
                                     }
                                 }
@@ -2327,6 +2423,17 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                         if (ref_name) {
                             memcpy(ref_name, ref_start + 1, ref_name_len);
                             ref_name[ref_name_len] = '\0';
+                            /* Trim whitespace from reference name */
+                            char *p = ref_name;
+                            while (*p && isspace((unsigned char)*p)) p++;
+                            if (p > ref_name) {
+                                memmove(ref_name, p, strlen(p) + 1);
+                            }
+                            p = ref_name + strlen(ref_name) - 1;
+                            while (p >= ref_name && isspace((unsigned char)*p)) {
+                                *p = '\0';
+                                p--;
+                            }
                         }
 
                         /* Detect footnote-style reference: [^id]: ... */
@@ -2385,6 +2492,7 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
 
                             free(url);
                             free(ref_name);
+                            if (title_text) free(title_text);
                             if (attrs) apex_free_attributes(attrs);
                             continue;
                         }
@@ -2394,30 +2502,50 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                         if (encoded_url) {
                             /* If has attributes, store them with reference name */
                             /* Note: ref_name will be duplicated in create_image_attr_entry_with_ref */
-                            if (attrs && do_image_attrs && ref_name) {
-                                image_attr_entry *entry = create_image_attr_entry_with_ref(&local_img_attrs, encoded_url, ref_name);
-                                if (entry) {
-                                    /* Copy attributes (don't merge) */
-                                    for (int i = 0; i < attrs->attr_count; i++) {
-                                        add_attribute(entry->attrs, attrs->keys[i], attrs->values[i]);
-                                    }
-                                    if (attrs->id) {
-                                        entry->attrs->id = strdup(attrs->id);
-                                    }
-                                    for (int i = 0; i < attrs->class_count; i++) {
-                                        add_class(entry->attrs, attrs->classes[i]);
+                            /* Also create entry if attrs is NULL but we detected IAL (for expansion even if parsing failed) */
+                            if (do_image_attrs && ref_name) {
+                                /* Check if we should create entry - either we have attrs, or we detected IAL */
+                                bool has_attrs = (attrs != NULL);
+
+                                if (has_attrs || found_ial) {
+                                    image_attr_entry *entry = create_image_attr_entry_with_ref(&local_img_attrs, encoded_url, ref_name);
+                                    if (entry) {
+                                        if (attrs) {
+                                            /* Copy attributes (don't merge) */
+                                            for (int i = 0; i < attrs->attr_count; i++) {
+                                                add_attribute(entry->attrs, attrs->keys[i], attrs->values[i]);
+                                            }
+                                            if (attrs->id) {
+                                                entry->attrs->id = strdup(attrs->id);
+                                            }
+                                            for (int i = 0; i < attrs->class_count; i++) {
+                                                add_class(entry->attrs, attrs->classes[i]);
+                                            }
+                                        }
+                                        /* Add title if present */
+                                        if (title_text) {
+                                            add_attribute(entry->attrs, "title", title_text);
+                                        }
+                                        /* Entry created - will be used for expansion */
                                     }
                                 }
                             }
                             /* If this reference definition has attributes, we'll remove it from output */
                             /* (attributes are stored and will be applied via expansion) */
                             /* If it doesn't have attributes, we need to write it back so cmark can resolve it */
-                            bool should_remove = (attrs && do_image_attrs);
+                            /* Check if we created an entry (either with attrs or detected IAL) */
+                            bool created_entry = false;
+                            if (do_image_attrs && ref_name) {
+                                bool has_attrs = (attrs != NULL);
+                                created_entry = (has_attrs || found_ial);
+                            }
+                            bool should_remove = (created_entry && do_image_attrs);
 
                             if (should_remove) {
                                 /* Reference definitions with attributes are removed from output (like ALDs) */
                                 /* Skip the entire line - don't write anything back */
                                 free(ref_name);
+                                if (title_text) free(title_text);
                                 const char *p = line_end;
                                 /* Skip the newline */
                                 if (*p == '\n') {
@@ -2723,10 +2851,21 @@ char *apex_preprocess_image_attributes(const char *text, image_attr_entry **img_
                             if (ref_name) {
                                 memcpy(ref_name, ref_start, ref_name_len);
                                 ref_name[ref_name_len] = '\0';
+                                /* Trim whitespace from reference name */
+                                char *p = ref_name;
+                                while (*p && isspace((unsigned char)*p)) p++;
+                                if (p > ref_name) {
+                                    memmove(ref_name, p, strlen(p) + 1);
+                                }
+                                p = ref_name + strlen(ref_name) - 1;
+                                while (p >= ref_name && isspace((unsigned char)*p)) {
+                                    *p = '\0';
+                                    p--;
+                                }
 
                                 /* Look up if this reference has attributes */
                                 image_attr_entry *def_entry = find_image_attr_by_ref(local_img_attrs, ref_name);
-                                if (def_entry && def_entry->attrs && def_entry->url) {
+                                if (def_entry && def_entry->url) {
                                     /* Expand to inline image: ![alt](url attributes) */
                                     /* Extract alt text */
                                     size_t alt_len = alt_end - read2;
