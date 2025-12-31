@@ -1,5 +1,5 @@
 
-[![Version: 0.1.41](https://img.shields.io/badge/Version-0.1.41-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: 0.1.42](https://img.shields.io/badge/Version-0.1.42-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 # Apex
@@ -211,7 +211,7 @@ apex input.md --mode kramdown
 ### All Options
 
 ```
-Apex Markdown Processor v0.1.41
+Apex Markdown Processor v0.1.42
 One Markdown processor to rule them all
 
 Project homepage: https://github.com/ApexMarkdown/apex
@@ -262,6 +262,8 @@ Options:
   --no-relaxed-tables    Disable relaxed table parsing
   --no-smart             Disable smart typography
   --no-sup-sub           Disable superscript/subscript syntax
+  --[no-]divs            Enable or disable Pandoc fenced divs (Unified mode only)
+  --[no-]spans           Enable or disable bracketed spans [text]{IAL} (Pandoc-style, enabled by default in unified mode)
   --no-tables            Disable table support
   --no-transforms        Disable metadata variable transforms
   --no-unsafe            Disable raw HTML in output

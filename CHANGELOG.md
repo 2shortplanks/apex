@@ -2,6 +2,68 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.43] - 2025-12-31
+
+### Changed
+
+- Reference image attribute expansion now converts IAL attributes (ID, classes) to key=value format for compatibility with inline image parsing
+- Test suite refactored: split test_runner.c into multiple files (test_basic.c, test_extensions.c, test_helpers.c, test_ial.c, test_links.c, test_metadata.c, test_output.c, test_tables.c) for better organization
+- Test fixtures reorganized: moved all .md test files from tests/ to tests/fixtures/ with subdirectories (basic/, demos/, extensions/, ial/, images/, output/, tables/)
+
+### New
+
+- Support for Pandoc-style table captions using `: Caption` syntax (in addition to existing `[Caption]` and `Table: Caption` formats)
+- IAL attributes in table captions are now extracted and applied to the table element (e.g., `: Caption {#id .class}` applies `id` and `class` to the table)
+- Support for Pandoc-style IAL syntax without colon prefix (`{#id .class}` in addition to Kramdown `{:#id .class}` format)
+- Support Pandoc-style IAL syntax ({#id .class}) in addition to Kramdown-style ({: #id .class}) for all IAL contexts including block-level, inline, and paragraph IALs
+- Extract_ial_from_text function now recognizes both {: and {# or {. formats when extracting IALs from text
+- Extract_ial_from_paragraph function now accepts Pandoc-style IALs for pure IAL paragraphs
+- Process_span_ial_in_container function now processes Pandoc-style IALs for inline elements like links, images, and emphasis
+- Is_ial_line function now detects Pandoc-style IAL-only lines in addition to Kramdown format
+- Support Pandoc-style IAL syntax ({#id .class}) in addition to Kramdown-style ({: #id .class}) for all IAL contexts including block-level elements, paragraphs, inline elements, and headings
+- Add support for Pandoc fenced divs syntax (::::: {#id .class} ... :::::) in unified mode, enabled by default
+- Add --divs and --no-divs command-line flags to control fenced divs processing
+- Add comprehensive test suite for Pandoc fenced divs covering basic divs, nested divs, attributes, and edge cases
+- Add bracketed spans feature that converts [text]{IAL} syntax to HTML span elements with attributes, enabled by default in unified mode
+- Add --spans and --no-spans command-line flags to enable/disable bracketed spans in other modes
+- Bracketed spans support all IAL attribute types (IDs, classes, key-value pairs) and process markdown inside spans
+- Reference link definitions take precedence over bracketed spans - if [text] matches a reference link, it remains a link
+- Add comprehensive test suite for bracketed spans including reference link precedence, nested brackets, and markdown processing
+- Add bracketed spans examples and documentation
+- Add automatic width/height attribute conversion: percentages and non-integer/non-px values convert to style attributes, Xpx values convert to integer width/height attributes (strips px suffix), bare integers remain as width/height attributes
+- Add support for Pandoc/Kramdown IAL syntax on images: inline images support IAL after closing paren like ![alt](url){#id .class width=50%}
+- Add support for IAL syntax after titles in reference image definitions: [ref]: url "title" {#id .class width=50%}
+- Add support for Pandoc-style IAL with space prefix: { width=50% } syntax works for images
+- Add comprehensive test suite for width/height conversion covering percentages, pixels, integers, mixed cases, and edge cases like decimals and viewport units
+- Reference image definitions now preserve and include title attributes from definitions like [ref]: url "title" {#id}
+
+### Improved
+
+- Table caption preprocessing now converts `: Caption` format to `[Caption]` format before definition list processing to avoid conflicts
+- HTML renderer now extracts and injects IAL attributes from table captions while excluding internal attributes like `data-caption`
+- IAL parsing automatically detects format and adjusts content offset accordingly (2 chars for {: format, 1 char for {# or {. format)
+- HTML markdown extension now uses CMARK_OPT_UNSAFE to allow raw HTML including nested divs in processed content
+- Width/height conversion properly merges with existing style attributes when both are present
+- IAL detection now properly handles whitespace before IAL syntax for both inline and reference images
+- Reference image expansion now correctly skips IAL even when closing paren is not found
+
+### Fixed
+
+- Table caption test assertions now correctly match table tags with attributes by using <table instead of <table>
+- Extract_ial_from_paragraph now allows newline character after closing brace in IAL syntax
+- List items with key:value format (e.g., "- Foo: Bar") are no longer incorrectly parsed as MMD metadata in unified mode
+- Fenced divs now add markdown="1" attribute so content inside divs is properly parsed as markdown
+- HTML markdown extension now preserves all attributes (id, class, custom attributes) when processing divs with markdown="1"
+- HTML markdown extension now recursively processes nested divs with markdown="1" attributes
+- HTML markdown extension now adds newline after closing div tags to ensure following markdown headers and content are parsed correctly
+- Bracketed spans now correctly handle nested brackets by matching outer brackets instead of first closing bracket
+- Remove test assertions checking for markdown attribute on bracketed spans which is correctly removed by html_markdown extension
+- IAL syntax with spaces (e.g., { width=50% }) now correctly detected and processed for images
+- IAL syntax is now properly stripped from output even when parsing fails, preventing raw IAL from appearing in HTML
+- Reference image definitions with IAL after URL (no title) now correctly detected and processed
+- Test string length issues: replaced hardcoded lengths with strlen() calls to ensure full IAL syntax is processed in width/height conversion tests
+- Removed unused style_attr_index variable to eliminate compiler warning
+
 ## [0.1.42] - 2025-12-30
 
 ### New
@@ -687,6 +749,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 - Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.43]: https://github.com/ttscoff/apex/releases/tag/v0.1.43
 [0.1.42]: https://github.com/ttscoff/apex/releases/tag/v0.1.42
 [0.1.41]: https://github.com/ttscoff/apex/releases/tag/v0.1.41
 [0.1.40]: https://github.com/ttscoff/apex/releases/tag/v0.1.40
