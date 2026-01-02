@@ -525,7 +525,9 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
     if (html_len > 50000 && !needs_all_cells) {
         /* Quick check for alignment colons - if none found, skip everything */
         has_alignment_colons = (strstr(html, ":</td>") != NULL || strstr(html, ":</th>") != NULL);
-        if (!has_alignment_colons) {
+        /* Also check for rowspan markers (^^) - these need processing */
+        bool has_rowspan_markers = (strstr(html, "^^") != NULL);
+        if (!has_alignment_colons && !has_rowspan_markers) {
             return (char *)html;
         }
     }
@@ -534,7 +536,9 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
     if (attrs == NULL && captions == NULL && paras_to_remove == NULL && tfoot_rows == NULL) {
         /* Check for alignment colons */
         has_alignment_colons = (strstr(html, ":</td>") != NULL || strstr(html, ":</th>") != NULL);
-        if (!has_alignment_colons) {
+        /* Also check for rowspan markers (^^) - these need processing even without attributes */
+        bool has_rowspan_markers = (strstr(html, "^^") != NULL);
+        if (!has_alignment_colons && !has_rowspan_markers) {
             /* Absolutely nothing to process - return immediately */
             return (char *)html;
         }
@@ -562,8 +566,10 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                 }
             }
         }
-        if (!has_alignment_colons) {
-            /* No alignment colons found, return early */
+        /* Also check for rowspan markers (^^) - these need processing even without other attributes */
+        bool has_rowspan_markers = (strstr(html, "^^") != NULL);
+        if (!has_alignment_colons && !has_rowspan_markers) {
+            /* No alignment colons or rowspan markers found, return early */
             return (char *)html;
         }
     } else {
@@ -589,22 +595,10 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
     /* Collect all cells (for mapping calculation) - only needed for attribute processing, not alignment */
     all_cell *all_cells = NULL;
     if (needs_all_cells) {
-        /* Check if attributes are simple (no rowspan/colspan/data-remove) - if so, skip expensive processing */
-        bool has_complex_attrs = false;
-        if (attrs) {
-            for (cell_attr *a = attrs; a; a = a->next) {
-                if (strstr(a->attributes, "rowspan") ||
-                    strstr(a->attributes, "colspan") ||
-                    strstr(a->attributes, "data-remove")) {
-                    has_complex_attrs = true;
-                    break;
-                }
-            }
-        }
-
-        /* If we have attributes but they're all simple (no spans/removals), and no captions/tfoot,
-         * and no alignment colons, we can skip the expensive HTML processing entirely */
-        if (!has_complex_attrs && captions == NULL && tfoot_rows == NULL && !has_alignment_colons) {
+        /* IMPORTANT: Always process if we have ANY attributes, even if they seem "simple".
+         * This ensures rowspan/colspan processing isn't skipped. Only skip if we truly
+         * have nothing to process (no attributes, no captions, no tfoot, no alignment). */
+        if (attrs == NULL && captions == NULL && tfoot_rows == NULL && !has_alignment_colons) {
             return (char *)html;
         }
 
@@ -1788,6 +1782,22 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
              * This is important because column mapping can be wrong for rows with colspans.
              * Match cells by content and prioritize cells with colspan/rowspan attributes.
              * Skip this expensive operation for very large tables to avoid timeout. */
+            /* Extract cell content if we need it for content-based or rowspan matching */
+            if (attrs != NULL && !matching && cell_preview[0] == '\0' && ast_row_idx >= 0) {
+                const char *close_tag = is_th ? "</th>" : "</td>";
+                const char *content_start = strchr(read, '>');
+                if (content_start) {
+                    const char *content_end = strstr(content_start + 1, close_tag);
+                    if (content_end && content_end - content_start - 1 < 99) {
+                        size_t len = content_end - content_start - 1;
+                        strncpy(cell_preview, content_start + 1, len);
+                        cell_preview[len] = '\0';
+                        while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
+                            cell_preview[--len] = '\0';
+                        }
+                    }
+                }
+            }
             if (attrs != NULL && !matching && cell_preview[0] != '\0' && ast_row_idx >= 0) {
                 /* For very large tables, skip content-based matching to avoid timeout */
                 /* Position-based matching should be sufficient for most cases */
@@ -1850,6 +1860,22 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
              *  - Restrict to cells in the same table
              *  - Restrict to cells that already have a \"rowspan\" attribute
              *  - Require that the match be unique (only one candidate) */
+            /* Extract cell content if we need it for rowspan matching */
+            if (attrs != NULL && !matching && cell_preview[0] == '\0' && ast_row_idx >= 0) {
+                const char *close_tag = is_th ? "</th>" : "</td>";
+                const char *content_start = strchr(read, '>');
+                if (content_start) {
+                    const char *content_end = strstr(content_start + 1, close_tag);
+                    if (content_end && content_end - content_start - 1 < 99) {
+                        size_t len = content_end - content_start - 1;
+                        strncpy(cell_preview, content_start + 1, len);
+                        cell_preview[len] = '\0';
+                        while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
+                            cell_preview[--len] = '\0';
+                        }
+                    }
+                }
+            }
             if (attrs != NULL && !matching && cell_preview[0] != '\0' && ast_row_idx >= 0) {
                 cell_attr *rowspan_candidate = NULL;
                 bool multiple_candidates = false;

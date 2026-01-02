@@ -196,6 +196,9 @@ static int is_inside_html_attribute(const char *pos, const char *start) {
 const char *apex_find_emoji_name(const char *unicode, size_t unicode_len) {
     if (!unicode || unicode_len == 0) return NULL;
 
+    const char *best_match = NULL;
+    size_t best_match_len = 0;
+
     for (int i = 0; complete_emoji_map[i].name; i++) {
         const char *emoji_unicode = complete_emoji_map[i].unicode;
         if (emoji_unicode) {
@@ -203,11 +206,16 @@ const char *apex_find_emoji_name(const char *unicode, size_t unicode_len) {
             /* Check if the unicode matches (exact match) */
             if (emoji_len == unicode_len &&
                 strncmp(emoji_unicode, unicode, unicode_len) == 0) {
-                return complete_emoji_map[i].name;
+                size_t name_len = strlen(complete_emoji_map[i].name);
+                /* Prefer longer names (more descriptive) over shorter ones (like "+1" vs "thumbsup") */
+                if (!best_match || name_len > best_match_len) {
+                    best_match = complete_emoji_map[i].name;
+                    best_match_len = name_len;
+                }
             }
         }
     }
-    return NULL;
+    return best_match;
 }
 
 /**
@@ -226,6 +234,23 @@ char *apex_replace_emoji(const char *html) {
     size_t remaining = capacity;
 
     while (*read) {
+        /* Check if we're inside an index placeholder <!--IDX:...--> - if so, skip emoji processing */
+        if (read >= html + 7 && strncmp(read - 7, "<!--IDX:", 8) == 0) {
+            /* Find the end of the placeholder */
+            const char *placeholder_end = strstr(read, "-->");
+            if (placeholder_end) {
+                /* Copy the entire placeholder as-is */
+                size_t placeholder_len = placeholder_end + 3 - read;
+                if (placeholder_len <= remaining) {
+                    memcpy(write, read, placeholder_len);
+                    write += placeholder_len;
+                    remaining -= placeholder_len;
+                    read = placeholder_end + 3;
+                    continue;
+                }
+            }
+        }
+
         if (*read == ':') {
             /* Check if we're inside an HTML tag attribute - if so, skip emoji processing */
             if (is_inside_html_attribute(read, html)) {

@@ -245,16 +245,71 @@ char *apex_generate_header_id(const char *text, apex_id_format_t format) {
                             first_char = false;
                             emoji_found = true;
                         } else {
-                            /* Valid UTF-8 sequence but not an emoji - skip it (GFM removes non-ASCII non-emoji) */
-                            read += utf8_len - 1;  /* -1 because for loop will increment */
-                            emoji_found = true;  /* Mark as found so we don't process it */
+                            /* Valid UTF-8 sequence but not an emoji - check if it's a diacritic */
+                            /* Check for diacritics before skipping */
+                            char normalized = 0;
+                            if (utf8_len == 2 && (c & 0xE0) == 0xC0) {
+                                /* 2-byte UTF-8 sequence - check for common Latin diacritics */
+                                if (read[1] != '\0' && ((unsigned char)read[1] & 0xC0) == 0x80) {
+                                    unsigned char byte2 = (unsigned char)read[1];
+                                    /* Check for É (0xC3 0x89) */
+                                    if (c == 0xC3 && byte2 == 0x89) {
+                                        normalized = 'e';
+                                    } else if (c == 0xC3 && byte2 >= 0x80 && byte2 <= 0x85) {
+                                        /* ÀÁÂÃÄÅ (0xC3 0x80-0x85) */
+                                        normalized = 'a';
+                                    } else if (c == 0xC3 && (byte2 == 0x87 || byte2 == 0xA7)) {
+                                        /* Ç (0xC7) or ç (0xE7) */
+                                        normalized = 'c';
+                                    } else if (c == 0xC3 && byte2 >= 0x88 && byte2 <= 0x8B) {
+                                        /* ÈÉÊË (0xC8-0xCB) */
+                                        normalized = 'e';
+                                    } else if (c == 0xC3 && byte2 >= 0x8C && byte2 <= 0x8F) {
+                                        /* ÌÍÎÏ (0xCC-0xCF) */
+                                        normalized = 'i';
+                                    } else if (c == 0xC3 && (byte2 == 0x91 || byte2 == 0xB1)) {
+                                        /* Ñ (0xD1) or ñ (0xF1) */
+                                        normalized = 'n';
+                                    } else if (c == 0xC3 && byte2 >= 0x92 && byte2 <= 0x98) {
+                                        /* ÒÓÔÕÖØ (0xD2-0xD8) */
+                                        normalized = 'o';
+                                    } else if (c == 0xC3 && byte2 >= 0x99 && byte2 <= 0x9C) {
+                                        /* ÙÚÛÜ (0xD9-0xDC) */
+                                        normalized = 'u';
+                                    } else if (c == 0xC3 && (byte2 == 0x9D || byte2 == 0xBD || byte2 == 0xFF)) {
+                                        /* Ýýÿ (0xDD, 0xFD, 0xFF) */
+                                        normalized = 'y';
+                                    } else if (c == 0xC3 && byte2 == 0x9F) {
+                                        /* ß (0xDF) */
+                                        normalized = 's';
+                                    }
+                                }
+                            }
+
+                            if (normalized) {
+                                /* Found a diacritic - write the normalized character */
+                                *write++ = normalized;
+                                read += utf8_len - 1;  /* -1 because for loop will increment */
+                                last_was_dash = false;
+                                first_char = false;
+                                emoji_found = true;  /* Mark as found so we don't process it again */
+                            } else {
+                                /* Not an emoji and not a diacritic - skip it (GFM removes non-ASCII non-emoji) */
+                                read += utf8_len - 1;  /* -1 because for loop will increment */
+                                emoji_found = true;  /* Mark as found so we don't process it */
+                            }
                         }
                     }
                 }
             }
 
             if (!emoji_found) {
-                char normalized = normalize_char(c);
+                /* Check for ASCII diacritics (single-byte) or other characters */
+                char normalized = 0;
+                if (c < 0x80) {
+                    /* ASCII character - use normalize_char */
+                    normalized = normalize_char(c);
+                }
 
                 if (normalized) {
                     /* Valid alphanumeric character (normalized diacritic) */

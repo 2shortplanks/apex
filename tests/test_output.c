@@ -367,7 +367,7 @@ void test_header_ids(void) {
     opts.id_format = 0;  /* GFM format */
     const char *diacritics_test = "# Émoji Support\n## Test—Heading";
     html = apex_markdown_to_html(diacritics_test, strlen(diacritics_test), &opts);
-    assert_contains(html, "id=\"amoji-support\"", "Diacritics converted (É→e)");
+    assert_contains(html, "id=\"emoji-support\"", "Diacritics converted (É→e)");
     /* GFM: em dash should be removed (not converted) */
     assert_contains(html, "id=\"testheading\"", "GFM removes em dash");
     apex_free_string(html);
