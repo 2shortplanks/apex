@@ -112,9 +112,67 @@ static bool is_closing_fence(const char *line, size_t colon_count) {
 }
 
 /**
+ * Parse block type from attribute text
+ * Looks for >blocktype pattern at the start
+ * Returns newly allocated block type string (defaults to "div"), or NULL on error
+ * If block type is found, updates attr_text and attr_len to exclude it
+ */
+static char *parse_block_type(const char **attr_text, size_t *attr_len) {
+    if (!attr_text || !*attr_text || !attr_len || *attr_len == 0) {
+        return strdup("div");
+    }
+
+    const char *p = *attr_text;
+    size_t len = *attr_len;
+
+    /* Skip leading whitespace */
+    while (len > 0 && isspace((unsigned char)*p)) {
+        p++;
+        len--;
+    }
+
+    /* Check for > prefix */
+    if (len > 0 && *p == '>') {
+        p++;
+        len--;
+        const char *type_start = p;
+
+        /* Extract block type (word characters and hyphens) */
+        while (len > 0 && (isalnum((unsigned char)*p) || *p == '-')) {
+            p++;
+            len--;
+        }
+
+        if (p > type_start) {
+            size_t type_len = p - type_start;
+            char *block_type = malloc(type_len + 1);
+            if (block_type) {
+                memcpy(block_type, type_start, type_len);
+                block_type[type_len] = '\0';
+
+                /* Update attr_text and attr_len to skip the >blocktype part */
+                /* Skip whitespace after block type */
+                while (len > 0 && isspace((unsigned char)*p)) {
+                    p++;
+                    len--;
+                }
+
+                *attr_text = p;
+                *attr_len = len;
+                return block_type;
+            }
+        }
+    }
+
+    /* No block type specified, default to div */
+    return strdup("div");
+}
+
+/**
  * Parse attributes from fenced div info string
  * Format: {#id .class .class2 key="value" key2='value2'}
  * Or: .class (single unbraced word treated as class)
+ * Or: >blocktype {#id .class ...} (block type followed by attributes)
  * Returns newly allocated HTML attribute string, or NULL on error
  */
 static char *parse_attributes(const char *attr_text, size_t attr_len) {
@@ -414,6 +472,7 @@ char *apex_process_fenced_divs(const char *text) {
     typedef struct {
         size_t colon_count;
         char *html_attrs;
+        char *block_type;  /* HTML element type (div, aside, article, details, etc.) */
     } div_stack_item;
 
     div_stack_item *div_stack = NULL;
@@ -433,6 +492,7 @@ char *apex_process_fenced_divs(const char *text) {
             /* Cleanup and return */
             for (size_t i = 0; i < div_stack_size; i++) {
                 if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                if (div_stack[i].block_type) free(div_stack[i].block_type);
             }
             if (div_stack) free(div_stack);
             free(output);
@@ -449,7 +509,13 @@ char *apex_process_fenced_divs(const char *text) {
 
         if (is_opening) {
             /* Opening fence with attributes */
-            char *html_attrs = parse_attributes(attr_start, attr_len);
+            /* Parse block type first (may modify attr_start and attr_len) */
+            const char *attr_text = attr_start;
+            size_t attr_len_remaining = attr_len;
+            char *block_type = parse_block_type(&attr_text, &attr_len_remaining);
+
+            /* Parse attributes (excluding block type) */
+            char *html_attrs = parse_attributes(attr_text, attr_len_remaining);
 
             /* Push to stack */
             if (div_stack_size >= div_stack_capacity) {
@@ -457,8 +523,11 @@ char *apex_process_fenced_divs(const char *text) {
                 div_stack = realloc(div_stack, sizeof(div_stack_item) * div_stack_capacity);
                 if (!div_stack) {
                     free(line);
+                    if (block_type) free(block_type);
+                    if (html_attrs) free(html_attrs);
                     for (size_t i = 0; i < div_stack_size; i++) {
                         if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                        if (div_stack[i].block_type) free(div_stack[i].block_type);
                     }
                     free(output);
                     return NULL;
@@ -467,11 +536,14 @@ char *apex_process_fenced_divs(const char *text) {
 
             div_stack[div_stack_size].colon_count = colon_count;
             div_stack[div_stack_size].html_attrs = html_attrs;
+            div_stack[div_stack_size].block_type = block_type ? block_type : strdup("div");
             div_stack_size++;
 
-            /* Write opening div tag with markdown="1" to enable markdown parsing inside */
+            /* Write opening tag with markdown="1" to enable markdown parsing inside */
+            const char *tag_name = div_stack[div_stack_size - 1].block_type;
+            size_t tag_name_len = strlen(tag_name);
             size_t markdown_attr_len = 13; /*  markdown="1" */
-            size_t needed = 5 + (html_attrs ? strlen(html_attrs) : 0) + markdown_attr_len + 1; /* <div...> */
+            size_t needed = 1 + tag_name_len + 1 + (html_attrs ? strlen(html_attrs) : 0) + markdown_attr_len + 1; /* <tag...> */
             if (remaining < needed) {
                 size_t written = write - output;
                 output_capacity = (written + needed) * 2;
@@ -480,6 +552,7 @@ char *apex_process_fenced_divs(const char *text) {
                     free(line);
                     for (size_t i = 0; i < div_stack_size; i++) {
                         if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                        if (div_stack[i].block_type) free(div_stack[i].block_type);
                     }
                     if (div_stack) free(div_stack);
                     free(output);
@@ -491,9 +564,9 @@ char *apex_process_fenced_divs(const char *text) {
             }
 
             if (html_attrs) {
-                write += snprintf(write, remaining, "<div%s markdown=\"1\">", html_attrs);
+                write += snprintf(write, remaining, "<%s%s markdown=\"1\">", tag_name, html_attrs);
             } else {
-                write += snprintf(write, remaining, "<div markdown=\"1\">");
+                write += snprintf(write, remaining, "<%s markdown=\"1\">", tag_name);
             }
             remaining = output_capacity - (write - output);
 
@@ -504,20 +577,24 @@ char *apex_process_fenced_divs(const char *text) {
         } else if (is_closing && div_stack_size > 0) {
             /* Closing fence - pop from stack */
             div_stack_size--;
+            char *block_type = div_stack[div_stack_size].block_type;
             if (div_stack[div_stack_size].html_attrs) {
                 free(div_stack[div_stack_size].html_attrs);
             }
 
-            /* Write closing div tag */
-            size_t needed = 7; /* </div> */
+            /* Write closing tag */
+            size_t tag_name_len = block_type ? strlen(block_type) : 3; /* default to "div" */
+            size_t needed = 2 + tag_name_len + 1; /* </tag> */
             if (remaining < needed) {
                 size_t written = write - output;
                 output_capacity = (written + needed) * 2;
                 char *new_output = realloc(output, output_capacity);
                 if (!new_output) {
                     free(line);
+                    if (block_type) free(block_type);
                     for (size_t i = 0; i < div_stack_size; i++) {
                         if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                        if (div_stack[i].block_type) free(div_stack[i].block_type);
                     }
                     if (div_stack) free(div_stack);
                     free(output);
@@ -528,7 +605,8 @@ char *apex_process_fenced_divs(const char *text) {
                 remaining = output_capacity - written;
             }
 
-            write += snprintf(write, remaining, "</div>");
+            write += snprintf(write, remaining, "</%s>", block_type ? block_type : "div");
+            if (block_type) free(block_type);
             remaining = output_capacity - (write - output);
 
             /* Skip the fence line */
@@ -546,6 +624,7 @@ char *apex_process_fenced_divs(const char *text) {
                     free(line);
                     for (size_t i = 0; i < div_stack_size; i++) {
                         if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                        if (div_stack[i].block_type) free(div_stack[i].block_type);
                     }
                     if (div_stack) free(div_stack);
                     free(output);
@@ -581,17 +660,21 @@ char *apex_process_fenced_divs(const char *text) {
     /* Close any remaining divs (shouldn't happen in valid input) */
     while (div_stack_size > 0) {
         div_stack_size--;
+        char *block_type = div_stack[div_stack_size].block_type;
         if (div_stack[div_stack_size].html_attrs) {
             free(div_stack[div_stack_size].html_attrs);
         }
-        size_t needed = 7; /* </div> */
+        size_t tag_name_len = block_type ? strlen(block_type) : 3; /* default to "div" */
+        size_t needed = 2 + tag_name_len + 1; /* </tag> */
         if (remaining < needed) {
             size_t written = write - output;
             output_capacity = (written + needed) * 2;
             char *new_output = realloc(output, output_capacity);
             if (!new_output) {
+                if (block_type) free(block_type);
                 for (size_t i = 0; i < div_stack_size; i++) {
                     if (div_stack[i].html_attrs) free(div_stack[i].html_attrs);
+                    if (div_stack[i].block_type) free(div_stack[i].block_type);
                 }
                 if (div_stack) free(div_stack);
                 free(output);
@@ -601,7 +684,8 @@ char *apex_process_fenced_divs(const char *text) {
             write = output + written;
             remaining = output_capacity - written;
         }
-        write += snprintf(write, remaining, "</div>");
+        write += snprintf(write, remaining, "</%s>", block_type ? block_type : "div");
+        if (block_type) free(block_type);
         remaining = output_capacity - (write - output);
     }
 

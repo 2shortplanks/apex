@@ -706,6 +706,158 @@ void test_fenced_divs(void) {
     }
     apex_free_string(html);
 
+    /* Test fenced div with block type (aside) */
+    const char *aside_block = "::: >aside {.sidebar}\nThis is an aside block.\n:::";
+    html = apex_markdown_to_html(aside_block, strlen(aside_block), &opts);
+    assert_contains(html, "<aside", "Aside block renders");
+    assert_contains(html, "</aside>", "Aside block closes");
+    assert_contains(html, "class=\"sidebar\"", "Aside block has class");
+    assert_contains(html, "This is an aside block", "Aside block content");
+    apex_free_string(html);
+
+    /* Test fenced div with block type (article) */
+    const char *article_block = "::: >article {#post .main}\nArticle content here.\n:::";
+    html = apex_markdown_to_html(article_block, strlen(article_block), &opts);
+    assert_contains(html, "<article", "Article block renders");
+    assert_contains(html, "</article>", "Article block closes");
+    assert_contains(html, "id=\"post\"", "Article block has ID");
+    assert_contains(html, "class=\"main\"", "Article block has class");
+    apex_free_string(html);
+
+    /* Test fenced div with block type (details/summary - nested) */
+    const char *details_block = "::: >details {.warning} :::\n:::: >summary\nThis is a summary\n::::\nThis is the content of the details block\n:::";
+    html = apex_markdown_to_html(details_block, strlen(details_block), &opts);
+    assert_contains(html, "<details", "Details block renders");
+    assert_contains(html, "</details>", "Details block closes");
+    assert_contains(html, "<summary", "Summary block renders");
+    assert_contains(html, "</summary>", "Summary block closes");
+    assert_contains(html, "class=\"warning\"", "Details block has class");
+    assert_contains(html, "This is a summary", "Summary content");
+    assert_contains(html, "This is the content of the details block", "Details content");
+    apex_free_string(html);
+
+    /* Test fenced div with block type and unbraced class */
+    const char *aside_unbraced = "::: >aside Warning :::\nWarning content.\n:::";
+    html = apex_markdown_to_html(aside_unbraced, strlen(aside_unbraced), &opts);
+    assert_contains(html, "<aside", "Aside with unbraced class renders");
+    assert_contains(html, "class=\"Warning\"", "Aside has unbraced class");
+    apex_free_string(html);
+
+    /* Test default div behavior (no > prefix) */
+    const char *default_div = "::: {.container}\nRegular div content.\n:::";
+    html = apex_markdown_to_html(default_div, strlen(default_div), &opts);
+    assert_contains(html, "<div", "Default div renders");
+    assert_contains(html, "</div>", "Default div closes");
+    assert_contains(html, "class=\"container\"", "Default div has class");
+    apex_free_string(html);
+
+    /* Test nested blocks with different types */
+    const char *nested_blocks = "::: >section {.outer} :::\nOuter section.\n\n::: >aside {.inner}\nInner aside.\n:::\n\nMore outer content.\n:::";
+    html = apex_markdown_to_html(nested_blocks, strlen(nested_blocks), &opts);
+    assert_contains(html, "<section", "Nested section renders");
+    assert_contains(html, "</section>", "Nested section closes");
+    assert_contains(html, "<aside", "Nested aside renders");
+    assert_contains(html, "</aside>", "Nested aside closes");
+    assert_contains(html, "Outer section", "Outer content");
+    assert_contains(html, "Inner aside", "Inner content");
+    apex_free_string(html);
+
+    /* Test block type with section */
+    const char *section_block = "::: >section {#chapter1 .main-section}\nSection content here.\n:::";
+    html = apex_markdown_to_html(section_block, strlen(section_block), &opts);
+    assert_contains(html, "<section", "Section block renders");
+    assert_contains(html, "</section>", "Section block closes");
+    assert_contains(html, "id=\"chapter1\"", "Section block has ID");
+    assert_contains(html, "class=\"main-section\"", "Section block has class");
+    apex_free_string(html);
+
+    /* Test block type with header */
+    const char *header_block = "::: >header {.site-header}\nSite header content\n:::";
+    html = apex_markdown_to_html(header_block, strlen(header_block), &opts);
+    assert_contains(html, "<header", "Header block renders");
+    assert_contains(html, "</header>", "Header block closes");
+    apex_free_string(html);
+
+    /* Test block type with footer */
+    const char *footer_block = "::: >footer {.site-footer}\nSite footer content\n:::";
+    html = apex_markdown_to_html(footer_block, strlen(footer_block), &opts);
+    assert_contains(html, "<footer", "Footer block renders");
+    assert_contains(html, "</footer>", "Footer block closes");
+    apex_free_string(html);
+
+    /* Test block type with nav */
+    const char *nav_block = "::: >nav {.main-nav}\nNavigation content\n:::";
+    html = apex_markdown_to_html(nav_block, strlen(nav_block), &opts);
+    assert_contains(html, "<nav", "Nav block renders");
+    assert_contains(html, "</nav>", "Nav block closes");
+    apex_free_string(html);
+
+    /* Test block type with explicit div */
+    const char *explicit_div = "::: >div {.custom-div}\nExplicit div content\n:::";
+    html = apex_markdown_to_html(explicit_div, strlen(explicit_div), &opts);
+    assert_contains(html, "<div", "Explicit div block renders");
+    assert_contains(html, "</div>", "Explicit div block closes");
+    apex_free_string(html);
+
+    /* Test block type with trailing colons */
+    const char *block_trailing = "::: >aside {.sidebar} :::\nContent with trailing colons\n:::";
+    html = apex_markdown_to_html(block_trailing, strlen(block_trailing), &opts);
+    assert_contains(html, "<aside", "Block with trailing colons renders");
+    assert_contains(html, "class=\"sidebar\"", "Block with trailing colons has class");
+    apex_free_string(html);
+
+    /* Test block type with multiple attributes */
+    const char *block_multi_attr = "::: >article {#post .main .highlight data-id=\"123\" role=\"main\"}\nArticle with multiple attributes\n:::";
+    html = apex_markdown_to_html(block_multi_attr, strlen(block_multi_attr), &opts);
+    assert_contains(html, "<article", "Block with multiple attributes renders");
+    assert_contains(html, "id=\"post\"", "Block has ID");
+    assert_contains(html, "class=\"main highlight\"", "Block has multiple classes");
+    assert_contains(html, "data-id=\"123\"", "Block has data attribute");
+    assert_contains(html, "role=\"main\"", "Block has role attribute");
+    apex_free_string(html);
+
+    /* Test deeply nested block types */
+    const char *deep_nested = "::: >section {.level1} :::\nLevel 1\n\n::: >article {.level2}\nLevel 2\n\n::: >aside {.level3}\nLevel 3\n:::\n\nMore level 2\n:::\n\nMore level 1\n:::";
+    html = apex_markdown_to_html(deep_nested, strlen(deep_nested), &opts);
+    assert_contains(html, "<section", "Deep nested section renders");
+    assert_contains(html, "</section>", "Deep nested section closes");
+    assert_contains(html, "<article", "Deep nested article renders");
+    assert_contains(html, "</article>", "Deep nested article closes");
+    assert_contains(html, "<aside", "Deep nested aside renders");
+    assert_contains(html, "</aside>", "Deep nested aside closes");
+    assert_contains(html, "Level 1", "Deep nested level 1 content");
+    assert_contains(html, "Level 2", "Deep nested level 2 content");
+    assert_contains(html, "Level 3", "Deep nested level 3 content");
+    apex_free_string(html);
+
+    /* Test mixed block types and regular divs */
+    const char *mixed_types = "::: >section {.outer}\nSection content\n\n::: {.regular-div}\nRegular div inside section\n:::\n\n::: >aside {.aside-in-section}\nAside inside section\n:::\n\nMore section content\n:::";
+    html = apex_markdown_to_html(mixed_types, strlen(mixed_types), &opts);
+    assert_contains(html, "<section", "Mixed types section renders");
+    assert_contains(html, "</section>", "Mixed types section closes");
+    assert_contains(html, "<div", "Mixed types regular div renders");
+    assert_contains(html, "</div>", "Mixed types regular div closes");
+    assert_contains(html, "<aside", "Mixed types aside renders");
+    assert_contains(html, "</aside>", "Mixed types aside closes");
+    apex_free_string(html);
+
+    /* Test block type with hyphenated name */
+    const char *hyphenated = "::: >custom-element {.test}\nCustom element content\n:::";
+    html = apex_markdown_to_html(hyphenated, strlen(hyphenated), &opts);
+    assert_contains(html, "<custom-element", "Hyphenated block type renders");
+    assert_contains(html, "</custom-element>", "Hyphenated block type closes");
+    apex_free_string(html);
+
+    /* Test block type preserves markdown parsing */
+    const char *block_with_markdown = "::: >article {.content}\n## Heading\n\nParagraph with **bold** text.\n:::";
+    html = apex_markdown_to_html(block_with_markdown, strlen(block_with_markdown), &opts);
+    assert_contains(html, "<article", "Block with markdown renders");
+    assert_contains(html, "<h2", "Block content parsed as markdown (heading)");
+    assert_contains(html, "Heading", "Block content parsed as markdown (heading text)");
+    assert_contains(html, "<strong", "Block content parsed as markdown (bold)");
+    assert_contains(html, "bold", "Block content parsed as markdown (bold text)");
+    apex_free_string(html);
+
     /* Test minimum 3 colons */
     const char *min_colons = "::: {.minimal}\nMinimal div\n:::";
     html = apex_markdown_to_html(min_colons, strlen(min_colons), &opts);

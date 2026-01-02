@@ -109,8 +109,6 @@ Test files are located in `tests/fixtures/includes/`:
 
 Some advanced features work but have limited test coverage:
 
-- **IAL**: ALD and list item IAL need debugging
-- **Definition Lists**: Markdown not yet processed in definitions
 - **Advanced Tables**: Rowspan/colspan rendering needs custom renderer
 - **Critic Markup**: Some edge cases with substitution/comment syntax
 

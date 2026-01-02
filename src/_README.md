@@ -1,5 +1,5 @@
 <!--README-->
-[![Version: <!--VER-->0.1.42<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.42<!--END VER-->-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: <!--VER-->0.1.43<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.43<!--END VER-->-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!--GITHUB-->
 # Apex
@@ -22,8 +22,9 @@ Apex is a unified Markdown processor that combines the best features from Common
 
 ### Markdown Extensions
 
-- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan via `^^`, colspan via empty cells/`<<`, captions before/after tables including Pandoc-style `Table: Caption`, and individual cell alignment using colons `:Left`, `Right:`, `:Center:`)
+- **Tables**: GitHub Flavored Markdown tables with advanced features (rowspan via `^^`, colspan via empty cells/`<<`, captions before/after tables including Pandoc-style `Table: Caption` and `: Caption` syntax, and individual cell alignment using colons `:Left`, `Right:`, `:Center:`)
 - **Table caption positioning**: Control caption placement with `--captions above` or `--captions below` (default: below)
+- **Table caption IAL**: IAL attributes in table captions (e.g., `: Caption {#id .class}`) are extracted and applied to the table element
 - **Relaxed tables**: Support for tables without separator rows (Kramdown-style)
 - **Headerless tables**: Support for tables that start with alignment rows (separator rows) without header rows; column alignment is automatically applied
 - **Footnotes**: Three syntaxes supported (reference-style, Kramdown inline, MultiMarkdown inline)
@@ -49,7 +50,10 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **Markdown combiner (`--combine`)**: Concatenate one or more Markdown files into a single Markdown stream, expanding all include syntaxes. When a `SUMMARY.md` file is provided, Apex treats it as a GitBook-style index and combines the linked files in order—perfect for building books, multi-file indices, and shared tables of contents that can then be piped back into Apex for final rendering.
 - **MultiMarkdown merge (`--mmd-merge`)**: Read one or more mmd_merge-style index files and stitch their referenced documents into a single Markdown stream. Each non-empty, non-comment line specifies a file to include; indentation with tabs or four-space groups shifts all headings in that file down by one level per indent, mirroring the original `mmd_merge.pl` behavior. Output is raw Markdown that can be piped into Apex (e.g., `apex --mmd-merge index.txt | apex --mode mmd`).
 - **CSV/TSV support**: Automatic table conversion from CSV and TSV files
-- **Inline Attribute Lists (IAL)**: Kramdown-style attributes `{: #id .class}`
+- **Inline Attribute Lists (IAL)**: Kramdown-style attributes `{: #id .class}` and Pandoc-style attributes `{#id .class}` - both formats work in all contexts (block-level, inline, paragraphs, headings, table captions)
+- **Bracketed spans**: Convert `[text]{IAL}` syntax to HTML span elements with attributes, enabled by default in unified mode
+- **Fenced divs**: Pandoc-style fenced divs `::::: {#id .class} ... :::::` for creating custom block containers, enabled by default in unified mode
+- **Image IAL support**: Inline and reference-style images support IAL syntax with automatic width/height conversion (percentages and non-integer/non-px values convert to style attributes, Xpx values convert to integer width/height attributes, bare integers remain as width/height attributes)
 - **Special markers**: Page breaks (`<!--BREAK-->`), autoscroll pauses (`<!--PAUSE:N-->`), end-of-block markers
 <!--JEKYLL {%endraw%}-->
 
@@ -207,6 +211,8 @@ apex input.md --mode kramdown
 - `--wikilinks` - Enable wiki link syntax `[[Page]]`, `[[Page|Display]]`, and `[[Page#Section]]`
 - `--wikilink-space MODE` - Control how spaces in wiki link page names are converted (`dash`, `none`, `underscore`, `space`; default: `dash`)
 - `--wikilink-extension EXT` - File extension to append to wiki link URLs (e.g. `html`, `md`)
+- `--divs` / `--no-divs` - Enable/disable Pandoc fenced divs syntax (enabled by default in unified mode)
+- `--spans` / `--no-spans` - Enable/disable bracketed spans `[text]{IAL}` syntax (enabled by default in unified mode)
 
 ### All Options
 
