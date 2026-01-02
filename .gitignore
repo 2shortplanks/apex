@@ -49,3 +49,4 @@ build-release/
 commit_message.txt
 .github/copilot-instructions.md
 output.html
+/build-debug

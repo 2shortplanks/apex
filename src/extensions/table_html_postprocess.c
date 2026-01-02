@@ -500,14 +500,25 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
     table_caption *captions = collect_table_captions(document, &paras_to_remove);
 
     /* Early exit: if there are no attributes, captions, or tfoot rows to process,
-     * return the original HTML. This avoids the expensive collect_all_cells() call
-     * and HTML processing for simple tables. */
-    if (!attrs && !captions && !paras_to_remove && !tfoot_rows) {
-        return (char *)html;
+     * and no alignment colons, return early to avoid expensive processing.
+     * This avoids the expensive collect_all_cells() call and HTML processing for simple tables. */
+    bool needs_all_cells = (attrs != NULL || captions != NULL || paras_to_remove != NULL || tfoot_rows != NULL);
+    bool has_alignment_colons = false;
+
+    if (!needs_all_cells) {
+        /* Quick check for alignment colons - look for :</td> or :</th> patterns in rendered HTML */
+        has_alignment_colons = (strstr(html, ":</td>") != NULL || strstr(html, ":</th>") != NULL);
+        if (!has_alignment_colons) {
+            /* No alignment colons found, return early */
+            return (char *)html;
+        }
     }
 
-    /* Collect all cells (for mapping calculation) - only needed if we have attributes to process */
-    all_cell *all_cells = collect_all_cells(document);
+    /* Collect all cells (for mapping calculation) - only needed for attribute processing, not alignment */
+    all_cell *all_cells = NULL;
+    if (needs_all_cells) {
+        all_cells = collect_all_cells(document);
+    }
 
     /* Allocate output buffer (same size as input, we'll realloc if needed) */
     size_t capacity = strlen(html) * 2;
@@ -917,59 +928,39 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
              * account for that. The header is typically AST row 0, and it's the first HTML row.
              * So for tbody/tfoot rows, row_idx will be >= 1 (1 = first data row, 2 = second data row, etc.).
              *
-             * The mapping should count all non-removed rows, including the header, to match row_idx. */
+             * The mapping should count all non-removed rows, including the header, to match row_idx.
+             * Note: This mapping is only needed when we have attributes to process. */
             ast_row_idx = -1;
-            int html_row_count = -1;  /* Start at -1, will be 0 for header */
-            for (int r = 0; r < 100; r++) {  /* Check up to 100 AST rows */
-                /* Check if this AST row has any non-removed cells */
-                bool has_non_removed = false;
-                for (all_cell *c = all_cells; c; c = c->next) {
-                    if (c->table_index == table_idx &&
-                        c->row_index == r &&
-                        !c->is_removed) {
-                        has_non_removed = true;
-                        break;
+            if (all_cells) {
+                int html_row_count = -1;  /* Start at -1, will be 0 for header */
+                for (int r = 0; r < 100; r++) {  /* Check up to 100 AST rows */
+                    /* Check if this AST row has any non-removed cells */
+                    bool has_non_removed = false;
+                    for (all_cell *c = all_cells; c; c = c->next) {
+                        if (c->table_index == table_idx &&
+                            c->row_index == r &&
+                            !c->is_removed) {
+                            has_non_removed = true;
+                            break;
+                        }
+                    }
+                    /* If this AST row has non-removed cells, it appears in HTML */
+                    if (has_non_removed) {
+                        html_row_count++;
+                        if (html_row_count == row_idx) {
+                            ast_row_idx = r;
+                            break;
+                        }
                     }
                 }
-                /* If this AST row has non-removed cells, it appears in HTML */
-                if (has_non_removed) {
-                    html_row_count++;
-                    if (html_row_count == row_idx) {
-                        ast_row_idx = r;
-                        break;
-                    }
-                }
+            } else {
+                /* No all_cells available (alignment-only processing) - use row_idx directly */
+                ast_row_idx = row_idx;
             }
 
             if (ast_row_idx == -1) {
-                /* Fallback: use row_idx directly (shouldn't happen)
-                 * But if row_idx is reasonable, try to map it to AST row index */
-                if (row_idx >= 0 && row_idx < 100) {
-                    /* Try to find the AST row that corresponds to this HTML row */
-                    int html_count = -1;
-                    for (int r = 0; r < 100; r++) {
-                        bool has_non_removed = false;
-                        for (all_cell *c = all_cells; c; c = c->next) {
-                            if (c->table_index == table_idx &&
-                                c->row_index == r &&
-                                !c->is_removed) {
-                                has_non_removed = true;
-                                break;
-                            }
-                        }
-                        if (has_non_removed) {
-                            html_count++;
-                            if (html_count == row_idx) {
-                                ast_row_idx = r;
-                                break;
-                            }
-                        }
-                    }
-                }
-                /* If still not found, use row_idx as fallback */
-                if (ast_row_idx == -1) {
-                    ast_row_idx = row_idx;
-                }
+                /* Fallback: use row_idx directly */
+                ast_row_idx = row_idx;
             }
 
             /* Pre-calculate which original columns will be visible in this row's HTML.
