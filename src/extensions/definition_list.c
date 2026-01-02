@@ -738,6 +738,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
                                 int render_opts = CMARK_OPT_DEFAULT;
                                 if (unsafe) {
                                     parser_opts |= CMARK_OPT_UNSAFE;
+                                    parser_opts |= CMARK_OPT_LIBERAL_HTML_TAG;  /* Be liberal in interpreting inline HTML tags */
                                     render_opts |= CMARK_OPT_UNSAFE;
                                 }
 
@@ -914,6 +915,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
                         int render_opts = CMARK_OPT_DEFAULT;
                         if (unsafe) {
                             parser_opts |= CMARK_OPT_UNSAFE;
+                            parser_opts |= CMARK_OPT_LIBERAL_HTML_TAG;  /* Be liberal in interpreting inline HTML tags */
                             render_opts |= CMARK_OPT_UNSAFE;
                         }
 

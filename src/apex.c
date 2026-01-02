@@ -596,6 +596,93 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
             continue;
         }
 
+        /* Check if we're inside an HTML tag attribute - if so, skip autolinking */
+        /* Look backwards for < to see if we're inside a tag */
+        bool in_html_attribute = false;
+        if (*r == 'h' || *r == 'm') {  /* Quick check: URLs start with http or mailto */
+            const char *p = r - 1;
+            const char *tag_start = NULL;
+            const char *tag_end = NULL;
+
+            /* Find nearest < or > before r */
+            while (p >= text) {
+                if (*p == '>') {
+                    tag_end = p;
+                    break;
+                } else if (*p == '<') {
+                    tag_start = p;
+                    break;
+                }
+                p--;
+            }
+
+            /* If we're inside a tag (between < and >), check if we're in an attribute */
+            if (tag_start && (!tag_end || tag_start > tag_end)) {
+                /* Look backwards from r to find the nearest = sign within this tag */
+                p = r - 1;
+                const char *equals_pos = NULL;
+                while (p > tag_start) {
+                    if (*p == '=') {
+                        equals_pos = p;
+                        break;
+                    } else if (*p == '>') {
+                        break;
+                    }
+                    p--;
+                }
+
+                if (equals_pos) {
+                    /* Check what comes after the = */
+                    const char *after_equals = equals_pos + 1;
+                    /* Skip whitespace */
+                    while (after_equals < r && isspace((unsigned char)*after_equals)) {
+                        after_equals++;
+                    }
+
+                    if (after_equals < r) {
+                        /* Check if it's a quoted attribute */
+                        if (*after_equals == '"' || *after_equals == '\'') {
+                            char quote = *after_equals;
+                            const char *value_start = after_equals + 1;
+
+                            /* If r is after the opening quote, check if we're inside */
+                            if (r >= value_start) {
+                                /* Look for the closing quote - scan forward from value_start */
+                                const char *quote_end = value_start;
+                                while (quote_end < r && *quote_end != quote && *quote_end != '\0') {
+                                    quote_end++;
+                                }
+
+                                /* If we haven't found the closing quote by the time we reach r, we're inside */
+                                if (quote_end >= r || *quote_end != quote) {
+                                    in_html_attribute = true;
+                                }
+                            }
+                        } else {
+                            /* Unquoted attribute - value is between = and next space or > */
+                            const char *value_start = after_equals;
+                            if (r > value_start) {
+                                const char *value_end = value_start;
+                                while (value_end < r && !isspace((unsigned char)*value_end) && *value_end != '>') {
+                                    value_end++;
+                                }
+                                /* If r is in this unquoted value, we're inside an attribute */
+                                if (r <= value_end) {
+                                    in_html_attribute = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (in_html_attribute) {
+            /* Inside HTML attribute, copy as-is */
+            *w++ = *r++;
+            continue;
+        }
+
         /* Handle angle-bracket autolink */
         if (*r == '<') {
             const char *start = r + 1;
@@ -650,7 +737,87 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
         bool is_url_start = false;
         bool is_email_start = false;
 
-        if (!isspace((unsigned char)*r)) {
+        /* Check again if we're inside an HTML attribute before processing URLs */
+        bool in_html_attribute_url = false;
+        if (!isspace((unsigned char)*r) && (*r == 'h' || *r == 'm' || *r == '@')) {
+            const char *p = r - 1;
+            const char *tag_start = NULL;
+            const char *tag_end = NULL;
+
+            /* Find nearest < or > before r */
+            while (p >= text) {
+                if (*p == '>') {
+                    tag_end = p;
+                    break;
+                } else if (*p == '<') {
+                    tag_start = p;
+                    break;
+                }
+                p--;
+            }
+
+            /* If we're inside a tag (between < and >), check if we're in an attribute */
+            if (tag_start && (!tag_end || tag_start > tag_end)) {
+                /* Look backwards from r to find the nearest = sign within this tag */
+                p = r - 1;
+                const char *equals_pos = NULL;
+                while (p > tag_start) {
+                    if (*p == '=') {
+                        equals_pos = p;
+                        break;
+                    } else if (*p == '>') {
+                        break;
+                    }
+                    p--;
+                }
+
+                if (equals_pos) {
+                    /* Check what comes after the = */
+                    const char *after_equals = equals_pos + 1;
+                    /* Skip whitespace */
+                    while (after_equals < r && isspace((unsigned char)*after_equals)) {
+                        after_equals++;
+                    }
+
+                    if (after_equals < r) {
+                        /* Check if it's a quoted attribute */
+                        if (*after_equals == '"' || *after_equals == '\'') {
+                            char quote = *after_equals;
+                            const char *value_start = after_equals + 1;
+
+                            /* If r is after the opening quote, check if we're inside */
+                            if (r >= value_start) {
+                                /* Look for the closing quote - scan forward from value_start */
+                                const char *quote_end = value_start;
+                                while (quote_end < r && *quote_end != quote && *quote_end != '\0') {
+                                    quote_end++;
+                                }
+
+                                /* If we haven't found the closing quote by the time we reach r, we're inside */
+                                if (quote_end >= r || *quote_end != quote) {
+                                    in_html_attribute_url = true;
+                                }
+                            }
+                        } else {
+                            /* Unquoted attribute - value is between = and next space or > */
+                            const char *value_start = after_equals;
+                            if (r > value_start) {
+                                const char *value_end = value_start;
+                                while (value_end < r && !isspace((unsigned char)*value_end) && *value_end != '>') {
+                                    value_end++;
+                                }
+                                /* If r is in this unquoted value, we're inside an attribute */
+                                if (r <= value_end) {
+                                    in_html_attribute_url = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!isspace((unsigned char)*r) && !in_html_attribute_url) {
             /* Check for URL protocols */
             if (strncmp(r, "http://", 7) == 0 || strncmp(r, "https://", 8) == 0 || strncmp(r, "mailto:", 7) == 0) {
                 is_url_start = true;
@@ -2091,6 +2258,8 @@ static int apex_to_cmark_options(const apex_options *options) {
 
     if (options->unsafe) {
         cmark_opts |= CMARK_OPT_UNSAFE;
+        /* Also enable liberal HTML tag interpretation to prevent encoding of inline HTML tags */
+        cmark_opts |= CMARK_OPT_LIBERAL_HTML_TAG;
     }
 
     if (options->hardbreaks) {

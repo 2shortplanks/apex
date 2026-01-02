@@ -12,6 +12,7 @@
 /* Forward declarations */
 static void normalize_emoji_name(char *name);
 static int is_table_alignment_pattern(const char *start, const char *end);
+static int is_inside_html_attribute(const char *pos, const char *start);
 
 /**
  * Find emoji entry by name
@@ -64,6 +65,131 @@ static int is_in_header(const char *pos, const char *start) {
 }
 
 /**
+ * Check if we're inside an HTML tag attribute
+ * Returns 1 if inside an attribute value, 0 otherwise
+ *
+ * Handles both raw HTML (<img>) and HTML-encoded tags (&lt;img&gt;)
+ */
+static int is_inside_html_attribute(const char *pos, const char *start) {
+    if (!pos || !start || pos < start) return 0;
+
+    /* First, check if we're inside a tag (between < and > or &lt; and &gt;) */
+    const char *p = pos - 1;
+    const char *tag_start = NULL;
+    const char *tag_end = NULL;
+
+    /* Find nearest < or > before pos, or &lt; or &gt; */
+    while (p >= start) {
+        if (*p == '>') {
+            tag_end = p;
+            break;
+        } else if (*p == '<') {
+            tag_start = p;
+            break;
+        } else if (p >= start + 3 && p[-2] == '&' && p[-1] == 'l' && *p == 't' && p[1] == ';') {
+            /* Found &lt; (encoded <) - tag_start is at the & */
+            tag_start = p - 2;
+            break;
+        } else if (p >= start + 3 && p[-2] == '&' && p[-1] == 'g' && *p == 't' && p[1] == ';') {
+            /* Found &gt; (encoded >) - tag_end is at the & */
+            tag_end = p - 2;
+            break;
+        }
+        p--;
+    }
+
+    /* If > comes before <, we're outside any tag */
+    if (tag_end && (!tag_start || tag_end > tag_start)) {
+        return 0;
+    }
+
+    /* If we're not inside a tag, we can't be in an attribute */
+    if (!tag_start) {
+        return 0;
+    }
+
+    /* Now look backwards from pos to find the nearest = sign within this tag */
+    p = pos - 1;
+    const char *equals_pos = NULL;
+    while (p > tag_start) {
+        if (*p == '=') {
+            equals_pos = p;
+            break;
+        } else if (*p == '>') {
+            /* Hit tag end, no = found before this */
+            return 0;
+        } else if (p >= start + 3 && p[-2] == '&' && p[-1] == 'g' && *p == 't' && p[1] == ';') {
+            /* Hit &gt; (encoded tag end), no = found before this */
+            return 0;
+        }
+        p--;
+    }
+
+    if (!equals_pos) {
+        return 0;  /* No = found, not in an attribute */
+    }
+
+    /* Check what comes after the = */
+    const char *after_equals = equals_pos + 1;
+    /* Skip whitespace */
+    while (after_equals < pos && isspace((unsigned char)*after_equals)) {
+        after_equals++;
+    }
+
+    if (after_equals >= pos) {
+        return 0;  /* pos is at or before the value starts */
+    }
+
+    /* Check if it's a quoted attribute */
+    if (*after_equals == '"' || *after_equals == '\'') {
+        char quote = *after_equals;
+        const char *value_start = after_equals + 1;  /* After opening quote */
+
+        /* If pos is after the opening quote, check if we're inside */
+        if (pos > value_start) {
+            /* Look for the closing quote - scan forward from value_start */
+            const char *quote_end = value_start;
+            while (quote_end < pos && *quote_end != quote && *quote_end != '\0') {
+                quote_end++;
+            }
+
+            /* If we haven't found the closing quote by the time we reach pos, we're inside */
+            if (quote_end >= pos || *quote_end != quote) {
+                return 1;
+            }
+            /* If quote_end < pos and *quote_end == quote, we found the closing quote before pos, so we're not inside */
+        } else if (pos == value_start) {
+            /* pos is exactly at the start of the value (right after opening quote) */
+            /* Check if there's a closing quote immediately */
+            if (pos[0] == quote) {
+                return 0;  /* Empty attribute value */
+            }
+            /* Otherwise we're inside (at the start of the value) */
+            return 1;
+        }
+    } else {
+        /* Unquoted attribute - value is between = and next space or > or &gt; */
+        const char *value_start = after_equals;
+        if (pos > value_start) {
+            const char *value_end = value_start;
+            while (value_end < pos && !isspace((unsigned char)*value_end) && *value_end != '>') {
+                /* Also check for &gt; */
+                if (value_end >= start + 3 && value_end[-2] == '&' && value_end[-1] == 'g' && *value_end == 't' && value_end[1] == ';') {
+                    break;
+                }
+                value_end++;
+            }
+            /* If pos is in this unquoted value, return 1 */
+            if (pos <= value_end) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+/**
  * Find emoji name from unicode emoji (reverse lookup)
  * Compares the unicode string against the emoji map
  */
@@ -101,6 +227,64 @@ char *apex_replace_emoji(const char *html) {
 
     while (*read) {
         if (*read == ':') {
+            /* Check if we're inside an HTML tag attribute - if so, skip emoji processing */
+            if (is_inside_html_attribute(read, html)) {
+                /* Inside HTML attribute, copy as-is */
+                if (remaining > 0) {
+                    *write++ = *read++;
+                    remaining--;
+                } else {
+                    read++;
+                }
+                continue;
+            }
+
+            /* Also check if we're inside an <img> tag (even if not in an attribute) */
+            /* This prevents processing emoji patterns that are part of img tag content */
+            /* Handles both raw HTML (<img>) and HTML-encoded tags (&lt;img&gt;) */
+            const char *img_check = read - 1;
+            while (img_check >= html && img_check > read - 50) {
+                if (*img_check == '>') {
+                    break;  /* Hit tag end, we're outside */
+                } else if (*img_check == '<') {
+                    /* Check if this is an <img> tag */
+                    if (img_check + 4 < read &&
+                        (img_check[1] == 'i' || img_check[1] == 'I') &&
+                        (img_check[2] == 'm' || img_check[2] == 'M') &&
+                        (img_check[3] == 'g' || img_check[3] == 'G') &&
+                        (isspace((unsigned char)img_check[4]) || img_check[4] == '>')) {
+                        /* We're inside an <img> tag - skip emoji processing */
+                        if (remaining > 0) {
+                            *write++ = *read++;
+                            remaining--;
+                        } else {
+                            read++;
+                        }
+                        continue;
+                    }
+                    break;
+                } else if (img_check >= html + 3 && img_check[-2] == '&' && img_check[-1] == 'l' && *img_check == 't' && img_check[1] == ';') {
+                    /* Found &lt; (encoded <) - check if this is an &lt;img&gt; tag */
+                    const char *tag_start = img_check - 2;
+                    if (tag_start + 6 < read &&
+                        (tag_start[3] == 'i' || tag_start[3] == 'I') &&
+                        (tag_start[4] == 'm' || tag_start[4] == 'M') &&
+                        (tag_start[5] == 'g' || tag_start[5] == 'G') &&
+                        (isspace((unsigned char)tag_start[6]) || (tag_start + 6 < read && tag_start[6] == '&'))) {
+                        /* We're inside an &lt;img&gt; tag - skip emoji processing */
+                        if (remaining > 0) {
+                            *write++ = *read++;
+                            remaining--;
+                        } else {
+                            read++;
+                        }
+                        continue;
+                    }
+                    break;
+                }
+                img_check--;
+            }
+
             /* Look for closing : */
             const char *end = strchr(read + 1, ':');
             if (end && (end - read) < 50) {  /* Reasonable emoji name length */
