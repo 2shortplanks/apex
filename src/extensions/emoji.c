@@ -21,6 +21,27 @@ static const char *find_emoji(const char *name, int len) {
 }
 
 /**
+ * Find emoji name from unicode emoji (reverse lookup)
+ * Compares the unicode string against the emoji map
+ */
+const char *apex_find_emoji_name(const char *unicode, size_t unicode_len) {
+    if (!unicode || unicode_len == 0) return NULL;
+
+    for (int i = 0; complete_emoji_map[i].name; i++) {
+        const char *emoji_unicode = complete_emoji_map[i].unicode;
+        if (emoji_unicode) {
+            size_t emoji_len = strlen(emoji_unicode);
+            /* Check if the unicode matches (exact match) */
+            if (emoji_len == unicode_len &&
+                strncmp(emoji_unicode, unicode, unicode_len) == 0) {
+                return complete_emoji_map[i].name;
+            }
+        }
+    }
+    return NULL;
+}
+
+/**
  * Replace :emoji: patterns in HTML
  */
 char *apex_replace_emoji(const char *html) {

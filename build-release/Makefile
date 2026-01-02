@@ -1162,6 +1162,174 @@ src/pretty_html.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/pretty_html.c.s
 .PHONY : src/pretty_html.c.s
 
+tests/test_basic.o: tests/test_basic.c.o
+.PHONY : tests/test_basic.o
+
+# target to build an object file
+tests/test_basic.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.o
+.PHONY : tests/test_basic.c.o
+
+tests/test_basic.i: tests/test_basic.c.i
+.PHONY : tests/test_basic.i
+
+# target to preprocess a source file
+tests/test_basic.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.i
+.PHONY : tests/test_basic.c.i
+
+tests/test_basic.s: tests/test_basic.c.s
+.PHONY : tests/test_basic.s
+
+# target to generate assembly for a file
+tests/test_basic.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.s
+.PHONY : tests/test_basic.c.s
+
+tests/test_extensions.o: tests/test_extensions.c.o
+.PHONY : tests/test_extensions.o
+
+# target to build an object file
+tests/test_extensions.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.o
+.PHONY : tests/test_extensions.c.o
+
+tests/test_extensions.i: tests/test_extensions.c.i
+.PHONY : tests/test_extensions.i
+
+# target to preprocess a source file
+tests/test_extensions.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.i
+.PHONY : tests/test_extensions.c.i
+
+tests/test_extensions.s: tests/test_extensions.c.s
+.PHONY : tests/test_extensions.s
+
+# target to generate assembly for a file
+tests/test_extensions.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.s
+.PHONY : tests/test_extensions.c.s
+
+tests/test_helpers.o: tests/test_helpers.c.o
+.PHONY : tests/test_helpers.o
+
+# target to build an object file
+tests/test_helpers.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.o
+.PHONY : tests/test_helpers.c.o
+
+tests/test_helpers.i: tests/test_helpers.c.i
+.PHONY : tests/test_helpers.i
+
+# target to preprocess a source file
+tests/test_helpers.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.i
+.PHONY : tests/test_helpers.c.i
+
+tests/test_helpers.s: tests/test_helpers.c.s
+.PHONY : tests/test_helpers.s
+
+# target to generate assembly for a file
+tests/test_helpers.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.s
+.PHONY : tests/test_helpers.c.s
+
+tests/test_ial.o: tests/test_ial.c.o
+.PHONY : tests/test_ial.o
+
+# target to build an object file
+tests/test_ial.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.o
+.PHONY : tests/test_ial.c.o
+
+tests/test_ial.i: tests/test_ial.c.i
+.PHONY : tests/test_ial.i
+
+# target to preprocess a source file
+tests/test_ial.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.i
+.PHONY : tests/test_ial.c.i
+
+tests/test_ial.s: tests/test_ial.c.s
+.PHONY : tests/test_ial.s
+
+# target to generate assembly for a file
+tests/test_ial.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.s
+.PHONY : tests/test_ial.c.s
+
+tests/test_links.o: tests/test_links.c.o
+.PHONY : tests/test_links.o
+
+# target to build an object file
+tests/test_links.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.o
+.PHONY : tests/test_links.c.o
+
+tests/test_links.i: tests/test_links.c.i
+.PHONY : tests/test_links.i
+
+# target to preprocess a source file
+tests/test_links.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.i
+.PHONY : tests/test_links.c.i
+
+tests/test_links.s: tests/test_links.c.s
+.PHONY : tests/test_links.s
+
+# target to generate assembly for a file
+tests/test_links.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.s
+.PHONY : tests/test_links.c.s
+
+tests/test_metadata.o: tests/test_metadata.c.o
+.PHONY : tests/test_metadata.o
+
+# target to build an object file
+tests/test_metadata.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.o
+.PHONY : tests/test_metadata.c.o
+
+tests/test_metadata.i: tests/test_metadata.c.i
+.PHONY : tests/test_metadata.i
+
+# target to preprocess a source file
+tests/test_metadata.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.i
+.PHONY : tests/test_metadata.c.i
+
+tests/test_metadata.s: tests/test_metadata.c.s
+.PHONY : tests/test_metadata.s
+
+# target to generate assembly for a file
+tests/test_metadata.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.s
+.PHONY : tests/test_metadata.c.s
+
+tests/test_output.o: tests/test_output.c.o
+.PHONY : tests/test_output.o
+
+# target to build an object file
+tests/test_output.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.o
+.PHONY : tests/test_output.c.o
+
+tests/test_output.i: tests/test_output.c.i
+.PHONY : tests/test_output.i
+
+# target to preprocess a source file
+tests/test_output.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.i
+.PHONY : tests/test_output.c.i
+
+tests/test_output.s: tests/test_output.c.s
+.PHONY : tests/test_output.s
+
+# target to generate assembly for a file
+tests/test_output.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.s
+.PHONY : tests/test_output.c.s
+
 tests/test_runner.o: tests/test_runner.c.o
 .PHONY : tests/test_runner.o
 
@@ -1185,6 +1353,30 @@ tests/test_runner.s: tests/test_runner.c.s
 tests/test_runner.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_runner.c.s
 .PHONY : tests/test_runner.c.s
+
+tests/test_tables.o: tests/test_tables.c.o
+.PHONY : tests/test_tables.o
+
+# target to build an object file
+tests/test_tables.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.o
+.PHONY : tests/test_tables.c.o
+
+tests/test_tables.i: tests/test_tables.c.i
+.PHONY : tests/test_tables.i
+
+# target to preprocess a source file
+tests/test_tables.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.i
+.PHONY : tests/test_tables.c.i
+
+tests/test_tables.s: tests/test_tables.c.s
+.PHONY : tests/test_tables.s
+
+# target to generate assembly for a file
+tests/test_tables.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.s
+.PHONY : tests/test_tables.c.s
 
 # Help Target
 help:
@@ -1305,9 +1497,33 @@ help:
 	@echo "... src/pretty_html.o"
 	@echo "... src/pretty_html.i"
 	@echo "... src/pretty_html.s"
+	@echo "... tests/test_basic.o"
+	@echo "... tests/test_basic.i"
+	@echo "... tests/test_basic.s"
+	@echo "... tests/test_extensions.o"
+	@echo "... tests/test_extensions.i"
+	@echo "... tests/test_extensions.s"
+	@echo "... tests/test_helpers.o"
+	@echo "... tests/test_helpers.i"
+	@echo "... tests/test_helpers.s"
+	@echo "... tests/test_ial.o"
+	@echo "... tests/test_ial.i"
+	@echo "... tests/test_ial.s"
+	@echo "... tests/test_links.o"
+	@echo "... tests/test_links.i"
+	@echo "... tests/test_links.s"
+	@echo "... tests/test_metadata.o"
+	@echo "... tests/test_metadata.i"
+	@echo "... tests/test_metadata.s"
+	@echo "... tests/test_output.o"
+	@echo "... tests/test_output.i"
+	@echo "... tests/test_output.s"
 	@echo "... tests/test_runner.o"
 	@echo "... tests/test_runner.i"
 	@echo "... tests/test_runner.s"
+	@echo "... tests/test_tables.o"
+	@echo "... tests/test_tables.i"
+	@echo "... tests/test_tables.s"
 .PHONY : help
 
 

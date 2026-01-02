@@ -150,12 +150,33 @@ Generate \f[CR]<a>\f[R] anchor tags instead of header IDs.
 \f[B]\(enwikilinks\f[R], \f[B]\(enno\-wikilinks\f[R]
 Enable wiki link syntax \f[CR][[PageName]]\f[R].
 Default: disabled.
+.TP
+\f[B]\(endivs\f[R], \f[B]\(enno\-divs\f[R]
+Enable or disable Pandoc fenced divs syntax.
+Fenced divs allow creating HTML block containers with attributes using
+colon fences (e.g., \f[CR]::: {#id .class} ... :::\f[R]).
+Supports block type syntax \f[CR]>blocktype\f[R] to create different
+HTML elements (e.g., \f[CR]::: >aside {.sidebar}\f[R] creates
+\f[CR]<aside>\f[R] instead of \f[CR]<div>\f[R]).
+Default: enabled in unified mode, disabled in other modes.
+.TP
+\f[B]\(enspans\f[R], \f[B]\(enno\-spans\f[R]
+Enable or disable bracketed spans syntax \f[CR][text]{IAL}\f[R]
+(Pandoc\-style).
+Bracketed spans convert to HTML span elements with attributes.
+Default: enabled in unified mode, disabled in other modes.
 .SS Header ID Format
 .TP
 \f[B]\(enid\-format\f[R] \f[I]FORMAT\f[R]
 Header ID format: \f[B]gfm\f[R] (default), \f[B]mmd\f[R], or
 \f[B]kramdown\f[R].
 Modes auto\-set format; use this to override in unified mode.
+.PP
+\f[B]Emoji\-to\-name conversion:\f[R] In GFM format, emojis in headers
+are automatically converted to their textual names in the generated IDs
+(e.g., \f[CR]# 😄 Support\f[R] → \f[CR]id=\(dqsmile\-support\(dq\f[R]),
+matching Pandoc\(cqs GFM behavior.
+This ensures emojis are represented as readable text in header IDs.
 .SS List Options
 .TP
 \f[B]\(enalpha\-lists\f[R], \f[B]\(enno\-alpha\-lists\f[R]
@@ -559,6 +580,16 @@ See \c
 Inline Attribute Lists
 .UE \c
 \ for complete documentation
+.IP \(bu 2
+\f[B]Fenced Divs\f[R]: Pandoc\-style fenced divs with block type support.
+Use \f[CR]>blocktype\f[R] syntax to create different HTML elements
+(e.g., \f[CR]::: >aside {.sidebar}\f[R] creates \f[CR]<aside>\f[R]
+instead of \f[CR]<div>\f[R]).
+Common block types include \f[CR]aside\f[R], \f[CR]article\f[R],
+\f[CR]section\f[R], \f[CR]details\f[R], \f[CR]summary\f[R],
+\f[CR]header\f[R], \f[CR]footer\f[R], \f[CR]nav\f[R], and custom
+elements.
+Available in unified mode.
 .SH SEE ALSO
 For complete documentation, see the \c
 .UR https://github.com/ttscoff/apex/wiki

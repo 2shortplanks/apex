@@ -5,6 +5,7 @@
 
 #include "header_ids.h"
 #include "cmark-gfm.h"
+#include "emoji.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -50,7 +51,8 @@ char *apex_generate_header_id(const char *text, apex_id_format_t format) {
     if (!text) return strdup("");
 
     size_t len = strlen(text);
-    char *id = malloc(len * 3 + 1);  /* Extra space for UTF-8 expansion */
+    size_t capacity = len * 3 + 1;  /* Extra space for UTF-8 expansion */
+    char *id = malloc(capacity);
     if (!id) return strdup("");
 
     char *write = id;
@@ -196,33 +198,90 @@ char *apex_generate_header_id(const char *text, apex_id_format_t format) {
             }
         } else {
             /* GFM format: spaces become dashes, other whitespace/punctuation removed, normalize diacritics */
-            char normalized = normalize_char(c);
+            /* Check for emoji (UTF-8 sequences) and replace with name */
+            bool emoji_found = false;
+            if (c >= 0x80) {
+                /* Potential UTF-8 sequence - check if it's an emoji */
+                int utf8_len = 0;
+                if ((c & 0xE0) == 0xC0) utf8_len = 2;  /* 2-byte sequence */
+                else if ((c & 0xF0) == 0xE0) utf8_len = 3;  /* 3-byte sequence */
+                else if ((c & 0xF8) == 0xF0) utf8_len = 4;  /* 4-byte sequence */
 
-            if (normalized) {
-                /* Valid alphanumeric character (normalized diacritic) */
-                *write++ = normalized;
-                last_was_dash = false;
-                first_char = false;
-            } else if (isalnum(c)) {
-                /* ASCII alphanumeric not in our diacritic map */
-                *write++ = tolower(c);
-                last_was_dash = false;
-                first_char = false;
-            } else if (c == ' ') {
-                /* Space: convert to dash (collapsed) */
-                if (!last_was_dash && !first_char) {
-                    *write++ = '-';
-                    last_was_dash = true;
+                if (utf8_len > 0) {
+                    /* Check if we have enough bytes */
+                    bool has_enough_bytes = true;
+                    for (int i = 1; i < utf8_len; i++) {
+                        if (read[i] == '\0' || ((unsigned char)read[i] & 0xC0) != 0x80) {
+                            has_enough_bytes = false;
+                            break;
+                        }
+                    }
+
+                    if (has_enough_bytes) {
+                        /* Try to find emoji name */
+                        const char *emoji_name = apex_find_emoji_name(read, utf8_len);
+                        if (emoji_name) {
+                            /* Replace emoji with its name */
+                            size_t name_len = strlen(emoji_name);
+                            /* Ensure we have enough space */
+                            size_t current_pos = write - id;
+                            size_t needed = current_pos + name_len + 1;
+                            if (needed > capacity) {
+                                /* Reallocate if needed */
+                                size_t old_pos = write - id;
+                                size_t new_cap = needed * 2;
+                                char *new_id = realloc(id, new_cap);
+                                if (new_id) {
+                                    id = new_id;
+                                    write = id + old_pos;
+                                    capacity = new_cap;
+                                }
+                            }
+                            /* Write emoji name */
+                            memcpy(write, emoji_name, name_len);
+                            write += name_len;
+                            read += utf8_len - 1;  /* -1 because for loop will increment */
+                            last_was_dash = false;
+                            first_char = false;
+                            emoji_found = true;
+                        } else {
+                            /* Valid UTF-8 sequence but not an emoji - skip it (GFM removes non-ASCII non-emoji) */
+                            read += utf8_len - 1;  /* -1 because for loop will increment */
+                            emoji_found = true;  /* Mark as found so we don't process it */
+                        }
+                    }
                 }
-            } else if (c == '-') {
-                /* Regular dash: preserve (but don't add multiple consecutive) */
-                if (!last_was_dash && !first_char) {
-                    *write++ = '-';
-                    last_was_dash = true;
+            }
+
+            if (!emoji_found) {
+                char normalized = normalize_char(c);
+
+                if (normalized) {
+                    /* Valid alphanumeric character (normalized diacritic) */
+                    *write++ = normalized;
+                    last_was_dash = false;
+                    first_char = false;
+                } else if (isalnum(c)) {
+                    /* ASCII alphanumeric not in our diacritic map */
+                    *write++ = tolower(c);
+                    last_was_dash = false;
+                    first_char = false;
+                } else if (c == ' ') {
+                    /* Space: convert to dash (collapsed) */
+                    if (!last_was_dash && !first_char) {
+                        *write++ = '-';
+                        last_was_dash = true;
+                    }
+                } else if (c == '-') {
+                    /* Regular dash: preserve (but don't add multiple consecutive) */
+                    if (!last_was_dash && !first_char) {
+                        *write++ = '-';
+                        last_was_dash = true;
+                    }
+                } else {
+                    /* Other whitespace and punctuation: remove (skip) */
+                    /* Do nothing */
                 }
-            } else {
-                /* Other whitespace and punctuation: remove (skip) */
-                /* Do nothing */
             }
         }
     }

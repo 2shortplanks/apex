@@ -290,6 +290,24 @@ void test_header_ids(void) {
     assert_contains(html, "id=\"test-heading\"", "GFM format: test-heading");
     apex_free_string(html);
 
+    /* Test GFM format converts emojis to names (Pandoc GFM behavior) */
+    opts.id_format = 0;  /* GFM format */
+    opts.enable_marked_extensions = true;  /* Enable emoji support */
+    const char *emoji_header_test = "# 😄 Emoji Support";
+    html = apex_markdown_to_html(emoji_header_test, strlen(emoji_header_test), &opts);
+    assert_contains(html, "id=\"smile-emoji-support\"", "GFM format converts emoji to name");
+    apex_free_string(html);
+
+    const char *emoji_only_test = "# 🚀";
+    html = apex_markdown_to_html(emoji_only_test, strlen(emoji_only_test), &opts);
+    assert_contains(html, "id=\"rocket\"", "GFM format converts single emoji to name");
+    apex_free_string(html);
+
+    const char *emoji_multiple_test = "# 👍 👎";
+    html = apex_markdown_to_html(emoji_multiple_test, strlen(emoji_multiple_test), &opts);
+    assert_contains(html, "id=\"thumbsup-thumbsdown\"", "GFM format converts multiple emojis to names");
+    apex_free_string(html);
+
     /* Test MMD format (preserves dashes, removes spaces) */
     opts.id_format = 1;  /* MMD format */
     html = apex_markdown_to_html("# Emoji Support\n## Test Heading", 33, &opts);

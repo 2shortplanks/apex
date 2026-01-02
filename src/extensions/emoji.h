@@ -14,6 +14,14 @@ extern "C" {
  */
 char *apex_replace_emoji(const char *html);
 
+/**
+ * Find emoji name from unicode emoji (reverse lookup)
+ * @param unicode The unicode emoji string (UTF-8)
+ * @param unicode_len Length of the unicode string in bytes
+ * @return Emoji name if found, NULL otherwise
+ */
+const char *apex_find_emoji_name(const char *unicode, size_t unicode_len);
+
 #ifdef __cplusplus
 }
 #endif

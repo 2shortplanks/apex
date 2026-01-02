@@ -52,7 +52,7 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **CSV/TSV support**: Automatic table conversion from CSV and TSV files
 - **Inline Attribute Lists (IAL)**: Kramdown-style attributes `{: #id .class}` and Pandoc-style attributes `{#id .class}` - both formats work in all contexts (block-level, inline, paragraphs, headings, table captions)
 - **Bracketed spans**: Convert `[text]{IAL}` syntax to HTML span elements with attributes, enabled by default in unified mode
-- **Fenced divs**: Pandoc-style fenced divs `::::: {#id .class} ... :::::` for creating custom block containers, enabled by default in unified mode
+- **Fenced divs**: Pandoc-style fenced divs `::::: {#id .class} ... :::::` for creating custom block containers, enabled by default in unified mode. Supports block type syntax `>blocktype` to create different HTML elements (e.g., `::: >aside {.sidebar}` creates `<aside>` instead of `<div>`). Common block types include `aside`, `article`, `section`, `details`, `summary`, `header`, `footer`, `nav`, and custom elements
 - **Image IAL support**: Inline and reference-style images support IAL syntax with automatic width/height conversion (percentages and non-integer/non-px values convert to style attributes, Xpx values convert to integer width/height attributes, bare integers remain as width/height attributes)
 - **Special markers**: Page breaks (`<!--BREAK-->`), autoscroll pauses (`<!--PAUSE:N-->`), end-of-block markers
 <!--JEKYLL {%endraw%}-->
@@ -91,6 +91,7 @@ Apex is a unified Markdown processor that combines the best features from Common
 - **Custom styling**: Link external CSS files in standalone mode
 - **Pretty-print**: Formatted HTML with proper indentation for readability
 - **Header ID generation**: Automatic or manual header IDs with multiple format options (GFM, MMD, Kramdown)
+- **Emoji-to-name conversion**: In GFM mode, emojis in headers are converted to their textual names in IDs (e.g., `# 😄 Support` → `id="smile-support"`), matching Pandoc's GFM behavior
 - **Header anchors**: Option to generate `<a>` anchor tags instead of header IDs
 - **ARIA accessibility**: Add ARIA labels and accessibility attributes (`--aria`) for better screen reader support, including aria-label on TOC navigation, role attributes on figures and tables, and aria-describedby linking tables to their captions
 
