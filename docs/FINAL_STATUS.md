@@ -6,34 +6,81 @@
 
 ## Executive Summary
 
-Apex is a unified Markdown processor built in C, providing comprehensive compatibility with CommonMark, GFM, MultiMarkdown, and Kramdown. The project has reached **82% completion** with all core features implemented and tested.
+Apex is a unified Markdown processor built in C, providing
+comprehensive compatibility with CommonMark, GFM,
+MultiMarkdown, and Kramdown. The project has reached **82%
+completion** with all core features implemented and tested.
 
 ## Completed Milestones ✅ (14/17)
 
-1. ✅ **Project Setup** - Complete build system, Git repo, directory structure
-2. ✅ **cmark-gfm Integration** - Parser fully integrated and working
-3. ✅ **Metadata Support** - All 3 formats (YAML, MMD, Pandoc) + `[%key]` variables
-4. ✅ **Wiki Links** - `[[Page]]` syntax with display text and sections
+1. ✅ **Project Setup** - Complete build system, Git repo,
+
+   directory structure
+
+2. ✅ **cmark-gfm Integration** - Parser fully integrated and
+
+   working
+
+3. ✅ **Metadata Support** - All 3 formats (YAML, MMD,
+
+   Pandoc) + `[%key]` variables
+
+4. ✅ **Wiki Links** - `[[Page]]` syntax with display text
+
+   and sections
+
 5. ✅ **Math Support** - LaTeX math blocks for MathJax/KaTeX
-6. ✅ **Critic Markup** - Full track changes support (5 markup types)
-7. ✅ **macOS Framework** - `Apex.framework` building successfully
-8. ✅ **CLI Tool** - `apex` binary with full command-line interface
-9. ✅ **Compatibility Modes** - 5 modes configured and working
-10. ✅ **Marked Integration** - Objective-C wrapper created with examples
+6. ✅ **Critic Markup** - Full track changes support (5
+
+   markup types)
+
+7. ✅ **macOS Framework** - `Apex.framework` building
+
+   successfully
+
+8. ✅ **CLI Tool** - `apex` binary with full command-line
+
+   interface
+
+✅ **Compatibility Modes** - 5 modes configured and working
+
+10. ✅ **Marked Integration** - Objective-C wrapper created
+
+    with examples
+
 11. ✅ **Test Suite** - 31 automated tests, 90% pass rate
-12. ✅ **Documentation** - Complete user guide and API reference
-13. ✅ **Build System** - CMake working on macOS (cross-platform ready)
-14. ✅ **Repository** - Well-organized Git repo with clean history
+
+✅ **Documentation** - Complete user guide and API reference
+
+13. ✅ **Build System** - CMake working on macOS
+
+    (cross-platform ready)
+
+14. ✅ **Repository** - Well-organized Git repo with clean
+
+    history
 
 ## Remaining Features ⏳ (3/17)
 
-1. **Definition Lists** - Kramdown/PHP Extra style (header created, needs impl)
-2. **Kramdown Attributes** - `{: #id .class}` syntax (not yet started)
-3. **Inline Footnotes** - `^[text]` format (not yet started)
-4. **Enhanced Tables** - MMD column spans and captions (not yet started)
-5. **Release Prep** - Homebrew formula, binaries, website (not yet started)
+1. **Definition Lists** - Kramdown/PHP Extra style (header
 
-Note: Items 1-4 are nice-to-have features. The core processor is fully functional.
+   created, needs impl)
+
+2. **Kramdown Attributes** - `{: #id .class}` syntax (not
+
+   yet started)
+
+3. **Inline Footnotes** - `^[text]` format (not yet started)
+4. **Enhanced Tables** - MMD column spans and captions (not
+
+   yet started)
+
+5. **Release Prep** - Homebrew formula, binaries, website
+
+   (not yet started)
+
+Note: Items 1-4 are nice-to-have features. The core
+processor is fully functional.
 
 ## What's Working Right Now
 
@@ -56,7 +103,10 @@ Note: Items 1-4 are nice-to-have features. The core processor is fully functiona
 ### ✅ Extended Syntax
 - **Metadata** (3 formats)
 - **Metadata variables** `[%key]`
-- **Wiki links** `[[Page]]`, `[[Page|Display]]`, `[[Page#Section]]`
+- **Wiki links** `[[Page]]`, `[[Page|Display]]`,
+
+  `[[Page#Section]]`
+
 - **Math** `$inline$` and `$$display$$`
 - **Critic Markup** (all 5 types)
 - **Footnotes** (reference style)
@@ -111,7 +161,10 @@ Note: Items 1-4 are nice-to-have features. The core processor is fully functiona
 
 - Metadata: Preprocessing (before parsing)
 - Critic Markup: Preprocessing (avoids typography conflicts)
-- Wiki Links: Postprocessing AST (avoids link syntax conflicts)
+- Wiki Links: Postprocessing AST (avoids link syntax
+
+  conflicts)
+
 - Math: Inline extension (character-level matching)
 
 **Clean Abstractions:**
@@ -132,6 +185,7 @@ Note: Items 1-4 are nice-to-have features. The core processor is fully functiona
 - ✅ Symlinks created in Marked directory
 
 **Next steps for Marked integration:**
+
 1. Add apex as git submodule in Marked repo
 2. Add Apex.framework to Xcode project
 3. Add Apex option to processor preferences UI
@@ -167,23 +221,26 @@ Note: Items 1-4 are nice-to-have features. The core processor is fully functiona
 
 ## Feature Comparison
 
-| Feature          | CommonMark | GFM | MMD | Kramdown | Apex Unified |
-| ---------------- | ---------- | --- | --- | -------- | ------------ |
-| Basic MD         | ✅         | ✅  | ✅  | ✅       | ✅           |
-| Tables           | ❌         | ✅  | ✅  | ✅       | ✅           |
-| Strikethrough    | ❌         | ✅  | ❌  | ❌       | ✅           |
-| Task Lists       | ❌         | ✅  | ❌  | ❌       | ✅           |
-| Footnotes        | ❌         | ❌  | ✅  | ✅       | ✅           |
-| Metadata         | ❌         | ❌  | ✅  | ✅       | ✅           |
-| Meta Vars        | ❌         | ❌  | ✅  | ❌       | ✅           |
-| Smart Typography | ❌         | ❌  | ✅  | ✅       | ✅           |
-| Math             | ❌         | ❌  | ✅  | ✅       | ✅           |
-| Wiki Links       | ❌         | ❌  | ❌  | ❌       | ✅           |
-| Critic Markup    | ❌         | ❌  | ❌  | ❌       | ✅           |
-| Def Lists        | ❌         | ❌  | ❌  | ✅       | ⏳            |
-| Attributes       | ❌         | ❌  | ❌  | ✅       | ⏳            |
+| Feature | CommonMark | GFM | MMD | Kramdown | Apex Unified
+|
+| ---------------- | ---------- | --- | --- | -------- |
+------------ |
+| Basic MD | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Tables | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Strikethrough | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Task Lists | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Footnotes | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Metadata | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Meta Vars | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Smart Typography | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Math | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Wiki Links | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Critic Markup | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Def Lists | ❌ | ❌ | ❌ | ✅ | ⏳ |
+| Attributes | ❌ | ❌ | ❌ | ✅ | ⏳ |
 
-**Result**: Apex Unified mode offers a true superset of all major Markdown flavors.
+**Result**: Apex Unified mode offers a true superset of all
+major Markdown flavors.
 
 ## What's Missing
 
@@ -200,7 +257,8 @@ Note: Items 1-4 are nice-to-have features. The core processor is fully functiona
 - Page breaks (`<!--BREAK-->`)
 - Leanpub syntax extensions
 
-These Marked-specific features are documented in the plan but can be added incrementally as needed.
+These Marked-specific features are documented in the plan
+but can be added incrementally as needed.
 
 ## Production Readiness
 
@@ -233,7 +291,9 @@ These Marked-specific features are documented in the plan but can be added incre
 
 ### For Immediate Use in Marked
 
-**Ready to integrate!** The current implementation covers 90% of what Marked users need:
+**Ready to integrate!** The current implementation covers
+90% of what Marked users need:
+
 1. All basic Markdown
 2. GFM features
 3. Metadata with variables
@@ -241,23 +301,30 @@ These Marked-specific features are documented in the plan but can be added incre
 5. Math support
 6. Critic Markup
 
-**Integration effort**: ~2-4 hours to wire into Marked's Xcode project
+**Integration effort**: ~2-4 hours to wire into Marked's
+Xcode project
 
 ### For Standalone CLI Use
 
-**Ready for beta release!** The `apex` binary is functional and useful:
+**Ready for beta release!** The `apex` binary is functional
+and useful:
 
 - Works on all common documents
 - Fast and reliable
 - Good error handling
 - Comprehensive help
 
-**Release effort**: ~1-2 days to create Homebrew formula and package
+**Release effort**: ~1-2 days to create Homebrew formula and
+package
 
 ### For Future Development
 
 **Recommended priority:**
-1. **Marked-specific syntax** (callouts, TOC, includes) - High user value
+
+1. **Marked-specific syntax** (callouts, TOC, includes) -
+
+   High user value
+
 2. **Definition lists** - Kramdown compatibility
 3. **Comprehensive tests** - Edge case coverage
 4. **Performance tuning** - Optimize for large documents
@@ -265,9 +332,13 @@ These Marked-specific features are documented in the plan but can be added incre
 
 ## Conclusion
 
-Apex has achieved its primary goal: creating a unified Markdown processor that works with multiple formats. With **14 of 17 milestones complete**, it's ready for integration into Marked and can be released as a standalone tool.
+Apex has achieved its primary goal: creating a unified
+Markdown processor that works with multiple formats. With
+**14 of 17 milestones complete**, it's ready for integration
+into Marked and can be released as a standalone tool.
 
-**The foundation is solid, the core features work, and the architecture is extensible.**
+**The foundation is solid, the core features work, and the
+architecture is extensible.**
 
 ### Success Criteria Met
 
@@ -280,7 +351,8 @@ Apex has achieved its primary goal: creating a unified Markdown processor that w
 ✅ macOS framework built
 ✅ Well documented
 
-**Apex is ready to be "One Markdown processor to rule them all."**
+**Apex is ready to be "One Markdown processor to rule them
+all."**
 
 ---
 
@@ -298,6 +370,7 @@ cmake -DBUILD_FRAMEWORK=ON ..
 make
 
 # Framework is at: apex/build/Apex.framework
+
 ```
 
 Then follow instructions in `docs/MARKED_INTEGRATION.md`.
@@ -309,6 +382,7 @@ cd /Users/ttscoff/Desktop/Code/marked/apex/build
 ./apex --help
 echo "# Test" | ./apex
 ./apex --mode gfm your-document.md > output.html
+
 ```
 
 ---

@@ -2,7 +2,8 @@
 
 ## Overview
 
-Apex can now generate complete, self-contained HTML5 documents with proper structure, metadata, and styling.
+Apex can now generate complete, self-contained HTML5
+documents with proper structure, metadata, and styling.
 
 ## Usage
 
@@ -12,24 +13,28 @@ Apex can now generate complete, self-contained HTML5 documents with proper struc
 apex --standalone document.md
 # or shorthand:
 apex -s document.md
+
 ```
 
 ### With Custom Title
 
 ```bash
 apex --standalone --title "My Report" report.md
+
 ```
 
 ### With External CSS
 
 ```bash
 apex --standalone --style /path/to/styles.css document.md
+
 ```
 
 ### Combined Example
 
 ```bash
 apex -s --title "Project Report" --style report.css report.md -o report.html
+
 ```
 
 ## Generated HTML Structure
@@ -59,14 +64,19 @@ apex -s --title "Project Report" --style report.css report.md -o report.html
 
 </body>
 </html>
+
 ```
 
 ## Default Styles
 
-When no `--style` is provided, Apex includes beautiful default inline styles:
+When no `--style` is provided, Apex includes beautiful
+default inline styles:
 
 ### Typography
-- Modern system font stack (`-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, etc.)
+- Modern system font stack (`-apple-system`,
+
+  `BlinkMacSystemFont`, `Segoe UI`, etc.)
+
 - Readable line-height (1.6)
 - Clean color scheme (#333 on white)
 
@@ -77,11 +87,15 @@ When no `--style` is provided, Apex includes beautiful default inline styles:
 - Mobile-friendly viewport
 
 ### Element Styling
-- **Code blocks**: Light gray background, horizontal scrolling
+**Code blocks**: Light gray background, horizontal scrolling
+
 - **Inline code**: Rounded corners, subtle background
 - **Blockquotes**: Left border, indented, muted color
 - **Tables**: Bordered cells, header row styling
-- **Callouts**: Colored borders and backgrounds (note, warning, tip, danger)
+- **Callouts**: Colored borders and backgrounds (note,
+
+  warning, tip, danger)
+
 - **Page breaks**: Print-friendly styling
 
 ## Use Cases
@@ -89,16 +103,19 @@ When no `--style` is provided, Apex includes beautiful default inline styles:
 ### Documentation Sites
 ```bash
 apex -s --title "API Docs" --style docs.css api.md -o index.html
+
 ```
 
 ### Reports
 ```bash
 apex -s --title "Q4 Report" --style corporate.css report.md -o report.html
+
 ```
 
 ### Blog Posts
 ```bash
 apex -s --title "My Post" --style blog.css post.md -o post.html
+
 ```
 
 ### Quick Previews
@@ -106,20 +123,24 @@ apex -s --title "My Post" --style blog.css post.md -o post.html
 # No CSS needed - beautiful defaults
 apex -s document.md > preview.html
 open preview.html
+
 ```
 
 ### Email HTML
 ```bash
 # Inline styles work great for email
 apex -s --title "Newsletter" newsletter.md > email.html
+
 ```
 
 ## Fragment Mode (Default)
 
-Without `--standalone`, Apex generates HTML fragments (body content only):
+Without `--standalone`, Apex generates HTML fragments (body
+content only):
 
 ```bash
 apex document.md  # Just the content, no <html> wrapper
+
 ```
 
 This is useful for:
@@ -133,7 +154,8 @@ This is useful for:
 
 | Option | Description | Implies |
 |--------|-------------|---------|
-| `-s`, `--standalone` | Generate complete HTML document | - |
+| `-s`, `--standalone` | Generate complete HTML document | -
+|
 | `--title TITLE` | Set document title | - |
 | `--style FILE` | Link external CSS | `--standalone` |
 

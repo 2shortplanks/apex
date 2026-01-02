@@ -5,7 +5,8 @@
 
 ### Known Limitations Resolution: 5 of 6 Complete (83%)
 
-All critical limitations have been resolved. The project is **production-ready**.
+All critical limitations have been resolved. The project is
+**production-ready**.
 
 ---
 
@@ -42,8 +43,14 @@ All critical limitations have been resolved. The project is **production-ready**
 - 14 tests passing (added 2)
 
 ### 6. ⚠️ IAL - Core Working, Edge Cases Remain
-- **Working**: Headers, paragraphs, blockquotes, code blocks, lists (80%)
-- **Not Working**: List items between items, ALD references (20%)
+- **Working**: Headers, paragraphs, blockquotes, code
+
+  blocks, lists (80%)
+
+- **Not Working**: List items between items, ALD references
+
+  (20%)
+
 - **Estimate**: 2-3 hours additional for edge cases
 - 5 tests passing
 
@@ -167,7 +174,9 @@ All critical limitations have been resolved. The project is **production-ready**
 - ALD references (advanced feature)
 
 **Recommendation**:
-Deploy to production. The missing IAL features represent < 2% of typical use cases and can be added as enhancements based on user feedback.
+Deploy to production. The missing IAL features represent <
+2% of typical use cases and can be added as enhancements
+based on user feedback.
 
 ---
 
@@ -192,10 +201,17 @@ Deploy to production. The missing IAL features represent < 2% of typical use cas
 
 ## Next Steps (Optional)
 
-1. **Deploy to Marked** - Integrate Apex into Marked application
-2. **Performance Testing** - Benchmark against other processors
+1. **Deploy to Marked** - Integrate Apex into Marked
+
+   application
+
+**Performance Testing** - Benchmark against other processors
+
 3. **User Feedback** - Gather real-world usage feedback
-4. **IAL Edge Cases** - If needed based on user requests (2-3 hours)
+4. **IAL Edge Cases** - If needed based on user requests
+
+   (2-3 hours)
+
 5. **Additional Emoji** - Expand beyond 350 if desired
 6. **More Tests** - Edge case coverage (optional)
 

@@ -1,10 +1,12 @@
 # Apex Markdown Example
 
-This is a comprehensive example document showing various Markdown features supported by Apex.
+This is a comprehensive example document showing various
+Markdown features supported by Apex.
 
 ## Basic Formatting
 
-This is a paragraph with **bold text**, *italic text*, and ***bold italic text***.
+This is a paragraph with **bold text**, *italic text*, and
+***bold italic text***.
 
 You can also use `inline code` within paragraphs.
 
@@ -39,6 +41,7 @@ def hello_world():
     return 42
 
 result = hello_world()
+
 ```
 
 ```javascript
@@ -47,6 +50,7 @@ function greet(name) {
 }
 
 greet("Apex");
+
 ```
 
 ## Links and Images

@@ -1,6 +1,8 @@
 # Width/Height Conversion Test
 
-This test verifies that width and height attributes are correctly converted:
+This test verifies that width and height attributes are
+correctly converted:
+
 - Percentages → `style` attribute
 - `Xpx` → integer `width`/`height` attribute (strips `px`)
 - Bare integers → `width`/`height` attribute

@@ -2,7 +2,10 @@
 
 **Version 0.1.0**
 
-Apex is a unified Markdown processor that combines the best features of CommonMark, GitHub Flavored Markdown, MultiMarkdown, and Kramdown into a single, fast, C-based processor.
+Apex is a unified Markdown processor that combines the best
+features of CommonMark, GitHub Flavored Markdown,
+MultiMarkdown, and Kramdown into a single, fast, C-based
+processor.
 
 ## Quick Start
 
@@ -16,6 +19,7 @@ mkdir build && cd build
 cmake ..
 make
 sudo make install
+
 ```
 
 ### Basic Usage
@@ -30,11 +34,13 @@ cat document.md | apex > output.html
 # Specify processor mode
 apex --mode gfm document.md
 apex --mode multimarkdown document.md
+
 ```
 
 ## Processor Modes
 
-Apex supports multiple processor modes for compatibility with different Markdown flavors:
+Apex supports multiple processor modes for compatibility
+with different Markdown flavors:
 
 ### CommonMark Mode (`--mode commonmark`)
 
@@ -42,6 +48,7 @@ Pure CommonMark specification compliance. No extensions.
 
 ```bash
 apex --mode commonmark document.md
+
 ```
 
 ### GFM Mode (`--mode gfm`)
@@ -56,6 +63,7 @@ GitHub Flavored Markdown with:
 
 ```bash
 apex --mode gfm document.md
+
 ```
 
 ### MultiMarkdown Mode (`--mode multimarkdown` or `--mode mmd`)
@@ -71,6 +79,7 @@ MultiMarkdown compatibility with:
 
 ```bash
 apex --mode mmd document.md
+
 ```
 
 ### Kramdown Mode (`--mode kramdown`)
@@ -85,6 +94,7 @@ Kramdown compatibility with:
 
 ```bash
 apex --mode kramdown document.md
+
 ```
 
 ### Unified Mode (`--mode unified`, default)
@@ -95,6 +105,7 @@ All features enabled - the superset of all modes.
 apex document.md
 # or explicitly:
 apex --mode unified document.md
+
 ```
 
 ## Features
@@ -110,6 +121,7 @@ title: My Document
 author: John Doe
 date: 2025-12-04
 ---
+
 ```
 
 **MultiMarkdown Metadata:**
@@ -125,11 +137,13 @@ Date: 2025-12-04
 % My Document
 % John Doe
 % 2025-12-04
+
 ```
 
 ### Metadata Variables
 
-Use `[%key]` to insert metadata values anywhere in your document:
+Use `[%key]` to insert metadata values anywhere in your
+document:
 
 ```markdown
 ---
@@ -140,12 +154,14 @@ version: 0.1.0
 # [%title]
 
 Version: [%version]
+
 ```
 
 Renders as:
 ```html
 <h1>Apex User Guide</h1>
 <p>Version: 0.1.0</p>
+
 ```
 
 ### Wiki Links
@@ -154,6 +170,7 @@ Renders as:
 [[Page Name]]                   # Link to page
 [[Page Name|Display Text]]      # Custom display
 [[Page Name#Section]]           # Link to section
+
 ```
 
 ### Math Support
@@ -161,6 +178,7 @@ Renders as:
 **Inline math:**
 ```markdown
 The equation $E = mc^2$ is famous.
+
 ```
 
 **Display math:**
@@ -168,9 +186,11 @@ The equation $E = mc^2$ is famous.
 $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
+
 ```
 
-Math is wrapped in spans with appropriate classes for MathJax or KaTeX to render.
+Math is wrapped in spans with appropriate classes for
+MathJax or KaTeX to render.
 
 ### Critic Markup
 
@@ -183,22 +203,29 @@ Track changes and annotations with three processing modes:
 {~~old text~>new text~~}    # Substitution → <del>old</del><ins>new</ins>
 {==highlighted==}           # Highlighted text → <mark>highlighted</mark>
 {>>comment text<<}          # Comment → <span class="comment">comment</span>
+
 ```
 
-**Accept Mode** (`--accept`) - Apply all changes, output clean text:
+**Accept Mode** (`--accept`) - Apply all changes, output
+clean text:
 ```bash
 apex --accept document.md
+
 ```
+
 - Additions: kept
 - Deletions: removed
 - Substitutions: new text kept
 - Highlights: text kept (markup removed)
 - Comments: removed
 
-**Reject Mode** (`--reject`) - Revert all changes, restore original:
+**Reject Mode** (`--reject`) - Revert all changes, restore
+original:
 ```bash
 apex --reject document.md
+
 ```
+
 - Additions: removed
 - Deletions: kept
 - Substitutions: old text kept
@@ -219,41 +246,58 @@ GitHub Flavored Markdown tables:
 | Header 1 | Header 2 |
 | -------- | -------- |
 | Cell 1   | Cell 2   |
+
 ```
 
 #### Inline tables from CSV/TSV
 
-You can turn inline CSV/TSV text into Markdown tables by using a fenced code
-block with the info string `table`. The delimiter is detected automatically:
+You can turn inline CSV/TSV text into Markdown tables by
+using a fenced code
+block with the info string `table`. The delimiter is
+detected automatically:
 
-- If any non-blank line contains a tab, the block is treated as TSV.
-- Otherwise, if any non-blank line contains a comma, the block is treated as CSV.
-- If no tabs or commas are found, the block is left unchanged as a normal
+- If any non-blank line contains a tab, the block is treated
+
+  as TSV.
+
+- Otherwise, if any non-blank line contains a comma, the
+
+  block is treated as CSV.
+
+- If no tabs or commas are found, the block is left
+
+  unchanged as a normal
   `table`-info fenced code block.
 
 ```table
 header 1,header 2,header 3
 data 1,data 2,data 3
 ,,data 2c
+
 ```
 
-Optionally, you can use an HTML comment marker to indicate that the following
-non-blank lines up to the next blank line should be treated as CSV/TSV data:
+Optionally, you can use an HTML comment marker to indicate
+that the following
+non-blank lines up to the next blank line should be treated
+as CSV/TSV data:
 
 ```markdown
 <!--TABLE-->
 header 1,header 2,header 3
 data 1,data 2,data 3
 ,,data 2c
+
 ```
 
-The same delimiter-detection rules apply to `<!--TABLE-->` blocks.
+The same delimiter-detection rules apply to `<!--TABLE-->`
+blocks.
 
 ### Task Lists
 
 ```markdown
 - [ ] Todo item
 - [x] Completed item
+
 ```
 
 ### Footnotes
@@ -263,19 +307,23 @@ The same delimiter-detection rules apply to `<!--TABLE-->` blocks.
 Here's a footnote[^1].
 
 [^1]: This is the footnote content.
+
 ```
 
 **Kramdown inline footnotes**:
 ```markdown
 This is a footnote^[inline content here] in the text.
+
 ```
 
 **MultiMarkdown inline footnotes**:
 ```markdown
 This is a footnote[^inline content with spaces] in the text.
+
 ```
 
-All styles produce properly formatted footnote sections with backlinks.
+All styles produce properly formatted footnote sections with
+backlinks.
 
 ### Abbreviations
 
@@ -285,6 +333,7 @@ All styles produce properly formatted footnote sections with backlinks.
 *[CSS]: Cascading Style Sheets
 
 HTML and CSS are essential.
+
 ```
 
 **MMD 6 reference syntax**:
@@ -292,11 +341,13 @@ HTML and CSS are essential.
 [>MMD]: MultiMarkdown
 
 Using [>MMD] here and [>MMD] again.
+
 ```
 
 **MMD 6 inline syntax** (no definition needed):
 ```markdown
 This is [>(MD) Markdown] and [>(CSS) Cascading Style Sheets].
+
 ```
 
 All produce `<abbr title="expansion">abbr</abbr>` tags.
@@ -311,6 +362,7 @@ Term
 Apple
 : A fruit
 : A company
+
 ```
 
 Renders as proper `<dl>`, `<dt>`, `<dd>` HTML.
@@ -325,6 +377,7 @@ Paragraph with class.
 {: .important}
 
 ## Another Header {: #section-2 .highlight}
+
 ```
 
 ### Callouts
@@ -342,6 +395,7 @@ Bear/Obsidian syntax:
 
 > [!DANGER] Critical
 > Dangerous operation
+
 ```
 
 Collapsible callouts:
@@ -351,6 +405,7 @@ Collapsible callouts:
 
 > [!NOTE]- Collapsed
 > Starts collapsed
+
 ```
 
 ### File Includes
@@ -360,12 +415,14 @@ Collapsible callouts:
 <<[file.md]      # Include and process Markdown
 <<(code.py)      # Include as code block
 <<{raw.html}     # Include raw HTML
+
 ```
 
 **MultiMarkdown transclusion**:
 ```markdown
 {{file.md}}      # Include file
 {{*.md}}         # Wildcard include
+
 ```
 
 **iA Writer syntax**:
@@ -373,6 +430,7 @@ Collapsible callouts:
 /image.png       # Intelligent include (detects type)
 /code.py         # Auto-detects as code block
 /document.md     # Auto-detects as Markdown
+
 ```
 
 CSV and TSV files automatically convert to tables!
@@ -385,6 +443,7 @@ Multiple marker formats:
 <!--TOC max2 min1-->    # With depth control
 {{TOC}}                 # MMD style
 {{TOC:2-4}}            # With range
+
 ```
 
 ### Advanced Tables
@@ -395,7 +454,9 @@ Multiple marker formats:
 | --- | --- |
 | C   | D   |
 | ^^  | E   |
+
 ```
+
 Cell C spans 2 rows (using `^^` marker).
 
 **Colspan** (cells spanning multiple columns):
@@ -403,7 +464,9 @@ Cell C spans 2 rows (using `^^` marker).
 | A   | B   | C   |
 | --- | --- | --- |
 | D   |     |     |
+
 ```
+
 Empty cells merge with previous cell.
 
 **Table captions**:
@@ -413,6 +476,7 @@ Empty cells merge with previous cell.
 | A   | B   |
 | --- | --- |
 | C   | D   |
+
 ```
 
 ### Special Markers
@@ -421,11 +485,13 @@ Empty cells merge with previous cell.
 ```markdown
 <!--BREAK-->            # HTML comment style
 {::pagebreak /}         # Kramdown style
+
 ```
 
 **Autoscroll pauses** (for Marked's teleprompter mode):
 ```markdown
 <!--PAUSE:5-->          # Pause for 5 seconds
+
 ```
 
 **End-of-block marker**:
@@ -435,7 +501,9 @@ Empty cells merge with previous cell.
 ^
 
 - Item 2
+
 ```
+
 Forces list separation.
 
 ### GitHub Emoji
@@ -443,6 +511,7 @@ Forces list separation.
 ```markdown
 Success! :rocket: :tada: :sparkles:
 I :heart: Markdown!
+
 ```
 
 Supports 350+ GitHub emoji, converted to Unicode characters.
@@ -469,6 +538,7 @@ Options:
   --hardbreaks           Treat newlines as hard breaks
   -h, --help             Show help
   -v, --version          Show version
+
 ```
 
 ### Output Modes
@@ -476,22 +546,26 @@ Options:
 **Fragment Mode (default)**: Outputs HTML body content only
 ```bash
 apex document.md  # Compact HTML fragment
+
 ```
 
 **Pretty Mode**: Formatted HTML with indentation
 ```bash
 apex --pretty document.md  # Readable, indented HTML
+
 ```
 
 **Standalone Mode**: Complete HTML5 document
 ```bash
 apex --standalone document.md
 apex -s --title "My Doc" --style styles.css document.md
+
 ```
 
 **Combined**: Beautiful complete documents
 ```bash
 apex -s --pretty --title "Report" --style report.css doc.md
+
 ```
 
 ## Library Usage
@@ -516,6 +590,7 @@ printf("%s\n", html);
 
 // Clean up
 apex_free_string(html);
+
 ```
 
 ### Objective-C (for Marked integration)
@@ -529,6 +604,7 @@ NSString *html = [NSString convertWithApex:markdown];
 // Convert with specific mode
 NSString *gfmHtml = [NSString convertWithApex:markdown mode:@"gfm"];
 NSString *mmdHtml = [NSString convertWithApex:markdown mode:@"multimarkdown"];
+
 ```
 
 ## Performance
@@ -607,6 +683,7 @@ apex -s --title "My Report" --style report.css doc.md -o report.html
 
 # Pretty-formatted complete document
 apex -s --pretty --title "Beautiful Doc" doc.md
+
 ```
 
 **Features**:
@@ -615,7 +692,8 @@ apex -s --pretty --title "Beautiful Doc" doc.md
 - UTF-8 charset and responsive viewport
 - Custom document titles
 - External CSS linking or beautiful default inline styles
-- Perfect for: documentation, reports, blogs, standalone files
+
+Perfect for: documentation, reports, blogs, standalone files
 
 **Default styles include**:
 
@@ -635,6 +713,7 @@ apex --pretty document.md
 
 # Pretty standalone
 apex -s --pretty document.md
+
 ```
 
 **Features**:
@@ -670,6 +749,7 @@ The famous equation: $E = mc^2$
 ### Code
 
 ```python
+
 def hello():
     print("Hello, World!")
 ```
@@ -696,13 +776,16 @@ New {++addition++} and {--removal--}.
 This has a footnote[^1].
 
 [^1]: Footnote content here.
+
 ```
 
 ## Troubleshooting
 
-**Math not rendering**: Ensure MathJax or KaTeX is loaded in your HTML template
+**Math not rendering**: Ensure MathJax or KaTeX is loaded in
+your HTML template
 
-**Wiki links as plain text**: Make sure `--mode unified` is set or wiki links are enabled
+**Wiki links as plain text**: Make sure `--mode unified` is
+set or wiki links are enabled
 
 **Critic markup not showing**: Verify `enable_critic_markup` is true in unified mode
 

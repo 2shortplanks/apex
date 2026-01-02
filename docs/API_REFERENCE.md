@@ -4,7 +4,8 @@
 
 ## Overview
 
-Apex provides a simple C API for converting Markdown to HTML with various processor modes and options.
+Apex provides a simple C API for converting Markdown to HTML
+with various processor modes and options.
 
 ## Core Types
 
@@ -20,6 +21,7 @@ typedef enum {
     APEX_MODE_KRAMDOWN = 3,         /* Kramdown */
     APEX_MODE_UNIFIED = 4           /* All features */
 } apex_mode_t;
+
 ```
 
 ### apex_options
@@ -73,16 +75,19 @@ typedef struct {
     bool allow_mixed_list_markers;  /* Allow mixed list markers at same level (inherit type from first item) */
     bool allow_alpha_lists;  /* Support alpha list markers (a., b., c. and A., B., C.) */
 } apex_options;
+
 ```
 
 ## Core Functions
 
 ### apex_options_default
 
-Get default options with all features enabled (unified mode).
+Get default options with all features enabled (unified
+mode).
 
 ```c
 apex_options apex_options_default(void);
+
 ```
 
 **Returns**: Default options structure
@@ -92,6 +97,7 @@ apex_options apex_options_default(void);
 apex_options opts = apex_options_default();
 opts.enable_math = true;
 opts.enable_wiki_links = true;
+
 ```
 
 ### apex_options_for_mode
@@ -100,6 +106,7 @@ Get options configured for a specific processor mode.
 
 ```c
 apex_options apex_options_for_mode(apex_mode_t mode);
+
 ```
 
 **Parameters**:
@@ -114,6 +121,7 @@ apex_options gfm_opts = apex_options_for_mode(APEX_MODE_GFM);
 apex_options mmd_opts = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
 apex_options unified_opts = apex_options_for_mode(APEX_MODE_UNIFIED);
 // Unified mode has mixed list markers and alpha lists enabled by default
+
 ```
 
 ### apex_markdown_to_html
@@ -123,6 +131,7 @@ Main conversion function - converts Markdown to HTML.
 ```c
 char *apex_markdown_to_html(const char *markdown, size_t len,
                             const apex_options *options);
+
 ```
 
 **Parameters**:
@@ -131,7 +140,8 @@ char *apex_markdown_to_html(const char *markdown, size_t len,
 - `len`: Length of input text
 - `options`: Processing options (NULL for defaults)
 
-**Returns**: Newly allocated HTML string (must be freed with `apex_free_string`)
+**Returns**: Newly allocated HTML string (must be freed with
+`apex_free_string`)
 
 **Example**:
 ```c
@@ -143,6 +153,7 @@ if (html) {
     printf("%s\n", html);
     apex_free_string(html);
 }
+
 ```
 
 ### apex_free_string
@@ -151,6 +162,7 @@ Free a string allocated by Apex.
 
 ```c
 void apex_free_string(char *str);
+
 ```
 
 **Parameters**:
@@ -162,6 +174,7 @@ void apex_free_string(char *str);
 char *html = apex_markdown_to_html(markdown, len, NULL);
 // Use html...
 apex_free_string(html);
+
 ```
 
 ### apex_version_string
@@ -170,6 +183,7 @@ Get version string.
 
 ```c
 const char *apex_version_string(void);
+
 ```
 
 **Returns**: Version string (e.g., "0.1.0")
@@ -182,6 +196,7 @@ Get individual version components.
 int apex_version_major(void);
 int apex_version_minor(void);
 int apex_version_patch(void);
+
 ```
 
 **Returns**: Version component as integer
@@ -204,6 +219,7 @@ char *apex_metadata_replace_variables(const char *text, apex_metadata_item *meta
 
 // Free metadata
 void apex_free_metadata(apex_metadata_item *metadata);
+
 ```
 
 ### Wiki Links
@@ -220,6 +236,7 @@ wiki_link_config config = {
     .extension = ".html",
     .space_mode = WIKILINK_SPACE_DASH  // Options: WIKILINK_SPACE_DASH, WIKILINK_SPACE_NONE, WIKILINK_SPACE_UNDERSCORE, WIKILINK_SPACE_SPACE
 };
+
 ```
 
 ### Critic Markup
@@ -234,6 +251,7 @@ void apex_process_critic_markup_in_tree(cmark_node *document, critic_mode_t mode
 char *apex_process_critic_markup_text(const char *text, critic_mode_t mode);
 
 // Modes: CRITIC_ACCEPT, CRITIC_REJECT, CRITIC_MARKUP
+
 ```
 
 ## List Options
@@ -251,6 +269,7 @@ opts.allow_mixed_list_markers = true;
 
 // To disable in unified/multimarkdown modes:
 opts.allow_mixed_list_markers = false;
+
 ```
 
 **Example markdown:**
@@ -258,6 +277,7 @@ opts.allow_mixed_list_markers = false;
 1. First numbered item
 * Second item (becomes numbered)
 * Third item (becomes numbered)
+
 ```
 
 ### Alpha Lists
@@ -273,6 +293,7 @@ opts.allow_alpha_lists = true;
 
 // To disable in unified mode:
 opts.allow_alpha_lists = false;
+
 ```
 
 **Example markdown:**
@@ -280,6 +301,7 @@ opts.allow_alpha_lists = false;
 a. First item
 b. Second item
 c. Third item
+
 ```
 
 This produces HTML with `style="list-style-type: lower-alpha"` on the `<ol>` tag.
@@ -331,12 +353,14 @@ int main() {
         return 1;
     }
 }
+
 ```
 
 Compile and link:
 ```bash
 gcc example.c -I/usr/local/include -L/usr/local/lib -lapex -o example
 ./example
+
 ```
 
 ## Thread Safety
@@ -345,22 +369,38 @@ Apex is thread-safe as long as each thread uses its own `apex_options` structure
 
 ## Memory Management
 
-- All strings returned by Apex must be freed with `apex_free_string()`
-- `apex_options` structures are typically stack-allocated (no freeing needed)
-- Metadata structures must be freed with `apex_free_metadata()`
+- All strings returned by Apex must be freed with
+
+  `apex_free_string()`
+
+- `apex_options` structures are typically stack-allocated
+
+  (no freeing needed)
+
+Metadata structures must be freed with `apex_free_metadata()`
 
 ## Error Handling
 
 - Functions return NULL or empty strings on error
 - Check return values before use
-- Errors are generally due to malloc failures or invalid input
+
+Errors are generally due to malloc failures or invalid input
 
 ## Performance Tips
 
-1. **Reuse options**: Create `apex_options` once and reuse for multiple conversions
-2. **String size**: Provide accurate length to avoid strlen() calls
-3. **Disable unused features**: Turn off extensions you don't need
-4. **Batch processing**: Process multiple documents in parallel
+1. **Reuse options**: Create `apex_options` once and reuse
+
+   for multiple conversions
+
+2. **String size**: Provide accurate length to avoid
+
+   strlen() calls
+
+3. **Disable unused features**: Turn off extensions you
+
+   don't need
+
+**Batch processing**: Process multiple documents in parallel
 
 ## Building as a Library
 
@@ -370,6 +410,7 @@ Apex is thread-safe as long as each thread uses its own `apex_options` structure
 # In your CMakeLists.txt
 add_subdirectory(apex)
 target_link_libraries(your_app apex)
+
 ```
 
 ### Manual Linking
@@ -384,6 +425,7 @@ gcc your_app.o -L/path/to/apex/build -lapex -o your_app
 # Run (may need library path)
 DYLD_LIBRARY_PATH=/path/to/apex/build ./your_app  # macOS
 LD_LIBRARY_PATH=/path/to/apex/build ./your_app    # Linux
+
 ```
 
 ## Integration with Marked
@@ -396,6 +438,7 @@ Quick integration:
 #import <NSString+Apex.h>
 
 NSString *html = [NSString convertWithApex:markdownText];
+
 ```
 
 ## See Also

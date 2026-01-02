@@ -1,6 +1,7 @@
 ### Included Content
 
-This content was **included** from an external file. It demonstrates:
+This content was **included** from an external file. It
+demonstrates:
 
 - File inclusion feature
 - Recursive markdown processing

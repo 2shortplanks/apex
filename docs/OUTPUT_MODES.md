@@ -6,6 +6,7 @@
 
 ```bash
 apex document.md
+
 ```
 
 **Output**: Compact HTML fragment (body content only)
@@ -17,6 +18,7 @@ apex document.md
 <li>Item 1</li>
 <li>Item 2</li>
 </ul>
+
 ```
 
 **Use for**: CMS integration, templates, AJAX, partial views
@@ -27,6 +29,7 @@ apex document.md
 
 ```bash
 apex --pretty document.md
+
 ```
 
 **Output**: Formatted HTML fragment with indentation
@@ -51,9 +54,11 @@ apex --pretty document.md
   </li>
 
 </ul>
+
 ```
 
-**Use for**: Debugging, viewing source, version control, learning
+**Use for**: Debugging, viewing source, version control,
+learning
 
 ---
 
@@ -61,6 +66,7 @@ apex --pretty document.md
 
 ```bash
 apex --standalone --title "My Doc" document.md
+
 ```
 
 **Output**: Complete HTML5 document
@@ -81,6 +87,7 @@ apex --standalone --title "My Doc" document.md
   [content]
 </body>
 </html>
+
 ```
 
 **Use for**: Complete documents, reports, previews, blogs
@@ -91,6 +98,7 @@ apex --standalone --title "My Doc" document.md
 
 ```bash
 apex --standalone --pretty --title "Beautiful Doc" document.md
+
 ```
 
 **Output**: Complete, beautifully formatted HTML5 document
@@ -123,9 +131,11 @@ apex --standalone --pretty --title "Beautiful Doc" document.md
   </body>
 
 </html>
+
 ```
 
-**Use for**: Documentation, reports, source viewing, teaching, publishing
+**Use for**: Documentation, reports, source viewing,
+teaching, publishing
 
 ---
 
@@ -145,6 +155,7 @@ apex -s --title "Title" doc.md
 
 # Complete + pretty
 apex -s --pretty --title "Title" doc.md
+
 ```
 
 ### With CSS
@@ -155,6 +166,7 @@ apex -s --style styles.css doc.md
 
 # Standalone + pretty + CSS
 apex -s --pretty --style styles.css --title "Styled" doc.md
+
 ```
 
 ### With Output File
@@ -163,6 +175,7 @@ apex -s --pretty --style styles.css --title "Styled" doc.md
 # Everything combined
 apex --standalone --pretty --title "Report" --style report.css \
      input.md -o output.html
+
 ```
 
 ---
@@ -216,6 +229,7 @@ apex --standalone --pretty --title "Report" --style report.css \
 
 ```bash
 echo "# Hello World" | apex --pretty
+
 ```
 
 Output:
@@ -223,6 +237,7 @@ Output:
 <h1>
   Hello World
 </h1>
+
 ```
 
 ### Complex Nested Structure
@@ -234,6 +249,7 @@ Output:
 
 - List
   - Nested
+
 ```
 
 With `--pretty`:
@@ -265,6 +281,7 @@ With `--pretty`:
   </li>
 
 </ul>
+
 ```
 
 ---
@@ -276,7 +293,8 @@ With `--pretty`:
 - **--standalone**: Minimal overhead (string wrapping)
 - **Combined**: Both overheads, still very fast
 
-For production pipelines where speed matters, use default mode.
+For production pipelines where speed matters, use default
+mode.
 For development and human consumption, use `--pretty`.
 
 ---
@@ -298,6 +316,6 @@ For development and human consumption, use `--pretty`.
 **Development**: `apex --pretty doc.md`  
 **Production**: `apex doc.md` (fast)  
 **Complete docs**: `apex -s --title "Title" doc.md`  
-**Beautiful complete docs**: `apex -s --pretty --title "Title" doc.md`  
+**Beautiful complete docs**: `apex -s --pretty --title "Title" doc.md`
 
 Choose the mode that fits your workflow!

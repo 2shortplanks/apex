@@ -4,7 +4,9 @@
 
 **5 of 6 limitations resolved!**
 
-All major limitations have been addressed. The remaining IAL edge cases represent <20% of typical use cases and are documented for future enhancement.
+All major limitations have been addressed. The remaining IAL
+edge cases represent <20% of typical use cases and are
+documented for future enhancement.
 
 ---
 
@@ -28,14 +30,18 @@ All major limitations have been addressed. The remaining IAL edge cases represen
 |---|---|
 | C | D |
 | ^^ | E |
+
 ```
+
 Output: `<td rowspan="2">C</td>`
 
 ```markdown
 | A | B | C |
 |---|---|---|
 | D |   |   |
+
 ```
+
 Output: `<td colspan="3">D</td>`
 
 **Test Coverage**: 6 tests, all passing
@@ -64,6 +70,7 @@ Code
 
 Link
 : Visit [Example](http://example.com)
+
 ```
 
 **Test Coverage**: 11 tests, all passing (added 2 new tests)
@@ -91,7 +98,9 @@ Link
 *[CSS]: Cascading Style Sheets
 
 HTML and CSS are essential.
+
 ```
+
 Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 **Test Coverage**: 7 tests, all passing (added 6 new tests)
@@ -119,6 +128,7 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 <!--PAUSE:5-->         → <div class="autoscroll-pause" data-pause="5"></div>
 {::pagebreak /}        → <div class="page-break" style="page-break-after: always;"></div>
 ^                      → Double newline (block separator)
+
 ```
 
 **Test Coverage**: 7 tests, all passing (added 7 new tests)
@@ -144,6 +154,7 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 <!--TOC min2 max4-->    Min 2, Max 4
 {{TOC:2-3}}            Min 2, Max 3
 {{TOC}}                Min 1, Max 6
+
 ```
 
 **Test Coverage**: 14 tests, all passing (added 2 new tests)
@@ -155,7 +166,8 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 ### 6. ⚠️ IAL - ALD and List Item Attributes (PARTIAL)
 
 **Status**: 80% working
-**Remaining Time Estimate**: 2-3 hours for full implementation
+**Remaining Time Estimate**: 2-3 hours for full
+implementation
 
 #### ✅ Working IAL Features (80%+):
 
@@ -170,7 +182,8 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 #### ❌ Not Yet Working (< 20%):
 
-- **List item IAL**: `- Item\n{: .class}` (between list items)
+**List item IAL**: `- Item\n{: .class}` (between list items)
+
   - Issue: Paragraph structure between items breaks list
   - Needs: Child paragraph detection within list items
   - Complexity: High - requires AST restructuring
@@ -180,7 +193,9 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
   - Needs: Implementation in `extract_ial_from_text`
   - Complexity: Medium - lookup and copy attributes
 
-**Recommendation**: Current IAL implementation covers majority of use cases. List item and ALD references can be added as enhancements in future versions.
+**Recommendation**: Current IAL implementation covers
+majority of use cases. List item and ALD references can be
+added as enhancements in future versions.
 
 ---
 
@@ -201,7 +216,8 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 **Before**: 20 tests (35% coverage)
 **After**: 138 tests (95% coverage)
-**Growth**: 590% increase in tests, 270% increase in coverage
+**Growth**: 590% increase in tests, 270% increase in
+coverage
 
 ### Time Investment
 
@@ -213,8 +229,12 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 ## Key Achievements
 
-1. **Rowspan/Colspan**: Full MultiMarkdown table compatibility
-2. **Markdown in Definitions**: Full Kramdown definition list support
+**Rowspan/Colspan**: Full MultiMarkdown table compatibility
+
+2. **Markdown in Definitions**: Full Kramdown definition
+
+   list support
+
 3. **Abbreviations**: Full MMD abbreviation support
 4. **Special Markers**: All Marked-specific features working
 5. **TOC Depth Control**: All TOC marker formats working
@@ -228,7 +248,8 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 **List Item IAL** (~1-2 hours):
 
-- Requires detecting IAL paragraphs as children of list items
+Requires detecting IAL paragraphs as children of list items
+
 - Need to handle multi-paragraph list items
 - Complex AST traversal and manipulation
 
@@ -248,7 +269,10 @@ Output: `<abbr title="Hypertext Markup Language">HTML</abbr>`
 
 **All critical limitations resolved!**
 
-The remaining IAL edge cases are advanced features used in < 20% of cases. The current implementation provides robust support for all major Markdown processors (CommonMark, GFM, MultiMarkdown, Kramdown) with 95% test coverage.
+The remaining IAL edge cases are advanced features used in <
+20% of cases. The current implementation provides robust
+support for all major Markdown processors (CommonMark, GFM,
+MultiMarkdown, Kramdown) with 95% test coverage.
 
 **Apex is production-ready for real-world use!** 🎉
 

@@ -6,9 +6,11 @@ Bracketed spans are a Pandoc-inspired feature that allows you to create HTML `<s
 
 This is [some *text*]{.highlight} with a class.
 
-This is [another example]{#custom-id .important} with an ID and class.
+This is [another example]{#custom-id .important} with an ID
+and class.
 
-This is [text with **bold**]{.bold-style} that processes markdown inside.
+This is [text with **bold**]{.bold-style} that processes
+markdown inside.
 
 ## Attributes
 
@@ -20,17 +22,21 @@ This is [text]{#my-id} with just an ID.
 
 ### Classes
 
-This is [text]{.class1 .class2 .class3} with multiple classes.
+This is [text]{.class1 .class2 .class3} with multiple
+classes.
 
 ### Key-Value Attributes
 
-This is [text]{key="value" title="Tooltip"} with custom attributes.
+This is [text]{key="value" title="Tooltip"} with custom
+attributes.
 
-This is [text]{data-id="123" aria-label="Description"} with data and ARIA attributes.
+This is [text]{data-id="123" aria-label="Description"} with
+data and ARIA attributes.
 
 ### Combined Attributes
 
-This is [text]{#my-id .highlight .important key="value"} combining all attribute types.
+This is [text]{#my-id .highlight .important key="value"}
+combining all attribute types.
 
 ## Markdown Processing
 
@@ -43,17 +49,23 @@ The text inside brackets is fully processed as markdown:
 
 ## Nested Brackets
 
-Bracketed spans support nested brackets. The parser correctly matches the outer brackets:
+Bracketed spans support nested brackets. The parser
+correctly matches the outer brackets:
 
-This is [Text with [nested brackets]]{.nested} that preserves the inner brackets.
+This is [Text with [nested brackets]]{.nested} that
+preserves the inner brackets.
 
-This is [Text with [multiple [levels] of nesting]]{.multi-level} that handles deep nesting.
+This is [Text with [multiple [levels] of
+nesting]]{.multi-level} that handles deep nesting.
 
-This is [Text with [inner] and [more inner] brackets]{.multiple-nested} that handles multiple nested pairs.
+This is [Text with [inner] and [more inner]
+brackets]{.multiple-nested} that handles multiple nested
+pairs.
 
 ## Reference Links Take Precedence
 
-If the bracketed text matches a reference link definition, it will be treated as a link instead of a span:
+If the bracketed text matches a reference link definition,
+it will be treated as a link instead of a span:
 
 This is [a link][example] that should be a link, not a span.
 
@@ -67,23 +79,29 @@ This is [another link][example2] with a title.
 
 ### Styling Inline Text
 
-You can [highlight important text]{.highlight .important} inline.
+You can [highlight important text]{.highlight .important}
+inline.
 
-You can [mark text as new]{.new} or [deprecated]{.deprecated}.
+You can [mark text as new]{.new} or
+[deprecated]{.deprecated}.
 
 ### Adding Metadata
 
-You can [add data attributes]{data-type="note" data-id="42"} for JavaScript.
+You can [add data attributes]{data-type="note" data-id="42"}
+for JavaScript.
 
-You can [add ARIA labels]{aria-label="Important notice"} for accessibility.
+You can [add ARIA labels]{aria-label="Important notice"} for
+accessibility.
 
 ### Semantic Markup
 
-You can [mark text as a term]{.term} or [citation]{.citation}.
+You can [mark text as a term]{.term} or
+[citation]{.citation}.
 
 ## Examples in Context
 
-Here's a paragraph with [highlighted text]{.highlight}, [important text]{.important}, and [a term]{.term}.
+Here's a paragraph with [highlighted text]{.highlight},
+[important text]{.important}, and [a term]{.term}.
 
 Here's a list with styled items:
 

@@ -49,9 +49,13 @@
 ### Recently Added Tests (46 new tests)
 
 1. **File Includes** ✅ (16 tests)
-   - Marked syntax: `<<[file.md]`, `<<(code.ext)`, `<<{html}`
+
+Marked syntax: `<<[file.md]`, `<<(code.ext)`, `<<{html}`
+
    - MMD transclusion: `{{file}}`
-   - iA Writer syntax: `/filename` (image and code detection)
+
+iA Writer syntax: `/filename` (image and code detection)
+
    - CSV to table conversion
    - TSV to table conversion
    - Markdown processing in includes
@@ -68,14 +72,18 @@
    - Basic definition syntax
    - Multiple definitions per term
    - Multiple terms
-   - Note: Markdown processing within definitions needs enhancement
+   - Note: Markdown processing within definitions needs
+
+     enhancement
 
 4. **Advanced Tables** ✅ (6 tests)
    - Caption detection (`[Caption]`)
    - Rowspan syntax (`^^`)
    - Colspan syntax (empty cells)
    - Basic table compatibility
-   - Note: HTML rendering of rowspan/colspan needs custom renderer
+   - Note: HTML rendering of rowspan/colspan needs custom
+
+     renderer
 
 ### ❌ **Still Missing Tests** (8 major features, 0 test cases)
 
@@ -83,7 +91,8 @@
    - Bear/Obsidian syntax: `> [!NOTE] Title`
    - Xcode Playground syntax: `- Attention: Title`
    - Collapsible callouts (`+`/`-`)
-   - All callout types (NOTE, WARNING, TIP, DANGER, INFO, etc.)
+
+All callout types (NOTE, WARNING, TIP, DANGER, INFO, etc.)
 
 2. **TOC Generation** ❌
    - `<!--TOC-->` marker
@@ -120,7 +129,10 @@
 ## Known Test Limitations (Features Work, But Not Fully Tested)
 
 1. **IAL Edge Cases**
-   - ALD (Attribute List Definitions) - parsing works but needs debugging
+   - ALD (Attribute List Definitions) - parsing works but
+
+     needs debugging
+
    - Custom attributes with quotes - quoting issues
    - List item IAL - needs investigation
 
@@ -129,7 +141,10 @@
    - Needs re-parsing of definition content
 
 3. **Advanced Tables**
-   - Rowspan/colspan HTML attributes - detection works, rendering needs custom renderer
+   - Rowspan/colspan HTML attributes - detection works,
+
+     rendering needs custom renderer
+
    - Figure wrapping for captions - needs custom renderer
 
 4. **Critic Markup Edge Cases**
@@ -168,22 +183,39 @@
 ## Priority Test Additions
 
 ### High Priority (Critical Features)
-1. **File Includes** - Complex feature with multiple syntaxes, needs thorough testing
-2. **IAL** - Core Kramdown feature, attribute injection is critical
-3. **Advanced Tables** - Complex parsing logic, rowspan/colspan need validation
-4. **Definition Lists** - Block-level content parsing needs verification
+1. **File Includes** - Complex feature with multiple
+
+   syntaxes, needs thorough testing
+
+2. **IAL** - Core Kramdown feature, attribute injection is
+
+   critical
+
+3. **Advanced Tables** - Complex parsing logic,
+
+   rowspan/colspan need validation
+
+4. **Definition Lists** - Block-level content parsing needs
+
+   verification
 
 ### Medium Priority (Important Features)
 5. **Callouts** - Multiple syntaxes, collapsible support
 6. **TOC Generation** - Depth control and marker detection
-7. **HTML Markdown Attributes** - Complex HTML parsing interaction
-8. **CSV/TSV Conversion** - File type detection and table generation
+7. **HTML Markdown Attributes** - Complex HTML parsing
+
+   interaction
+
+8. **CSV/TSV Conversion** - File type detection and table
+
+   generation
 
 ### Lower Priority (Simple Features)
 9. **Abbreviations** - Straightforward text replacement
 10. **Emoji** - Text replacement (but test all 350+ emoji)
 11. **Special Markers** - Simple marker replacement
-12. **Advanced Footnotes** - Block-level content in footnotes
+
+**Advanced Footnotes** - Block-level content in footnotes
 
 ---
 
@@ -212,6 +244,7 @@ tests/
 ├── test_advanced_tables.c (NEW)
 ├── test_html_markdown.c   (NEW)
 └── test_csv_tsv.c         (NEW)
+
 ```
 
 ### Test Data Files
@@ -230,16 +263,29 @@ tests/
 │   └── tables/
 │       ├── basic.csv
 │       └── advanced.md
+
 ```
 
 ---
 
 ## Next Steps
 
-1. **Create test infrastructure** for file-based includes (test fixtures)
-2. **Add high-priority tests** (includes, IAL, advanced tables, definition lists)
-3. **Add medium-priority tests** (callouts, TOC, HTML markdown, CSV/TSV)
-4. **Add lower-priority tests** (abbreviations, emoji, special markers, advanced footnotes)
+1. **Create test infrastructure** for file-based includes
+
+   (test fixtures)
+
+2. **Add high-priority tests** (includes, IAL, advanced
+
+   tables, definition lists)
+
+3. **Add medium-priority tests** (callouts, TOC, HTML
+
+   markdown, CSV/TSV)
+
+4. **Add lower-priority tests** (abbreviations, emoji,
+
+   special markers, advanced footnotes)
+
 5. **Add edge case tests** for all features
 6. **Add regression tests** for previously fixed bugs
 7. **Set up CI/CD** to run tests automatically
@@ -258,9 +304,13 @@ tests/
 
 ## Conclusion
 
-**Current Status**: 95% test coverage (18/19 feature categories, 138 tests, all passing)
+**Current Status**: 95% test coverage (18/19 feature
+categories, 138 tests, all passing)
 
 **Gap**: 12 major features with 0 test cases
 
-**Recommendation**: Prioritize testing file includes, IAL, advanced tables, and definition lists as these are the most complex and critical features. Then systematically add tests for remaining features.
+**Recommendation**: Prioritize testing file includes, IAL,
+advanced tables, and definition lists as these are the most
+complex and critical features. Then systematically add tests
+for remaining features.
 

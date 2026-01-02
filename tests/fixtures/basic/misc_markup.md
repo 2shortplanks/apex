@@ -12,6 +12,7 @@ b. alpha list continued
 Does ^super and ~sub work?
 
 Test cases:
+
 - Simple: H^2 O and m^2
 - Complex: x~(y,z) and y^(a+b)
 

@@ -22,14 +22,19 @@
 - `[[Page]]` syntax working
 - `[[Page|Display]]` format working
 - `[[Page#Section]]` anchors working
-- **Solution**: Postprocessing AST approach avoids conflict with standard markdown
+- **Solution**: Postprocessing AST approach avoids conflict
+
+  with standard markdown
+
 - Tested with multiple links per line
 - Works alongside regular markdown links
 
 ### 5. Math Support ✅ **FIXED!**
 - `$inline$` and `$$display$$` working
 - `\(inline\)` and `\[display\]` working
-- **Fixed**: Dollar sign false positives (e.g., "$5 and $10")
+
+**Fixed**: Dollar sign false positives (e.g., "$5 and $10")
+
 - Proper whitespace checking prevents false matches
 - Wraps in spans with classes for MathJax/KaTeX
 
@@ -45,7 +50,9 @@
 - All modes working
 
 ### 9. Compatibility Modes ✅
-- CommonMark, GFM, MultiMarkdown, Kramdown, Unified modes configured
+- CommonMark, GFM, MultiMarkdown, Kramdown, Unified modes
+
+  configured
 
 ## In Progress 🔄 (0/17)
 
@@ -58,7 +65,9 @@
 3. Inline Footnotes (`^[text]`)
 4. Critic Markup (`{++add++}`, `{--del--}`, etc.)
 5. Enhanced Tables (MMD features)
-6. Marked Integration (Objective-C wrapper) - **HIGH PRIORITY**
+
+Marked Integration (Objective-C wrapper) - **HIGH PRIORITY**
+
 7. Test Suite
 8. Documentation & Release
 
@@ -87,8 +96,12 @@
 
 **Session Progress:**
 
-- ✅ Identified and solved wiki links conflict (postprocessing approach)
-- ✅ Fixed math dollar sign false positives (whitespace rules)
+- ✅ Identified and solved wiki links conflict
+
+  (postprocessing approach)
+
+✅ Fixed math dollar sign false positives (whitespace rules)
+
 - ✅ Both extensions now production-ready
 
 **Quality Improvements:**
@@ -100,16 +113,25 @@
 ## Next Recommended Steps
 
 **Immediate (High Value):**
-1. **Marked Integration** - Create Objective-C wrapper, get Apex into Marked app
-2. **Critic Markup** - Widely used, relatively straightforward inline syntax
-3. **Callouts** - Bear/Obsidian compatibility, high user value
+
+1. **Marked Integration** - Create Objective-C wrapper, get
+
+   Apex into Marked app
+
+2. **Critic Markup** - Widely used, relatively
+
+   straightforward inline syntax
+
+**Callouts** - Bear/Obsidian compatibility, high user value
 
 **Medium Term:**
+
 1. File includes (`<<[file]>>`) - Essential for Marked
 2. Basic test suite - Validate what we have
 3. Definition lists - Kramdown compatibility
 
 **Long Term:**
+
 1. Comprehensive test coverage
 2. Full documentation
 3. Release preparation
@@ -140,4 +162,6 @@
 5. ✅ Clean, maintainable architecture
 6. ✅ 9 of 17 major milestones complete (53%)
 
-**Status**: Apex is now at a solid foundation with core features working. Ready for Marked integration or additional syntax features.
+**Status**: Apex is now at a solid foundation with core
+features working. Ready for Marked integration or additional
+syntax features.

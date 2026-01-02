@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 /**
- * Replace :emoji: patterns with Unicode emoji
+ * Replace :emoji: patterns with Unicode emoji or image tags
  */
 char *apex_replace_emoji(const char *html);
 
@@ -21,6 +21,14 @@ char *apex_replace_emoji(const char *html);
  * @return Emoji name if found, NULL otherwise
  */
 const char *apex_find_emoji_name(const char *unicode, size_t unicode_len);
+
+/**
+ * Autocorrect emoji names in markdown text
+ * Processes :emoji_name: patterns and corrects typos using fuzzy matching
+ * @param text The markdown text to process
+ * @return New string with corrected emoji names (caller must free), or NULL on error
+ */
+char *apex_autocorrect_emoji_names(const char *text);
 
 #ifdef __cplusplus
 }

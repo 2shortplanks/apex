@@ -5,6 +5,7 @@
 ```bash
 cd /path/to/apex
 ./build/apex_test_runner
+
 ```
 
 ## Test Coverage
@@ -90,6 +91,7 @@ cd /path/to/apex
 ## Test Fixtures
 
 Test files are located in `tests/fixtures/includes/`:
+
 - `simple.md` - Markdown content for includes
 - `code.py` - Python code file
 - `raw.html` - Raw HTML content
@@ -100,7 +102,9 @@ Test files are located in `tests/fixtures/includes/`:
 ## Adding New Tests
 
 1. Add test function to `test_runner.c`
-2. Use `assert_contains(html, expected, "Test name")` for validation
+
+Use `assert_contains(html, expected, "Test name")` for validation
+
 3. Add test function call in `main()`
 4. Rebuild: `cmake --build build`
 5. Run: `./build/apex_test_runner`
@@ -109,8 +113,13 @@ Test files are located in `tests/fixtures/includes/`:
 
 Some advanced features work but have limited test coverage:
 
-- **Advanced Tables**: Rowspan/colspan rendering needs custom renderer
-- **Critic Markup**: Some edge cases with substitution/comment syntax
+- **Advanced Tables**: Rowspan/colspan rendering needs
+
+  custom renderer
+
+- **Critic Markup**: Some edge cases with
+
+  substitution/comment syntax
 
 See `docs/TEST_COVERAGE.md` for detailed analysis.
 

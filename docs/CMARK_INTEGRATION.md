@@ -56,11 +56,13 @@ char *cmark_render_commonmark(cmark_node *root, int options, int width);
 // Extension API
 void cmark_parser_attach_syntax_extension(cmark_parser *parser, cmark_syntax_extension *ext);
 cmark_syntax_extension *cmark_find_syntax_extension(const char *name);
+
 ```
 
 ### Extension System Design
 
 Extensions can:
+
 1. Register pattern matchers for blocks/inlines
 2. Create custom node types
 3. Provide custom rendering
@@ -113,6 +115,7 @@ apex_node *apex_parse_cmark(const char *markdown, size_t len, const apex_options
 
     return apex_root;
 }
+
 ```
 
 ### Phase 3: Custom Extensions
@@ -152,16 +155,19 @@ Create Apex-specific extensions:
 Two options:
 
 **Option A: Convert to Apex AST**
+
 - cmark nodes → Apex nodes
 - Pros: Full control, can extend freely
 - Cons: Conversion overhead
 
 **Option B: Use cmark AST directly**
+
 - Wrap cmark_node as apex_node
 - Pros: Zero-copy, faster
 - Cons: Tied to cmark structure
 
-Recommendation: **Option A initially**, can optimize to B later.
+Recommendation: **Option A initially**, can optimize to B
+later.
 
 ### Phase 5: Rendering
 
@@ -178,6 +184,7 @@ char *apex_render_html(apex_node *root, const apex_options *opts) {
     // Otherwise use Apex's renderer with custom node support
     return apex_render_html_custom(root, opts);
 }
+
 ```
 
 ## Implementation Steps
@@ -194,7 +201,8 @@ char *apex_render_html(apex_node *root, const apex_options *opts) {
 
 ## Benefits of This Approach
 
-✅ **Immediate Results**: Full CommonMark + GFM support right away
+✅ **Immediate Results**: Full CommonMark + GFM support right
+away
 ✅ **Battle-tested**: cmark is used by GitHub, proven quality
 ✅ **Extensible**: Can add Apex features incrementally
 ✅ **Maintainable**: cmark updates can be merged upstream

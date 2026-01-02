@@ -7,4 +7,5 @@ With no spaces.
 - this
 - is a list
 - with a class
+
 {: .this-list }

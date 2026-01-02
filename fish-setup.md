@@ -2,15 +2,24 @@
 
 ## When providing instructions for running commands in Fish shell, include:
 
-1. **Shell specification**: Always specify `fish` as the shell
-2. **Variable syntax**: Use Fish syntax (`set -gx VAR value`, not `export VAR=value`)
-3. **Command substitution**: Use `(command)` not `$(command)`
-4. **Conditionals**: Use `if test ... end` not `if [ ... ]; then ... fi`
-5. **Path handling**: Use `(pwd)` for current directory, `~` for home
+**Shell specification**: Always specify `fish` as the shell
+
+2. **Variable syntax**: Use Fish syntax (`set -gx VAR
+
+   value`, not `export VAR=value`)
+
+**Command substitution**: Use `(command)` not `$(command)`
+
+**Conditionals**: Use `if test ... end` not `if [ ... ]; then ... fi`
+
+**Path handling**: Use `(pwd)` for current directory, `~` for home
 
 ## Execute sandbox commands in Fish shell (not bash):
 
-1. Use Fish syntax: `set -gx VAR value` for environment variables
+1. Use Fish syntax: `set -gx VAR value` for environment
+
+   variables
+
 2. Use `(command)` for command substitution
 3. Use `if test ... end` for conditionals
 4. Use `source` to execute scripts in current shell context
@@ -28,14 +37,17 @@ function setup-env
         # ... more setup
     FISH_SCRIPT
 end
+
 ```
 
 **Pros:**
+
 - Simple and direct
 - No temporary files
 - Good for one-off or simple setups
 
 **Cons:**
+
 - Can be harder to debug
 - Limited error handling
 - Not ideal for complex multi-step operations
@@ -67,15 +79,18 @@ function setup-env
     # Cleanup
     rm -f $temp_script
 end
+
 ```
 
 **Pros:**
+
 - Better for complex scripts
 - Easier to debug (can inspect the file)
 - Can reuse the script file
 - Better error handling
 
 **Cons:**
+
 - Creates temporary files
 - Slightly more verbose
 
@@ -89,14 +104,19 @@ function setup-env
     FISH_SCRIPT
     | psub)
 end
+
 ```
 
 **Pros:**
+
 - No temporary files visible
 - Direct execution in current shell
 - Clean syntax
 
 **Cons:**
+
 - Requires Fish 3.0+
-- Process substitution creates a file descriptor (cleaned up automatically)
+- Process substitution creates a file descriptor (cleaned up
+
+  automatically)
 

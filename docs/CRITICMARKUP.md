@@ -13,6 +13,7 @@ Text that has been added to the document.
 
 ```markdown
 The document now includes {++this new section++}.
+
 ```
 
 ### 2. Deletion `{--text--}`
@@ -20,6 +21,7 @@ Text that has been removed from the document.
 
 ```markdown
 The {--old approach--} is no longer used.
+
 ```
 
 ### 3. Substitution `{~~old~>new~~}`
@@ -27,13 +29,16 @@ Text that has been replaced with new text.
 
 ```markdown
 The process {~~was inefficient~>is now optimized~~}.
+
 ```
 
 ### 4. Highlight `{==text==}`
-Text that should be highlighted for attention (annotation, not a change).
+Text that should be highlighted for attention (annotation,
+not a change).
 
 ```markdown
 {==This section is critical==} for understanding the concept.
+
 ```
 
 ### 5. Comment `{>>text<<}`
@@ -41,6 +46,7 @@ Editorial comments or notes (annotation, not a change).
 
 ```markdown
 {>>TODO: Expand this section with more examples<<}
+
 ```
 
 ---
@@ -56,6 +62,7 @@ Shows all changes with HTML tags for styling.
 **Command**:
 ```bash
 apex document.md
+
 ```
 
 **Output**:
@@ -65,6 +72,7 @@ apex document.md
 <del class="critic break">old</del><ins class="critic break">new</ins>
 <mark class="critic">highlight</mark>
 <span class="critic comment">comment</span>
+
 ```
 
 **Use for**: Reviewing changes, showing tracked edits
@@ -78,6 +86,7 @@ Applies all changes, outputs clean final text.
 **Command**:
 ```bash
 apex --accept document.md
+
 ```
 
 **Behavior**:
@@ -101,6 +110,7 @@ Reverts all changes, restores original text.
 **Command**:
 ```bash
 apex --reject document.md
+
 ```
 
 **Behavior**:
@@ -133,6 +143,7 @@ The formula {~~E=mc^2~>E=mc²~~} has been corrected.
 {>>TODO: Expand this section<<}
 
 Final text.
+
 ```
 
 ### Markup Mode Output
@@ -152,6 +163,7 @@ understanding the concept.</p>
 <p><span class="critic comment">TODO: Expand this section</span></p>
 
 <p>Final text.</p>
+
 ```
 
 ### Accept Mode Output
@@ -166,6 +178,7 @@ understanding the concept.</p>
 <p>This section is important for understanding the concept.</p>
 
 <p>Final text.</p>
+
 ```
 
 ### Reject Mode Output
@@ -180,13 +193,15 @@ understanding the concept.</p>
 <p>This section is important for understanding the concept.</p>
 
 <p>Final text.</p>
+
 ```
 
 ---
 
 ## Default Styling
 
-When using `--standalone` mode, Apex includes default CSS for Critic Markup:
+When using `--standalone` mode, Apex includes default CSS
+for Critic Markup:
 
 ```css
 ins {
@@ -208,6 +223,7 @@ mark {
   color: #666;
   font-style: italic;
 }
+
 ```
 
 These styles make changes clearly visible in markup mode.
@@ -229,7 +245,9 @@ These styles make changes clearly visible in markup mode.
 - `{==highlights==}` - Both modes: show text without markup
 - `{>>comments<<}` - Both modes: remove entirely
 
-This distinction ensures that highlights (marking important content) and comments (editorial notes) don't affect the final text in either accept or reject mode.
+This distinction ensures that highlights (marking important
+content) and comments (editorial notes) don't affect the
+final text in either accept or reject mode.
 
 ---
 
@@ -249,6 +267,7 @@ apex --accept draft.md -o final.html
 
 # 4. If changes rejected, revert to original
 apex --reject draft.md -o original.html
+
 ```
 
 ### Collaboration
@@ -259,6 +278,7 @@ apex --standalone --title "Review" draft.md -o review.html
 
 # Accept changes and publish
 apex --accept --standalone --title "Published" draft.md -o published.html
+
 ```
 
 ### Side-by-Side Comparison
@@ -270,6 +290,7 @@ apex --accept draft.md -o accepted.html
 apex --reject draft.md -o rejected.html
 
 # Compare in browser
+
 ```
 
 ---
@@ -294,9 +315,11 @@ Critic Markup can contain Markdown:
 The {++**bold new text**++} is added.
 Changes to {~~*old italic*~>**new bold**~~}.
 {==Important with `code`==}
+
 ```
 
-The Markdown inside is processed after Critic Markup is converted.
+The Markdown inside is processed after Critic Markup is
+converted.
 
 ### Multiple Edits
 
@@ -304,6 +327,7 @@ Multiple changes in the same paragraph work correctly:
 
 ```markdown
 Text with {++addition++} and {--deletion--} and {~~old~>new~~} in one line.
+
 ```
 
 ---
@@ -328,6 +352,7 @@ char *accepted = apex_markdown_to_html(text, len, &opts);
 // Reject mode
 opts.critic_mode = 1;  // CRITIC_REJECT
 char *rejected = apex_markdown_to_html(text, len, &opts);
+
 ```
 
 ### Enum Values
@@ -338,6 +363,7 @@ typedef enum {
     CRITIC_REJECT = 1,  /* Reject all changes */
     CRITIC_MARKUP = 2   /* Show markup with classes */
 } critic_mode_t;
+
 ```
 
 ---
@@ -354,6 +380,7 @@ Apex includes comprehensive tests for all three modes:
 echo "Test {++add++} and {--del--}" | apex --accept
 echo "Test {++add++} and {--del--}" | apex --reject
 echo "Test {++add++} and {--del--}" | apex
+
 ```
 
 ---
@@ -371,16 +398,22 @@ echo "Test {++add++} and {--del--}" | apex
 ### For Reviewers
 
 1. **Review with markup mode**: See all changes clearly
-2. **Test both modes**: Generate accepted and rejected versions
+
+**Test both modes**: Generate accepted and rejected versions
+
 3. **Compare outputs**: Ensure changes are as intended
-4. **Remove comments**: Use accept/reject to clean up editorial notes
+4. **Remove comments**: Use accept/reject to clean up
+
+   editorial notes
 
 ### For Publishers
 
 1. **Use --accept for final**: Clean published version
 2. **Keep markup version**: For future reference
 3. **Archive rejected**: In case revert needed
-4. **Combine with --standalone**: Complete publishable documents
+4. **Combine with --standalone**: Complete publishable
+
+   documents
 
 ---
 
@@ -394,6 +427,7 @@ apex -s --pretty --title "Review Draft" draft.md -o review.html
 
 # Clean final version
 apex --accept -s --title "Final Version" draft.md -o final.html
+
 ```
 
 ### With Pretty-Print
@@ -404,6 +438,7 @@ apex --pretty draft.md > readable.html
 
 # Clean accepted version, nicely formatted
 apex --accept --pretty draft.md > accepted.html
+
 ```
 
 ---
@@ -413,7 +448,9 @@ apex --accept --pretty draft.md > accepted.html
 **Markup not processed**:
 
 - Ensure you're in unified mode or MMD/Kramdown mode
-- CommonMark and GFM modes don't enable Critic Markup by default
+- CommonMark and GFM modes don't enable Critic Markup by
+
+  default
 
 **Changes not applying with --accept**:
 
@@ -452,11 +489,13 @@ apex --accept --pretty draft.md > accepted.html
 
 ## Summary
 
-Apex provides complete CriticMarkup support with three processing modes:
+Apex provides complete CriticMarkup support with three
+processing modes:
 
 1. **Markup** - Visual review
 2. **Accept** - Apply changes
 3. **Reject** - Revert changes
 
-Combined with Apex's output modes (standalone, pretty), you get a powerful editorial workflow tool!
+Combined with Apex's output modes (standalone, pretty), you
+get a powerful editorial workflow tool!
 

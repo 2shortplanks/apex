@@ -21,11 +21,14 @@ Smith says blah [-@smith04].
 
 ## MultiMarkdown Citations
 
-This is a statement that should be attributed to its source[p. 23][#Doe:2006].
+This is a statement that should be attributed to its
+source[p. 23][#Doe:2006].
 
-This is a statement that should be attributed to its source[][#Doe:2006].
+This is a statement that should be attributed to its
+source[][#Doe:2006].
 
-As per Doe.[#John Doe. *A Totally Fake Book 1*.  Vanity Press, 2006.]
+As per Doe.[#John Doe. *A Totally Fake Book 1*. Vanity
+Press, 2006.]
 
 ## mmark Citations
 

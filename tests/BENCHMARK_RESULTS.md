@@ -12,7 +12,8 @@
 
 ## Features Tested
 
-The comprehensive test document exercises **all** Apex features:
+The comprehensive test document exercises **all** Apex
+features:
 
 - ✅ Basic Markdown (headings, paragraphs, lists, emphasis)
 - ✅ Extended Markdown (tables, footnotes, task lists)
@@ -42,10 +43,13 @@ The comprehensive test document exercises **all** Apex features:
 
 | Mode | Average | Min | Max | Throughput |
 |------|---------|-----|-----|------------|
-| **Fragment** (default) | 14ms | 8ms | 125ms | ~236,000 words/sec |
-| **Pretty-Print** | 10ms | 9ms | 19ms | ~236,000 words/sec |
+| **Fragment** (default) | 14ms | 8ms | 125ms | ~236,000
+words/sec |
+| **Pretty-Print** | 10ms | 9ms | 19ms | ~236,000 words/sec
+|
 | **Standalone** | 9ms | 9ms | 11ms | ~262,000 words/sec |
-| **Standalone + Pretty** | 13ms | 9ms | 44ms | ~181,000 words/sec |
+| **Standalone + Pretty** | 13ms | 9ms | 44ms | ~181,000
+words/sec |
 
 ### Mode Comparison
 
@@ -75,7 +79,10 @@ Generated HTML contains:
 ### Speed Metrics
 
 - **Processing rate**: ~236,000 words per second
-- **Overhead**: Only ~2ms for all custom extensions vs base CommonMark
+- **Overhead**: Only ~2ms for all custom extensions vs base
+
+  CommonMark
+
 - **Memory efficiency**: Processes 16 KB document in < 10ms
 - **Consistency**: Low variance (max/min ratio < 5x)
 
@@ -93,14 +100,19 @@ For typical documents:
 ### Performance Characteristics
 
 **Strengths:**
+
 - Extremely fast baseline (cmark-gfm)
 - Minimal overhead from extensions
 - Excellent for batch processing
 - Suitable for real-time preview
 
 **Observations:**
+
 - Pretty-print adds minimal overhead (~3-4ms)
-- Standalone HTML generation is actually *faster* (more consistent caching)
+- Standalone HTML generation is actually *faster* (more
+
+  consistent caching)
+
 - Combined features scale linearly
 
 ## Testing Methodology
@@ -121,7 +133,8 @@ The comprehensive test document includes:
 2. **Realism**: Structured like actual documentation
 3. **Scale**: Large enough to measure accurately (592 lines)
 4. **Complexity**: Nested structures, mixed content types
-5. **Edge cases**: Tables with text after, nested lists, etc.
+
+**Edge cases**: Tables with text after, nested lists, etc.
 
 ## Output Quality
 
@@ -148,7 +161,8 @@ All tested features render correctly:
 
 ### Table Row Bug (Fixed)
 
-The benchmark document specifically tests the table row regression:
+The benchmark document specifically tests the table row
+regression:
 
 ```markdown
 | Header |
@@ -157,17 +171,23 @@ The benchmark document specifically tests the table row regression:
 | Row 2  |
 
 Text after table.
+
 ```
 
-**Result**: ✅ All rows properly rendered in table, text correctly follows.
+**Result**: ✅ All rows properly rendered in table, text
+correctly follows.
 
 ## Comparison with Other Processors
 
 ### Relative Performance
 
-While we haven't benchmarked against other processors in this session, Apex's performance characteristics suggest:
+While we haven't benchmarked against other processors in
+this session, Apex's performance characteristics suggest:
 
-- Faster than most interpreted Markdown processors (Ruby, Python)
+- Faster than most interpreted Markdown processors (Ruby,
+
+  Python)
+
 - Competitive with native processors (cmark, Discount)
 - More features than any single alternative
 
@@ -185,7 +205,8 @@ While we haven't benchmarked against other processors in this session, Apex's pe
 
 Apex demonstrates:
 
-1. **Exceptional speed**: < 15ms for complex 592-line documents
+**Exceptional speed**: < 15ms for complex 592-line documents
+
 2. **Feature completeness**: All planned features working
 3. **Reliability**: Consistent performance across runs
 4. **Production readiness**: Suitable for real-world use
@@ -196,7 +217,9 @@ Apex demonstrates:
 - **~0.006ms per word** average processing time
 - **~0.025ms per line** for complex markdown
 
-**This places Apex among the fastest Markdown processors available while offering the most comprehensive feature set.**
+**This places Apex among the fastest Markdown processors
+available while offering the most comprehensive feature
+set.**
 
 ---
 
