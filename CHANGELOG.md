@@ -2,6 +2,21 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.45] - 2026-01-03
+
+### Improved
+
+- Table caption preprocessing now handles blank lines between tables and captions by buffering and discarding them appropriately
+- Table matching in HTML renderer now uses sequential matching instead of index-based matching to correctly handle tables with attributes
+- Caption detection now concatenates all text nodes in a paragraph to ensure IAL attributes are found even when split across nodes
+
+### Fixed
+
+- Table captions now work correctly when separated from tables by blank lines
+- IAL attributes (id, class) are now correctly extracted and applied to tables with captions
+- Table: caption format now works when appearing immediately after table rows without blank lines
+- Table: caption format now supports case-insensitive "table:" in addition to "Table:"
+
 ## [0.1.44] - 2026-01-02
 
 ### Changed
@@ -1929,6 +1944,7 @@ Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 
 Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.45]: https://github.com/ttscoff/apex/releases/tag/v0.1.45
 [0.1.44]: https://github.com/ttscoff/apex/releases/tag/v0.1.44
 [0.1.43]:
 https://github.com/ttscoff/apex/releases/tag/v0.1.43
