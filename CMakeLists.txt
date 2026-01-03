@@ -242,6 +242,11 @@ if(APPLE)
             DESTINATION ${FRAMEWORK_INSTALL_DIR}/Apex.framework/Headers
         )
 
+        # Install module map for Swift support
+        install(FILES include/apex/module.modulemap
+            DESTINATION ${FRAMEWORK_INSTALL_DIR}/Apex.framework/Headers
+        )
+
         # Post-install script to copy dylibs into framework and fix install names
         # This runs after the framework is installed
         install(CODE "

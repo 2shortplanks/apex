@@ -5,6 +5,7 @@
  */
 
 import Foundation
+@_exported import ApexObjC
 
 /// Apex processor mode
 /// Type-safe enum for processor modes
@@ -103,14 +104,14 @@ extension String {
      * Convert Markdown to HTML using Apex in unified mode
      */
     public func apexHTML() -> String {
-        return NSString.convert(withApex: self) as String
+        return (self as NSString).apexHTML() as String
     }
 
     /**
      * Convert Markdown to HTML using Apex with specific mode
      */
     public func apexHTML(mode: ApexMode) -> String {
-        return NSString.convert(withApex: self, mode: mode.nsString) as String
+        return (self as NSString).apexHTML(withMode: mode.rawValue) as String
     }
 
     /**
@@ -120,11 +121,11 @@ extension String {
         let dict = options.toDictionary()
         if dict.isEmpty {
             // No options, use simple method
-            return NSString.convert(withApex: self, mode: mode.nsString) as String
+            return (self as NSString).apexHTML(withMode: mode.rawValue)
         } else {
             // Use dictionary-based method
             return NSString.convert(
-                withApex: self, mode: mode.nsString, options: dict as NSDictionary) as String
+                withApex: self, mode: mode.rawValue, options: dict)
         }
     }
 
@@ -136,11 +137,11 @@ extension String {
     ) -> String {
         return NSString.convert(
             withApex: self,
-            mode: mode.nsString,
+            mode: mode.rawValue,
             standalone: standalone,
-            stylesheet: stylesheet as NSString?,
-            title: title as NSString?
-        ) as String
+            stylesheet: stylesheet,
+            title: title
+        )
     }
 
     /**
@@ -148,7 +149,7 @@ extension String {
      * Convenience method for pretty-printing only
      */
     public func apexHTML(pretty: Bool, mode: ApexMode = .unified) -> String {
-        return NSString.convert(withApex: self, mode: mode.nsString, pretty: pretty) as String
+        return NSString.convert(withApex: self, mode: mode.rawValue, pretty: pretty)
     }
 
     /**
@@ -162,11 +163,11 @@ extension String {
     ) -> String {
         return NSString.convert(
             withApex: self,
-            mode: mode.nsString,
+            mode: mode.rawValue,
             generateHeaderIDs: generateHeaderIDs,
             hardBreaks: hardBreaks,
             pretty: pretty
-        ) as String
+        )
     }
 }
 

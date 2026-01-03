@@ -6,6 +6,12 @@ cmake-build-*/
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/
 
+# Swift Package Manager
+.build/
+.swiftpm/
+*.xcodeproj
+Package.resolved
+
 # Compiled files
 *.o
 *.a
