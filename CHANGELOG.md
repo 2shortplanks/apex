@@ -2,6 +2,12 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.48] - 2026-01-03
+
+### Fixed
+
+- Linux build error: add missing stdint.h include to emoji.c for SIZE_MAX definition
+
 ## [0.1.47] - 2026-01-03
 
 ### Changed
@@ -1961,6 +1967,7 @@ Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 
 Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.48]: https://github.com/ttscoff/apex/releases/tag/v0.1.48
 [0.1.47]: https://github.com/ttscoff/apex/releases/tag/v0.1.47
 [0.1.46]: https://github.com/ttscoff/apex/releases/tag/v0.1.46
 [0.1.45]: https://github.com/ttscoff/apex/releases/tag/v0.1.45
