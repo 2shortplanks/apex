@@ -2,6 +2,35 @@
 
 All notable changes to Apex will be documented in this file.
 
+## 0.1.49
+
+### New
+
+- Added standalone HTML document generation method with stylesheet and title support
+- Added pretty-printing option method for formatted HTML output
+- Added dictionary-based options method for flexible configuration
+- Added Swift-friendly convenience method combining common options (generateHeaderIDs, hardBreaks, pretty)
+- Added instance methods (apexHTML and apexHTMLWithMode) for fluent NSString usage
+- Added Swift API wrapper (Apex.swift) with type-safe ApexMode enum and ApexOptions struct
+- Added String extensions providing idiomatic Swift API for Markdown conversion
+- Added static Apex converter struct for functional-style Swift usage
+- Swift Package Manager (SPM) support - Apex can now be added as a package dependency in Xcode projects via SPM
+- IOS support - Apex now supports iOS 11+ in addition to macOS 10.13+ through bundled libyaml dependency
+- Module map for Swift C API imports - Added module.modulemap to enable direct C API access from Swift
+- Add Package.swift for Swift Package Manager integration
+- Add module.modulemap for Swift/Objective-C interop
+- Add SPM test script and test project
+
+### Improved
+
+- Framework build now includes module map for proper Swift module support
+- Add default initializer to ApexOptions struct for better Swift ergonomics
+
+### Fixed
+
+- Swift/Objective-C bridging issues in Apex.swift to work correctly with SPM module structure
+- Fix node type declarations to use enum values instead of extern variables for better module compatibility
+
 ## [0.1.48] - 2026-01-03
 
 ### Fixed
@@ -1967,6 +1996,7 @@ Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 
 Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.49]: https://github.com/ttscoff/apex/releases/tag/v0.1.49
 [0.1.48]: https://github.com/ttscoff/apex/releases/tag/v0.1.48
 [0.1.47]: https://github.com/ttscoff/apex/releases/tag/v0.1.47
 [0.1.46]: https://github.com/ttscoff/apex/releases/tag/v0.1.46
