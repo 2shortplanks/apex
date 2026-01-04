@@ -43,14 +43,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 17px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   line-height: 1.65;
   color: #1e293b;
   background-color: #fff;
 }
 
 /* Sidebar / Main TOC - wider on larger screens */
-.main-toc, .sidebar {
+.main-toc,
+.sidebar {
   position: fixed;
   left: 0;
   top: 0;
@@ -70,24 +72,28 @@ body {
   transition: transform 0.3s ease;
 }
 
-.main-toc ul, .sidebar ul {
+.main-toc ul,
+.sidebar ul {
   list-style: none;
   padding-left: 0;
   margin: 0;
   padding-bottom: 80px;
 }
 
-.main-toc ul::after, .sidebar ul::after {
-  content: '';
+.main-toc ul::after,
+.sidebar ul::after {
+  content: "";
   display: block;
   height: 80px;
 }
 
-.main-toc li, .sidebar li {
+.main-toc li,
+.sidebar li {
   margin: 0.25em 0;
 }
 
-.main-toc a, .sidebar a {
+.main-toc a,
+.sidebar a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   display: block;
@@ -99,7 +105,8 @@ body {
   text-overflow: ellipsis;
 }
 
-.main-toc a:hover, .sidebar a:hover {
+.main-toc a:hover,
+.sidebar a:hover {
   background: #334155;
   color: #fff;
 }
@@ -146,7 +153,9 @@ body {
 
 /* Move hamburger to the right of the sidebar when menu is open */
 .hamburger-menu.active {
-  left: calc(250px + 12px); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
+  left: calc(
+    250px + 12px
+  ); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
 }
 
 .hamburger-menu.active {
@@ -154,11 +163,11 @@ body {
 }
 
 .hamburger-menu::before {
-  content: '☰';
+  content: "☰";
 }
 
 .hamburger-menu.active::before {
-  content: '✕';
+  content: "✕";
 }
 
 /* Mobile menu overlay */
@@ -356,7 +365,7 @@ code {
   background: #f0f0f0;
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9em;
   margin: 0 0.1em;
 }
@@ -375,8 +384,254 @@ pre code {
   margin: 0;
 }
 
+/* Rouge syntax highlighting - GitHub theme, scoped to .highlight containers */
+.highlight {
+  color: #24292e;
+}
+
+.highlight .c {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment */
+.highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+} /* Error */
+.highlight .k {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword */
+.highlight .l {
+  color: #032f62;
+} /* Literal */
+.highlight .n {
+  color: #24292e;
+} /* Name */
+.highlight .o {
+  color: #d73a49;
+} /* Operator */
+.highlight .p {
+  color: #24292e;
+} /* Punctuation */
+.highlight .cm {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Multiline */
+.highlight .cp {
+  color: #6a737d;
+  font-weight: bold;
+} /* Comment.Preproc */
+.highlight .c1 {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Single */
+.highlight .cs {
+  color: #6a737d;
+  font-weight: bold;
+  font-style: italic;
+} /* Comment.Special */
+.highlight .gd {
+  color: #24292e;
+  background-color: #ffeef0;
+} /* Generic.Deleted */
+.highlight .ge {
+  color: #24292e;
+  font-style: italic;
+} /* Generic.Emph */
+.highlight .gr {
+  color: #aa0000;
+} /* Generic.Error */
+.highlight .gh {
+  color: #999999;
+  font-weight: bold;
+} /* Generic.Heading */
+.highlight .gi {
+  color: #24292e;
+  background-color: #f0fff4;
+} /* Generic.Inserted */
+.highlight .go {
+  color: #888888;
+} /* Generic.Output */
+.highlight .gp {
+  color: #555555;
+} /* Generic.Prompt */
+.highlight .gs {
+  font-weight: bold;
+} /* Generic.Strong */
+.highlight .gu {
+  color: #aaaaaa;
+} /* Generic.Subheading */
+.highlight .gt {
+  color: #aa0000;
+} /* Generic.Traceback */
+.highlight .kc {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Constant */
+.highlight .kd {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Declaration */
+.highlight .kn {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Namespace */
+.highlight .kp {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Pseudo */
+.highlight .kr {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Reserved */
+.highlight .kt {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Type */
+.highlight .ld {
+  color: #032f62;
+} /* Literal.Date */
+.highlight .m {
+  color: #005cc5;
+} /* Literal.Number */
+.highlight .s {
+  color: #032f62;
+} /* Literal.String */
+.highlight .na {
+  color: #6f42c1;
+} /* Name.Attribute */
+.highlight .nb {
+  color: #005cc5;
+} /* Name.Builtin */
+.highlight .nc {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Class */
+.highlight .no {
+  color: #005cc5;
+} /* Name.Constant */
+.highlight .nd {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Decorator */
+.highlight .ni {
+  color: #800080;
+} /* Name.Entity */
+.highlight .ne {
+  color: #990000;
+  font-weight: bold;
+} /* Name.Exception */
+.highlight .nf {
+  color: #6f42c1;
+} /* Name.Function */
+.highlight .nl {
+  color: #990000;
+} /* Name.Label */
+.highlight .nn {
+  color: #555555;
+} /* Name.Namespace */
+.highlight .nx {
+  color: #6f42c1;
+} /* Name.Other */
+.highlight .py {
+  color: #990000;
+} /* Name.Property */
+.highlight .nt {
+  color: #22863a;
+} /* Name.Tag */
+.highlight .nv {
+  color: #e36209;
+} /* Name.Variable */
+.highlight .ow {
+  color: #d73a49;
+  font-weight: bold;
+} /* Operator.Word */
+.highlight .w {
+  color: #bbbbbb;
+} /* Text.Whitespace */
+.highlight .mf {
+  color: #005cc5;
+} /* Literal.Number.Float */
+.highlight .mh {
+  color: #005cc5;
+} /* Literal.Number.Hex */
+.highlight .mi {
+  color: #005cc5;
+} /* Literal.Number.Integer */
+.highlight .mo {
+  color: #005cc5;
+} /* Literal.Number.Oct */
+.highlight .sb {
+  color: #032f62;
+} /* Literal.String.Backtick */
+.highlight .sc {
+  color: #032f62;
+} /* Literal.String.Char */
+.highlight .sd {
+  color: #032f62;
+} /* Literal.String.Doc */
+.highlight .s2 {
+  color: #032f62;
+} /* Literal.String.Double */
+.highlight .se {
+  color: #032f62;
+} /* Literal.String.Escape */
+.highlight .sh {
+  color: #032f62;
+} /* Literal.String.Heredoc */
+.highlight .si {
+  color: #032f62;
+} /* Literal.String.Interpol */
+.highlight .sx {
+  color: #032f62;
+} /* Literal.String.Other */
+.highlight .sr {
+  color: #22863a;
+} /* Literal.String.Regex */
+.highlight .s1 {
+  color: #032f62;
+} /* Literal.String.Single */
+.highlight .ss {
+  color: #032f62;
+} /* Literal.String.Symbol */
+.highlight .bp {
+  color: #005cc5;
+} /* Name.Builtin.Pseudo */
+.highlight .vc {
+  color: #e36209;
+} /* Name.Variable.Class */
+.highlight .vg {
+  color: #e36209;
+} /* Name.Variable.Global */
+.highlight .vi {
+  color: #e36209;
+} /* Name.Variable.Instance */
+.highlight .il {
+  color: #005cc5;
+} /* Literal.Number.Integer.Long */
+
+/* Additional Rouge token classes that may be used */
+.highlight .token {
+  color: #5670a0;
+}
+.highlight .token.list {
+  color: #546e9f;
+}
+.highlight .token.punctuation {
+  color: #3e8dad;
+}
+.highlight .token.list.punctuation {
+  color: #e05b78;
+}
+.highlight .token.content {
+  padding: 0;
+}
+
 /* Nested lists in page content */
-ul ul, ol ol, ul ol, ol ul {
+ul ul,
+ol ol,
+ul ol,
+ol ul {
   padding-left: 1.5em;
   margin-top: 0.25em;
 }
@@ -410,12 +665,14 @@ ul ul, ol ol, ul ol, ol ul {
     display: flex;
   }
 
-  .main-toc, .sidebar {
+  .main-toc,
+  .sidebar {
     transform: translateX(-100%);
     z-index: 175;
   }
 
-  .main-toc.mobile-open, .sidebar.mobile-open {
+  .main-toc.mobile-open,
+  .sidebar.mobile-open {
     transform: translateX(0);
   }
 
@@ -428,125 +685,7 @@ ul ul, ol ol, ul ol, ol ul {
   }
 }
 
-</style><style>
-  .highlight .highlight table td { padding: 5px; }
-.highlight .highlight table pre { margin: 0; }
-.highlight .highlight, .highlight .w {
-  color: #24292f;
-  background-color: #f6f8fa;
-}
-.highlight .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv {
-  color: #cf222e;
-}
-.highlight .highlight .gr {
-  color: #f6f8fa;
-}
-.highlight .highlight .gd {
-  color: #82071e;
-  background-color: #ffebe9;
-}
-.highlight .highlight .nb {
-  color: #953800;
-}
-.highlight .highlight .nc {
-  color: #953800;
-}
-.highlight .highlight .no {
-  color: #953800;
-}
-.highlight .highlight .nn {
-  color: #953800;
-}
-.highlight .highlight .sr {
-  color: #116329;
-}
-.highlight .highlight .na {
-  color: #116329;
-}
-.highlight .highlight .nt {
-  color: #116329;
-}
-.highlight .highlight .gi {
-  color: #116329;
-  background-color: #dafbe1;
-}
-.highlight .highlight .ges {
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .highlight .kc {
-  color: #0550ae;
-}
-.highlight .highlight .l, .highlight .ld, .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
-  color: #0550ae;
-}
-.highlight .highlight .sb {
-  color: #0550ae;
-}
-.highlight .highlight .bp {
-  color: #0550ae;
-}
-.highlight .highlight .ne {
-  color: #0550ae;
-}
-.highlight .highlight .nl {
-  color: #0550ae;
-}
-.highlight .highlight .py {
-  color: #0550ae;
-}
-.highlight .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
-  color: #0550ae;
-}
-.highlight .highlight .o, .highlight .ow {
-  color: #0550ae;
-}
-.highlight .highlight .gh {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .gu {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .s, .highlight .sa, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss {
-  color: #0a3069;
-}
-.highlight .highlight .nd {
-  color: #8250df;
-}
-.highlight .highlight .nf, .highlight .fm {
-  color: #8250df;
-}
-.highlight .highlight .err {
-  color: #f6f8fa;
-  background-color: #82071e;
-}
-.highlight .highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs {
-  color: #6e7781;
-}
-.highlight .highlight .gl {
-  color: #6e7781;
-}
-.highlight .highlight .gt {
-  color: #6e7781;
-}
-.highlight .highlight .ni {
-  color: #24292f;
-}
-.highlight .highlight .si {
-  color: #24292f;
-}
-.highlight .highlight .ge {
-  color: #24292f;
-  font-style: italic;
-}
-.highlight .highlight .gs {
-  color: #24292f;
-  font-weight: bold;
-}
-</style>
-</head>
+</style></head>
 
   <body>
 <div class="floating-toc" id="floating-toc">
@@ -594,14 +733,14 @@ ul ul, ol ol, ul ol, ol ul {
       Processor compatibility modes:
     </p>
 
-<pre lang="c"><code>typedef enum {
-    APEX_MODE_COMMONMARK = 0,      /* Pure CommonMark spec */
-    APEX_MODE_GFM = 1,              /* GitHub Flavored Markdown */
-    APEX_MODE_MULTIMARKDOWN = 2,    /* MultiMarkdown compatibility */
-    APEX_MODE_KRAMDOWN = 3,         /* Kramdown compatibility */
-    APEX_MODE_UNIFIED = 4           /* All features enabled */
-} apex_mode_t;
-</code>  </pre>
+<pre><code class="highlight language-c"><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
+    <span class="n">APEX_MODE_COMMONMARK</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>      <span class="cm">/* Pure CommonMark spec */</span>
+    <span class="n">APEX_MODE_GFM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>              <span class="cm">/* GitHub Flavored Markdown */</span>
+    <span class="n">APEX_MODE_MULTIMARKDOWN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>    <span class="cm">/* MultiMarkdown compatibility */</span>
+    <span class="n">APEX_MODE_KRAMDOWN</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>         <span class="cm">/* Kramdown compatibility */</span>
+    <span class="n">APEX_MODE_UNIFIED</span> <span class="o">=</span> <span class="mi">4</span>           <span class="cm">/* All features enabled */</span>
+<span class="p">}</span> <span class="n">apex_mode_t</span><span class="p">;</span>
+</code></pre>
 
   <h3 id="apexoptions">
     apex_options
@@ -611,59 +750,59 @@ ul ul, ol ol, ul ol, ol ul {
     Configuration structure for processing:
   </p>
 
-<pre lang="c"><code>typedef struct {
-    apex_mode_t mode;
+<pre><code class="highlight language-c"><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">apex_mode_t</span> <span class="n">mode</span><span class="p">;</span>
 
-    /* Feature flags */
-    bool enable_tables;
-    bool enable_footnotes;
-    bool enable_definition_lists;
-    bool enable_smart_typography;
-    bool enable_math;
-    bool enable_critic_markup;
-    bool enable_wiki_links;
-    bool enable_task_lists;
-    bool enable_attributes;
-    bool enable_callouts;
-    bool enable_marked_extensions;
+    <span class="cm">/* Feature flags */</span>
+    <span class="n">bool</span> <span class="n">enable_tables</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_footnotes</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_definition_lists</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_smart_typography</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_math</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_critic_markup</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_wiki_links</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_task_lists</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_attributes</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_callouts</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_marked_extensions</span><span class="p">;</span>
 
-    /* Critic markup mode */
-    int critic_mode;  /* 0=accept, 1=reject, 2=markup (default) */
+    <span class="cm">/* Critic markup mode */</span>
+    <span class="kt">int</span> <span class="n">critic_mode</span><span class="p">;</span>  <span class="cm">/* 0=accept, 1=reject, 2=markup (default) */</span>
 
-    /* Metadata handling */
-    bool strip_metadata;
-    bool enable_metadata_variables;
+    <span class="cm">/* Metadata handling */</span>
+    <span class="n">bool</span> <span class="n">strip_metadata</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">enable_metadata_variables</span><span class="p">;</span>
 
-    /* File inclusion */
-    bool enable_file_includes;
-    int max_include_depth;
-    const char *base_directory;
+    <span class="cm">/* File inclusion */</span>
+    <span class="n">bool</span> <span class="n">enable_file_includes</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">max_include_depth</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">base_directory</span><span class="p">;</span>
 
-    /* Output options */
-    bool unsafe;  /* Allow raw HTML */
-    bool validate_utf8;
-    bool github_pre_lang;
-    bool standalone;  /* Generate complete HTML document */
-    bool pretty;      /* Pretty-print HTML */
-    const char *stylesheet_path;
-    const char *document_title;
+    <span class="cm">/* Output options */</span>
+    <span class="n">bool</span> <span class="n">unsafe</span><span class="p">;</span>  <span class="cm">/* Allow raw HTML */</span>
+    <span class="n">bool</span> <span class="n">validate_utf8</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">github_pre_lang</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">standalone</span><span class="p">;</span>  <span class="cm">/* Generate complete HTML document */</span>
+    <span class="n">bool</span> <span class="n">pretty</span><span class="p">;</span>      <span class="cm">/* Pretty-print HTML */</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">stylesheet_path</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">document_title</span><span class="p">;</span>
 
-    /* Line break handling */
-    bool hardbreaks;  /* Treat newlines as hard breaks */
-    bool nobreaks;    /* Render soft breaks as spaces */
+    <span class="cm">/* Line break handling */</span>
+    <span class="n">bool</span> <span class="n">hardbreaks</span><span class="p">;</span>  <span class="cm">/* Treat newlines as hard breaks */</span>
+    <span class="n">bool</span> <span class="n">nobreaks</span><span class="p">;</span>    <span class="cm">/* Render soft breaks as spaces */</span>
 
-    /* Header ID generation */
-    bool generate_header_ids;
-    bool header_anchors;  /* Generate &lt;a&gt; tags instead of id attributes */
-    int id_format;  /* 0=GFM, 1=MMD, 2=Kramdown */
+    <span class="cm">/* Header ID generation */</span>
+    <span class="n">bool</span> <span class="n">generate_header_ids</span><span class="p">;</span>
+    <span class="n">bool</span> <span class="n">header_anchors</span><span class="p">;</span>  <span class="cm">/* Generate &lt;a&gt; tags instead of id attributes */</span>
+    <span class="kt">int</span> <span class="n">id_format</span><span class="p">;</span>  <span class="cm">/* 0=GFM, 1=MMD, 2=Kramdown */</span>
 
-    /* Table options */
-    bool relaxed_tables;
+    <span class="cm">/* Table options */</span>
+    <span class="n">bool</span> <span class="n">relaxed_tables</span><span class="p">;</span>
 
-    /* List options */
-    bool allow_mixed_list_markers;  /* Allow mixed list markers at same level (inherit type from first item) */
-    bool allow_alpha_lists;  /* Support alpha list markers (a., b., c. and A., B., C.) */
-} apex_options;
+    <span class="cm">/* List options */</span>
+    <span class="n">bool</span> <span class="n">allow_mixed_list_markers</span><span class="p">;</span>  <span class="cm">/* Allow mixed list markers at same level (inherit type from first item) */</span>
+    <span class="n">bool</span> <span class="n">allow_alpha_lists</span><span class="p">;</span>  <span class="cm">/* Support alpha list markers (a., b., c. and A., B., C.) */</span>
+<span class="p">}</span> <span class="n">apex_options</span><span class="p">;</span>
 </code></pre>
 
 <h2 id="core-functions">
@@ -678,7 +817,7 @@ ul ul, ol ol, ul ol, ol ul {
   Get default options with all features enabled (unified mode).
 </p>
 
-<pre lang="c"><code>apex_options apex_options_default(void);
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="nf">apex_options_default</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -689,9 +828,9 @@ ul ul, ol ol, ul ol, ol ul {
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>apex_options opts = apex_options_default();
-opts.enable_math = true;
-opts.pretty = true;
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_default</span><span class="p">();</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">enable_math</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 </code></pre>
 
 <h3 id="apexoptionsformode">
@@ -702,7 +841,7 @@ opts.pretty = true;
   Get options configured for a specific processor mode.
 </p>
 
-<pre lang="c"><code>apex_options apex_options_for_mode(apex_mode_t mode);
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="nf">apex_options_for_mode</span><span class="p">(</span><span class="n">apex_mode_t</span> <span class="n">mode</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -725,8 +864,8 @@ opts.pretty = true;
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>apex_options gfm_opts = apex_options_for_mode(APEX_MODE_GFM);
-apex_options mmd_opts = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="n">gfm_opts</span> <span class="o">=</span> <span class="n">apex_options_for_mode</span><span class="p">(</span><span class="n">APEX_MODE_GFM</span><span class="p">);</span>
+<span class="n">apex_options</span> <span class="n">mmd_opts</span> <span class="o">=</span> <span class="n">apex_options_for_mode</span><span class="p">(</span><span class="n">APEX_MODE_MULTIMARKDOWN</span><span class="p">);</span>
 </code></pre>
 
 <h3 id="apexmarkdowntohtml">
@@ -737,8 +876,8 @@ apex_options mmd_opts = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
   Main conversion function - converts Markdown to HTML.
 </p>
 
-<pre lang="c"><code>char *apex_markdown_to_html(const char *markdown, size_t len,
-                            const apex_options *options);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="nf">apex_markdown_to_html</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">markdown</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span>
+                            <span class="k">const</span> <span class="n">apex_options</span> <span class="o">*</span><span class="n">options</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -769,14 +908,14 @@ apex_options mmd_opts = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>const char *markdown = &quot;# Hello\n\nThis is **bold**.&quot;;
-apex_options opts = apex_options_default();
-char *html = apex_markdown_to_html(markdown, strlen(markdown), &amp;opts);
+<pre><code class="highlight language-c"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">markdown</span> <span class="o">=</span> <span class="s">"# Hello</span><span class="se">\n\n</span><span class="s">This is **bold**."</span><span class="p">;</span>
+<span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_default</span><span class="p">();</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">markdown</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
 
-if (html) {
-    printf(&quot;%s\n&quot;, html);
-    apex_free_string(html);
-}
+<span class="k">if</span> <span class="p">(</span><span class="n">html</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">html</span><span class="p">);</span>
+    <span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre>
 
 <h3 id="apexfreestring">
@@ -787,7 +926,7 @@ if (html) {
   Free a string allocated by Apex.
 </p>
 
-<pre lang="c"><code>void apex_free_string(char *str);
+<pre><code class="highlight language-c"><span class="kt">void</span> <span class="nf">apex_free_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -806,9 +945,9 @@ if (html) {
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, NULL);
- Use html...
-apex_free_string(html);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ <span class="n">Use</span> <span class="n">html</span><span class="p">...</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
 </code></pre>
 
 <h3 id="apexwraphtmldocument">
@@ -819,8 +958,8 @@ apex_free_string(html);
   Wrap HTML content in a complete HTML5 document structure.
 </p>
 
-<pre lang="c"><code>char *apex_wrap_html_document(const char *content, const char *title,
-                              const char *stylesheet_path);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="nf">apex_wrap_html_document</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">content</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">title</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">stylesheet_path</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -851,11 +990,11 @@ apex_free_string(html);
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>char *fragment = apex_markdown_to_html(markdown, len, &amp;opts);
-char *document = apex_wrap_html_document(fragment, &quot;My Document&quot;, &quot;style.css&quot;);
-apex_free_string(fragment);
- Use document...
-apex_free_string(document);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="n">fragment</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">document</span> <span class="o">=</span> <span class="n">apex_wrap_html_document</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="s">"My Document"</span><span class="p">,</span> <span class="s">"style.css"</span><span class="p">);</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">fragment</span><span class="p">);</span>
+ <span class="n">Use</span> <span class="n">document</span><span class="p">...</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">document</span><span class="p">);</span>
 </code></pre>
 
 <h3 id="apexprettyprinthtml">
@@ -866,7 +1005,7 @@ apex_free_string(document);
   Pretty-print HTML with proper indentation.
 </p>
 
-<pre lang="c"><code>char *apex_pretty_print_html(const char *html);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="nf">apex_pretty_print_html</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">html</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -889,11 +1028,11 @@ apex_free_string(document);
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, &amp;opts);
-char *pretty = apex_pretty_print_html(html);
-apex_free_string(html);
- Use pretty...
-apex_free_string(pretty);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">pretty</span> <span class="o">=</span> <span class="n">apex_pretty_print_html</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+ <span class="n">Use</span> <span class="n">pretty</span><span class="p">...</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">pretty</span><span class="p">);</span>
 </code></pre>
 
 <h2 id="version-functions">
@@ -908,7 +1047,7 @@ apex_free_string(pretty);
   Get version string.
 </p>
 
-<pre lang="c"><code>const char *apex_version_string(void);
+<pre><code class="highlight language-c"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">apex_version_string</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -923,9 +1062,9 @@ apex_free_string(pretty);
   Get individual version components.
 </p>
 
-<pre lang="c"><code>int apex_version_major(void);
-int apex_version_minor(void);
-int apex_version_patch(void);
+<pre><code class="highlight language-c"><span class="kt">int</span> <span class="nf">apex_version_major</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">apex_version_minor</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">apex_version_patch</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
 </code></pre>
 
 <p>
@@ -944,23 +1083,23 @@ int apex_version_patch(void);
   When <code>allow_mixed_list_markers</code> is enabled, lists with different marker types at the same indentation level will inherit the type from the first item. This is enabled by default in <strong>MultiMarkdown</strong> and <strong>Unified</strong> modes.
 </p>
 
-<pre lang="c"><code>apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
- opts.allow_mixed_list_markers is true by default
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_for_mode</span><span class="p">(</span><span class="n">APEX_MODE_UNIFIED</span><span class="p">);</span>
+ <span class="n">opts</span><span class="p">.</span><span class="n">allow_mixed_list_markers</span> <span class="n">is</span> <span class="nb">true</span> <span class="n">by</span> <span class="k">default</span>
 
- To enable in other modes:
-opts.allow_mixed_list_markers = true;
+ <span class="n">To</span> <span class="n">enable</span> <span class="n">in</span> <span class="n">other</span> <span class="n">modes</span><span class="o">:</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">allow_mixed_list_markers</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 
- To disable in unified/multimarkdown modes:
-opts.allow_mixed_list_markers = false;
+ <span class="n">To</span> <span class="n">disable</span> <span class="n">in</span> <span class="n">unified</span><span class="o">/</span><span class="n">multimarkdown</span> <span class="n">modes</span><span class="o">:</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">allow_mixed_list_markers</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 </code></pre>
 
 <p>
 <strong>  Example markdown:</strong>
 </p>
 
-<pre lang="markdown"><code>1. First numbered item
-* Second item (becomes numbered)
-* Third item (becomes numbered)
+<pre><code class="highlight language-markdown"><span class="p">1.</span> First numbered item
+<span class="p">*</span> Second item (becomes numbered)
+<span class="p">*</span> Third item (becomes numbered)
 </code></pre>
 
 <h3 id="alpha-lists">
@@ -971,25 +1110,25 @@ opts.allow_mixed_list_markers = false;
   When <code>allow_alpha_lists</code> is enabled, alphabetic markers (<code>a.</code>, <code>b.</code>, <code>c.</code> for lower-alpha and <code>A.</code>, <code>B.</code>, <code>C.</code> for upper-alpha) are converted to HTML lists with appropriate <code>list-style-type</code> CSS. This is enabled by default in <strong>Unified</strong> mode only.
 </p>
 
-<pre lang="c"><code>apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
- opts.allow_alpha_lists is true by default
+<pre><code class="highlight language-c"><span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_for_mode</span><span class="p">(</span><span class="n">APEX_MODE_UNIFIED</span><span class="p">);</span>
+ <span class="n">opts</span><span class="p">.</span><span class="n">allow_alpha_lists</span> <span class="n">is</span> <span class="nb">true</span> <span class="n">by</span> <span class="k">default</span>
 
- To enable in other modes:
-opts.allow_alpha_lists = true;
+ <span class="n">To</span> <span class="n">enable</span> <span class="n">in</span> <span class="n">other</span> <span class="n">modes</span><span class="o">:</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">allow_alpha_lists</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 
- To disable in unified mode:
-opts.allow_alpha_lists = false;
+ <span class="n">To</span> <span class="n">disable</span> <span class="n">in</span> <span class="n">unified</span> <span class="n">mode</span><span class="o">:</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">allow_alpha_lists</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 </code></pre>
 
 <p>
 <strong>  Example markdown:</strong>
 </p>
 
-<pre lang="markdown"><code>[apex-alpha-list:lower]
-
-1.  First item
-2.  Second item
-3.  Third item
+<pre><code class="highlight language-markdown">[apex-alpha-list:lower]
+<span class="p">
+1.</span>  First item
+<span class="p">2.</span>  Second item
+<span class="p">3.</span>  Third item
 </code></pre>
 
 <p>
@@ -1180,50 +1319,50 @@ opts.allow_alpha_lists = false;
   Complete Example
 </h2>
 
-<pre lang="c"><code>#include &lt;apex/apex.h&gt;
-#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
+<pre><code class="highlight language-c"><span class="cp">#include</span> <span class="cpf">&lt;apex/apex.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">markdown</span> <span class="o">=</span>
+        <span class="s">"---</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"title: Test Document</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"author: John Doe</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"---</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"# [%title]</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"By [%author]</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"This has **bold** and a [[WikiLink]].</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"Math: $E = mc^2$</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"1. Mixed markers</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"* Second item</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"a. Alpha list</span><span class="se">\n</span><span class="s">"</span>
+        <span class="s">"b. Second alpha</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
 
-int main() {
-    const char *markdown =
-        &quot;---\n&quot;
-        &quot;title: Test Document\n&quot;
-        &quot;author: John Doe\n&quot;
-        &quot;---\n&quot;
-        &quot;\n&quot;
-        &quot;# [%title]\n&quot;
-        &quot;\n&quot;
-        &quot;By [%author]\n&quot;
-        &quot;\n&quot;
-        &quot;This has **bold** and a [[WikiLink]].\n&quot;
-        &quot;\n&quot;
-        &quot;Math: $E = mc^2$\n&quot;
-        &quot;\n&quot;
-        &quot;1. Mixed markers\n&quot;
-        &quot;* Second item\n&quot;
-        &quot;\n&quot;
-        &quot;a. Alpha list\n&quot;
-        &quot;b. Second alpha\n&quot;;
+    <span class="c1">// Use unified mode with all features</span>
+    <span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_for_mode</span><span class="p">(</span><span class="n">APEX_MODE_UNIFIED</span><span class="p">);</span>
+    <span class="c1">// Mixed markers and alpha lists are enabled by default in unified mode</span>
+    <span class="n">opts</span><span class="p">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">opts</span><span class="p">.</span><span class="n">standalone</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">opts</span><span class="p">.</span><span class="n">document_title</span> <span class="o">=</span> <span class="s">"Test Document"</span><span class="p">;</span>
 
-    // Use unified mode with all features
-    apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
-    // Mixed markers and alpha lists are enabled by default in unified mode
-    opts.pretty = true;
-    opts.standalone = true;
-    opts.document_title = &quot;Test Document&quot;;
+    <span class="c1">// Convert to HTML</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">markdown</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
 
-    // Convert to HTML
-    char *html = apex_markdown_to_html(markdown, strlen(markdown), &amp;opts);
-
-    if (html) {
-        printf(&quot;%s\n&quot;, html);
-        apex_free_string(html);
-        return 0;
-    } else {
-        fprintf(stderr, &quot;Conversion failed\n&quot;);
-        return 1;
-    }
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">html</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">html</span><span class="p">);</span>
+        <span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Conversion failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="compiling-and-linking">
@@ -1234,31 +1373,31 @@ int main() {
   With CMake
 </h3>
 
-<pre lang="cmake"><code># In your CMakeLists.txt
-find_package(apex REQUIRED)
-target_link_libraries(your_app apex)
+<pre><code class="highlight language-cmake"><span class="c1"># In your CMakeLists.txt</span>
+<span class="nb">find_package</span><span class="p">(</span>apex REQUIRED<span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>your_app apex<span class="p">)</span>
 </code></pre>
 
 <h3 id="manual-compilation">
   Manual Compilation
 </h3>
 
-<pre lang="bash"><code># Compile
-gcc -c -I/usr/local/include your_app.c
+<pre><code class="highlight language-bash"><span class="c"># Compile</span>
+gcc <span class="nt">-c</span> <span class="nt">-I</span>/usr/local/include your_app.c
 
-# Link
-gcc your_app.o -L/usr/local/lib -lapex -o your_app
+<span class="c"># Link</span>
+gcc your_app.o <span class="nt">-L</span>/usr/local/lib <span class="nt">-lapex</span> <span class="nt">-o</span> your_app
 
-# Run (may need library path)
-DYLD_LIBRARY_PATH=/usr/local/lib ./your_app  # macOS
-LD_LIBRARY_PATH=/usr/local/lib ./your_app    # Linux
+<span class="c"># Run (may need library path)</span>
+<span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib ./your_app  <span class="c"># macOS</span>
+<span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib ./your_app    <span class="c"># Linux</span>
 </code></pre>
 
 <h3 id="static-linking">
   Static Linking
 </h3>
 
-<pre lang="bash"><code>gcc your_app.c -I/usr/local/include -L/usr/local/lib -lapex -static -o your_app
+<pre><code class="highlight language-bash">gcc your_app.c <span class="nt">-I</span>/usr/local/include <span class="nt">-L</span>/usr/local/lib <span class="nt">-lapex</span> <span class="nt">-static</span> <span class="nt">-o</span> your_app
 </code></pre>
 
 <h2 id="thread-safety">
@@ -1289,14 +1428,14 @@ LD_LIBRARY_PATH=/usr/local/lib ./your_app    # Linux
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code> Thread-safe: each thread has its own options
-void *thread_func(void *arg) {
-    apex_options opts = apex_options_default();
-    char *html = apex_markdown_to_html(markdown, len, &amp;opts);
-    // Use html...
-    apex_free_string(html);
-    return NULL;
-}
+<pre><code class="highlight language-c"> <span class="n">Thread</span><span class="o">-</span><span class="n">safe</span><span class="o">:</span> <span class="n">each</span> <span class="kr">thread</span> <span class="n">has</span> <span class="n">its</span> <span class="n">own</span> <span class="n">options</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">thread_func</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_default</span><span class="p">();</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
+    <span class="c1">// Use html...</span>
+    <span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="memory-management">
@@ -1363,13 +1502,13 @@ void *thread_func(void *arg) {
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, &amp;opts);
-if (!html) {
-    fprintf(stderr, &quot;Conversion failed\n&quot;);
-    return 1;
-}
- Use html...
-apex_free_string(html);
+<pre><code class="highlight language-c"><span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">html</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Conversion failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+ <span class="n">Use</span> <span class="n">html</span><span class="p">...</span>
+<span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
 </code></pre>
 
 <h2 id="performance-tips">
@@ -1400,13 +1539,13 @@ apex_free_string(html);
 <strong>  Example:</strong>
 </p>
 
-<pre lang="c"><code> Good: reuse options
-apex_options opts = apex_options_default();
-for (int i = 0; i &lt; count; i++) {
-    char *html = apex_markdown_to_html(docs[i], lens[i], &amp;opts);
-    // Process...
-    apex_free_string(html);
-}
+<pre><code class="highlight language-c"> <span class="nl">Good:</span> <span class="n">reuse</span> <span class="n">options</span>
+<span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_default</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">docs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lens</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
+    <span class="c1">// Process...</span>
+    <span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="related">

@@ -43,14 +43,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 17px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   line-height: 1.65;
   color: #1e293b;
   background-color: #fff;
 }
 
 /* Sidebar / Main TOC - wider on larger screens */
-.main-toc, .sidebar {
+.main-toc,
+.sidebar {
   position: fixed;
   left: 0;
   top: 0;
@@ -70,24 +72,28 @@ body {
   transition: transform 0.3s ease;
 }
 
-.main-toc ul, .sidebar ul {
+.main-toc ul,
+.sidebar ul {
   list-style: none;
   padding-left: 0;
   margin: 0;
   padding-bottom: 80px;
 }
 
-.main-toc ul::after, .sidebar ul::after {
-  content: '';
+.main-toc ul::after,
+.sidebar ul::after {
+  content: "";
   display: block;
   height: 80px;
 }
 
-.main-toc li, .sidebar li {
+.main-toc li,
+.sidebar li {
   margin: 0.25em 0;
 }
 
-.main-toc a, .sidebar a {
+.main-toc a,
+.sidebar a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   display: block;
@@ -99,7 +105,8 @@ body {
   text-overflow: ellipsis;
 }
 
-.main-toc a:hover, .sidebar a:hover {
+.main-toc a:hover,
+.sidebar a:hover {
   background: #334155;
   color: #fff;
 }
@@ -146,7 +153,9 @@ body {
 
 /* Move hamburger to the right of the sidebar when menu is open */
 .hamburger-menu.active {
-  left: calc(250px + 12px); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
+  left: calc(
+    250px + 12px
+  ); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
 }
 
 .hamburger-menu.active {
@@ -154,11 +163,11 @@ body {
 }
 
 .hamburger-menu::before {
-  content: '☰';
+  content: "☰";
 }
 
 .hamburger-menu.active::before {
-  content: '✕';
+  content: "✕";
 }
 
 /* Mobile menu overlay */
@@ -356,7 +365,7 @@ code {
   background: #f0f0f0;
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9em;
   margin: 0 0.1em;
 }
@@ -375,8 +384,254 @@ pre code {
   margin: 0;
 }
 
+/* Rouge syntax highlighting - GitHub theme, scoped to .highlight containers */
+.highlight {
+  color: #24292e;
+}
+
+.highlight .c {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment */
+.highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+} /* Error */
+.highlight .k {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword */
+.highlight .l {
+  color: #032f62;
+} /* Literal */
+.highlight .n {
+  color: #24292e;
+} /* Name */
+.highlight .o {
+  color: #d73a49;
+} /* Operator */
+.highlight .p {
+  color: #24292e;
+} /* Punctuation */
+.highlight .cm {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Multiline */
+.highlight .cp {
+  color: #6a737d;
+  font-weight: bold;
+} /* Comment.Preproc */
+.highlight .c1 {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Single */
+.highlight .cs {
+  color: #6a737d;
+  font-weight: bold;
+  font-style: italic;
+} /* Comment.Special */
+.highlight .gd {
+  color: #24292e;
+  background-color: #ffeef0;
+} /* Generic.Deleted */
+.highlight .ge {
+  color: #24292e;
+  font-style: italic;
+} /* Generic.Emph */
+.highlight .gr {
+  color: #aa0000;
+} /* Generic.Error */
+.highlight .gh {
+  color: #999999;
+  font-weight: bold;
+} /* Generic.Heading */
+.highlight .gi {
+  color: #24292e;
+  background-color: #f0fff4;
+} /* Generic.Inserted */
+.highlight .go {
+  color: #888888;
+} /* Generic.Output */
+.highlight .gp {
+  color: #555555;
+} /* Generic.Prompt */
+.highlight .gs {
+  font-weight: bold;
+} /* Generic.Strong */
+.highlight .gu {
+  color: #aaaaaa;
+} /* Generic.Subheading */
+.highlight .gt {
+  color: #aa0000;
+} /* Generic.Traceback */
+.highlight .kc {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Constant */
+.highlight .kd {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Declaration */
+.highlight .kn {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Namespace */
+.highlight .kp {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Pseudo */
+.highlight .kr {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Reserved */
+.highlight .kt {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Type */
+.highlight .ld {
+  color: #032f62;
+} /* Literal.Date */
+.highlight .m {
+  color: #005cc5;
+} /* Literal.Number */
+.highlight .s {
+  color: #032f62;
+} /* Literal.String */
+.highlight .na {
+  color: #6f42c1;
+} /* Name.Attribute */
+.highlight .nb {
+  color: #005cc5;
+} /* Name.Builtin */
+.highlight .nc {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Class */
+.highlight .no {
+  color: #005cc5;
+} /* Name.Constant */
+.highlight .nd {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Decorator */
+.highlight .ni {
+  color: #800080;
+} /* Name.Entity */
+.highlight .ne {
+  color: #990000;
+  font-weight: bold;
+} /* Name.Exception */
+.highlight .nf {
+  color: #6f42c1;
+} /* Name.Function */
+.highlight .nl {
+  color: #990000;
+} /* Name.Label */
+.highlight .nn {
+  color: #555555;
+} /* Name.Namespace */
+.highlight .nx {
+  color: #6f42c1;
+} /* Name.Other */
+.highlight .py {
+  color: #990000;
+} /* Name.Property */
+.highlight .nt {
+  color: #22863a;
+} /* Name.Tag */
+.highlight .nv {
+  color: #e36209;
+} /* Name.Variable */
+.highlight .ow {
+  color: #d73a49;
+  font-weight: bold;
+} /* Operator.Word */
+.highlight .w {
+  color: #bbbbbb;
+} /* Text.Whitespace */
+.highlight .mf {
+  color: #005cc5;
+} /* Literal.Number.Float */
+.highlight .mh {
+  color: #005cc5;
+} /* Literal.Number.Hex */
+.highlight .mi {
+  color: #005cc5;
+} /* Literal.Number.Integer */
+.highlight .mo {
+  color: #005cc5;
+} /* Literal.Number.Oct */
+.highlight .sb {
+  color: #032f62;
+} /* Literal.String.Backtick */
+.highlight .sc {
+  color: #032f62;
+} /* Literal.String.Char */
+.highlight .sd {
+  color: #032f62;
+} /* Literal.String.Doc */
+.highlight .s2 {
+  color: #032f62;
+} /* Literal.String.Double */
+.highlight .se {
+  color: #032f62;
+} /* Literal.String.Escape */
+.highlight .sh {
+  color: #032f62;
+} /* Literal.String.Heredoc */
+.highlight .si {
+  color: #032f62;
+} /* Literal.String.Interpol */
+.highlight .sx {
+  color: #032f62;
+} /* Literal.String.Other */
+.highlight .sr {
+  color: #22863a;
+} /* Literal.String.Regex */
+.highlight .s1 {
+  color: #032f62;
+} /* Literal.String.Single */
+.highlight .ss {
+  color: #032f62;
+} /* Literal.String.Symbol */
+.highlight .bp {
+  color: #005cc5;
+} /* Name.Builtin.Pseudo */
+.highlight .vc {
+  color: #e36209;
+} /* Name.Variable.Class */
+.highlight .vg {
+  color: #e36209;
+} /* Name.Variable.Global */
+.highlight .vi {
+  color: #e36209;
+} /* Name.Variable.Instance */
+.highlight .il {
+  color: #005cc5;
+} /* Literal.Number.Integer.Long */
+
+/* Additional Rouge token classes that may be used */
+.highlight .token {
+  color: #5670a0;
+}
+.highlight .token.list {
+  color: #546e9f;
+}
+.highlight .token.punctuation {
+  color: #3e8dad;
+}
+.highlight .token.list.punctuation {
+  color: #e05b78;
+}
+.highlight .token.content {
+  padding: 0;
+}
+
 /* Nested lists in page content */
-ul ul, ol ol, ul ol, ol ul {
+ul ul,
+ol ol,
+ul ol,
+ol ul {
   padding-left: 1.5em;
   margin-top: 0.25em;
 }
@@ -410,12 +665,14 @@ ul ul, ol ol, ul ol, ol ul {
     display: flex;
   }
 
-  .main-toc, .sidebar {
+  .main-toc,
+  .sidebar {
     transform: translateX(-100%);
     z-index: 175;
   }
 
-  .main-toc.mobile-open, .sidebar.mobile-open {
+  .main-toc.mobile-open,
+  .sidebar.mobile-open {
     transform: translateX(0);
   }
 
@@ -428,125 +685,7 @@ ul ul, ol ol, ul ol, ol ul {
   }
 }
 
-</style><style>
-  .highlight .highlight table td { padding: 5px; }
-.highlight .highlight table pre { margin: 0; }
-.highlight .highlight, .highlight .w {
-  color: #24292f;
-  background-color: #f6f8fa;
-}
-.highlight .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv {
-  color: #cf222e;
-}
-.highlight .highlight .gr {
-  color: #f6f8fa;
-}
-.highlight .highlight .gd {
-  color: #82071e;
-  background-color: #ffebe9;
-}
-.highlight .highlight .nb {
-  color: #953800;
-}
-.highlight .highlight .nc {
-  color: #953800;
-}
-.highlight .highlight .no {
-  color: #953800;
-}
-.highlight .highlight .nn {
-  color: #953800;
-}
-.highlight .highlight .sr {
-  color: #116329;
-}
-.highlight .highlight .na {
-  color: #116329;
-}
-.highlight .highlight .nt {
-  color: #116329;
-}
-.highlight .highlight .gi {
-  color: #116329;
-  background-color: #dafbe1;
-}
-.highlight .highlight .ges {
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .highlight .kc {
-  color: #0550ae;
-}
-.highlight .highlight .l, .highlight .ld, .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
-  color: #0550ae;
-}
-.highlight .highlight .sb {
-  color: #0550ae;
-}
-.highlight .highlight .bp {
-  color: #0550ae;
-}
-.highlight .highlight .ne {
-  color: #0550ae;
-}
-.highlight .highlight .nl {
-  color: #0550ae;
-}
-.highlight .highlight .py {
-  color: #0550ae;
-}
-.highlight .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
-  color: #0550ae;
-}
-.highlight .highlight .o, .highlight .ow {
-  color: #0550ae;
-}
-.highlight .highlight .gh {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .gu {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .s, .highlight .sa, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss {
-  color: #0a3069;
-}
-.highlight .highlight .nd {
-  color: #8250df;
-}
-.highlight .highlight .nf, .highlight .fm {
-  color: #8250df;
-}
-.highlight .highlight .err {
-  color: #f6f8fa;
-  background-color: #82071e;
-}
-.highlight .highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs {
-  color: #6e7781;
-}
-.highlight .highlight .gl {
-  color: #6e7781;
-}
-.highlight .highlight .gt {
-  color: #6e7781;
-}
-.highlight .highlight .ni {
-  color: #24292f;
-}
-.highlight .highlight .si {
-  color: #24292f;
-}
-.highlight .highlight .ge {
-  color: #24292f;
-  font-style: italic;
-}
-.highlight .highlight .gs {
-  color: #24292f;
-  font-weight: bold;
-}
-</style>
-</head>
+</style></head>
 
   <body>
 <div class="floating-toc" id="floating-toc">
@@ -666,21 +805,21 @@ ul ul, ol ol, ul ol, ol ul {
       Once added via SPM, simply import and use:
     </p>
 
-<pre lang="swift"><code>import Apex
+<pre><code class="highlight language-swift"><span class="kd">import</span> <span class="kt">Apex</span>
 
- Basic usage
-let markdown = &quot;# Hello World&quot;
-let html = markdown.apexHTML()
+ <span class="kt">Basic</span> <span class="n">usage</span>
+<span class="k">let</span> <span class="nv">markdown</span> <span class="o">=</span> <span class="s">"# Hello World"</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">()</span>
 
- With mode
-let html2 = markdown.apexHTML(mode: .gfm)
+ <span class="kt">With</span> <span class="n">mode</span>
+<span class="k">let</span> <span class="nv">html2</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">gfm</span><span class="p">)</span>
 
- With options
-var options = ApexOptions()
-options.pretty = true
-options.generateHeaderIDs = true
-let html3 = markdown.apexHTML(mode: .unified, options: options)
-</code>  </pre>
+ <span class="kt">With</span> <span class="n">options</span>
+<span class="k">var</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">ApexOptions</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">generateHeaderIDs</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">let</span> <span class="nv">html3</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
+</code></pre>
 
   <h3 id="platform-support">
     Platform Support
@@ -734,9 +873,9 @@ let html3 = markdown.apexHTML(mode: .unified, options: options)
     Apex can also be built as a framework for manual integration:
   </p>
 
-<pre lang="bash"><code>cd apex
-mkdir build &amp;&amp; cd build
-cmake -DBUILD_FRAMEWORK=ON ..
+<pre><code class="highlight language-bash"><span class="nb">cd </span>apex
+<span class="nb">mkdir </span>build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+cmake <span class="nt">-DBUILD_FRAMEWORK</span><span class="o">=</span>ON ..
 make
 </code></pre>
 
@@ -784,8 +923,8 @@ make
   If your project uses CMake:
 </p>
 
-<pre lang="cmake"><code>add_subdirectory(apex)
-target_link_libraries(your_app Apex)
+<pre><code class="highlight language-cmake"><span class="nb">add_subdirectory</span><span class="p">(</span>apex<span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>your_app Apex<span class="p">)</span>
 </code></pre>
 
 <h2 id="objective-c-wrapper">
@@ -816,69 +955,69 @@ target_link_libraries(your_app Apex)
   Basic Usage
 </h3>
 
-<pre lang="objective-c"><code>#import &quot;NSString+Apex.h&quot;
+<pre><code class="highlight language-objective-c"><span class="cp">#import "NSString+Apex.h"
+</span>
+ <span class="n">Convert</span> <span class="n">with</span> <span class="k">default</span> <span class="n">unified</span> <span class="n">mode</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span><span class="p">];</span>
 
- Convert with default unified mode
-NSString *html = [NSString convertWithApex:markdownText];
+ <span class="n">Convert</span> <span class="n">with</span> <span class="n">specific</span> <span class="n">mode</span> <span class="n">using</span> <span class="n">constants</span> <span class="p">(</span><span class="n">recommended</span><span class="p">)</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">gfmHtml</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeGFM</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">mmdHtml</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeMultiMarkdown</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">kramdownHtml</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeKramdown</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">commonmarkHtml</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeCommonmark</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">unifiedHtml</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeUnified</span><span class="p">];</span>
 
- Convert with specific mode using constants (recommended)
-NSString *gfmHtml = [NSString convertWithApex:markdownText mode:ApexModeGFM];
-NSString *mmdHtml = [NSString convertWithApex:markdownText mode:ApexModeMultiMarkdown];
-NSString *kramdownHtml = [NSString convertWithApex:markdownText mode:ApexModeKramdown];
-NSString *commonmarkHtml = [NSString convertWithApex:markdownText mode:ApexModeCommonmark];
-NSString *unifiedHtml = [NSString convertWithApex:markdownText mode:ApexModeUnified];
-
- String literals also work (for backward compatibility)
-NSString *gfmHtml2 = [NSString convertWithApex:markdownText mode:@&quot;gfm&quot;];
-NSString *mmdHtml2 = [NSString convertWithApex:markdownText mode:@&quot;multimarkdown&quot;];
+ <span class="n">String</span> <span class="n">literals</span> <span class="n">also</span> <span class="n">work</span> <span class="p">(</span><span class="k">for</span> <span class="n">backward</span> <span class="n">compatibility</span><span class="p">)</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">gfmHtml2</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="s">@"gfm"</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">mmdHtml2</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdownText</span> <span class="nf">mode</span><span class="p">:</span><span class="s">@"multimarkdown"</span><span class="p">];</span>
 </code></pre>
 
 <h3 id="api">
   API
 </h3>
 
-<pre lang="objective-c"><code> Mode constants
-extern NSString * const ApexModeCommonmark;
-extern NSString * const ApexModeGFM;
-extern NSString * const ApexModeMultiMarkdown;
-extern NSString * const ApexModeKramdown;
-extern NSString * const ApexModeUnified;
+<pre><code class="highlight language-objective-c"> <span class="n">Mode</span> <span class="n">constants</span>
+<span class="k">extern</span> <span class="n">NSString</span> <span class="o">*</span> <span class="k">const</span> <span class="n">ApexModeCommonmark</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">NSString</span> <span class="o">*</span> <span class="k">const</span> <span class="n">ApexModeGFM</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">NSString</span> <span class="o">*</span> <span class="k">const</span> <span class="n">ApexModeMultiMarkdown</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">NSString</span> <span class="o">*</span> <span class="k">const</span> <span class="n">ApexModeKramdown</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">NSString</span> <span class="o">*</span> <span class="k">const</span> <span class="n">ApexModeUnified</span><span class="p">;</span>
 
-@interface NSString (Apex)
+<span class="k">@interface</span> <span class="nc">NSString</span> <span class="p">(</span><span class="nl">Apex</span><span class="p">)</span>
 
- Basic conversion methods
-+ (NSString *)convertWithApex:(NSString *)markdown;
-+ (NSString *)convertWithApex:(NSString *)markdown mode:(NSString *)mode;
+ <span class="n">Basic</span> <span class="n">conversion</span> <span class="n">methods</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span> <span class="nf">mode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span><span class="p">;</span>
 
- Standalone HTML document generation
-+ (NSString *)convertWithApex:(NSString *)markdown
-                         mode:(NSString *)mode
-                   standalone:(BOOL)standalone
-                    stylesheet:(NSString * _Nullable)stylesheetPath
-                         title:(NSString * _Nullable)title;
+ <span class="n">Standalone</span> <span class="n">HTML</span> <span class="n">document</span> <span class="n">generation</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span>
+                         <span class="nf">mode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span>
+                   <span class="nf">standalone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">standalone</span>
+                    <span class="nf">stylesheet</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span> <span class="n">_Nullable</span><span class="p">)</span><span class="nv">stylesheetPath</span>
+                         <span class="nf">title</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span> <span class="n">_Nullable</span><span class="p">)</span><span class="nv">title</span><span class="p">;</span>
 
- Pretty-printed HTML output
-+ (NSString *)convertWithApex:(NSString *)markdown
-                         mode:(NSString *)mode
-                        pretty:(BOOL)pretty;
+ <span class="n">Pretty</span><span class="k">-</span><span class="n">printed</span> <span class="n">HTML</span> <span class="n">output</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span>
+                         <span class="nf">mode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span>
+                        <span class="nf">pretty</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">pretty</span><span class="p">;</span>
 
- Dictionary-based options configuration
-+ (NSString *)convertWithApex:(NSString *)markdown
-                         mode:(NSString *)mode
-                    options:(NSDictionary&lt;NSString *, id&gt; * _Nullable)options;
+ <span class="n">Dictionary</span><span class="k">-</span><span class="n">based</span> <span class="n">options</span> <span class="n">configuration</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span>
+                         <span class="nf">mode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span>
+                    <span class="nf">options</span><span class="p">:(</span><span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span> <span class="n">_Nullable</span><span class="p">)</span><span class="nv">options</span><span class="p">;</span>
 
- Swift-friendly convenience method with common options
-+ (NSString *)convertWithApex:(NSString *)markdown
-                         mode:(NSString *)mode
-              generateHeaderIDs:(BOOL)generateHeaderIDs
-                    hardBreaks:(BOOL)hardBreaks
-                        pretty:(BOOL)pretty;
+ <span class="n">Swift</span><span class="k">-</span><span class="n">friendly</span> <span class="n">convenience</span> <span class="n">method</span> <span class="n">with</span> <span class="n">common</span> <span class="n">options</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertWithApex</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span>
+                         <span class="nf">mode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span>
+              <span class="nf">generateHeaderIDs</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">generateHeaderIDs</span>
+                    <span class="nf">hardBreaks</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">hardBreaks</span>
+                        <span class="nf">pretty</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">pretty</span><span class="p">;</span>
 
- Instance methods for convenient usage
-- (NSString *)apexHTML;
-- (NSString *)apexHTMLWithMode:(NSString *)mode;
+ <span class="n">Instance</span> <span class="n">methods</span> <span class="k">for</span> <span class="n">convenient</span> <span class="n">usage</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">apexHTML</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">apexHTMLWithMode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">mode</span><span class="p">;</span>
 
-@end
+<span class="k">@end</span>
 </code></pre>
 
 <p>
@@ -945,19 +1084,19 @@ extern NSString * const ApexModeUnified;
   Generate complete HTML5 documents with stylesheet and title:
 </p>
 
-<pre lang="objective-c"><code> Generate standalone HTML document
-NSString *html = [NSString convertWithApex:markdown
-                                     mode:ApexModeUnified
-                               standalone:YES
-                                stylesheet:@&quot;style.css&quot;
-                                     title:@&quot;My Document&quot;];
+<pre><code class="highlight language-objective-c"> <span class="n">Generate</span> <span class="n">standalone</span> <span class="n">HTML</span> <span class="n">document</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span>
+                                     <span class="nl">mode:</span><span class="n">ApexModeUnified</span>
+                               <span class="nl">standalone:</span><span class="nb">YES</span>
+                                <span class="nl">stylesheet:</span><span class="s">@"style.css"</span>
+                                     <span class="nl">title:</span><span class="s">@"My Document"</span><span class="p">];</span>
 
- Without stylesheet or title
-NSString *html2 = [NSString convertWithApex:markdown
-                                       mode:ApexModeGFM
-                                 standalone:YES
-                                  stylesheet:nil
-                                       title:nil];
+ <span class="n">Without</span> <span class="n">stylesheet</span> <span class="n">or</span> <span class="n">title</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html2</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span>
+                                       <span class="nl">mode:</span><span class="n">ApexModeGFM</span>
+                                 <span class="nl">standalone:</span><span class="nb">YES</span>
+                                  <span class="nl">stylesheet:</span><span class="nb">nil</span>
+                                       <span class="nl">title:</span><span class="nb">nil</span><span class="p">];</span>
 </code></pre>
 
 <h4 id="pretty-printed-html">
@@ -968,10 +1107,10 @@ NSString *html2 = [NSString convertWithApex:markdown
   Generate formatted HTML with indentation:
 </p>
 
-<pre lang="objective-c"><code> Pretty-print HTML output
-NSString *html = [NSString convertWithApex:markdown
-                                     mode:ApexModeUnified
-                                    pretty:YES];
+<pre><code class="highlight language-objective-c"> <span class="n">Pretty</span><span class="k">-</span><span class="n">print</span> <span class="n">HTML</span> <span class="n">output</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span>
+                                     <span class="nl">mode:</span><span class="n">ApexModeUnified</span>
+                                    <span class="nl">pretty:</span><span class="nb">YES</span><span class="p">];</span>
 </code></pre>
 
 <h4 id="dictionary-based-options">
@@ -982,22 +1121,22 @@ NSString *html = [NSString convertWithApex:markdown
   Configure multiple options at once using a dictionary:
 </p>
 
-<pre lang="objective-c"><code> Configure multiple options
-NSDictionary *options = @{
-    @&quot;pretty&quot;: @YES,
-    @&quot;standalone&quot;: @YES,
-    @&quot;stylesheet&quot;: @&quot;style.css&quot;,
-    @&quot;title&quot;: @&quot;My Document&quot;,
-    @&quot;hardBreaks&quot;: @YES,
-    @&quot;generateHeaderIDs&quot;: @YES,
-    @&quot;headerAnchors&quot;: @NO,
-    @&quot;obfuscateEmails&quot;: @YES,
-    @&quot;embedImages&quot;: @NO
-};
+<pre><code class="highlight language-objective-c"> <span class="n">Configure</span> <span class="n">multiple</span> <span class="n">options</span>
+<span class="n">NSDictionary</span> <span class="o">*</span><span class="n">options</span> <span class="o">=</span> <span class="p">@{</span>
+    <span class="s">@"pretty"</span><span class="o">:</span> <span class="nb">@YES</span><span class="p">,</span>
+    <span class="s">@"standalone"</span><span class="o">:</span> <span class="nb">@YES</span><span class="p">,</span>
+    <span class="s">@"stylesheet"</span><span class="o">:</span> <span class="s">@"style.css"</span><span class="p">,</span>
+    <span class="s">@"title"</span><span class="o">:</span> <span class="s">@"My Document"</span><span class="p">,</span>
+    <span class="s">@"hardBreaks"</span><span class="o">:</span> <span class="nb">@YES</span><span class="p">,</span>
+    <span class="s">@"generateHeaderIDs"</span><span class="o">:</span> <span class="nb">@YES</span><span class="p">,</span>
+    <span class="s">@"headerAnchors"</span><span class="o">:</span> <span class="nb">@NO</span><span class="p">,</span>
+    <span class="s">@"obfuscateEmails"</span><span class="o">:</span> <span class="nb">@YES</span><span class="p">,</span>
+    <span class="s">@"embedImages"</span><span class="o">:</span> <span class="nb">@NO</span>
+<span class="p">};</span>
 
-NSString *html = [NSString convertWithApex:markdown
-                                     mode:ApexModeUnified
-                                   options:options];
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span>
+                                     <span class="nl">mode:</span><span class="n">ApexModeUnified</span>
+                                   <span class="nl">options:</span><span class="n">options</span><span class="p">];</span>
 </code></pre>
 
 <p>
@@ -1056,12 +1195,12 @@ NSString *html = [NSString convertWithApex:markdown
   Combine common options in a single method call (ideal for Swift):
 </p>
 
-<pre lang="objective-c"><code> Combine common options
-NSString *html = [NSString convertWithApex:markdown
-                                     mode:ApexModeUnified
-                          generateHeaderIDs:YES
-                                hardBreaks:YES
-                                    pretty:YES];
+<pre><code class="highlight language-objective-c"> <span class="n">Combine</span> <span class="n">common</span> <span class="n">options</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span>
+                                     <span class="nl">mode:</span><span class="n">ApexModeUnified</span>
+                          <span class="nl">generateHeaderIDs:</span><span class="nb">YES</span>
+                                <span class="nl">hardBreaks:</span><span class="nb">YES</span>
+                                    <span class="nl">pretty:</span><span class="nb">YES</span><span class="p">];</span>
 </code></pre>
 
 <h4 id="instance-methods">
@@ -1072,12 +1211,12 @@ NSString *html = [NSString convertWithApex:markdown
   Use instance methods for more natural, fluent syntax:
 </p>
 
-<pre lang="objective-c"><code> Instance method with default unified mode
-NSString *markdown = @&quot;# Hello World&quot;;
-NSString *html = [markdown apexHTML];
+<pre><code class="highlight language-objective-c"> <span class="n">Instance</span> <span class="n">method</span> <span class="n">with</span> <span class="k">default</span> <span class="n">unified</span> <span class="n">mode</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">markdown</span> <span class="o">=</span> <span class="s">@"# Hello World"</span><span class="p">;</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">markdown</span> <span class="nf">apexHTML</span><span class="p">];</span>
 
- Instance method with specific mode
-NSString *html2 = [markdown apexHTMLWithMode:ApexModeGFM];
+ <span class="n">Instance</span> <span class="n">method</span> <span class="n">with</span> <span class="n">specific</span> <span class="n">mode</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html2</span> <span class="o">=</span> <span class="p">[</span><span class="n">markdown</span> <span class="nf">apexHTMLWithMode</span><span class="p">:</span><span class="n">ApexModeGFM</span><span class="p">];</span>
 </code></pre>
 
 <h2 id="mode-constants">
@@ -1088,12 +1227,12 @@ NSString *html2 = [markdown apexHTMLWithMode:ApexModeGFM];
   Apex provides NSString constants for processor modes to avoid ambiguity and typos:
 </p>
 
-<pre lang="objective-c"><code> Available constants
-ApexModeCommonmark      // @&quot;commonmark&quot;
-ApexModeGFM             // @&quot;gfm&quot;
-ApexModeMultiMarkdown   // @&quot;multimarkdown&quot;
-ApexModeKramdown        // @&quot;kramdown&quot;
-ApexModeUnified         // @&quot;unified&quot;
+<pre><code class="highlight language-objective-c"> <span class="n">Available</span> <span class="n">constants</span>
+<span class="n">ApexModeCommonmark</span>      <span class="c1">// @"commonmark"</span>
+<span class="n">ApexModeGFM</span>             <span class="c1">// @"gfm"</span>
+<span class="n">ApexModeMultiMarkdown</span>   <span class="c1">// @"multimarkdown"</span>
+<span class="n">ApexModeKramdown</span>        <span class="c1">// @"kramdown"</span>
+<span class="n">ApexModeUnified</span>         <span class="c1">// @"unified"</span>
 </code></pre>
 
 <p>
@@ -1124,11 +1263,11 @@ ApexModeUnified         // @&quot;unified&quot;
 <strong>  Example:</strong>
 </p>
 
-<pre lang="objective-c"><code> Good: Using constants
-NSString *html = [NSString convertWithApex:markdown mode:ApexModeMultiMarkdown];
+<pre><code class="highlight language-objective-c"> <span class="nl">Good:</span> <span class="n">Using</span> <span class="n">constants</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span> <span class="nf">mode</span><span class="p">:</span><span class="n">ApexModeMultiMarkdown</span><span class="p">];</span>
 
- Also works: String literals (for backward compatibility)
-NSString *html2 = [NSString convertWithApex:markdown mode:@&quot;multimarkdown&quot;];
+ <span class="n">Also</span> <span class="n">works</span><span class="o">:</span> <span class="n">String</span> <span class="n">literals</span> <span class="p">(</span><span class="k">for</span> <span class="n">backward</span> <span class="n">compatibility</span><span class="p">)</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">html2</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">markdown</span> <span class="nf">mode</span><span class="p">:</span><span class="s">@"multimarkdown"</span><span class="p">];</span>
 </code></pre>
 
 <h2 id="direct-c-api-usage">
@@ -1139,23 +1278,23 @@ NSString *html2 = [NSString convertWithApex:markdown mode:@&quot;multimarkdown&q
   For more control, use the C API directly:
 </p>
 
-<pre lang="objective-c"><code>#include &lt;Apex/apex.h&gt;
+<pre><code class="highlight language-objective-c"><span class="cp">#include</span> <span class="cpf">&lt;Apex/apex.h&gt;</span><span class="cp">
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convertMarkdown</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">markdown</span> <span class="p">{</span>
+    <span class="n">apex_options</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">apex_options_default</span><span class="p">();</span>
+    <span class="n">opts</span><span class="p">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 
-- (NSString *)convertMarkdown:(NSString *)markdown {
-    apex_options opts = apex_options_default();
-    opts.pretty = true;
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">md</span> <span class="o">=</span> <span class="p">[</span><span class="n">markdown</span> <span class="nf">UTF8String</span><span class="p">];</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">html</span> <span class="o">=</span> <span class="n">apex_markdown_to_html</span><span class="p">(</span><span class="n">md</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">md</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">);</span>
 
-    const char *md = [markdown UTF8String];
-    char *html = apex_markdown_to_html(md, strlen(md), &amp;opts);
+    <span class="k">if</span> <span class="p">(</span><span class="n">html</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithUTF8String</span><span class="p">:</span><span class="n">html</span><span class="p">];</span>
+        <span class="n">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    if (html) {
-        NSString *result = [NSString stringWithUTF8String:html];
-        apex_free_string(html);
-        return result;
-    }
-
-    return nil;
-}
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="integration-example">
@@ -1174,36 +1313,36 @@ NSString *html2 = [NSString convertWithApex:markdown mode:@&quot;multimarkdown&q
 <strong>  1. Add to processor selection:</strong>
 </p>
 
-<pre lang="objective-c"><code> In MKConductorTransformer.m or similar
-} else if ([processor isEqualToString:@&quot;Apex&quot;]) {
-    result = [NSString convertWithApex:text];
-} else if ([processor isEqualToString:@&quot;MultiMarkdown&quot;]) {
-    result = [NSString convertWithMultiMarkdown:text];
-}
+<pre><code class="highlight language-objective-c"> <span class="n">In</span> <span class="n">MKConductorTransformer</span><span class="p">.</span><span class="n">m</span> <span class="n">or</span> <span class="n">similar</span>
+<span class="err">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">([</span><span class="n">processor</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"Apex"</span><span class="p">])</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithApex</span><span class="p">:</span><span class="n">text</span><span class="p">];</span>
+<span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">([</span><span class="n">processor</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"MultiMarkdown"</span><span class="p">])</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">convertWithMultiMarkdown</span><span class="p">:</span><span class="n">text</span><span class="p">];</span>
+<span class="p">}</span>
 </code></pre>
 
 <p>
 <strong>  2. Add to preferences:</strong>
 </p>
 
-<pre lang="objective-c"><code> In processor dropdown
-NSArray *processors = @[
-    @&quot;MultiMarkdown&quot;,
-    @&quot;Discount (GFM)&quot;,
-    @&quot;CommonMark&quot;,
-    @&quot;Kramdown&quot;,
-    @&quot;Apex&quot;  // Add this
-];
+<pre><code class="highlight language-objective-c"> <span class="n">In</span> <span class="n">processor</span> <span class="n">dropdown</span>
+<span class="n">NSArray</span> <span class="o">*</span><span class="n">processors</span> <span class="o">=</span> <span class="p">@[</span>
+    <span class="s">@"MultiMarkdown"</span><span class="p">,</span>
+    <span class="s">@"Discount (GFM)"</span><span class="p">,</span>
+    <span class="s">@"CommonMark"</span><span class="p">,</span>
+    <span class="s">@"Kramdown"</span><span class="p">,</span>
+    <span class="s">@"Apex"</span>  <span class="c1">// Add this</span>
+<span class="p">];</span>
 </code></pre>
 
 <p>
 <strong>  3. Handle custom processor rules:</strong>
 </p>
 
-<pre lang="objective-c"><code> In custom processor handling
-} else if ([outputString.uppercaseString isEqualToString:@&quot;APEX&quot;]) {
-    [defaults setValue:@&quot;Apex&quot; forKey:@&quot;defaultProcessor&quot;];
-}
+<pre><code class="highlight language-objective-c"> <span class="n">In</span> <span class="n">custom</span> <span class="n">processor</span> <span class="n">handling</span>
+<span class="err">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">([</span><span class="n">outputString</span><span class="p">.</span><span class="n">uppercaseString</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"APEX"</span><span class="p">])</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">defaults</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Apex"</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"defaultProcessor"</span><span class="p">];</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="build-settings">
@@ -1303,55 +1442,55 @@ NSArray *processors = @[
   Idiomatic Swift API (Recommended)
 </h3>
 
-<pre lang="swift"><code>import Foundation
- Import Apex.swift (automatically available when framework is linked)
+<pre><code class="highlight language-swift"><span class="kd">import</span> <span class="kt">Foundation</span>
+ <span class="kt">Import</span> <span class="kt">Apex</span><span class="o">.</span><span class="nf">swift</span> <span class="p">(</span><span class="n">automatically</span> <span class="n">available</span> <span class="n">when</span> <span class="n">framework</span> <span class="k">is</span> <span class="n">linked</span><span class="p">)</span>
 
- Basic conversion with default unified mode
-let markdown = &quot;# Hello World&quot;
-let html = markdown.apexHTML()
+ <span class="kt">Basic</span> <span class="n">conversion</span> <span class="n">with</span> <span class="k">default</span> <span class="n">unified</span> <span class="n">mode</span>
+<span class="k">let</span> <span class="nv">markdown</span> <span class="o">=</span> <span class="s">"# Hello World"</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">()</span>
 
- With type-safe mode enum
-let gfmHtml = markdown.apexHTML(mode: .gfm)
-let mmdHtml = markdown.apexHTML(mode: .multimarkdown)
-let kramdownHtml = markdown.apexHTML(mode: .kramdown)
-let commonmarkHtml = markdown.apexHTML(mode: .commonmark)
-let unifiedHtml = markdown.apexHTML(mode: .unified)
+ <span class="kt">With</span> <span class="n">type</span><span class="o">-</span><span class="n">safe</span> <span class="n">mode</span> <span class="kd">enum</span>
+<span class="k">let</span> <span class="nv">gfmHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">gfm</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">mmdHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">multimarkdown</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">kramdownHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">kramdown</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">commonmarkHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">commonmark</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">unifiedHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">)</span>
 
- Using ApexOptions struct (type-safe)
-var options = ApexOptions()
-options.pretty = true
-options.standalone = true
-options.stylesheet = &quot;style.css&quot;
-options.title = &quot;My Document&quot;
-options.generateHeaderIDs = true
-options.hardBreaks = true
-options.obfuscateEmails = true
+ <span class="kt">Using</span> <span class="kt">ApexOptions</span> <span class="nf">struct</span> <span class="p">(</span><span class="n">type</span><span class="o">-</span><span class="n">safe</span><span class="p">)</span>
+<span class="k">var</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">ApexOptions</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">standalone</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">stylesheet</span> <span class="o">=</span> <span class="s">"style.css"</span>
+<span class="n">options</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">"My Document"</span>
+<span class="n">options</span><span class="o">.</span><span class="n">generateHeaderIDs</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">hardBreaks</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">obfuscateEmails</span> <span class="o">=</span> <span class="kc">true</span>
 
-let configuredHtml = markdown.apexHTML(mode: .unified, options: options)
+<span class="k">let</span> <span class="nv">configuredHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
 
- Or use static Apex converter
-let html2 = Apex.convert(markdown)
-let html3 = Apex.convert(markdown, mode: .gfm)
-let html4 = Apex.convert(markdown, mode: .unified, options: options)
+ <span class="kt">Or</span> <span class="n">use</span> <span class="kd">static</span> <span class="kt">Apex</span> <span class="n">converter</span>
+<span class="k">let</span> <span class="nv">html2</span> <span class="o">=</span> <span class="kt">Apex</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span><span class="n">markdown</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">html3</span> <span class="o">=</span> <span class="kt">Apex</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">gfm</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">html4</span> <span class="o">=</span> <span class="kt">Apex</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
 
- Standalone HTML document
-let standaloneHtml = markdown.apexHTML(
-    mode: .unified,
-    standalone: true,
-    stylesheet: &quot;style.css&quot;,
-    title: &quot;My Document&quot;
-)
+ <span class="kt">Standalone</span> <span class="kt">HTML</span> <span class="n">document</span>
+<span class="k">let</span> <span class="nv">standaloneHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">,</span>
+    <span class="nv">standalone</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">stylesheet</span><span class="p">:</span> <span class="s">"style.css"</span><span class="p">,</span>
+    <span class="nv">title</span><span class="p">:</span> <span class="s">"My Document"</span>
+<span class="p">)</span>
 
- Pretty-printed HTML
-let prettyHtml = markdown.apexHTML(pretty: true, mode: .unified)
+ <span class="kt">Pretty</span><span class="o">-</span><span class="n">printed</span> <span class="kt">HTML</span>
+<span class="k">let</span> <span class="nv">prettyHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">pretty</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">)</span>
 
- Common options combined
-let commonOptionsHtml = markdown.apexHTML(
-    mode: .unified,
-    generateHeaderIDs: true,
-    hardBreaks: true,
-    pretty: true
-)
+ <span class="kt">Common</span> <span class="n">options</span> <span class="n">combined</span>
+<span class="k">let</span> <span class="nv">commonOptionsHtml</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">unified</span><span class="p">,</span>
+    <span class="nv">generateHeaderIDs</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">hardBreaks</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">pretty</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">)</span>
 </code></pre>
 
 <h3 id="apexmode-enum">
@@ -1362,13 +1501,13 @@ let commonOptionsHtml = markdown.apexHTML(
   Type-safe processor mode enum:
 </p>
 
-<pre lang="swift"><code>public enum ApexMode: String, CaseIterable {
-    case commonmark
-    case gfm
-    case multimarkdown
-    case kramdown
-    case unified
-}
+<pre><code class="highlight language-swift"><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ApexMode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">CaseIterable</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">commonmark</span>
+    <span class="k">case</span> <span class="n">gfm</span>
+    <span class="k">case</span> <span class="n">multimarkdown</span>
+    <span class="k">case</span> <span class="n">kramdown</span>
+    <span class="k">case</span> <span class="n">unified</span>
+<span class="p">}</span>
 </code></pre>
 
 <h3 id="apexoptions-struct">
@@ -1379,30 +1518,30 @@ let commonOptionsHtml = markdown.apexHTML(
   Type-safe options configuration:
 </p>
 
-<pre lang="swift"><code>public struct ApexOptions {
-    public var pretty: Bool = false
-    public var standalone: Bool = false
-    public var stylesheet: String? = nil
-    public var title: String? = nil
-    public var hardBreaks: Bool = false
-    public var generateHeaderIDs: Bool = false
-    public var unsafe: Bool = false
-    public var headerAnchors: Bool = false
-    public var obfuscateEmails: Bool = false
-    public var embedImages: Bool = false
+<pre><code class="highlight language-swift"><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ApexOptions</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">pretty</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">standalone</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">stylesheet</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">hardBreaks</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">generateHeaderIDs</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">unsafe</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">headerAnchors</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">obfuscateEmails</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">embedImages</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
 
-    public static let `default` = ApexOptions()
-}
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">let</span> <span class="p">`</span><span class="nv">default</span><span class="p">`</span> <span class="o">=</span> <span class="kt">ApexOptions</span><span class="p">()</span>
+<span class="p">}</span>
 </code></pre>
 
 <p>
 <strong>  Example usage:</strong>
 </p>
 
-<pre lang="swift"><code>var options = ApexOptions.default
-options.pretty = true
-options.generateHeaderIDs = true
-let html = markdown.apexHTML(mode: .gfm, options: options)
+<pre><code class="highlight language-swift"><span class="k">var</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">ApexOptions</span><span class="o">.</span><span class="k">default</span>
+<span class="n">options</span><span class="o">.</span><span class="n">pretty</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">options</span><span class="o">.</span><span class="n">generateHeaderIDs</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="nf">apexHTML</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">gfm</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
 </code></pre>
 
 <h3 id="objective-c-bridge-alternative">
@@ -1413,44 +1552,44 @@ let html = markdown.apexHTML(mode: .gfm, options: options)
   You can also use the Objective-C API directly from Swift:
 </p>
 
-<pre lang="swift"><code>import Foundation
+<pre><code class="highlight language-swift"><span class="kd">import</span> <span class="kt">Foundation</span>
 
- Use Objective-C wrapper
-let html = NSString.convert(withApex: markdownText)
+ <span class="kt">Use</span> <span class="kt">Objective</span><span class="o">-</span><span class="kt">C</span> <span class="n">wrapper</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="kt">NSString</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span><span class="nv">withApex</span><span class="p">:</span> <span class="n">markdownText</span><span class="p">)</span>
 
- With mode constants
-let gfmHtml = NSString.convert(withApex: markdownText, mode: ApexModeGFM)
+ <span class="kt">With</span> <span class="n">mode</span> <span class="n">constants</span>
+<span class="k">let</span> <span class="nv">gfmHtml</span> <span class="o">=</span> <span class="kt">NSString</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span><span class="nv">withApex</span><span class="p">:</span> <span class="n">markdownText</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">ApexModeGFM</span><span class="p">)</span>
 
- Dictionary-based options
-let options: [String: Any] = [
-    &quot;pretty&quot;: true,
-    &quot;standalone&quot;: true,
-    &quot;stylesheet&quot;: &quot;style.css&quot;
-]
-let configuredHtml = NSString.convert(
-    withApex: markdownText,
-    mode: ApexModeUnified,
-    options: options
-)
+ <span class="kt">Dictionary</span><span class="o">-</span><span class="n">based</span> <span class="n">options</span>
+<span class="k">let</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">"pretty"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s">"standalone"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s">"stylesheet"</span><span class="p">:</span> <span class="s">"style.css"</span>
+<span class="p">]</span>
+<span class="k">let</span> <span class="nv">configuredHtml</span> <span class="o">=</span> <span class="kt">NSString</span><span class="o">.</span><span class="nf">convert</span><span class="p">(</span>
+    <span class="nv">withApex</span><span class="p">:</span> <span class="n">markdownText</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="kt">ApexModeUnified</span><span class="p">,</span>
+    <span class="nv">options</span><span class="p">:</span> <span class="n">options</span>
+<span class="p">)</span>
 </code></pre>
 
 <p>
   For direct C API access, create a Swift bridging header:
 </p>
 
-<pre lang="swift"><code> Bridging header
-#import &lt;Apex/apex.h&gt;
+<pre><code class="highlight language-swift"> <span class="kt">Bridging</span> <span class="n">header</span>
+<span class="cp">#import &lt;Apex/apex.h&gt;</span>
 
- Swift code
-func convertMarkdown(_ text: String) -&gt; String? {
-    let opts = apex_options_default()
-    let cString = text.utf8CString
-    guard let html = apex_markdown_to_html(cString, text.utf8.count, &amp;opts) else {
-        return nil
-    }
-    defer { apex_free_string(html) }
-    return String(cString: html)
-}
+ <span class="kt">Swift</span> <span class="n">code</span>
+<span class="kd">func</span> <span class="nf">convertMarkdown</span><span class="p">(</span><span class="n">_</span> <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">opts</span> <span class="o">=</span> <span class="nf">apex_options_default</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">cString</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">utf8CString</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="nf">apex_markdown_to_html</span><span class="p">(</span><span class="n">cString</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">utf8</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="p">{</span> <span class="nf">apex_free_string</span><span class="p">(</span><span class="n">html</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">cString</span><span class="p">:</span> <span class="n">html</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre>
 
 <h2 id="troubleshooting">
@@ -1629,12 +1768,12 @@ func convertMarkdown(_ text: String) -&gt; String? {
   Apex includes a module map (<code>include/apex/module.modulemap</code>) that allows Swift to import the C API directly:
 </p>
 
-<pre lang="swift"><code>import Apex
+<pre><code class="highlight language-swift"><span class="kd">import</span> <span class="kt">Apex</span>
 
- Direct C API access (advanced usage)
-let opts = apex_options_default()
- ... configure options ...
-let html = apex_markdown_to_html(markdown, markdown.count, &amp;opts)
+ <span class="kt">Direct</span> <span class="kt">C</span> <span class="kt">API</span> <span class="nf">access</span> <span class="p">(</span><span class="n">advanced</span> <span class="n">usage</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">opts</span> <span class="o">=</span> <span class="nf">apex_options_default</span><span class="p">()</span>
+ <span class="o">...</span> <span class="n">configure</span> <span class="n">options</span> <span class="o">...</span>
+<span class="k">let</span> <span class="nv">html</span> <span class="o">=</span> <span class="nf">apex_markdown_to_html</span><span class="p">(</span><span class="n">markdown</span><span class="p">,</span> <span class="n">markdown</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opts</span><span class="p">)</span>
 </code></pre>
 
 <p>

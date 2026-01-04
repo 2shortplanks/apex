@@ -43,14 +43,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 17px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   line-height: 1.65;
   color: #1e293b;
   background-color: #fff;
 }
 
 /* Sidebar / Main TOC - wider on larger screens */
-.main-toc, .sidebar {
+.main-toc,
+.sidebar {
   position: fixed;
   left: 0;
   top: 0;
@@ -70,24 +72,28 @@ body {
   transition: transform 0.3s ease;
 }
 
-.main-toc ul, .sidebar ul {
+.main-toc ul,
+.sidebar ul {
   list-style: none;
   padding-left: 0;
   margin: 0;
   padding-bottom: 80px;
 }
 
-.main-toc ul::after, .sidebar ul::after {
-  content: '';
+.main-toc ul::after,
+.sidebar ul::after {
+  content: "";
   display: block;
   height: 80px;
 }
 
-.main-toc li, .sidebar li {
+.main-toc li,
+.sidebar li {
   margin: 0.25em 0;
 }
 
-.main-toc a, .sidebar a {
+.main-toc a,
+.sidebar a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   display: block;
@@ -99,7 +105,8 @@ body {
   text-overflow: ellipsis;
 }
 
-.main-toc a:hover, .sidebar a:hover {
+.main-toc a:hover,
+.sidebar a:hover {
   background: #334155;
   color: #fff;
 }
@@ -146,7 +153,9 @@ body {
 
 /* Move hamburger to the right of the sidebar when menu is open */
 .hamburger-menu.active {
-  left: calc(250px + 12px); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
+  left: calc(
+    250px + 12px
+  ); /* Position just to the right of sidebar (max-width 250px + 12px padding) */
 }
 
 .hamburger-menu.active {
@@ -154,11 +163,11 @@ body {
 }
 
 .hamburger-menu::before {
-  content: '☰';
+  content: "☰";
 }
 
 .hamburger-menu.active::before {
-  content: '✕';
+  content: "✕";
 }
 
 /* Mobile menu overlay */
@@ -356,7 +365,7 @@ code {
   background: #f0f0f0;
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9em;
   margin: 0 0.1em;
 }
@@ -375,8 +384,254 @@ pre code {
   margin: 0;
 }
 
+/* Rouge syntax highlighting - GitHub theme, scoped to .highlight containers */
+.highlight {
+  color: #24292e;
+}
+
+.highlight .c {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment */
+.highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+} /* Error */
+.highlight .k {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword */
+.highlight .l {
+  color: #032f62;
+} /* Literal */
+.highlight .n {
+  color: #24292e;
+} /* Name */
+.highlight .o {
+  color: #d73a49;
+} /* Operator */
+.highlight .p {
+  color: #24292e;
+} /* Punctuation */
+.highlight .cm {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Multiline */
+.highlight .cp {
+  color: #6a737d;
+  font-weight: bold;
+} /* Comment.Preproc */
+.highlight .c1 {
+  color: #6a737d;
+  font-style: italic;
+} /* Comment.Single */
+.highlight .cs {
+  color: #6a737d;
+  font-weight: bold;
+  font-style: italic;
+} /* Comment.Special */
+.highlight .gd {
+  color: #24292e;
+  background-color: #ffeef0;
+} /* Generic.Deleted */
+.highlight .ge {
+  color: #24292e;
+  font-style: italic;
+} /* Generic.Emph */
+.highlight .gr {
+  color: #aa0000;
+} /* Generic.Error */
+.highlight .gh {
+  color: #999999;
+  font-weight: bold;
+} /* Generic.Heading */
+.highlight .gi {
+  color: #24292e;
+  background-color: #f0fff4;
+} /* Generic.Inserted */
+.highlight .go {
+  color: #888888;
+} /* Generic.Output */
+.highlight .gp {
+  color: #555555;
+} /* Generic.Prompt */
+.highlight .gs {
+  font-weight: bold;
+} /* Generic.Strong */
+.highlight .gu {
+  color: #aaaaaa;
+} /* Generic.Subheading */
+.highlight .gt {
+  color: #aa0000;
+} /* Generic.Traceback */
+.highlight .kc {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Constant */
+.highlight .kd {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Declaration */
+.highlight .kn {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Namespace */
+.highlight .kp {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Pseudo */
+.highlight .kr {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Reserved */
+.highlight .kt {
+  color: #d73a49;
+  font-weight: bold;
+} /* Keyword.Type */
+.highlight .ld {
+  color: #032f62;
+} /* Literal.Date */
+.highlight .m {
+  color: #005cc5;
+} /* Literal.Number */
+.highlight .s {
+  color: #032f62;
+} /* Literal.String */
+.highlight .na {
+  color: #6f42c1;
+} /* Name.Attribute */
+.highlight .nb {
+  color: #005cc5;
+} /* Name.Builtin */
+.highlight .nc {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Class */
+.highlight .no {
+  color: #005cc5;
+} /* Name.Constant */
+.highlight .nd {
+  color: #6f42c1;
+  font-weight: bold;
+} /* Name.Decorator */
+.highlight .ni {
+  color: #800080;
+} /* Name.Entity */
+.highlight .ne {
+  color: #990000;
+  font-weight: bold;
+} /* Name.Exception */
+.highlight .nf {
+  color: #6f42c1;
+} /* Name.Function */
+.highlight .nl {
+  color: #990000;
+} /* Name.Label */
+.highlight .nn {
+  color: #555555;
+} /* Name.Namespace */
+.highlight .nx {
+  color: #6f42c1;
+} /* Name.Other */
+.highlight .py {
+  color: #990000;
+} /* Name.Property */
+.highlight .nt {
+  color: #22863a;
+} /* Name.Tag */
+.highlight .nv {
+  color: #e36209;
+} /* Name.Variable */
+.highlight .ow {
+  color: #d73a49;
+  font-weight: bold;
+} /* Operator.Word */
+.highlight .w {
+  color: #bbbbbb;
+} /* Text.Whitespace */
+.highlight .mf {
+  color: #005cc5;
+} /* Literal.Number.Float */
+.highlight .mh {
+  color: #005cc5;
+} /* Literal.Number.Hex */
+.highlight .mi {
+  color: #005cc5;
+} /* Literal.Number.Integer */
+.highlight .mo {
+  color: #005cc5;
+} /* Literal.Number.Oct */
+.highlight .sb {
+  color: #032f62;
+} /* Literal.String.Backtick */
+.highlight .sc {
+  color: #032f62;
+} /* Literal.String.Char */
+.highlight .sd {
+  color: #032f62;
+} /* Literal.String.Doc */
+.highlight .s2 {
+  color: #032f62;
+} /* Literal.String.Double */
+.highlight .se {
+  color: #032f62;
+} /* Literal.String.Escape */
+.highlight .sh {
+  color: #032f62;
+} /* Literal.String.Heredoc */
+.highlight .si {
+  color: #032f62;
+} /* Literal.String.Interpol */
+.highlight .sx {
+  color: #032f62;
+} /* Literal.String.Other */
+.highlight .sr {
+  color: #22863a;
+} /* Literal.String.Regex */
+.highlight .s1 {
+  color: #032f62;
+} /* Literal.String.Single */
+.highlight .ss {
+  color: #032f62;
+} /* Literal.String.Symbol */
+.highlight .bp {
+  color: #005cc5;
+} /* Name.Builtin.Pseudo */
+.highlight .vc {
+  color: #e36209;
+} /* Name.Variable.Class */
+.highlight .vg {
+  color: #e36209;
+} /* Name.Variable.Global */
+.highlight .vi {
+  color: #e36209;
+} /* Name.Variable.Instance */
+.highlight .il {
+  color: #005cc5;
+} /* Literal.Number.Integer.Long */
+
+/* Additional Rouge token classes that may be used */
+.highlight .token {
+  color: #5670a0;
+}
+.highlight .token.list {
+  color: #546e9f;
+}
+.highlight .token.punctuation {
+  color: #3e8dad;
+}
+.highlight .token.list.punctuation {
+  color: #e05b78;
+}
+.highlight .token.content {
+  padding: 0;
+}
+
 /* Nested lists in page content */
-ul ul, ol ol, ul ol, ol ul {
+ul ul,
+ol ol,
+ul ol,
+ol ul {
   padding-left: 1.5em;
   margin-top: 0.25em;
 }
@@ -410,12 +665,14 @@ ul ul, ol ol, ul ol, ol ul {
     display: flex;
   }
 
-  .main-toc, .sidebar {
+  .main-toc,
+  .sidebar {
     transform: translateX(-100%);
     z-index: 175;
   }
 
-  .main-toc.mobile-open, .sidebar.mobile-open {
+  .main-toc.mobile-open,
+  .sidebar.mobile-open {
     transform: translateX(0);
   }
 
@@ -428,125 +685,7 @@ ul ul, ol ol, ul ol, ol ul {
   }
 }
 
-</style><style>
-  .highlight .highlight table td { padding: 5px; }
-.highlight .highlight table pre { margin: 0; }
-.highlight .highlight, .highlight .w {
-  color: #24292f;
-  background-color: #f6f8fa;
-}
-.highlight .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv {
-  color: #cf222e;
-}
-.highlight .highlight .gr {
-  color: #f6f8fa;
-}
-.highlight .highlight .gd {
-  color: #82071e;
-  background-color: #ffebe9;
-}
-.highlight .highlight .nb {
-  color: #953800;
-}
-.highlight .highlight .nc {
-  color: #953800;
-}
-.highlight .highlight .no {
-  color: #953800;
-}
-.highlight .highlight .nn {
-  color: #953800;
-}
-.highlight .highlight .sr {
-  color: #116329;
-}
-.highlight .highlight .na {
-  color: #116329;
-}
-.highlight .highlight .nt {
-  color: #116329;
-}
-.highlight .highlight .gi {
-  color: #116329;
-  background-color: #dafbe1;
-}
-.highlight .highlight .ges {
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .highlight .kc {
-  color: #0550ae;
-}
-.highlight .highlight .l, .highlight .ld, .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
-  color: #0550ae;
-}
-.highlight .highlight .sb {
-  color: #0550ae;
-}
-.highlight .highlight .bp {
-  color: #0550ae;
-}
-.highlight .highlight .ne {
-  color: #0550ae;
-}
-.highlight .highlight .nl {
-  color: #0550ae;
-}
-.highlight .highlight .py {
-  color: #0550ae;
-}
-.highlight .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
-  color: #0550ae;
-}
-.highlight .highlight .o, .highlight .ow {
-  color: #0550ae;
-}
-.highlight .highlight .gh {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .gu {
-  color: #0550ae;
-  font-weight: bold;
-}
-.highlight .highlight .s, .highlight .sa, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss {
-  color: #0a3069;
-}
-.highlight .highlight .nd {
-  color: #8250df;
-}
-.highlight .highlight .nf, .highlight .fm {
-  color: #8250df;
-}
-.highlight .highlight .err {
-  color: #f6f8fa;
-  background-color: #82071e;
-}
-.highlight .highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs {
-  color: #6e7781;
-}
-.highlight .highlight .gl {
-  color: #6e7781;
-}
-.highlight .highlight .gt {
-  color: #6e7781;
-}
-.highlight .highlight .ni {
-  color: #24292f;
-}
-.highlight .highlight .si {
-  color: #24292f;
-}
-.highlight .highlight .ge {
-  color: #24292f;
-  font-style: italic;
-}
-.highlight .highlight .gs {
-  color: #24292f;
-  font-weight: bold;
-}
-</style>
-</head>
+</style></head>
 
   <body>
 <div class="floating-toc" id="floating-toc">
@@ -586,8 +725,8 @@ ul ul, ol ol, ul ol, ol ul {
       Display help message and exit.
     </p>
 
-<pre lang="bash"><code>apex --help
-</code>  </pre>
+<pre><code class="highlight language-bash">apex <span class="nt">--help</span>
+</code></pre>
 
   <h3 id="v-version">
 <code>-v, --version</code>
@@ -597,7 +736,7 @@ ul ul, ol ol, ul ol, ol ul {
     Display version information and exit.
   </p>
 
-<pre lang="bash"><code>apex --version
+<pre><code class="highlight language-bash">apex <span class="nt">--version</span>
 </code></pre>
 
 <h3 id="no-progress">
@@ -628,13 +767,13 @@ ul ul, ol ol, ul ol, ol ul {
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Explicitly enable progress (useful when piping)
+<pre><code class="highlight language-bash"><span class="c"># Explicitly enable progress (useful when piping)</span>
 
-apex document.md --progress | less
-# Explicitly disable progress
-apex document.md --no-progress
+apex document.md <span class="nt">--progress</span> | less
+<span class="c"># Explicitly disable progress</span>
+apex document.md <span class="nt">--no-progress</span>
 
-# Progress is automatically enabled in interactive terminals
+<span class="c"># Progress is automatically enabled in interactive terminals</span>
 apex document.md
 </code></pre>
 
@@ -666,8 +805,8 @@ apex document.md
 <strong>  Note:</strong> Progress can also be controlled via the <code>APEX_PROGRESS</code> environment variable:
 </p>
 
-<pre lang="bash"><code>export APEX_PROGRESS=1  # Enable
-export APEX_PROGRESS=0  # Disable
+<pre><code class="highlight language-bash"><span class="nb">export </span><span class="nv">APEX_PROGRESS</span><span class="o">=</span>1  <span class="c"># Enable</span>
+<span class="nb">export </span><span class="nv">APEX_PROGRESS</span><span class="o">=</span>0  <span class="c"># Disable</span>
 </code></pre>
 
 <h3 id="combine">
@@ -769,11 +908,11 @@ chapter2.md
 <strong>  Usage:</strong>
 </p>
 
-<pre lang="bash"><code># Merge and process in one step
+<pre><code class="highlight language-bash"><span class="c"># Merge and process in one step</span>
 
-apex --mmd-merge index.txt | apex --mode mmd --standalone -o book.html
-# Merge multiple index files
-apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
+apex <span class="nt">--mmd-merge</span> index.txt | apex <span class="nt">--mode</span> mmd <span class="nt">--standalone</span> <span class="nt">-o</span> book.html
+<span class="c"># Merge multiple index files</span>
+apex <span class="nt">--mmd-merge</span> index1.txt index2.txt | apex <span class="nt">--standalone</span> <span class="nt">-o</span> combined.html
 </code></pre>
 
 <h3 id="m-mode-mode">
@@ -816,7 +955,7 @@ apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex --mode gfm document.md
+<pre><code class="highlight language-bash">apex <span class="nt">--mode</span> gfm document.md
 </code></pre>
 
 <h3 id="o-output-file">
@@ -827,7 +966,7 @@ apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
   Write output to a file instead of stdout.
 </p>
 
-<pre lang="bash"><code>apex document.md -o output.html
+<pre><code class="highlight language-bash">apex document.md <span class="nt">-o</span> output.html
 </code></pre>
 
 <h2 id="output-options">
@@ -842,7 +981,7 @@ apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
   Generate a complete HTML document with <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.
 </p>
 
-<pre lang="bash"><code>apex document.md --standalone
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--standalone</span>
 </code></pre>
 
 <h3 id="style-file-css-file">
@@ -853,8 +992,8 @@ apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
   Link to a CSS file in the document head. Requires <code>--standalone</code>. <code>--css</code> is an alias for <code>--style</code>. Overrides CSS metadata if present.
 </p>
 
-<pre lang="bash"><code>apex document.md --standalone --style styles.css
-apex document.md --standalone --css styles.css
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--standalone</span> <span class="nt">--style</span> styles.css
+apex document.md <span class="nt">--standalone</span> <span class="nt">--css</span> styles.css
 </code></pre>
 
 <h3 id="embed-css">
@@ -865,7 +1004,7 @@ apex document.md --standalone --css styles.css
   Embed the CSS file contents into a <code>&lt;style&gt;</code> tag in the document head instead of using a <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code> tag. Intended to be used together with <code>--css</code>.
 </p>
 
-<pre lang="bash"><code>apex document.md --standalone --css styles.css --embed-css
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--standalone</span> <span class="nt">--css</span> styles.css <span class="nt">--embed-css</span>
 </code></pre>
 
 <h3 id="script-value">
@@ -888,8 +1027,8 @@ apex document.md --standalone --css styles.css
 
 </ul>
 
-<pre lang="bash"><code>apex document.md --standalone --script mermaid,mathjax
-apex document.md --script /assets/app.js --script https://cdn.example.com/widget.js
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--standalone</span> <span class="nt">--script</span> mermaid,mathjax
+apex document.md <span class="nt">--script</span> /assets/app.js <span class="nt">--script</span> https://cdn.example.com/widget.js
 </code></pre>
 
 <h3 id="title-title">
@@ -900,7 +1039,7 @@ apex document.md --script /assets/app.js --script https://cdn.example.com/widget
   Set the document title. Requires <code>--standalone</code>. Default is “Document”.
 </p>
 
-<pre lang="bash"><code>apex document.md --standalone --title &quot;My Document&quot;
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--standalone</span> <span class="nt">--title</span> <span class="s2">"My Document"</span>
 </code></pre>
 
 <h3 id="pretty">
@@ -911,7 +1050,7 @@ apex document.md --script /assets/app.js --script https://cdn.example.com/widget
   Pretty-print HTML with indentation and whitespace.
 </p>
 
-<pre lang="bash"><code>apex document.md --pretty
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--pretty</span>
 </code></pre>
 
 <h3 id="aria">
@@ -958,11 +1097,11 @@ apex document.md --script /assets/app.js --script https://cdn.example.com/widget
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Generate accessible HTML output
-apex document.md --aria
+<pre><code class="highlight language-bash"><span class="c"># Generate accessible HTML output</span>
+apex document.md <span class="nt">--aria</span>
 
-# Combine with other options
-apex document.md --aria --standalone --pretty
+<span class="c"># Combine with other options</span>
+apex document.md <span class="nt">--aria</span> <span class="nt">--standalone</span> <span class="nt">--pretty</span>
 </code></pre>
 
 <p>
@@ -973,23 +1112,23 @@ apex document.md --aria --standalone --pretty
   With <code>--aria</code> enabled, a table of contents generates:
 </p>
 
-<pre lang="html"><code>&lt;nav class=&quot;toc&quot; aria-label=&quot;Table of contents&quot;&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a href=&quot;#section&quot;&gt;Section&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"toc"</span> <span class="na">aria-label=</span><span class="s">"Table of contents"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ul&gt;</span>
+    <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#section"</span><span class="nt">&gt;</span>Section<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/nav&gt;</span>
 </code></pre>
 
 <p>
   Tables with captions get proper ARIA attributes:
 </p>
 
-<pre lang="html"><code>&lt;figure class=&quot;table-figure&quot; role=&quot;figure&quot;&gt;
-  &lt;figcaption id=&quot;table-caption-1&quot;&gt;Table Title&lt;/figcaption&gt;
-  &lt;table role=&quot;table&quot; aria-describedby=&quot;table-caption-1&quot;&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;figure</span> <span class="na">class=</span><span class="s">"table-figure"</span> <span class="na">role=</span><span class="s">"figure"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;figcaption</span> <span class="na">id=</span><span class="s">"table-caption-1"</span><span class="nt">&gt;</span>Table Title<span class="nt">&lt;/figcaption&gt;</span>
+  <span class="nt">&lt;table</span> <span class="na">role=</span><span class="s">"table"</span> <span class="na">aria-describedby=</span><span class="s">"table-caption-1"</span><span class="nt">&gt;</span>
     ...
-  &lt;/table&gt;
-&lt;/figure&gt;
+  <span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;/figure&gt;</span>
 </code></pre>
 
 <p>
@@ -1008,8 +1147,8 @@ apex document.md --aria --standalone --pretty
   Enable or disable external/plugin processing. Plugins are <strong>disabled by default</strong>; enable them per run or via metadata (<code>plugins: true</code> / <code>enable-plugins: true</code>).
 </p>
 
-<pre lang="bash"><code>apex document.md --plugins
-apex document.md --no-plugins
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--plugins</span>
+apex document.md <span class="nt">--no-plugins</span>
 </code></pre>
 
 <h3 id="list-plugins">
@@ -1020,7 +1159,7 @@ apex document.md --no-plugins
   List installed plugins and available plugins from the remote directory. Shows IDs, titles, authors, and descriptions when available.
 </p>
 
-<pre lang="bash"><code>apex --list-plugins
+<pre><code class="highlight language-bash">apex <span class="nt">--list-plugins</span>
 </code></pre>
 
 <h3 id="install-plugin-id-or-url">
@@ -1047,9 +1186,9 @@ apex document.md --no-plugins
   When installing from a URL, Apex prints a security warning before cloning, since plugins execute unverified code.
 </p>
 
-<pre lang="bash"><code>apex --install-plugin kbd
-apex --install-plugin https://github.com/user/apex-plugin-example.git
-apex --install-plugin user/apex-plugin-example
+<pre><code class="highlight language-bash">apex <span class="nt">--install-plugin</span> kbd
+apex <span class="nt">--install-plugin</span> https://github.com/user/apex-plugin-example.git
+apex <span class="nt">--install-plugin</span> user/apex-plugin-example
 </code></pre>
 
 <h3 id="uninstall-plugin-id">
@@ -1060,7 +1199,7 @@ apex --install-plugin user/apex-plugin-example
   Uninstall a locally installed plugin by ID. This removes the plugin’s directory from the user plugin location, but does not delete any external support data the plugin may have created.
 </p>
 
-<pre lang="bash"><code>apex --uninstall-plugin kbd
+<pre><code class="highlight language-bash">apex <span class="nt">--uninstall-plugin</span> kbd
 </code></pre>
 
 <h2 id="header-id-options">
@@ -1111,7 +1250,7 @@ apex --install-plugin user/apex-plugin-example
 
 </ul>
 
-<pre lang="bash"><code>apex document.md --id-format mmd
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--id-format</span> mmd
 </code></pre>
 
 <h3 id="no-ids">
@@ -1122,7 +1261,7 @@ apex --install-plugin user/apex-plugin-example
   Disable automatic header ID generation.
 </p>
 
-<pre lang="bash"><code>apex document.md --no-ids
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-ids</span>
 </code></pre>
 
 <h3 id="header-anchors">
@@ -1133,18 +1272,18 @@ apex --install-plugin user/apex-plugin-example
   Generate <code>&lt;a&gt;</code> anchor tags instead of <code>id</code> attributes on headers.
 </p>
 
-<pre lang="bash"><code>apex document.md --header-anchors
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--header-anchors</span>
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;!-- Default --&gt;
-&lt;h1 id=&quot;my-header&quot;&gt;My Header&lt;/h1&gt;
+<pre><code class="highlight language-html"><span class="c">&lt;!-- Default --&gt;</span>
+<span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">"my-header"</span><span class="nt">&gt;</span>My Header<span class="nt">&lt;/h1&gt;</span>
 
-&lt;!-- With --header-anchors --&gt;
-&lt;h1&gt;&lt;a id=&quot;my-header&quot; href=&quot;#my-header&quot;&gt;My Header&lt;/a&gt;&lt;/h1&gt;
+<span class="c">&lt;!-- With --header-anchors --&gt;</span>
+<span class="nt">&lt;h1&gt;&lt;a</span> <span class="na">id=</span><span class="s">"my-header"</span> <span class="na">href=</span><span class="s">"#my-header"</span><span class="nt">&gt;</span>My Header<span class="nt">&lt;/a&gt;&lt;/h1&gt;</span>
 </code></pre>
 
 <h2 id="table-options">
@@ -1159,7 +1298,7 @@ apex --install-plugin user/apex-plugin-example
   Enable relaxed table parsing (tables without separator rows). Default in unified and kramdown modes.
 </p>
 
-<pre lang="bash"><code>apex document.md --relaxed-tables
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--relaxed-tables</span>
 </code></pre>
 
 <h3 id="no-relaxed-tables">
@@ -1170,7 +1309,7 @@ apex --install-plugin user/apex-plugin-example
   Disable relaxed table parsing.
 </p>
 
-<pre lang="bash"><code>apex document.md --no-relaxed-tables
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-relaxed-tables</span>
 </code></pre>
 
 <h3 id="captions-position">
@@ -1201,11 +1340,11 @@ apex --install-plugin user/apex-plugin-example
 <strong>  Default:</strong> <code>below</code>
 </p>
 
-<pre lang="bash"><code># Place captions above tables
-apex document.md --captions above
+<pre><code class="highlight language-bash"><span class="c"># Place captions above tables</span>
+apex document.md <span class="nt">--captions</span> above
 
-# Place captions below tables (default)
-apex document.md --captions below
+<span class="c"># Place captions below tables (default)</span>
+apex document.md <span class="nt">--captions</span> below
 </code></pre>
 
 <p>
@@ -1220,7 +1359,7 @@ apex document.md --captions below
   Disable table support entirely.
 </p>
 
-<pre lang="bash"><code>apex document.md --no-tables
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-tables</span>
 </code></pre>
 
 <h2 id="list-options">
@@ -1259,43 +1398,43 @@ apex document.md --captions below
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable alpha lists in GFM mode
-apex document.md --mode gfm --alpha-lists
+<pre><code class="highlight language-bash"><span class="c"># Enable alpha lists in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--alpha-lists</span>
 
-# Disable alpha lists in unified mode
-apex document.md --mode unified --no-alpha-lists
+<span class="c"># Disable alpha lists in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-alpha-lists</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>[apex-alpha-list:lower]
-
-1.  First item
-2.  Second item
-3.  Third item
+<pre><code class="highlight language-markdown">[apex-alpha-list:lower]
+<span class="p">
+1.</span>  First item
+<span class="p">2.</span>  Second item
+<span class="p">3.</span>  Third item
 
 [apex-alpha-list:upper]
-
-1.  Uppercase item
-2.  Another uppercase
+<span class="p">
+1.</span>  Uppercase item
+<span class="p">2.</span>  Another uppercase
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;ol style=&quot;list-style-type: lower-alpha&quot;&gt;
-  &lt;li&gt;First item&lt;/li&gt;
-  &lt;li&gt;Second item&lt;/li&gt;
-  &lt;li&gt;Third item&lt;/li&gt;
-&lt;/ol&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;ol</span> <span class="na">style=</span><span class="s">"list-style-type: lower-alpha"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;li&gt;</span>First item<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Second item<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Third item<span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ol&gt;</span>
 
-&lt;ol style=&quot;list-style-type: upper-alpha&quot;&gt;
-  &lt;li&gt;Uppercase item&lt;/li&gt;
-  &lt;li&gt;Another uppercase&lt;/li&gt;
-&lt;/ol&gt;
+<span class="nt">&lt;ol</span> <span class="na">style=</span><span class="s">"list-style-type: upper-alpha"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Uppercase item<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Another uppercase<span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ol&gt;</span>
 </code></pre>
 
 <h3 id="no-mixed-lists">
@@ -1330,31 +1469,31 @@ apex document.md --mode unified --no-alpha-lists
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable mixed lists in GFM mode
-apex document.md --mode gfm --mixed-lists
+<pre><code class="highlight language-bash"><span class="c"># Enable mixed lists in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--mixed-lists</span>
 
-# Disable mixed lists in unified mode
-apex document.md --mode unified --no-mixed-lists
+<span class="c"># Disable mixed lists in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-mixed-lists</span>
 </code></pre>
 
 <p>
 <strong>  Input with mixed-lists enabled:</strong>
 </p>
 
-<pre lang="markdown"><code>1. First numbered item
-* Second item (becomes numbered)
-* Third item (becomes numbered)
+<pre><code class="highlight language-markdown"><span class="p">1.</span> First numbered item
+<span class="p">*</span> Second item (becomes numbered)
+<span class="p">*</span> Third item (becomes numbered)
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;ol&gt;
-  &lt;li&gt;First numbered item&lt;/li&gt;
-  &lt;li&gt;Second item (becomes numbered)&lt;/li&gt;
-  &lt;li&gt;Third item (becomes numbered)&lt;/li&gt;
-&lt;/ol&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;ol&gt;</span>
+  <span class="nt">&lt;li&gt;</span>First numbered item<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Second item (becomes numbered)<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li&gt;</span>Third item (becomes numbered)<span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ol&gt;</span>
 </code></pre>
 
 <h2 id="feature-flags">
@@ -1369,7 +1508,7 @@ apex document.md --mode unified --no-mixed-lists
   Disable footnote support.
 </p>
 
-<pre lang="bash"><code>apex document.md --no-footnotes
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-footnotes</span>
 </code></pre>
 
 <h3 id="no-smart">
@@ -1380,7 +1519,7 @@ apex document.md --mode unified --no-mixed-lists
   Disable smart typography (smart quotes, dashes, ellipsis).
 </p>
 
-<pre lang="bash"><code>apex document.md --no-smart
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-smart</span>
 </code></pre>
 
 <h3 id="no-math">
@@ -1391,7 +1530,7 @@ apex document.md --mode unified --no-mixed-lists
   Disable math support.
 </p>
 
-<pre lang="bash"><code>apex document.md --no-math
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-math</span>
 </code></pre>
 
 <h3 id="no-autolink">
@@ -1446,35 +1585,35 @@ apex document.md --mode unified --no-mixed-lists
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable autolinking in CommonMark mode
-apex document.md --mode commonmark --autolink
+<pre><code class="highlight language-bash"><span class="c"># Enable autolinking in CommonMark mode</span>
+apex document.md <span class="nt">--mode</span> commonmark <span class="nt">--autolink</span>
 
-# Disable autolinking in unified mode
-apex document.md --mode unified --no-autolink
+<span class="c"># Disable autolinking in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-autolink</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>Visit [https://example.com](https://example.com) or contact [me@example.com](mailto:me@example.com).
-See `&lt;https://example.com&gt;` in code.
+<pre><code class="highlight language-markdown">Visit <span class="p">[</span><span class="nv">https://example.com</span><span class="p">](</span><span class="sx">https://example.com</span><span class="p">)</span> or contact <span class="p">[</span><span class="nv">me@example.com</span><span class="p">](</span><span class="sx">mailto:me@example.com</span><span class="p">)</span>.
+See <span class="sb">`&lt;https://example.com&gt;`</span> in code.
 </code></pre>
 
 <p>
 <strong>  Output with autolink enabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Visit &lt;a href=&quot;https://example.com&quot;&gt;[https://example.com](https://example.com)&lt;/a&gt; or contact &lt;a [href=&quot;me@example.com&quot;](mailto:href=%22me@example.com%22)&gt;me@example.com&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;See &lt;code&gt;&amp;lt;[https://example.com&amp;gt](https://example.com&amp;gt);&lt;/code&gt; in code.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Visit <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"https://example.com"</span><span class="nt">&gt;</span>[https://example.com](https://example.com)<span class="nt">&lt;/a&gt;</span> or contact <span class="nt">&lt;a</span> <span class="na">[href=</span><span class="s">"me@example.com"</span><span class="na">](mailto:href=</span><span class="s">%22me@example.com%22)</span><span class="nt">&gt;</span>me@example.com<span class="nt">&lt;/a&gt;</span>.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;code&gt;</span><span class="ni">&amp;lt;</span>[https://example.com<span class="ni">&amp;gt](https://example.com&amp;gt);</span><span class="nt">&lt;/code&gt;</span> in code.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with autolink disabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Visit [https://example.com](https://example.com) or contact [me@example.com](mailto:me@example.com).&lt;/p&gt;
-&lt;p&gt;See &lt;code&gt;&amp;lt;[https://example.com&amp;gt](https://example.com&amp;gt);&lt;/code&gt; in code.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Visit [https://example.com](https://example.com) or contact [me@example.com](mailto:me@example.com).<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;code&gt;</span><span class="ni">&amp;lt;</span>[https://example.com<span class="ni">&amp;gt](https://example.com&amp;gt);</span><span class="nt">&lt;/code&gt;</span> in code.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <h3 id="obfuscate-emails">
@@ -1489,17 +1628,17 @@ See `&lt;https://example.com&gt;` in code.
 <strong>  Default:</strong> Off (emails are plain <code>mailto:</code> links)
 </p>
 
-<pre lang="bash"><code># Encode all mailto links in the output
-apex document.md --obfuscate-emails
+<pre><code class="highlight language-bash"><span class="c"># Encode all mailto links in the output</span>
+apex document.md <span class="nt">--obfuscate-emails</span>
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;a href=&quot;&amp;#x6D;&amp;#x61;&amp;#x69;&amp;#x6C;&amp;#x74;&amp;#x6F;&amp;#x3A;&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;&quot;&gt;
-&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;
-&lt;/a&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"&amp;#x6D;&amp;#x61;&amp;#x69;&amp;#x6C;&amp;#x74;&amp;#x6F;&amp;#x3A;&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;"</span><span class="nt">&gt;</span>
+<span class="ni">&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;</span>
+<span class="nt">&lt;/a&gt;</span>
 </code></pre>
 
 <h3 id="includes-no-includes">
@@ -1510,8 +1649,8 @@ apex document.md --obfuscate-emails
   Enable or disable file inclusion features. Enabled by default in unified mode.
 </p>
 
-<pre lang="bash"><code>apex document.md --includes
-apex document.md --no-includes
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--includes</span>
+apex document.md <span class="nt">--no-includes</span>
 </code></pre>
 
 <h2 id="image-embedding">
@@ -1598,29 +1737,29 @@ apex document.md --no-includes
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Embed local images
-apex document.md --embed-images
+<pre><code class="highlight language-bash"><span class="c"># Embed local images</span>
+apex document.md <span class="nt">--embed-images</span>
 
-# Embed images with custom base directory
-apex document.md --embed-images --base-dir /path/to/images
+<span class="c"># Embed images with custom base directory</span>
+apex document.md <span class="nt">--embed-images</span> <span class="nt">--base-dir</span> /path/to/images
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>![Local Image](images/photo.png)
-![Remote Image](https://example.com/image.jpg)
-![Already Embedded](data:image/png;base64,iVBORw0KGgo...)
+<pre><code class="highlight language-markdown"><span class="p">![</span><span class="nv">Local Image</span><span class="p">](</span><span class="sx">images/photo.png</span><span class="p">)</span>
+<span class="p">![</span><span class="nv">Remote Image</span><span class="p">](</span><span class="sx">https://example.com/image.jpg</span><span class="p">)</span>
+<span class="p">![</span><span class="nv">Already Embedded</span><span class="p">](</span><span class="sx">data:image/png;base64,iVBORw0KGgo...</span><span class="p">)</span>
 </code></pre>
 
 <p>
 <strong>  Output with <code>--embed-images</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;img src=&quot;data:image/png;base64,iVBORw0KGgo...&quot; alt=&quot;Local Image&quot;&gt;
-&lt;img src=&quot;https://example.com/image.jpg&quot; alt=&quot;Remote Image&quot;&gt;
-&lt;img src=&quot;data:image/png;base64,iVBORw0KGgo...&quot; alt=&quot;Already Embedded&quot;&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"data:image/png;base64,iVBORw0KGgo..."</span> <span class="na">alt=</span><span class="s">"Local Image"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"https://example.com/image.jpg"</span> <span class="na">alt=</span><span class="s">"Remote Image"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"data:image/png;base64,iVBORw0KGgo..."</span> <span class="na">alt=</span><span class="s">"Already Embedded"</span><span class="nt">&gt;</span>
 </code></pre>
 
 <h2 id="path-resolution">
@@ -1687,40 +1826,40 @@ apex document.md --embed-images --base-dir /path/to/images
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Read from file (base directory auto-set to file's directory)
-apex document.md --embed-images
+<pre><code class="highlight language-bash"><span class="c"># Read from file (base directory auto-set to file's directory)</span>
+apex document.md <span class="nt">--embed-images</span>
 
-# Read from stdin with base directory
+<span class="c"># Read from stdin with base directory</span>
 
-cat document.md | apex --base-dir /path/to/document --embed-images
-# Override auto-detected base directory
-apex document.md --base-dir /custom/path --embed-images
+<span class="nb">cat </span>document.md | apex <span class="nt">--base-dir</span> /path/to/document <span class="nt">--embed-images</span>
+<span class="c"># Override auto-detected base directory</span>
+apex document.md <span class="nt">--base-dir</span> /custom/path <span class="nt">--embed-images</span>
 
-# Use for includes
-apex document.md --base-dir /path/to/project --includes
+<span class="c"># Use for includes</span>
+apex document.md <span class="nt">--base-dir</span> /path/to/project <span class="nt">--includes</span>
 </code></pre>
 
 <p>
 <strong>  Input (reading from stdin):</strong>
 </p>
 
-<pre lang="markdown"><code>![Image](images/photo.png)
+<pre><code class="highlight language-markdown"><span class="p">![</span><span class="nv">Image</span><span class="p">](</span><span class="sx">images/photo.png</span><span class="p">)</span>
 </code></pre>
 
 <p>
 <strong>  Without <code>--base-dir</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;!-- Image not found, path preserved --&gt;
-&lt;img src=&quot;images/photo.png&quot; alt=&quot;Image&quot;&gt;
+<pre><code class="highlight language-html"><span class="c">&lt;!-- Image not found, path preserved --&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"images/photo.png"</span> <span class="na">alt=</span><span class="s">"Image"</span><span class="nt">&gt;</span>
 </code></pre>
 
 <p>
 <strong>  With <code>--base-dir /path/to/document</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;!-- Image found at /path/to/document/images/photo.png and embedded --&gt;
-&lt;img src=&quot;data:image/png;base64,...&quot; alt=&quot;Image&quot;&gt;
+<pre><code class="highlight language-html"><span class="c">&lt;!-- Image found at /path/to/document/images/photo.png and embedded --&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"data:image/png;base64,..."</span> <span class="na">alt=</span><span class="s">"Image"</span><span class="nt">&gt;</span>
 </code></pre>
 
 <h3 id="no-transforms">
@@ -1751,36 +1890,36 @@ apex document.md --base-dir /path/to/project --includes
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable transforms in GFM mode
-apex document.md --mode gfm --transforms
+<pre><code class="highlight language-bash"><span class="c"># Enable transforms in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--transforms</span>
 
-# Disable transforms in unified mode
-apex document.md --mode unified --no-transforms
+<span class="c"># Disable transforms in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-transforms</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>---
-title: hello world
----
+<pre><code class="highlight language-markdown"><span class="nn">---</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">hello world</span>
+<span class="nn">---</span>
 
-# [%title:upper]
+<span class="gh"># [%title:upper]</span>
 </code></pre>
 
 <p>
 <strong>  Output with transforms enabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;h1&gt;HELLO WORLD&lt;/h1&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;h1&gt;</span>HELLO WORLD<span class="nt">&lt;/h1&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with transforms disabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;h1&gt;[%title:upper]&lt;/h1&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;h1&gt;</span>[%title:upper]<span class="nt">&lt;/h1&gt;</span>
 </code></pre>
 
 <p>
@@ -1843,7 +1982,7 @@ title: hello world
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --meta-file defaults.yml
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--meta-file</span> defaults.yml
 </code></pre>
 
 <p>
@@ -1858,10 +1997,10 @@ title: hello world
 <strong>  Example metadata file (<code>lang-fr.yml</code>):</strong>
 </p>
 
-<pre lang="yaml"><code>---
-language: fr
-quoteslanguage: french
----
+<pre><code class="highlight language-yaml"><span class="nn">---</span>
+<span class="na">language</span><span class="pi">:</span> <span class="s">fr</span>
+<span class="na">quoteslanguage</span><span class="pi">:</span> <span class="s">french</span>
+<span class="nn">---</span>
 </code></pre>
 
 <p>
@@ -1884,12 +2023,12 @@ Quotes Language: german
 <strong>  Usage:</strong>
 </p>
 
-<pre lang="bash"><code># Use French language settings for all documents
-apex document1.md --meta-file lang-fr.yml
-apex document2.md --meta-file lang-fr.yml
+<pre><code class="highlight language-bash"><span class="c"># Use French language settings for all documents</span>
+apex document1.md <span class="nt">--meta-file</span> lang-fr.yml
+apex document2.md <span class="nt">--meta-file</span> lang-fr.yml
 
-# Use German language settings
-apex document.md --meta-file lang-de.mmd
+<span class="c"># Use German language settings</span>
+apex document.md <span class="nt">--meta-file</span> lang-de.mmd
 </code></pre>
 
 <p>
@@ -1956,17 +2095,17 @@ apex document.md --meta-file lang-de.mmd
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Single metadata value
-apex document.md --meta title=&quot;My Document&quot;
+<pre><code class="highlight language-bash"><span class="c"># Single metadata value</span>
+apex document.md <span class="nt">--meta</span> <span class="nv">title</span><span class="o">=</span><span class="s2">"My Document"</span>
 
-# Multiple metadata values
-apex document.md --meta title=&quot;My Document&quot; --meta author=&quot;John Doe&quot;
+<span class="c"># Multiple metadata values</span>
+apex document.md <span class="nt">--meta</span> <span class="nv">title</span><span class="o">=</span><span class="s2">"My Document"</span> <span class="nt">--meta</span> <span class="nv">author</span><span class="o">=</span><span class="s2">"John Doe"</span>
 
-# Comma-separated pairs
-apex document.md --meta title=&quot;My Document&quot;,author=&quot;John Doe&quot;
+<span class="c"># Comma-separated pairs</span>
+apex document.md <span class="nt">--meta</span> <span class="nv">title</span><span class="o">=</span><span class="s2">"My Document"</span>,author<span class="o">=</span><span class="s2">"John Doe"</span>
 
-# Quoted values with spaces
-apex document.md --meta title=&quot;My Document Title&quot;
+<span class="c"># Quoted values with spaces</span>
+apex document.md <span class="nt">--meta</span> <span class="nv">title</span><span class="o">=</span><span class="s2">"My Document Title"</span>
 </code></pre>
 
 <p>
@@ -2037,16 +2176,16 @@ apex document.md --meta title=&quot;My Document Title&quot;
 <strong>  Example YAML front matter:</strong>
 </p>
 
-<pre lang="yaml"><code>---
-indices: false
-wikilinks: true
-bibliography: references.bib
-title: My Research Paper
-pretty: true
-standalone: true
-language: en
-quoteslanguage: english
----
+<pre><code class="highlight language-yaml"><span class="nn">---</span>
+<span class="na">indices</span><span class="pi">:</span> <span class="kc">false</span>
+<span class="na">wikilinks</span><span class="pi">:</span> <span class="kc">true</span>
+<span class="na">bibliography</span><span class="pi">:</span> <span class="s">references.bib</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">My Research Paper</span>
+<span class="na">pretty</span><span class="pi">:</span> <span class="kc">true</span>
+<span class="na">standalone</span><span class="pi">:</span> <span class="kc">true</span>
+<span class="na">language</span><span class="pi">:</span> <span class="s">en</span>
+<span class="na">quoteslanguage</span><span class="pi">:</span> <span class="s">english</span>
+<span class="nn">---</span>
 </code></pre>
 
 <p>
@@ -2064,11 +2203,11 @@ title: My Research Paper
   When processing multiple files with <code>apex *.md</code>, each file can use its own configuration via metadata. You can also use <code>--meta-file</code> or a global <code>config.yml</code> to specify shared configuration that applies to all processed files.
 </p>
 
-<pre lang="bash"><code># Process all markdown files, each with its own configuration
-apex *.md
+<pre><code class="highlight language-bash"><span class="c"># Process all markdown files, each with its own configuration</span>
+apex <span class="k">*</span>.md
 
-# Process all files with a shared configuration file
-apex *.md --meta-file defaults.yml
+<span class="c"># Process all files with a shared configuration file</span>
+apex <span class="k">*</span>.md <span class="nt">--meta-file</span> defaults.yml
 </code></pre>
 
 <p>
@@ -2135,33 +2274,33 @@ apex *.md --meta-file defaults.yml
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Single bibliography file
-apex document.md --bibliography refs.bib
+<pre><code class="highlight language-bash"><span class="c"># Single bibliography file</span>
+apex document.md <span class="nt">--bibliography</span> refs.bib
 
-# Multiple bibliography files
-apex document.md --bibliography refs1.bib --bibliography refs2.bib
+<span class="c"># Multiple bibliography files</span>
+apex document.md <span class="nt">--bibliography</span> refs1.bib <span class="nt">--bibliography</span> refs2.bib
 
-# With base directory for relative paths
-apex document.md --bibliography references.bib --base-dir /path/to/docs
+<span class="c"># With base directory for relative paths</span>
+apex document.md <span class="nt">--bibliography</span> references.bib <span class="nt">--base-dir</span> /path/to/docs
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>See [@doe99] for details.
+<pre><code class="highlight language-markdown">See [@doe99] for details.
 
-&lt;!-- REFERENCES --&gt;
+<span class="c">&lt;!-- REFERENCES --&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; for details.&lt;/p&gt;
-&lt;div id=&quot;refs&quot; class=&quot;references csl-bib-body&quot;&gt;
-&lt;div id=&quot;ref-doe99&quot; class=&quot;csl-entry&quot;&gt;Doe, John 1999. &lt;em&gt;Article Title&lt;/em&gt;. &lt;em&gt;Journal Name&lt;/em&gt; 1: 1--10&lt;/div&gt;
-&lt;/div&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"citation"</span> <span class="na">data-cites=</span><span class="s">"doe99"</span><span class="nt">&gt;</span>(Doe, John 1999)<span class="nt">&lt;/span&gt;</span> for details.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"refs"</span> <span class="na">class=</span><span class="s">"references csl-bib-body"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"ref-doe99"</span> <span class="na">class=</span><span class="s">"csl-entry"</span><span class="nt">&gt;</span>Doe, John 1999. <span class="nt">&lt;em&gt;</span>Article Title<span class="nt">&lt;/em&gt;</span>. <span class="nt">&lt;em&gt;</span>Journal Name<span class="nt">&lt;/em&gt;</span> 1: 1--10<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <h3 id="csl-file">
@@ -2196,7 +2335,7 @@ apex document.md --bibliography references.bib --base-dir /path/to/docs
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --bibliography refs.bib --csl apa.csl
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--bibliography</span> refs.bib <span class="nt">--csl</span> apa.csl
 </code></pre>
 
 <h3 id="no-bibliography">
@@ -2211,7 +2350,7 @@ apex document.md --bibliography references.bib --base-dir /path/to/docs
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --bibliography refs.bib --no-bibliography
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--bibliography</span> refs.bib <span class="nt">--no-bibliography</span>
 </code></pre>
 
 <p>
@@ -2230,21 +2369,21 @@ apex document.md --bibliography references.bib --base-dir /path/to/docs
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --bibliography refs.bib --link-citations
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--bibliography</span> refs.bib <span class="nt">--link-citations</span>
 </code></pre>
 
 <p>
 <strong>  Output with <code>--link-citations</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;See &lt;a href=&quot;#ref-doe99&quot; class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/a&gt; for details.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#ref-doe99"</span> <span class="na">class=</span><span class="s">"citation"</span> <span class="na">data-cites=</span><span class="s">"doe99"</span><span class="nt">&gt;</span>(Doe, John 1999)<span class="nt">&lt;/a&gt;</span> for details.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output without <code>--link-citations</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; for details.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"citation"</span> <span class="na">data-cites=</span><span class="s">"doe99"</span><span class="nt">&gt;</span>(Doe, John 1999)<span class="nt">&lt;/span&gt;</span> for details.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <h3 id="show-tooltips">
@@ -2259,7 +2398,7 @@ apex document.md --bibliography references.bib --base-dir /path/to/docs
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --bibliography refs.bib --show-tooltips
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--bibliography</span> refs.bib <span class="nt">--show-tooltips</span>
 </code></pre>
 
 <p>
@@ -2318,14 +2457,14 @@ apex document.md --bibliography references.bib --base-dir /path/to/docs
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --indices
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--indices</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>This is about protocols (!Protocol).
+<pre><code class="highlight language-markdown">This is about protocols (!Protocol).
 
 And implementations (!Implementation).
 </code></pre>
@@ -2334,12 +2473,12 @@ And implementations (!Implementation).
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;This is about protocols &lt;span class=&quot;index&quot; id=&quot;idxref:0&quot;&gt;&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;And implementations &lt;span class=&quot;index&quot; id=&quot;idxref:1&quot;&gt;&lt;/span&gt;.&lt;/p&gt;
-&lt;h1 id=&quot;index-section&quot;&gt;Index&lt;/h1&gt;
-&lt;div class=&quot;index&quot;&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>This is about protocols <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"index"</span> <span class="na">id=</span><span class="s">"idxref:0"</span><span class="nt">&gt;&lt;/span&gt;</span>.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>And implementations <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"index"</span> <span class="na">id=</span><span class="s">"idxref:1"</span><span class="nt">&gt;&lt;/span&gt;</span>.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">"index-section"</span><span class="nt">&gt;</span>Index<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"index"</span><span class="nt">&gt;</span>
 ...
-&lt;/div&gt;
+<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <h3 id="no-indices">
@@ -2354,7 +2493,7 @@ And implementations (!Implementation).
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --no-indices
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-indices</span>
 </code></pre>
 
 <p>
@@ -2373,7 +2512,7 @@ And implementations (!Implementation).
 <strong>  Example:</strong>
 </p>
 
-<pre lang="bash"><code>apex document.md --no-index
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--no-index</span>
 </code></pre>
 
 <p>
@@ -2408,7 +2547,7 @@ And implementations (!Implementation).
   Treat newlines as hard breaks (GFM style). Newlines become <code>&lt;br&gt;</code> tags.
 </p>
 
-<pre lang="bash"><code>apex document.md --hardbreaks
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--hardbreaks</span>
 </code></pre>
 
 <h3 id="no-sup-sub">
@@ -2459,22 +2598,22 @@ And implementations (!Implementation).
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable sup/sub in GFM mode
-apex document.md --mode gfm --sup-sub
+<pre><code class="highlight language-bash"><span class="c"># Enable sup/sub in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--sup-sub</span>
 
-# Disable sup/sub in unified mode
-apex document.md --mode unified --no-sup-sub
+<span class="c"># Disable sup/sub in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-sup-sub</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>Water: H&lt;sub&gt;2&lt;/sub&gt;O          # Subscript (tildes within word)
-Area: m&lt;sup&gt;2&lt;/sup&gt;              # Superscript
-Formula: E = mc&lt;sup&gt;2&lt;/sup&gt;      # Superscript
-Chemical: H&lt;sub&gt;2&lt;/sub&gt;SO&lt;sub&gt;4&lt;/sub&gt;    # Multiple subscripts within word
-&lt;u&gt;h2o&lt;/u&gt;                  # Underline (tildes at word boundaries)
+<pre><code class="highlight language-markdown">Water: H<span class="nt">&lt;sub&gt;</span>2<span class="nt">&lt;/sub&gt;</span>O          # Subscript (tildes within word)
+Area: m<span class="nt">&lt;sup&gt;</span>2<span class="nt">&lt;/sup&gt;</span>              # Superscript
+Formula: E = mc<span class="nt">&lt;sup&gt;</span>2<span class="nt">&lt;/sup&gt;</span>      # Superscript
+Chemical: H<span class="nt">&lt;sub&gt;</span>2<span class="nt">&lt;/sub&gt;</span>SO<span class="nt">&lt;sub&gt;</span>4<span class="nt">&lt;/sub&gt;</span>    # Multiple subscripts within word
+<span class="nt">&lt;u&gt;</span>h2o<span class="nt">&lt;/u&gt;</span>                  # Underline (tildes at word boundaries)
 </code></pre>
 
 <h3 id="no-divs">
@@ -2505,30 +2644,30 @@ Chemical: H&lt;sub&gt;2&lt;/sub&gt;SO&lt;sub&gt;4&lt;/sub&gt;    # Multiple subs
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable fenced divs in unified mode (default)
-apex document.md --mode unified --divs
+<pre><code class="highlight language-bash"><span class="c"># Enable fenced divs in unified mode (default)</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--divs</span>
 
-# Disable fenced divs in unified mode
-apex document.md --mode unified --no-divs
+<span class="c"># Disable fenced divs in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-divs</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>&lt;div id=&quot;special&quot; class=&quot;sidebar&quot;&gt;&lt;p&gt;Here is a paragraph.&lt;/p&gt;
-&lt;p&gt;And another.&lt;/p&gt;
-&lt;/div&gt;
+<pre><code class="highlight language-markdown"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"special"</span> <span class="na">class=</span><span class="s">"sidebar"</span><span class="nt">&gt;&lt;p&gt;</span>Here is a paragraph.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>And another.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;div id=&quot;special&quot; class=&quot;sidebar&quot;&gt;
-&lt;p&gt;Here is a paragraph.&lt;/p&gt;
-&lt;p&gt;And another.&lt;/p&gt;
-&lt;/div&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"special"</span> <span class="na">class=</span><span class="s">"sidebar"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;p&gt;</span>Here is a paragraph.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>And another.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <p>
@@ -2599,20 +2738,20 @@ apex document.md --mode unified --no-divs
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable bracketed spans in unified mode (default)
-apex document.md --mode unified --spans
+<pre><code class="highlight language-bash"><span class="c"># Enable bracketed spans in unified mode (default)</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--spans</span>
 
-# Disable bracketed spans in unified mode
-apex document.md --mode unified --no-spans
+<span class="c"># Disable bracketed spans in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-spans</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>This is &lt;span class=&quot;highlight&quot;&gt;highlighted text&lt;/span&gt;
+<pre><code class="highlight language-markdown">This is <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"highlight"</span><span class="nt">&gt;</span>highlighted text<span class="nt">&lt;/span&gt;</span>
  in a sentence.
-&lt;span id=&quot;id&quot; class=&quot;class&quot; key=&quot;value&quot;&gt;Custom span&lt;/span&gt;
+<span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">"id"</span> <span class="na">class=</span><span class="s">"class"</span> <span class="na">key=</span><span class="s">"value"</span><span class="nt">&gt;</span>Custom span<span class="nt">&lt;/span&gt;</span>
 
 </code></pre>
 
@@ -2620,8 +2759,8 @@ apex document.md --mode unified --no-spans
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;This is &lt;span class=&quot;highlight&quot;&gt;highlighted text&lt;/span&gt; in a sentence.&lt;/p&gt;
-&lt;p&gt;&lt;span id=&quot;id&quot; class=&quot;class&quot; key=&quot;value&quot;&gt;Custom span&lt;/span&gt;&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>This is <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"highlight"</span><span class="nt">&gt;</span>highlighted text<span class="nt">&lt;/span&gt;</span> in a sentence.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;span</span> <span class="na">id=</span><span class="s">"id"</span> <span class="na">class=</span><span class="s">"class"</span> <span class="na">key=</span><span class="s">"value"</span><span class="nt">&gt;</span>Custom span<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
 </code></pre>
 
 <p>
@@ -2676,21 +2815,21 @@ apex document.md --mode unified --no-spans
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable emoji autocorrect in unified mode (default)
-apex document.md --mode unified --emoji-autocorrect
+<pre><code class="highlight language-bash"><span class="c"># Enable emoji autocorrect in unified mode (default)</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--emoji-autocorrect</span>
 
-# Disable emoji autocorrect in unified mode
-apex document.md --mode unified --no-emoji-autocorrect
+<span class="c"># Disable emoji autocorrect in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-emoji-autocorrect</span>
 
-# Enable emoji autocorrect in GFM mode
-apex document.md --mode gfm --emoji-autocorrect
+<span class="c"># Enable emoji autocorrect in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--emoji-autocorrect</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>Success! 🚀 🎉 ✨
+<pre><code class="highlight language-markdown">Success! 🚀 🎉 ✨
 I ❤️ Markdown!
 </code></pre>
 
@@ -2698,16 +2837,16 @@ I ❤️ Markdown!
 <strong>  Output with emoji-autocorrect enabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Success! 🚀 🎉 ✨&lt;/p&gt;
-&lt;p&gt;I ❤️ Markdown!&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Success! 🚀 🎉 ✨<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>I ❤️ Markdown!<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with emoji-autocorrect disabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Success! 🚀 🎉 ✨&lt;/p&gt;
-&lt;p&gt;I ❤️ Markdown!&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Success! 🚀 🎉 ✨<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>I ❤️ Markdown!<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <p>
@@ -2718,11 +2857,11 @@ I ❤️ Markdown!
 <strong>  Output:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Water: H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
-&lt;p&gt;Area: m&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;Formula: E = mc&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;Chemical: H&lt;sub&gt;2&lt;/sub&gt;SO&lt;sub&gt;4&lt;/sub&gt;&lt;/p&gt;
-&lt;p&gt;&lt;u&gt;h2o&lt;/u&gt;&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Water: H<span class="nt">&lt;sub&gt;</span>2<span class="nt">&lt;/sub&gt;</span>O<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Area: m<span class="nt">&lt;sup&gt;</span>2<span class="nt">&lt;/sup&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Formula: E = mc<span class="nt">&lt;sup&gt;</span>2<span class="nt">&lt;/sup&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Chemical: H<span class="nt">&lt;sub&gt;</span>2<span class="nt">&lt;/sub&gt;</span>SO<span class="nt">&lt;sub&gt;</span>4<span class="nt">&lt;/sub&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;u&gt;</span>h2o<span class="nt">&lt;/u&gt;&lt;/p&gt;</span>
 </code></pre>
 
 <h3 id="no-unsafe">
@@ -2757,32 +2896,32 @@ I ❤️ Markdown!
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable raw HTML in GFM mode
-apex document.md --mode gfm --unsafe
+<pre><code class="highlight language-bash"><span class="c"># Enable raw HTML in GFM mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--unsafe</span>
 
-# Disable raw HTML in unified mode
-apex document.md --mode unified --no-unsafe
+<span class="c"># Disable raw HTML in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--no-unsafe</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>&lt;div class=&quot;custom&quot;&gt;Custom HTML&lt;/div&gt;
+<pre><code class="highlight language-markdown"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"custom"</span><span class="nt">&gt;</span>Custom HTML<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with unsafe enabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;div class=&quot;custom&quot;&gt;Custom HTML&lt;/div&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"custom"</span><span class="nt">&gt;</span>Custom HTML<span class="nt">&lt;/div&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with unsafe disabled (GFM mode):</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;&amp;lt;div class=&quot;custom&quot;&amp;gt;Custom HTML&amp;lt;/div&amp;gt;&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span><span class="ni">&amp;lt;</span>div class="custom"<span class="ni">&amp;gt;</span>Custom HTML<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span><span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <h3 id="no-wikilinks">
@@ -2802,21 +2941,21 @@ apex document.md --mode unified --no-unsafe
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Enable wiki links in unified mode
-apex document.md --mode unified --wikilinks
+<pre><code class="highlight language-bash"><span class="c"># Enable wiki links in unified mode</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--wikilinks</span>
 
-# Enable wiki links in any mode
-apex document.md --mode gfm --wikilinks
+<span class="c"># Enable wiki links in any mode</span>
+apex document.md <span class="nt">--mode</span> gfm <span class="nt">--wikilinks</span>
 
-# Disable wiki links (explicit)
-apex document.md --no-wikilinks
+<span class="c"># Disable wiki links (explicit)</span>
+apex document.md <span class="nt">--no-wikilinks</span>
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>Check out [[Main Page]] for details.
+<pre><code class="highlight language-markdown">Check out [[Main Page]] for details.
 Or see [[Main Page|the main page]] with custom text.
 Link to [[Main Page#Section]] for a specific section.
 </code></pre>
@@ -2825,18 +2964,18 @@ Link to [[Main Page#Section]] for a specific section.
 <strong>  Output with wikilinks enabled (default - spaces converted to dashes):</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Check out &lt;a href=&quot;Main-Page&quot;&gt;Main Page&lt;/a&gt; for details.&lt;/p&gt;
-&lt;p&gt;Or see &lt;a href=&quot;Main-Page&quot;&gt;the main page&lt;/a&gt; with custom text.&lt;/p&gt;
-&lt;p&gt;Link to &lt;a href=&quot;Main-Page#Section&quot;&gt;Main Page&lt;/a&gt; for a specific section.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Check out <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Main-Page"</span><span class="nt">&gt;</span>Main Page<span class="nt">&lt;/a&gt;</span> for details.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Or see <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Main-Page"</span><span class="nt">&gt;</span>the main page<span class="nt">&lt;/a&gt;</span> with custom text.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Link to <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Main-Page#Section"</span><span class="nt">&gt;</span>Main Page<span class="nt">&lt;/a&gt;</span> for a specific section.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <p>
 <strong>  Output with wikilinks disabled:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;Check out [[Main Page]] for details.&lt;/p&gt;
-&lt;p&gt;Or see [[Main Page|the main page]] for custom text.&lt;/p&gt;
-&lt;p&gt;Link to [[Main Page#Section]] for a specific section.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>Check out [[Main Page]] for details.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Or see [[Main Page|the main page]] for custom text.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Link to [[Main Page#Section]] for a specific section.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <h3 id="wikilink-space-mode">
@@ -2879,17 +3018,17 @@ Link to [[Main Page#Section]] for a specific section.
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Use dashes (default)
-apex document.md --wikilinks --wikilink-space dash
+<pre><code class="highlight language-bash"><span class="c"># Use dashes (default)</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-space</span> dash
 
-# Remove spaces
-apex document.md --wikilinks --wikilink-space none
+<span class="c"># Remove spaces</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-space</span> none
 
-# Use underscores
-apex document.md --wikilinks --wikilink-space underscore
+<span class="c"># Use underscores</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-space</span> underscore
 
-# Keep spaces (not recommended for URLs)
-apex document.md --wikilinks --wikilink-space space
+<span class="c"># Keep spaces (not recommended for URLs)</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-space</span> space
 </code></pre>
 
 <h3 id="wikilink-extension-ext">
@@ -2912,28 +3051,28 @@ apex document.md --wikilinks --wikilink-space space
 <strong>  Examples:</strong>
 </p>
 
-<pre lang="bash"><code># Add .html extension
-apex document.md --wikilinks --wikilink-extension html
+<pre><code class="highlight language-bash"><span class="c"># Add .html extension</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-extension</span> html
 
-# Add .md extension
-apex document.md --wikilinks --wikilink-extension md
+<span class="c"># Add .md extension</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-extension</span> md
 
-# Combine with space mode
-apex document.md --wikilinks --wikilink-space dash --wikilink-extension html
+<span class="c"># Combine with space mode</span>
+apex document.md <span class="nt">--wikilinks</span> <span class="nt">--wikilink-space</span> dash <span class="nt">--wikilink-extension</span> html
 </code></pre>
 
 <p>
 <strong>  Input:</strong>
 </p>
 
-<pre lang="markdown"><code>See [[Home Page]] for details.
+<pre><code class="highlight language-markdown">See [[Home Page]] for details.
 </code></pre>
 
 <p>
 <strong>  Output with <code>--wikilink-space dash --wikilink-extension html</code>:</strong>
 </p>
 
-<pre lang="html"><code>&lt;p&gt;See &lt;a href=&quot;Home-Page.html&quot;&gt;Home Page&lt;/a&gt; for details.&lt;/p&gt;
+<pre><code class="highlight language-html"><span class="nt">&lt;p&gt;</span>See <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Home-Page.html"</span><span class="nt">&gt;</span>Home Page<span class="nt">&lt;/a&gt;</span> for details.<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <h2 id="critic-markup-options">
@@ -2948,7 +3087,7 @@ apex document.md --wikilinks --wikilink-space dash --wikilink-extension html
   Accept all Critic Markup changes. Applies all additions, removes all deletions, keeps substitutions.
 </p>
 
-<pre lang="bash"><code>apex document.md --accept
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--accept</span>
 </code></pre>
 
 <p>
@@ -2987,7 +3126,7 @@ apex document.md --wikilinks --wikilink-space dash --wikilink-extension html
   Reject all Critic Markup changes. Reverts all changes, keeps original text.
 </p>
 
-<pre lang="bash"><code>apex document.md --reject
+<pre><code class="highlight language-bash">apex document.md <span class="nt">--reject</span>
 </code></pre>
 
 <p>
@@ -3030,9 +3169,9 @@ apex document.md --wikilinks --wikilink-space dash --wikilink-extension html
   If no file is specified, Apex reads from stdin:
 </p>
 
-<pre lang="bash"><code>echo &quot;# Hello&quot; | apex
----|---|
-cat document.md | apex &gt; output.html
+<pre><code class="highlight language-bash"><span class="nb">echo</span> <span class="s2">"# Hello"</span> | apex
+<span class="nt">---</span>|---|
+<span class="nb">cat </span>document.md | apex <span class="o">&gt;</span> output.html
 </code></pre>
 
 <h3 id="writing-to-stdout">
@@ -3043,8 +3182,8 @@ cat document.md | apex &gt; output.html
   By default, Apex writes to stdout. Use <code>-o</code> or <code>&gt;</code> to redirect:
 </p>
 
-<pre lang="bash"><code>apex document.md &gt; output.html
-apex document.md -o output.html
+<pre><code class="highlight language-bash">apex document.md <span class="o">&gt;</span> output.html
+apex document.md <span class="nt">-o</span> output.html
 </code></pre>
 
 <h2 id="combining-options">
@@ -3055,14 +3194,14 @@ apex document.md -o output.html
   You can combine multiple options:
 </p>
 
-<pre lang="bash"><code># Standalone document with custom title and stylesheet, pretty-printed
-apex document.md --standalone --title &quot;Report&quot; --style report.css --pretty
+<pre><code class="highlight language-bash"><span class="c"># Standalone document with custom title and stylesheet, pretty-printed</span>
+apex document.md <span class="nt">--standalone</span> <span class="nt">--title</span> <span class="s2">"Report"</span> <span class="nt">--style</span> report.css <span class="nt">--pretty</span>
 
-# GFM mode with no header IDs
-apex --mode gfm --no-ids document.md
+<span class="c"># GFM mode with no header IDs</span>
+apex <span class="nt">--mode</span> gfm <span class="nt">--no-ids</span> document.md
 
-# Unified mode with MMD-style header IDs
-apex --mode unified --id-format mmd document.md
+<span class="c"># Unified mode with MMD-style header IDs</span>
+apex <span class="nt">--mode</span> unified <span class="nt">--id-format</span> mmd document.md
 </code></pre>
 
 <h2 id="option-precedence">
@@ -3073,8 +3212,8 @@ apex --mode unified --id-format mmd document.md
   Options are processed in order. Later options override earlier ones:
 </p>
 
-<pre lang="bash"><code># This will use GFM mode (unified is default, but --mode gfm overrides)
-apex document.md --mode unified --mode gfm
+<pre><code class="highlight language-bash"><span class="c"># This will use GFM mode (unified is default, but --mode gfm overrides)</span>
+apex document.md <span class="nt">--mode</span> unified <span class="nt">--mode</span> gfm
 </code></pre>
 
 <h2 id="examples">
@@ -3085,49 +3224,49 @@ apex document.md --mode unified --mode gfm
   Blog Post
 </h3>
 
-<pre lang="bash"><code>apex post.md --standalone --title &quot;My Blog Post&quot; --style blog.css --pretty -o post.html
+<pre><code class="highlight language-bash">apex post.md <span class="nt">--standalone</span> <span class="nt">--title</span> <span class="s2">"My Blog Post"</span> <span class="nt">--style</span> blog.css <span class="nt">--pretty</span> <span class="nt">-o</span> post.html
 </code></pre>
 
 <h3 id="github-compatible-output">
   GitHub-Compatible Output
 </h3>
 
-<pre lang="bash"><code>apex README.md --mode gfm --pretty &gt; README.html
+<pre><code class="highlight language-bash">apex README.md <span class="nt">--mode</span> gfm <span class="nt">--pretty</span> <span class="o">&gt;</span> README.html
 </code></pre>
 
 <h3 id="documentation-with-custom-ids">
   Documentation with Custom IDs
 </h3>
 
-<pre lang="bash"><code>apex docs.md --standalone --title &quot;Documentation&quot; --id-format mmd --pretty
+<pre><code class="highlight language-bash">apex docs.md <span class="nt">--standalone</span> <span class="nt">--title</span> <span class="s2">"Documentation"</span> <span class="nt">--id-format</span> mmd <span class="nt">--pretty</span>
 </code></pre>
 
 <h3 id="review-document-with-critic-markup">
   Review Document with Critic Markup
 </h3>
 
-<pre lang="bash"><code># Show all changes
+<pre><code class="highlight language-bash"><span class="c"># Show all changes</span>
 apex draft.md
 
-# Apply all changes (final version)
-apex draft.md --accept
+<span class="c"># Apply all changes (final version)</span>
+apex draft.md <span class="nt">--accept</span>
 
-# Revert all changes (original version)
-apex draft.md --reject
+<span class="c"># Revert all changes (original version)</span>
+apex draft.md <span class="nt">--reject</span>
 </code></pre>
 
 <h3 id="academic-document-with-citations">
   Academic Document with Citations
 </h3>
 
-<pre lang="bash"><code># Process document with bibliography
-apex paper.md --bibliography refs.bib
+<pre><code class="highlight language-bash"><span class="c"># Process document with bibliography</span>
+apex paper.md <span class="nt">--bibliography</span> refs.bib
 
-# With citation style and linked citations
-apex paper.md --bibliography refs.bib --csl apa.csl --link-citations
+<span class="c"># With citation style and linked citations</span>
+apex paper.md <span class="nt">--bibliography</span> refs.bib <span class="nt">--csl</span> apa.csl <span class="nt">--link-citations</span>
 
-# Multiple bibliography files
-apex paper.md --bibliography refs1.bib --bibliography refs2.bib
+<span class="c"># Multiple bibliography files</span>
+apex paper.md <span class="nt">--bibliography</span> refs1.bib <span class="nt">--bibliography</span> refs2.bib
 </code></pre>
 
 <h2 id="related">
@@ -3182,7 +3321,7 @@ apex paper.md --bibliography refs1.bib --bibliography refs2.bib
   Plugins can also be enabled per document using metadata (e.g. <code>plugins: true</code>). See <a href="Plugins.html">Plugins</a> for details.
 </p>
 
-<pre lang="bash"><code>apex --plugins document.md
+<pre><code class="highlight language-bash">apex <span class="nt">--plugins</span> document.md
 </code></pre>
 
 <h3 id="list-plugins">
@@ -3205,7 +3344,7 @@ apex paper.md --bibliography refs1.bib --bibliography refs2.bib
 
 </ul>
 
-<pre lang="bash"><code>apex --list-plugins
+<pre><code class="highlight language-bash">apex <span class="nt">--list-plugins</span>
 </code></pre>
 
 <h3 id="install-plugin-id">
@@ -3236,7 +3375,7 @@ apex paper.md --bibliography refs1.bib --bibliography refs2.bib
 
 </ul>
 
-<pre lang="bash"><code>apex --install-plugin kbd
+<pre><code class="highlight language-bash">apex <span class="nt">--install-plugin</span> kbd
 </code></pre>
 
 <h3 id="uninstall-plugin-id">
@@ -3263,7 +3402,7 @@ apex paper.md --bibliography refs1.bib --bibliography refs2.bib
 
 </ul>
 
-<pre lang="bash"><code>apex --uninstall-plugin kbd
+<pre><code class="highlight language-bash">apex <span class="nt">--uninstall-plugin</span> kbd
 </code></pre>
 
 <script>
