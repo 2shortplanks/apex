@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="inline-attribute-lists-ials-and-attribute-list-definitions-alds">
+      Inline Attribute Lists (IALs) and Attribute List Definitions (ALDs)
+    </h1>
+<nav class="page-toc"><ul><li><a href="#inline-attribute-lists-ials-and-attribute-list-definitions-alds">Inline Attribute Lists (IALs) and Attribute List Definitions (ALDs)</a><ul><li><a href="#overview">Overview</a></li><li><a href="#block-level-ials">Block-Level IALs</a><ul><li><a href="#paragraphs">Paragraphs</a></li><li><a href="#headings">Headings</a></li><li><a href="#lists">Lists</a></li><li><a href="#blockquotes">Blockquotes</a></li><li><a href="#tables">Tables</a></li></ul></li><li><a href="#inline-ials">Inline IALs</a><ul><li><a href="#links">Links</a></li><li><a href="#images">Images</a></li><li><a href="#emphasis-and-strong">Emphasis and Strong</a></li><li><a href="#code-spans">Code Spans</a></li></ul></li><li><a href="#attribute-syntax">Attribute Syntax</a><ul><li><a href="#1-ids">1. IDs</a></li><li><a href="#2-classes">2. Classes</a></li><li><a href="#3-key-value-pairs">3. Key-Value Pairs</a></li><li><a href="#combining-attributes">Combining Attributes</a></li></ul></li><li><a href="#attribute-list-definitions-alds">Attribute List Definitions (ALDs)</a><ul><li><a href="#defining-alds">Defining ALDs</a></li><li><a href="#ald-syntax">ALD Syntax</a></li><li><a href="#referencing-alds">Referencing ALDs</a></li><li><a href="#mixed-usage">Mixed Usage</a></li></ul></li><li><a href="#important-notes">Important Notes</a><ul><li><a href="#block-level-ial-positioning">Block-Level IAL Positioning</a></li><li><a href="#inline-ial-positioning">Inline IAL Positioning</a></li><li><a href="#multiple-elements-with-same-attributes">Multiple Elements with Same Attributes</a></li><li><a href="#nested-elements">Nested Elements</a></li></ul></li><li><a href="#examples">Examples</a><ul><li><a href="#complete-example">Complete Example</a></li><li><a href="#using-alds-for-consistent-styling">Using ALDs for Consistent Styling</a></li></ul></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      Inline Attribute Lists (IALs) allow you to add HTML attributes (IDs, classes, and custom key-value pairs) to Markdown elements. Attribute List Definitions (ALDs) let you define reusable attribute sets that can be referenced multiple times.
+    </p>
+
+    <p>
+      This feature is available in <strong>Kramdown</strong> and <strong>unified</strong> modes.
+    </p>
+
+    <h2 id="overview">
+      Overview
+    </h2>
+
+    <p>
+      IALs use the syntax <code>{: attributes}</code> (Kramdown-style) or <code>{#id .class}</code> (Pandoc-style) and can be applied to:
+    </p>
+
+    <ul>
+
+      <li>
+<strong>        Block-level elements</strong>: Headings, paragraphs, lists, blockquotes, code blocks, tables
+      </li>
+
+      <li>
+<strong>        Span-level elements</strong>: Links, images, emphasis (italic), strong (bold), code spans
+      </li>
+
+    </ul>
+
+    <p>
+      Apex supports both formats:
+    </p>
+
+    <ul>
+
+      <li>
+<strong>        Kramdown-style</strong>: <code>{: #id .class key=&quot;value&quot;}</code> - requires a colon after the opening brace
+      </li>
+
+      <li>
+<strong>        Pandoc-style</strong>: <code>{#id .class key=&quot;value&quot;}</code> - no colon required
+      </li>
+
+    </ul>
+
+    <p>
+      Both formats work identically. For example, <code>{#my-id .my-class}</code> is equivalent to <code>{:#my-id .my-class}</code>.
+    </p>
+
+    <p>
+      ALDs define reusable attribute sets with the syntax <code>{🚗 attributes}</code> and can be referenced in IALs using <code>{:ref-name}</code>.
+    </p>
+
+    <h2 id="block-level-ials">
+      Block-Level IALs
+    </h2>
+
+    <p>
+      For block-level elements, IALs appear on a separate line immediately after the element (no blank line).
+    </p>
+
+    <h3 id="paragraphs">
+      Paragraphs
+    </h3>
+
+<pre lang="markdown"><code>This is a paragraph with an ID and classes.
+
+{: #para-id .important .note}
+
+This is a paragraph using Pandoc-style IAL.
+
+{#para-id-2 .important .note}
+
+Another paragraph with custom attributes.
+
+{: title=&quot;Important Note&quot; lang=&quot;en&quot;}
+</code>  </pre>
+
+  <p>
+    Output:
+  </p>
+
+<pre lang="html"><code>&lt;p id=&quot;para-id&quot; class=&quot;important note&quot;&gt;This is a paragraph with an ID and classes.&lt;/p&gt;
+&lt;p id=&quot;para-id-2&quot; class=&quot;important note&quot;&gt;This is a paragraph using Pandoc-style IAL.&lt;/p&gt;
+&lt;p title=&quot;Important Note&quot; lang=&quot;en&quot;&gt;Another paragraph with custom attributes.&lt;/p&gt;
+</code></pre>
+
+<h3 id="headings">
+  Headings
+</h3>
+
+<p>
+  Headings can have IALs on the same line or the next line:
+</p>
+
+<p>
+<strong>  Same line:</strong>
+</p>
+
+<pre lang="markdown"><code># Heading {: #custom-id}
+## Another Heading {: .highlight .large}
+## Pandoc-style Heading {#pandoc-id .highlight}
+</code></pre>
+
+<p>
+<strong>  Next line:</strong>
+</p>
+
+<pre lang="markdown"><code># Heading
+
+{: #custom-id .highlight}
+
+# Pandoc-style Heading
+
+{#pandoc-id-2 .highlight}
+
+## Another Heading
+
+{: .section-title lang=&quot;en&quot;}
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;h1 id=&quot;custom-id&quot;&gt;Heading&lt;/h1&gt;
+&lt;h2 class=&quot;highlight large&quot;&gt;Another Heading&lt;/h2&gt;
+&lt;h2 id=&quot;pandoc-id&quot; class=&quot;highlight&quot;&gt;Pandoc-style Heading&lt;/h2&gt;
+&lt;h1 id=&quot;custom-id&quot; class=&quot;highlight&quot;&gt;Heading&lt;/h1&gt;
+&lt;h1 id=&quot;pandoc-id-2&quot; class=&quot;highlight&quot;&gt;Pandoc-style Heading&lt;/h1&gt;
+&lt;h2 class=&quot;section-title&quot; lang=&quot;en&quot;&gt;Another Heading&lt;/h2&gt;
+</code></pre>
+
+<h3 id="lists">
+  Lists
+</h3>
+
+<pre lang="markdown"><code>- Item 1
+- Item 2
+- Item 3
+
+{: .unordered-list .compact}
+
+1. First
+2. Second
+3. Third
+
+{: #ordered-list .numbered}
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;ul class=&quot;unordered-list compact&quot;&gt;
+  &lt;li&gt;Item 1&lt;/li&gt;
+  &lt;li&gt;Item 2&lt;/li&gt;
+  &lt;li&gt;Item 3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol id=&quot;ordered-list&quot; class=&quot;numbered&quot;&gt;
+  &lt;li&gt;First&lt;/li&gt;
+  &lt;li&gt;Second&lt;/li&gt;
+  &lt;li&gt;Third&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<h3 id="blockquotes">
+  Blockquotes
+</h3>
+
+<pre lang="markdown"><code>&gt; This is a quote.
+
+{: .quote .inspirational}
+
+&gt; Another quote with attribution.
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;blockquote class=&quot;quote inspirational&quot;&gt;
+  &lt;p&gt;This is a quote.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote cite=&quot;https://example.com&quot;&gt;
+  &lt;p&gt;Another quote with attribution.&lt;/p&gt;
+&lt;/blockquote&gt;
+</code></pre>
+
+<h3 id="tables">
+  Tables
+</h3>
+
+<p>
+  Tables can have IALs applied on a separate line after the table:
+</p>
+
+<pre lang="markdown"><code>| Key | Value |
+| --- | :---: |
+| one |   1   |
+| --- | --- |
+| two |   2   |
+
+{: #data-table .striped .bordered}
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;table id=&quot;data-table&quot; class=&quot;striped bordered&quot;&gt;
+  &lt;!-- table content --&gt;
+&lt;/table&gt;
+</code></pre>
+
+<p>
+<strong>  Pandoc table_attributes extension:</strong>
+</p>
+
+<p>
+  Apex also supports Pandoc’s <code>table_attributes</code> extension, which allows IAL attributes to be specified in table captions. When using Pandoc-style captions with the <code>: Caption</code> syntax, IAL attributes in the caption are extracted and applied to the table:
+</p>
+
+<pre lang="markdown"><code>| Key | Value |
+| --- | :---: |
+| one |   1   |
+| --- | --- |
+| two |   2   |
+
+&lt;dl&gt;
+&lt;dd&gt;Key value table {#table-id .testing key=&amp;quot;value&amp;quot;}&lt;/dd&gt;
+&lt;/dl&gt;
+
+</code></pre>
+
+<p>
+  This is equivalent to:
+</p>
+
+<pre lang="markdown"><code>| Key | Value |
+| --- | :---: |
+| one |   1   |
+| --- | --- |
+| two |   2   |
+
+{: #table-id .testing key=&quot;value&quot;}
+</code></pre>
+
+<p>
+  Both Kramdown-style IALs (<code>{: #id .class}</code>) and Pandoc-style IALs without the colon (<code>{#id .class}</code>) are supported in table captions.
+</p>
+
+<p>
+<strong>  Note:</strong> The <code>: Caption</code> syntax only works when adjacent to a table to avoid conflicts with definition list syntax. See <a href="Syntax.html">Syntax</a> for more details on table captions.
+</p>
+
+<h2 id="inline-ials">
+  Inline IALs
+</h2>
+
+<p>
+  Inline IALs appear immediately after the element they apply to, within the same paragraph.
+</p>
+
+<h3 id="links">
+  Links
+</h3>
+
+<pre lang="markdown"><code>This is a [regular link](https://example.com) without attributes.
+
+Here's a [styled link](https://example.com){:.button} with a button class.
+
+Here's a [Pandoc-style link](https://example.com){#link-id .button} with attributes.
+
+You can have [multiple links](https://example.com){:.link-primary} with [different classes](https://example.com){:.link-secondary} in the same paragraph.
+
+A link with [custom attributes](https://example.com){:rel=&quot;nofollow&quot; title=&quot;External Link&quot;}.
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This is a &lt;a href=&quot;https://example.com&quot;&gt;regular link&lt;/a&gt; without attributes.&lt;/p&gt;
+&lt;p&gt;Here's a &lt;a href=&quot;https://example.com&quot; class=&quot;button&quot;&gt;styled link&lt;/a&gt; with a button class.&lt;/p&gt;
+&lt;p&gt;Here's a &lt;a href=&quot;https://example.com&quot; id=&quot;link-id&quot; class=&quot;button&quot;&gt;Pandoc-style link&lt;/a&gt; with attributes.&lt;/p&gt;
+&lt;p&gt;You can have &lt;a href=&quot;https://example.com&quot; class=&quot;link-primary&quot;&gt;multiple links&lt;/a&gt; with &lt;a href=&quot;https://example.com&quot; class=&quot;link-secondary&quot;&gt;different classes&lt;/a&gt; in the same paragraph.&lt;/p&gt;
+&lt;p&gt;A link with &lt;a href=&quot;https://example.com&quot; rel=&quot;nofollow&quot; title=&quot;External Link&quot;&gt;custom attributes&lt;/a&gt;.&lt;/p&gt;
+</code></pre>
+
+<h3 id="images">
+  Images
+</h3>
+
+<pre lang="markdown"><code>![Regular image](image.png)
+
+![Styled image](logo.png)
+
+![Image with ID](icon.png)
+
+![Image with title](photo.jpg)
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;p&gt;&lt;img src=&quot;image.png&quot; alt=&quot;Regular image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;logo.png&quot; alt=&quot;Styled image&quot; class=&quot;logo centered&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;icon.png&quot; alt=&quot;Image with ID&quot; id=&quot;site-icon&quot; class=&quot;icon&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;photo.jpg&quot; alt=&quot;Image with title&quot; title=&quot;Photo Title&quot; alt=&quot;Photo description&quot; /&gt;&lt;/p&gt;
+</code></pre>
+
+<h3 id="emphasis-and-strong">
+  Emphasis and Strong
+</h3>
+
+<pre lang="markdown"><code>This paragraph has **bold text**{:.bold-style} with a custom class and *italic text*{:.italic-style} with another class.
+
+You can combine **bold**{:.bold} and *italic*{:.italic} in the same paragraph with different styles.
+
+Nested **bold with *italic*{:.nested-italic} inside**{:.bold-wrapper} works too.
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This paragraph has &lt;strong class=&quot;bold-style&quot;&gt;bold text&lt;/strong&gt; with a custom class and &lt;em class=&quot;italic-style&quot;&gt;italic text&lt;/em&gt; with another class.&lt;/p&gt;
+&lt;p&gt;You can combine &lt;strong class=&quot;bold&quot;&gt;bold&lt;/strong&gt; and &lt;em class=&quot;italic&quot;&gt;italic&lt;/em&gt; in the same paragraph with different styles.&lt;/p&gt;
+&lt;p&gt;Nested &lt;strong class=&quot;bold-wrapper&quot;&gt;bold with &lt;em class=&quot;nested-italic&quot;&gt;italic&lt;/em&gt; inside&lt;/strong&gt; works too.&lt;/p&gt;
+</code></pre>
+
+<h3 id="code-spans">
+  Code Spans
+</h3>
+
+<pre lang="markdown"><code>Use `inline code`{:.code-inline} for code snippets with styling.
+
+You can have multiple `code spans`{:.code-1} and `more code`{:.code-2} with different classes.
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Use &lt;code class=&quot;code-inline&quot;&gt;inline code&lt;/code&gt; for code snippets with styling.&lt;/p&gt;
+&lt;p&gt;You can have multiple &lt;code class=&quot;code-1&quot;&gt;code spans&lt;/code&gt; and &lt;code class=&quot;code-2&quot;&gt;more code&lt;/code&gt; with different classes.&lt;/p&gt;
+</code></pre>
+
+<h2 id="attribute-syntax">
+  Attribute Syntax
+</h2>
+
+<p>
+  IALs support three types of attributes:
+</p>
+
+<h3 id="1-ids">
+  1. IDs
+</h3>
+
+<p>
+  Use <code>#</code> followed by the ID name:
+</p>
+
+<pre lang="markdown"><code># Heading {: #section-1}
+</code></pre>
+
+<p>
+  Output: <code>&lt;h1 id=&quot;section-1&quot;&gt;Heading&lt;/h1&gt;</code>
+</p>
+
+<h3 id="2-classes">
+  2. Classes
+</h3>
+
+<p>
+  Use <code>.</code> followed by the class name. Multiple classes can be specified:
+</p>
+
+<pre lang="markdown"><code>Paragraph.
+
+{: .important .note .highlight}
+</code></pre>
+
+<p>
+  Output: <code>&lt;p class=&quot;important note highlight&quot;&gt;Paragraph.&lt;/p&gt;</code>
+</p>
+
+<p>
+<strong>  Note:</strong> Multiple <code>.class</code> specifiers are equivalent to a single <code>class</code> attribute with space-separated values.
+</p>
+
+<h3 id="3-key-value-pairs">
+  3. Key-Value Pairs
+</h3>
+
+<p>
+  Use <code>key=&quot;value&quot;</code> or <code>key='value'</code> for custom attributes. Values can be quoted (single or double quotes) or unquoted:
+</p>
+
+<pre lang="markdown"><code>Paragraph.
+
+{: title=&quot;Important Note&quot; lang=&quot;en&quot; data-id=&quot;123&quot;}
+
+Link with attributes.
+[Click here](url){:rel=&quot;nofollow&quot; target=&quot;_blank&quot;}
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;p title=&quot;Important Note&quot; lang=&quot;en&quot; data-id=&quot;123&quot;&gt;Paragraph.&lt;/p&gt;
+&lt;p&gt;Link with attributes.
+&lt;a href=&quot;url&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot;&gt;Click here&lt;/a&gt;&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Quoted values:</strong> Use quotes when values contain spaces or special characters:
+</p>
+
+<pre lang="markdown"><code>
+{: title=&quot;This is a title with spaces&quot; lang=&quot;en-US&quot;}
+</code></pre>
+
+<p>
+<strong>  Unquoted values:</strong> Simple values without spaces can be unquoted:
+</p>
+
+<pre lang="markdown"><code>
+{: lang=en data-visible=true}
+</code></pre>
+
+<p>
+<strong>  Escaping quotes:</strong> Inside quoted values, escape quotes with backslash:
+</p>
+
+<pre lang="markdown"><code>
+{: title=&quot;He said \&quot;Hello\&quot;&quot;}
+</code></pre>
+
+<h3 id="combining-attributes">
+  Combining Attributes
+</h3>
+
+<p>
+  All three types can be combined in a single IAL:
+</p>
+
+<pre lang="markdown"><code># Heading
+
+{: #section-1 .important .highlight title=&quot;Section Title&quot; lang=&quot;en&quot;}
+</code></pre>
+
+<p>
+  Output: <code>&lt;h1 id=&quot;section-1&quot; class=&quot;important highlight&quot; title=&quot;Section Title&quot; lang=&quot;en&quot;&gt;Heading&lt;/h1&gt;</code>
+</p>
+
+<h2 id="attribute-list-definitions-alds">
+  Attribute List Definitions (ALDs)
+</h2>
+
+<p>
+  ALDs let you define reusable attribute sets that can be referenced multiple times. This is useful for maintaining consistent styling across a document.
+</p>
+
+<h3 id="defining-alds">
+  Defining ALDs
+</h3>
+
+<p>
+  ALDs use the syntax <code>{🚗 attributes}</code> and can appear anywhere in your document (though typically at the end for organization):
+</p>
+
+<pre lang="markdown"><code># Header 1
+
+{:header-style}
+
+# Header 2
+
+{:header-style}
+
+# Header 3
+
+{:header-style}
+
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;h1 id=&quot;section-title&quot; class=&quot;large bold&quot; lang=&quot;en&quot;&gt;Header 1&lt;/h1&gt;
+&lt;h1 id=&quot;section-title&quot; class=&quot;large bold&quot; lang=&quot;en&quot;&gt;Header 2&lt;/h1&gt;
+&lt;h1 id=&quot;section-title&quot; class=&quot;large bold&quot; lang=&quot;en&quot;&gt;Header 3&lt;/h1&gt;
+</code></pre>
+
+<h3 id="ald-syntax">
+  ALD Syntax
+</h3>
+
+<p>
+  ALD definitions follow the same attribute syntax as IALs:
+</p>
+
+<pre lang="markdown"><code></code></pre>
+
+<h3 id="referencing-alds">
+  Referencing ALDs
+</h3>
+
+<p>
+  Reference an ALD in an IAL using just the reference name:
+</p>
+
+<pre lang="markdown"><code># Heading
+
+{:my-style}
+
+Paragraph.
+
+{:my-style}
+</code></pre>
+
+<p>
+  If the ALD <code>{💪 ...}</code> is defined, both elements will receive those attributes.
+</p>
+
+<h3 id="mixed-usage">
+  Mixed Usage
+</h3>
+
+<p>
+  You can mix ALD references with additional attributes in the same IAL. The additional attributes override or extend the ALD:
+</p>
+
+<pre lang="markdown"><code>
+# Heading 1
+
+{:base-style}
+
+# Heading 2
+
+{:base-style .class3}
+
+# Heading 3
+
+{:base-style #override-id}
+
+# Heading 4
+
+{:base-style .class3 rel=&quot;nofollow&quot;}
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;h1 id=&quot;main&quot; class=&quot;class1 class2&quot;&gt;Heading 1&lt;/h1&gt;
+&lt;h1 id=&quot;main&quot; class=&quot;class1 class2 class3&quot;&gt;Heading 2&lt;/h1&gt;
+&lt;h1 id=&quot;override-id&quot; class=&quot;class1 class2&quot;&gt;Heading 3&lt;/h1&gt;
+&lt;h1 id=&quot;main&quot; class=&quot;class1 class2 class3&quot; rel=&quot;nofollow&quot;&gt;Heading 4&lt;/h1&gt;
+</code></pre>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Classes</strong>: Additional classes are appended to the ALD classes
+  </li>
+
+  <li>
+<strong>    IDs</strong>: If an ID is specified in the IAL, it overrides the ALD’s ID
+  </li>
+
+  <li>
+<strong>    Key-value attributes</strong>: If a key exists in both ALD and IAL, the IAL value overrides the ALD value
+  </li>
+
+</ul>
+
+<h2 id="important-notes">
+  Important Notes
+</h2>
+
+<h3 id="block-level-ial-positioning">
+  Block-Level IAL Positioning
+</h3>
+
+<p>
+  For block-level elements, the IAL <strong>must</strong> appear immediately after the element with <strong>no blank line</strong> between them:
+</p>
+
+<p>
+<strong>  Correct:</strong>
+</p>
+
+<pre lang="markdown"><code>Paragraph text.
+
+{: .class}
+</code></pre>
+
+<p>
+<strong>  Incorrect:</strong>
+</p>
+
+<pre lang="markdown"><code>Paragraph text.
+
+{: .class}
+</code></pre>
+
+<p>
+  The blank line will cause the IAL to be treated as a separate paragraph.
+</p>
+
+<h3 id="inline-ial-positioning">
+  Inline IAL Positioning
+</h3>
+
+<p>
+  For inline elements, the IAL must appear immediately after the element, with optional whitespace:
+</p>
+
+<pre lang="markdown"><code>[link](url){:.class} text after
+**bold**{:.bold-style} more text
+</code></pre>
+
+<h3 id="multiple-elements-with-same-attributes">
+  Multiple Elements with Same Attributes
+</h3>
+
+<p>
+  When multiple links share the same URL, IALs are correctly matched using element indexing:
+</p>
+
+<pre lang="markdown"><code>Here's a [regular link](https://example.com) and [another link](https://example.com){:.button}.
+</code></pre>
+
+<p>
+  Both links point to the same URL, but only the second one receives the <code>button</code> class.
+</p>
+
+<h3 id="nested-elements">
+  Nested Elements
+</h3>
+
+<p>
+  IALs work with nested inline elements:
+</p>
+
+<pre lang="markdown"><code>**Bold text with *italic*{:.nested} inside**{:.wrapper}
+</code></pre>
+
+<p>
+  The italic element gets the <code>nested</code> class, and the bold element gets the <code>wrapper</code> class.
+</p>
+
+<h2 id="examples">
+  Examples
+</h2>
+
+<h3 id="complete-example">
+  Complete Example
+</h3>
+
+<pre lang="markdown"><code># Main Title
+
+{: #main-title .page-title}
+
+## Section 1
+
+{:section-heading}
+
+This paragraph has [a link](https://example.com){:.external-link} with styling.
+
+Another paragraph with **bold text**{:.highlight}.
+
+## Section 2
+
+{:section-heading}
+
+More content here.
+
+</code></pre>
+
+<p>
+  Output:
+</p>
+
+<pre lang="html"><code>&lt;h1 id=&quot;main-title&quot; class=&quot;page-title&quot;&gt;Main Title&lt;/h1&gt;
+&lt;h2 class=&quot;section important&quot; lang=&quot;en&quot;&gt;Section 1&lt;/h2&gt;
+&lt;p&gt;This paragraph has &lt;a href=&quot;https://example.com&quot; class=&quot;external-link&quot;&gt;a link&lt;/a&gt; with styling.&lt;/p&gt;
+&lt;p&gt;Another paragraph with &lt;strong class=&quot;highlight&quot;&gt;bold text&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 class=&quot;section important&quot; lang=&quot;en&quot;&gt;Section 2&lt;/h2&gt;
+&lt;p&gt;More content here.&lt;/p&gt;
+</code></pre>
+
+<h3 id="using-alds-for-consistent-styling">
+  Using ALDs for Consistent Styling
+</h3>
+
+<pre lang="markdown"><code># Introduction
+
+{:intro}
+
+## Overview
+
+{:intro}
+
+## Details
+
+{:intro}
+
+# Conclusion
+
+{:conclusion}
+
+## Summary
+
+{:conclusion}
+
+</code></pre>
+
+<p>
+  This allows you to maintain consistent styling across multiple elements by defining the attributes once and referencing them multiple times.
+</p>
+
+<h2 id="related">
+  Related
+</h2>
+
+<ul>
+
+  <li>
+<a href="Syntax.html">    Syntax</a> - Complete syntax reference
+  </li>
+
+  <li>
+<a href="Modes.html">    Modes</a> - Understanding processor modes (IALs available in Kramdown and unified modes)
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

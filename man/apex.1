@@ -64,24 +64,25 @@ Pretty\-print HTML with indentation and whitespace.
 \f[B]\(enaria\f[R]
 Add ARIA labels and accessibility attributes to HTML output.
 When enabled, adds:
-.RS
-.IP \(bu 2
+.PP
 \f[CR]aria\-label=\(dqTable of contents\(dq\f[R] to TOC navigation
 elements (\f[CR]<nav class=\(dqtoc\(dq>\f[R])
-.IP \(bu 2
-\f[CR]role=\(dqfigure\(dq\f[R] to \f[CR]<figure>\f[R] elements
-.IP \(bu 2
-\f[CR]role=\(dqtable\(dq\f[R] to \f[CR]<table>\f[R] elements
-.IP \(bu 2
-\f[CR]id\f[R] attributes to \f[CR]<figcaption>\f[R] elements within
-table figures (if missing)
-.IP \(bu 2
-\f[CR]aria\-describedby\f[R] attributes to tables linking them to their
-captions
+.IP
+.EX
+\- \(garole=\(dqfigure\(dq\(ga to \(ga<figure>\(ga elements
+\- \(garole=\(dqtable\(dq\(ga to \(ga<table>\(ga elements
+\- \(gaid\(ga attributes to \(ga<figcaption>\(ga elements within
+
+  table figures (if missing)
+
+\- \(gaaria\-describedby\(ga attributes to tables linking them
+
+  to their captions
+.EE
+.PP
 This enhances screen reader support and makes the HTML output more
 accessible.
 Default: disabled.
-.RE
 .SS Feature Flags
 .TP
 \f[B]\(enaccept\f[R]
@@ -150,39 +151,12 @@ Generate \f[CR]<a>\f[R] anchor tags instead of header IDs.
 \f[B]\(enwikilinks\f[R], \f[B]\(enno\-wikilinks\f[R]
 Enable wiki link syntax \f[CR][[PageName]]\f[R].
 Default: disabled.
-.TP
-\f[B]\(endivs\f[R], \f[B]\(enno\-divs\f[R]
-Enable or disable Pandoc fenced divs syntax.
-Fenced divs allow creating HTML block containers with attributes using
-colon fences (e.g., \f[CR]::: {#id .class} ... :::\f[R]).
-Supports block type syntax \f[CR]>blocktype\f[R] to create different
-HTML elements (e.g., \f[CR]::: >aside {.sidebar}\f[R] creates
-\f[CR]<aside>\f[R] instead of \f[CR]<div>\f[R]).
-Default: enabled in unified mode, disabled in other modes.
-.TP
-\f[B]\(enspans\f[R], \f[B]\(enno\-spans\f[R]
-Enable or disable bracketed spans syntax \f[CR][text]{IAL}\f[R]
-(Pandoc\-style).
-Bracketed spans convert to HTML span elements with attributes.
-Default: enabled in unified mode, disabled in other modes.
-.TP
-\f[B]\(enemoji\-autocorrect\f[R], \f[B]\(enno\-emoji\-autocorrect\f[R]
-Enable or disable emoji name autocorrect.
-When enabled, emoji names like \f[CR]:rocket:\f[R] are automatically
-converted to Unicode emoji characters.
-Default: enabled in unified mode, disabled in other modes.
 .SS Header ID Format
 .TP
 \f[B]\(enid\-format\f[R] \f[I]FORMAT\f[R]
 Header ID format: \f[B]gfm\f[R] (default), \f[B]mmd\f[R], or
 \f[B]kramdown\f[R].
 Modes auto\-set format; use this to override in unified mode.
-.PP
-\f[B]Emoji\-to\-name conversion:\f[R] In GFM format, emojis in headers
-are automatically converted to their textual names in the generated IDs
-(e.g., \f[CR]# 😄 Support\f[R] → \f[CR]id=\(dqsmile\-support\(dq\f[R]),
-matching Pandoc\(cqs GFM behavior.
-This ensures emojis are represented as readable text in header IDs.
 .SS List Options
 .TP
 \f[B]\(enalpha\-lists\f[R], \f[B]\(enno\-alpha\-lists\f[R]
@@ -219,13 +193,20 @@ Obfuscate email links and text using HTML entities (hex\-encoded).
 \f[B]\(enwikilink\-space\f[R] \f[I]MODE\f[R] :: Control how spaces in
 wiki link page names are handled in the generated URL.
 \f[B]MODE\f[R] must be one of:
+.PP
+\f[CR]dash\f[R] \- Convert spaces to dashes: \f[CR][[Home Page]]\f[R] →
+\f[CR]href=\(dqHome\-Page\(dq\f[R]
+.PP
+\f[CR]none\f[R] \- Remove spaces: \f[CR][[Home Page]]\f[R] →
+\f[CR]href=\(dqHomePage\(dq\f[R]
+.PP
+\f[CR]underscore\f[R] \- Convert spaces to underscores:
+\f[CR][[Home Page]]\f[R] → \f[CR]href=\(dqHome_Page\(dq\f[R]
+.PP
+\f[CR]space\f[R] \- Keep spaces (rendered as \f[CR]%%20\f[R] in HTML):
+\f[CR][[Home Page]]\f[R] → \f[CR]href=\(dqHome%20Page\(dq\f[R]
 .IP
 .EX
-\- \(gadash\(ga \- Convert spaces to dashes: \(ga[[Home Page]]\(ga → \(gahref=\(dqHome\-Page\(dq\(ga
-\- \(ganone\(ga \- Remove spaces: \(ga[[Home Page]]\(ga → \(gahref=\(dqHomePage\(dq\(ga
-\- \(gaunderscore\(ga \- Convert spaces to underscores: \(ga[[Home Page]]\(ga → \(gahref=\(dqHome_Page\(dq\(ga
-\- \(gaspace\(ga \- Keep spaces (rendered as \(ga%%20\(ga in HTML): \(ga[[Home Page]]\(ga → \(gahref=\(dqHome%20Page\(dq\(ga
-
 Default: \(gadash\(ga.
 .EE
 .PP
@@ -257,13 +238,17 @@ Image embedding (with \f[B]\(enembed\-images\f[R])
 .IP \(bu 2
 File includes/transclusions
 .IP \(bu 2
-Relative path resolution when reading from stdin or when the working
-directory differs from the document location
+Relative path resolution when reading from stdin or
+.RS 2
+.PP
+when the working directory differs from the document location
+.RE
+.RE
+.PP
 If not specified and reading from a file, the base directory is
 automatically set to the input file\(cqs directory.
 When reading from stdin, this flag must be used to resolve relative
 paths.
-.RE
 .SS Superscript/Subscript
 .TP
 \f[B]\(ensup\-sub\f[R], \f[B]\(enno\-sup\-sub\f[R]
@@ -275,6 +260,30 @@ word/identifier (e.g., \f[CR]H\(ti2\(tiO\f[R] creates H₂O).
 When tildes are at word boundaries (e.g., \f[CR]\(titext\(ti\f[R]), they
 create underline instead.
 Default: enabled in unified and MultiMarkdown modes.
+.TP
+\f[B]\(endivs\f[R], \f[B]\(enno\-divs\f[R]
+Enable or disable Pandoc fenced divs syntax
+(\f[CR]::::: {#id .class} ... :::::\f[R]).
+Fenced divs allow you to create HTML block elements with attributes
+using a special fence syntax.
+By default, fenced divs create \f[CR]<div>\f[R] elements, but you can
+specify different block types using the \f[CR]>blocktype\f[R] syntax
+(e.g., \f[CR]::: >aside {.sidebar} ... :::\f[R] creates an
+\f[CR]<aside>\f[R] element instead).
+Opening fences must have at least 3 colons and attributes; closing
+fences need at least 3 colons.
+Fenced divs can be nested, including different block types.
+Default: enabled in unified mode only.
+.TP
+\f[B]\(enspans\f[R], \f[B]\(enno\-spans\f[R]
+Enable or disable Pandoc\-style bracketed spans syntax
+(\f[CR][text]{#id .class key=\(dqval\(dq}\f[R]).
+Bracketed spans allow you to create HTML \f[CR]<span>\f[R] elements with
+attributes.
+The text inside the brackets is processed as markdown.
+If the bracketed text matches a reference link definition, it will be
+treated as a link instead of a span.
+Default: enabled in unified mode only.
 .SS Citations and Bibliography
 .TP
 \f[B]\(enbibliography\f[R] \f[I]FILE\f[R]
@@ -300,10 +309,14 @@ bibliography entry.
 \f[B]\(enshow\-tooltips\f[R]
 Show tooltips on citations when hovering (requires CSS support).
 .PP
-Citation syntax is supported in MultiMarkdown and unified modes: \-
+Citation syntax is supported in MultiMarkdown and unified modes:
+.IP \(bu 2
 Pandoc: \f[CR][\(atkey]\f[R], \f[CR][\(atkey1; \(atkey2]\f[R],
-\f[CR]\(atkey\f[R] \- MultiMarkdown: \f[CR][#key]\f[R] \- mmark:
-\f[CR][\(atRFC1234]\f[R]
+\f[CR]\(atkey\f[R]
+.IP \(bu 2
+MultiMarkdown: \f[CR][#key]\f[R]
+.IP \(bu 2
+mmark: \f[CR][\(atRFC1234]\f[R]
 .PP
 Bibliography is inserted at the \f[CR]<!\-\- REFERENCES \-\->\f[R]
 marker or appended to the end of the document if no marker is found.
@@ -325,7 +338,11 @@ is not generated.
 Index syntax is supported in MultiMarkdown and unified modes:
 .IP \(bu 2
 \f[B]mmark syntax\f[R]: \f[CR](!item)\f[R], \f[CR](!item, subitem)\f[R],
-\f[CR](!!item, subitem)\f[R] for primary entries
+\(ga(!!item,
+.RS 2
+.PP
+subitem)\(ga for primary entries
+.RE
 .IP \(bu 2
 \f[B]TextIndex syntax\f[R]: \f[CR]word{\(ha}\f[R],
 \f[CR][term]{\(ha}\f[R], \f[CR]{\(haparams}\f[R]
@@ -359,12 +376,6 @@ Removes the plugin directory from the plugins folder.
 Apex will prompt for confirmation before removing the plugin.
 .SS General Options
 .TP
-\f[B]\(enprogress\f[R], \f[B]\(enno\-progress\f[R]
-Show progress indicator during processing.
-Progress is displayed on stderr for operations that take longer than 1
-second.
-Default: enabled when stderr is a TTY, disabled otherwise.
-.TP
 \f[B]\-h\f[R], \f[B]\(enhelp\f[R]
 Show help message and exit.
 .TP
@@ -390,10 +401,9 @@ Indentation (tabs or groups of four spaces) before the filename
 increases the header level of the included document (each indent level
 shifts all Markdown headings in that file down one level).
 Output is raw Markdown suitable for piping into Apex, for example:
-.RS
+.PP
 apex \(enmmd\-merge index.txt | apex \(enmode mmd \(enstandalone \-o
 book.html
-.RE
 .SH EXAMPLES
 Process a markdown file:
 .IP
@@ -539,13 +549,23 @@ Apex supports a wide range of Markdown extensions:
 \f[B]Footnotes\f[R]: Reference\-style footnotes
 .IP \(bu 2
 \f[B]Math\f[R]: Inline (\f[CR]$...$\f[R]) and display
-(\f[CR]$$...$$\f[R]) math with LaTeX
+(\f[CR]$$...$$\f[R]) math
+.RS 2
+.PP
+with LaTeX
+.RE
 .IP \(bu 2
 \f[B]Wiki Links\f[R]: \f[CR][[Page]]\f[R], \f[CR][[Page|Display]]\f[R],
+.RS 2
+.PP
 \f[CR][[Page#Section]]\f[R]
+.RE
 .IP \(bu 2
 \f[B]Critic Markup\f[R]: All 5 types ({++add++}, {\(endel\(en},
+.RS 2
+.PP
 {[STRIKEOUT:sub]}, {==mark==}, {>>comment<<})
+.RE
 .IP \(bu 2
 \f[B]Smart Typography\f[R]: Smart quotes, dashes, ellipsis
 .IP \(bu 2
@@ -553,25 +573,43 @@ Apex supports a wide range of Markdown extensions:
 .IP \(bu 2
 \f[B]Task Lists\f[R]: GFM\-style task lists
 .IP \(bu 2
-\f[B]Metadata\f[R]: YAML front matter, MultiMarkdown metadata, Pandoc
-title blocks
+\f[B]Metadata\f[R]: YAML front matter, MultiMarkdown metadata,
+.RS 2
+.PP
+Pandoc title blocks
+.RE
 .IP \(bu 2
 \f[B]Metadata Transforms\f[R]: Transform metadata values with
+.RS 2
+.PP
 \f[CR][%key:transform]\f[R] syntax (case conversion, string
 manipulation, regex replacement, date formatting, etc.)
+.RE
 .IP \(bu 2
-\f[B]Metadata Control of Options\f[R]: Control command\-line options via
-metadata for per\-document configuration
+\f[B]Metadata Control of Options\f[R]: Control command\-line
+.RS 2
+.PP
+options via metadata for per\-document configuration
+.RE
 .IP \(bu 2
-\f[B]Header IDs\f[R]: Automatic or manual header IDs with multiple
-format options
+\f[B]Header IDs\f[R]: Automatic or manual header IDs with
+.RS 2
+.PP
+multiple format options
+.RE
 .IP \(bu 2
-\f[B]Relaxed Tables\f[R]: Support for tables without separator rows
-(Kramdown\-style)
+\f[B]Relaxed Tables\f[R]: Support for tables without separator
+.RS 2
+.PP
+rows (Kramdown\-style)
+.RE
 .IP \(bu 2
-\f[B]Inline Tables from CSV/TSV\f[R]: Convert inline CSV/TSV text to
-tables using \(ga\(ga\f[CR]table fences or\f[R]\(ga markers
-.IP \(bu 2
+\f[B]Inline Tables from CSV/TSV\f[R]: Convert inline CSV/TSV
+.RS 2
+.PP
+text to tables using \(ga\(ga\f[CR]table fences or\f[R]\(ga markers
+.RE
+.PP
 \f[B]Superscript/Subscript\f[R]: MultiMarkdown\-style superscript
 (\f[CR]\(hatext\f[R]) and subscript (\f[CR]\(titext\(ti\f[R] within
 words) syntax.
@@ -579,9 +617,12 @@ Subscript uses paired tildes within word boundaries (e.g.,
 \f[CR]H\(ti2\(tiO\f[R]), while tildes at word boundaries create
 underline
 .IP \(bu 2
-\f[B]Image Embedding\f[R]: Embed local images as base64 data URLs with
-\f[CR]\-\-embed\-images\f[R] flag
-.IP \(bu 2
+\f[B]Image Embedding\f[R]: Embed local images as base64 data
+.RS 2
+.PP
+URLs with \f[CR]\-\-embed\-images\f[R] flag
+.RE
+.PP
 \f[B]Inline Attribute Lists (IAL)\f[R]: Kramdown\-style syntax for
 adding HTML attributes (IDs, classes, key\-value pairs) to block\-level
 and inline elements.
@@ -592,17 +633,10 @@ See \c
 Inline Attribute Lists
 .UE \c
 \ for complete documentation
-.IP \(bu 2
-\f[B]Fenced Divs\f[R]: Pandoc\-style fenced divs with block type support.
-Use \f[CR]>blocktype\f[R] syntax to create different HTML elements
-(e.g., \f[CR]::: >aside {.sidebar}\f[R] creates \f[CR]<aside>\f[R]
-instead of \f[CR]<div>\f[R]).
-Common block types include \f[CR]aside\f[R], \f[CR]article\f[R],
-\f[CR]section\f[R], \f[CR]details\f[R], \f[CR]summary\f[R],
-\f[CR]header\f[R], \f[CR]footer\f[R], \f[CR]nav\f[R], and custom
-elements.
-Available in unified mode.
 .SH SEE ALSO
+\f[B]apex\-config\f[R](5), \f[B]apex\-plugins\f[R](7),
+\f[B]pandoc\f[R](1), \f[B]markdown\f[R](7)
+.PP
 For complete documentation, see the \c
 .UR https://github.com/ttscoff/apex/wiki
 Apex Wiki

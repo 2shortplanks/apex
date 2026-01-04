@@ -359,63 +359,85 @@ if(BUILD_DOCS)
 endif()
 
 # Man page handling
-# Prefer pre-generated man page from repository, generate only if missing
-set(MAN_SOURCE ${CMAKE_SOURCE_DIR}/man/apex.1.md)
-set(MAN_PREGENERATED ${CMAKE_SOURCE_DIR}/man/apex.1)
-set(MAN_OUTPUT ${CMAKE_BINARY_DIR}/apex.1)
+# Define all man page sources and their sections
+set(MAN_PAGES
+    "apex.1.md:1:apex"
+    "apex-config.5.md:5:apex-config"
+    "apex-plugins.7.md:7:apex-plugins"
+)
 
-# Check if pre-generated man page exists
-if(EXISTS ${MAN_PREGENERATED})
-    # Use pre-generated man page (copy to build directory for installation)
-    add_custom_command(
-        OUTPUT ${MAN_OUTPUT}
-        COMMAND ${CMAKE_COMMAND} -E copy ${MAN_PREGENERATED} ${MAN_OUTPUT}
-        DEPENDS ${MAN_PREGENERATED}
-        COMMENT "Using pre-generated man page"
-    )
-    add_custom_target(man_page_copy ALL DEPENDS ${MAN_OUTPUT})
-    message(STATUS "Man page: Using pre-generated man/apex.1")
-    set(MAN_AVAILABLE TRUE)
-else()
-    # Try to generate man page from Markdown source
-    find_program(PANDOC_EXECUTABLE pandoc)
-    find_program(GO_MD2MAN_EXECUTABLE go-md2man)
+# Find man page generation tools
+find_program(PANDOC_EXECUTABLE pandoc)
+find_program(GO_MD2MAN_EXECUTABLE go-md2man)
 
-    if(PANDOC_EXECUTABLE)
+set(MAN_AVAILABLE FALSE)
+set(MAN_OUTPUTS "")
+
+# Process each man page
+foreach(MAN_PAGE_SPEC ${MAN_PAGES})
+    string(REPLACE ":" ";" MAN_PAGE_PARTS ${MAN_PAGE_SPEC})
+    list(GET MAN_PAGE_PARTS 0 MAN_SOURCE_NAME)
+    list(GET MAN_PAGE_PARTS 1 MAN_SECTION)
+    list(GET MAN_PAGE_PARTS 2 MAN_NAME)
+
+    set(MAN_SOURCE ${CMAKE_SOURCE_DIR}/man/${MAN_SOURCE_NAME})
+    set(MAN_PREGENERATED ${CMAKE_SOURCE_DIR}/man/${MAN_NAME}.${MAN_SECTION})
+    set(MAN_OUTPUT ${CMAKE_BINARY_DIR}/${MAN_NAME}.${MAN_SECTION})
+
+    list(APPEND MAN_OUTPUTS ${MAN_OUTPUT})
+
+    # Check if pre-generated man page exists
+    if(EXISTS ${MAN_PREGENERATED})
+        # Use pre-generated man page (copy to build directory for installation)
         add_custom_command(
             OUTPUT ${MAN_OUTPUT}
-            COMMAND ${PANDOC_EXECUTABLE} -s -t man -o ${MAN_OUTPUT} ${MAN_SOURCE}
-            DEPENDS ${MAN_SOURCE}
-            COMMENT "Generating man page from Markdown using pandoc"
+            COMMAND ${CMAKE_COMMAND} -E copy ${MAN_PREGENERATED} ${MAN_OUTPUT}
+            DEPENDS ${MAN_PREGENERATED}
+            COMMENT "Using pre-generated man/${MAN_NAME}.${MAN_SECTION}"
         )
-        add_custom_target(man_page ALL DEPENDS ${MAN_OUTPUT})
-        message(STATUS "Man page: Will be generated using pandoc")
-        set(MAN_AVAILABLE TRUE)
-    elseif(GO_MD2MAN_EXECUTABLE)
-        add_custom_command(
-            OUTPUT ${MAN_OUTPUT}
-            COMMAND ${GO_MD2MAN_EXECUTABLE} -in=${MAN_SOURCE} -out=${MAN_OUTPUT}
-            DEPENDS ${MAN_SOURCE}
-            COMMENT "Generating man page from Markdown using go-md2man"
-        )
-        add_custom_target(man_page ALL DEPENDS ${MAN_OUTPUT})
-        message(STATUS "Man page: Will be generated using go-md2man")
         set(MAN_AVAILABLE TRUE)
     else()
-        message(WARNING "Pre-generated man page not found and neither pandoc nor go-md2man available.")
-        message(STATUS "  Man page will not be installed. Generate it with 'make man' before building.")
-        set(MAN_AVAILABLE FALSE)
+        # Try to generate man page from Markdown source
+        if(PANDOC_EXECUTABLE)
+            add_custom_command(
+                OUTPUT ${MAN_OUTPUT}
+                COMMAND ${PANDOC_EXECUTABLE} -s -t man -o ${MAN_OUTPUT} ${MAN_SOURCE}
+                DEPENDS ${MAN_SOURCE}
+                COMMENT "Generating man page ${MAN_NAME}.${MAN_SECTION} from Markdown using pandoc"
+            )
+            set(MAN_AVAILABLE TRUE)
+        elseif(GO_MD2MAN_EXECUTABLE)
+            add_custom_command(
+                OUTPUT ${MAN_OUTPUT}
+                COMMAND ${GO_MD2MAN_EXECUTABLE} -in=${MAN_SOURCE} -out=${MAN_OUTPUT}
+                DEPENDS ${MAN_SOURCE}
+                COMMENT "Generating man page ${MAN_NAME}.${MAN_SECTION} from Markdown using go-md2man"
+            )
+            set(MAN_AVAILABLE TRUE)
+        endif()
     endif()
-endif()
 
-# Install man page
+    # Install man page
+    if(MAN_AVAILABLE)
+        install(FILES ${MAN_OUTPUT}
+            DESTINATION share/man/man${MAN_SECTION}
+            RENAME ${MAN_NAME}.${MAN_SECTION}
+        )
+    endif()
+endforeach()
+
+# Create a target that depends on all man pages
 if(MAN_AVAILABLE)
-    # Determine man page section (1 for user commands)
-    set(MAN_SECTION 1)
-    install(FILES ${MAN_OUTPUT}
-        DESTINATION share/man/man${MAN_SECTION}
-        RENAME apex.${MAN_SECTION}
-    )
+    if(PANDOC_EXECUTABLE OR GO_MD2MAN_EXECUTABLE)
+        add_custom_target(man_pages ALL DEPENDS ${MAN_OUTPUTS})
+        message(STATUS "Man pages: Will be generated from Markdown sources")
+    else()
+        add_custom_target(man_pages_copy ALL DEPENDS ${MAN_OUTPUTS})
+        message(STATUS "Man pages: Using pre-generated man pages")
+    endif()
+else()
+    message(WARNING "Pre-generated man pages not found and neither pandoc nor go-md2man available.")
+    message(STATUS "  Man pages will not be installed. Generate them with 'make man' before building.")
 endif()
 
 # Print configuration

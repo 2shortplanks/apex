@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="getting-started">
+      Getting Started
+    </h1>
+<nav class="page-toc"><ul><li><a href="#getting-started">Getting Started</a><ul><li><a href="#installation">Installation</a></li><li><a href="#your-first-conversion">Your First Conversion</a></li><li><a href="#understanding-modes">Understanding Modes</a></li><li><a href="#common-tasks">Common Tasks</a><ul><li><a href="#generate-a-standalone-html-document">Generate a Standalone HTML Document</a></li><li><a href="#pretty-print-html-output">Pretty-Print HTML Output</a></li><li><a href="#disable-automatic-header-ids">Disable Automatic Header IDs</a></li><li><a href="#use-relaxed-tables">Use Relaxed Tables</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></li></ul></nav>
+
+    <p>
+      This guide will help you get up and running with Apex quickly.
+    </p>
+
+    <h2 id="installation">
+      Installation
+    </h2>
+
+    <p>
+      First, you’ll need to build Apex from source. See the <a href="Installation.html">Installation</a> guide for detailed instructions.
+    </p>
+
+<pre lang="bash"><code>git clone https://github.com/ApexMarkdown/apex.git
+cd apex
+mkdir build &amp;&amp; cd build
+cmake ..
+make
+</code>  </pre>
+
+  <h2 id="your-first-conversion">
+    Your First Conversion
+  </h2>
+
+  <p>
+    Once built, you can convert Markdown to HTML:
+  </p>
+
+<pre lang="bash"><code># Basic conversion
+./apex input.md &gt; output.html
+
+# Or pipe from stdin
+echo &quot;# Hello World&quot; | ./apex
+</code></pre>
+
+<h2 id="understanding-modes">
+  Understanding Modes
+</h2>
+
+<p>
+  Apex supports multiple processor modes. The default is <strong>unified mode</strong>, which enables all features. You can also use specific modes for compatibility:
+</p>
+
+<pre lang="bash"><code># Unified mode (default - all features)
+apex document.md
+
+# GFM mode (GitHub compatibility)
+apex --mode gfm document.md
+
+# Kramdown mode
+apex --mode kramdown document.md
+</code></pre>
+
+<p>
+  See the <a href="Modes.html">Modes</a> page for details on what’s enabled in each mode.
+</p>
+
+<h2 id="common-tasks">
+  Common Tasks
+</h2>
+
+<h3 id="generate-a-standalone-html-document">
+  Generate a Standalone HTML Document
+</h3>
+
+<pre lang="bash"><code>apex document.md --standalone --title &quot;My Document&quot; --style styles.css
+</code></pre>
+
+<h3 id="pretty-print-html-output">
+  Pretty-Print HTML Output
+</h3>
+
+<pre lang="bash"><code>apex document.md --pretty
+</code></pre>
+
+<h3 id="disable-automatic-header-ids">
+  Disable Automatic Header IDs
+</h3>
+
+<pre lang="bash"><code>apex document.md --no-ids
+</code></pre>
+
+<h3 id="use-relaxed-tables">
+  Use Relaxed Tables
+</h3>
+
+<p>
+  Relaxed tables are enabled by default in unified and kramdown modes. They allow tables without separator rows:
+</p>
+
+<pre lang="markdown"><code>one | two
+---|---|
+1 | 2
+</code></pre>
+
+<p>
+  To disable:
+</p>
+
+<pre lang="bash"><code>apex document.md --no-relaxed-tables
+</code></pre>
+
+<h2 id="next-steps">
+  Next Steps
+</h2>
+
+<ul>
+
+  <li>
+    Learn about all available <a href="Syntax.html">syntax features</a>
+  </li>
+
+  <li>
+    Understand <a href="Modes.html">processor modes</a>
+  </li>
+
+  <li>
+    Explore <a href="Command-Line-Options.html">command line options</a>
+  </li>
+
+  <li>
+    Check out the <a href="C-API.html">C API</a> for programmatic use
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

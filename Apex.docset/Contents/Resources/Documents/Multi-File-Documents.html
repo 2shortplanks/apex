@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h2 id="multi-file-documents-with-apex">
+      Multi-file documents with Apex
+    </h2>
+
+    <p>
+      Apex can assemble larger documents from many smaller Markdown files. There are two primary tools for this:
+    </p>
+
+    <ul>
+
+      <li>
+<strong><code>--combine</code></strong>: Apex’s native Markdown combiner, with optional GitBook-style <code>SUMMARY.md</code> support.
+      </li>
+
+      <li>
+<strong><code>--mmd-merge</code></strong>: A MultiMarkdown-compatible mode that emulates <code>mmd_merge.pl</code>, reading a plain-text index file to stitch documents together.
+      </li>
+
+    </ul>
+
+    <p>
+      Both modes output <strong>raw Markdown</strong>, which you can then pipe back into <code>apex</code> for full HTML rendering.
+    </p>
+
+<hr />
+    <h2 id="using-combine">
+      Using <code>--combine</code>
+    </h2>
+
+    <h3 id="basic-usage-with-multiple-files">
+      Basic usage with multiple files
+    </h3>
+
+    <p>
+      You can pass multiple Markdown files after <code>--combine</code>. Apex will:
+    </p>
+
+    <ul>
+
+      <li>
+        Read each file in order
+      </li>
+
+      <li>
+        Expand any include syntax it supports (Marked, MultiMarkdown, iA Writer)
+      </li>
+
+      <li>
+        Separate each document with blank lines
+      </li>
+
+    </ul>
+
+    <p>
+      Example:
+    </p>
+
+<pre lang="bash"><code>apex --combine intro.md chapter1.md chapter2.md &gt; combined.md
+
+# Then render the combined Markdown:
+apex combined.md --standalone --title &quot;My Book&quot; -o book.html
+</code>  </pre>
+
+  <p>
+    Or in a single pipeline:
+  </p>
+
+<pre lang="bash"><code>apex --combine intro.md chapter1.md chapter2.md \
+  | apex --standalone --title &quot;My Book&quot; -o book.html
+</code></pre>
+
+<h3 id="using-a-gitbook-style-summarymd">
+  Using a GitBook-style <code>SUMMARY.md</code>
+</h3>
+
+<p>
+  When one of the inputs to <code>--combine</code> is named <code>SUMMARY.md</code>, Apex treats it as a <strong>GitBook index</strong>. It scans the file for Markdown links and combines the referenced pages in order:
+</p>
+
+<p>
+  Example <code>SUMMARY.md</code>:
+</p>
+
+<pre lang="markdown"><code># My Book
+
+- [Introduction](intro.md)
+- [Getting Started](getting-started.md)
+- [Advanced Topics](advanced.md)
+  - [Performance](performance.md)
+  - [Appendix](appendix.md)
+</code></pre>
+
+<p>
+  To build your book:
+</p>
+
+<pre lang="bash"><code>apex --combine SUMMARY.md \
+  | apex --standalone --title &quot;My Book&quot; -o book.html
+</code></pre>
+
+<p>
+<code>--combine</code> will:
+</p>
+
+<ul>
+
+  <li>
+    Follow the link targets (<code>intro.md</code>, <code>getting-started.md</code>, etc.)
+  </li>
+
+  <li>
+    Expand any file includes inside those documents
+  </li>
+
+  <li>
+    Output a single Markdown stream to stdout, ready for final processing
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="using-mmd-merge-multimarkdown-style">
+  Using <code>--mmd-merge</code> (MultiMarkdown-style)
+</h2>
+
+<p>
+<code>--mmd-merge</code> emulates the original MultiMarkdown <code>mmd_merge.pl</code> script. It reads one or more <strong>plain text index files</strong> and:
+</p>
+
+<ul>
+
+  <li>
+    Skips blank lines
+  </li>
+
+  <li>
+    Treats lines whose first non-whitespace character is <code>#</code> as <strong>comments</strong>
+  </li>
+
+  <li>
+    Treats all other lines as filenames to include
+  </li>
+
+  <li>
+    Uses <strong>indentation</strong> (tabs or groups of four spaces) to increase the header level of the included file
+  </li>
+
+</ul>
+
+<h3 id="example-mmdmerge-index-file">
+  Example mmd_merge index file
+</h3>
+
+<pre lang="text"><code>metadata.txt
+Chapter-1.md
+    sub-chapter-1-1.md
+    sub-chapter-1-2.md
+Chapter-2.md
+    sub-chapter-2-1.md
+    sub-chapter-2-2.md
+FAQ.md
+Acknowledgments.md
+</code></pre>
+
+<p>
+  Behavior:
+</p>
+
+<ul>
+
+  <li>
+<code>metadata.txt</code>, <code>Chapter-1.md</code>, <code>Chapter-2.md</code>, <code>FAQ.md</code>, <code>Acknowledgments.md</code> are included at their original heading levels.
+  </li>
+
+  <li>
+    Files indented by <strong>one tab or four spaces</strong> (<code>sub-chapter-1-1.md</code>, <code>sub-chapter-1-2.md</code>, etc.) have all headings shifted <strong>down one level</strong>:
+    <ul>
+
+      <li>
+<code># Heading</code> → <code>## Heading</code>
+      </li>
+
+      <li>
+<code>## Subheading</code> → <code>### Subheading</code>, etc.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  Comments are supported:
+</p>
+
+<pre lang="text"><code># This is my book index
+metadata.txt
+
+# Part 1
+Chapter-1.md
+    sub-chapter-1-1.md
+</code></pre>
+
+<p>
+  Lines starting with <code>#</code> after optional whitespace are ignored.
+</p>
+
+<h3 id="running-mmd-merge-and-piping-back-to-apex">
+  Running <code>--mmd-merge</code> and piping back to Apex
+</h3>
+
+<p>
+  Assuming the index file above is named <code>index.txt</code>:
+</p>
+
+<pre lang="bash"><code>apex --mmd-merge index.txt \
+  | apex --mode mmd --standalone --title &quot;My MMD Book&quot; -o book.html
+</code></pre>
+
+<p>
+  You can also merge multiple index files:
+</p>
+
+<pre lang="bash"><code>apex --mmd-merge part1.txt part2.txt \
+  | apex --mode mmd --standalone --title &quot;My Two-Part Book&quot; -o book.html
+</code></pre>
+
+<p>
+  Notes:
+</p>
+
+<ul>
+
+  <li>
+<code>--mmd-merge</code> does <strong>not</strong> itself expand includes; it just concatenates files and shifts headings.
+  </li>
+
+  <li>
+    For full MultiMarkdown semantics, use <code>--mode mmd</code> when piping the merged Markdown back into Apex.
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="combining-multiple-files-directly-on-the-command-line">
+  Combining multiple files directly on the command line
+</h2>
+
+<p>
+  You don’t need an index file to combine documents. With <code>--combine</code>, you can just list the files in order:
+</p>
+
+<pre lang="bash"><code>apex --combine metadata.md intro.md chapter1.md chapter2.md \
+  | apex --standalone --title &quot;Direct Combine&quot; -o book.html
+</code></pre>
+
+<p>
+  This approach works well when:
+</p>
+
+<ul>
+
+  <li>
+    The order is simple and fixed
+  </li>
+
+  <li>
+    You don’t need header-level shifting based on indentation
+  </li>
+
+</ul>
+
+<p>
+  If you need finer control over header levels, use:
+</p>
+
+<ul>
+
+  <li>
+<code>--mmd-merge</code> with an index file (indentation-based)
+  </li>
+
+  <li>
+    Or explicit headings inside your individual files
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="building-multi-file-documents-with-include-syntax">
+  Building multi-file documents with include syntax
+</h2>
+
+<p>
+  In addition to <code>--combine</code> and <code>--mmd-merge</code>, Apex supports <strong>file includes</strong> inside Markdown. This lets you treat one file as the “root” and pull in other files at specific points.
+</p>
+
+<p>
+  Supported include syntaxes:
+</p>
+
+<ul>
+
+  <li>
+<strong>    MultiMarkdown</strong>: <code>{{file.md}}</code>
+  </li>
+
+  <li>
+<strong>    Marked</strong>: <code>(Markdown include),</code> (code include), `` (raw HTML)
+  </li>
+
+  <li>
+<strong>    iA Writer</strong>: <code>/file.md</code> at the start of a line
+  </li>
+
+</ul>
+
+<h3 id="multimarkdown-include-example">
+  MultiMarkdown include example
+</h3>
+
+<p>
+<code>book.md</code>:
+</p>
+
+<pre lang="markdown"><code>Title: My Included Book
+
+{{metadata.md}}
+
+{{intro.md}}
+{{chapter1.md}}
+{{chapter2.md}}
+{{appendix.md}}
+</code></pre>
+
+<p>
+  Build and render:
+</p>
+
+<pre lang="bash"><code>apex book.md --standalone --title &quot;My Included Book&quot; -o book.html
+</code></pre>
+
+<h3 id="marked-style-include-example">
+  Marked-style include example
+</h3>
+
+<p>
+<code>book.md</code>:
+</p>
+
+<pre lang="markdown"><code># My Marked-Style Book
+
+</code></pre>
+
+<p>
+  Render:
+</p>
+
+<pre lang="bash"><code>apex book.md --standalone --title &quot;My Marked Book&quot; -o book.html
+</code></pre>
+
+<h3 id="ia-writer-style-include-example">
+  iA Writer-style include example
+</h3>
+
+<p>
+<code>book.md</code>:
+</p>
+
+<pre lang="markdown"><code># My iA Writer-Style Book
+
+/intro.md
+/chapter1.md
+/chapter2.md
+</code></pre>
+
+<p>
+  Render:
+</p>
+
+<pre lang="bash"><code>apex book.md --standalone --title &quot;My iA Book&quot; -o book.html
+</code></pre>
+
+<h3 id="combining-includes-with-combine">
+  Combining includes with <code>--combine</code>
+</h3>
+
+<p>
+  You can combine both approaches: use includes inside files and then use <code>--combine</code> on top:
+</p>
+
+<pre lang="bash"><code># Each chapter uses includes, and we combine chapters into one big stream:
+apex --combine part1.md part2.md part3.md \
+  | apex --standalone --title &quot;Big Included Book&quot; -o book.html
+</code></pre>
+
+<p>
+  This is especially useful when:
+</p>
+
+<ul>
+
+  <li>
+    Each part has its own local includes
+  </li>
+
+  <li>
+    You want a single final HTML output
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="choosing-between-combine-mmd-merge-and-includes">
+  Choosing between <code>--combine</code>, <code>--mmd-merge</code>, and includes
+</h2>
+
+<ul>
+
+  <li>
+
+    <p>
+<strong>      Use <code>--combine</code></strong> when:
+    </p>
+
+    <ul>
+
+      <li>
+        You want Apex to expand includes
+      </li>
+
+      <li>
+        You like GitBook-style <code>SUMMARY.md</code> navigation
+      </li>
+
+      <li>
+        You just want to pass multiple files and let Apex concatenate them
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Use <code>--mmd-merge</code></strong> when:
+    </p>
+
+    <ul>
+
+      <li>
+        You have existing MultiMarkdown workflows or <code>mmd_merge.pl</code> index files
+      </li>
+
+      <li>
+        You want indentation-based header level shifting
+      </li>
+
+      <li>
+        You want a very simple, text-only index format
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Use include syntax</strong> when:
+    </p>
+
+    <ul>
+
+      <li>
+        You want one “master” document that controls where content appears
+      </li>
+
+      <li>
+        You prefer to keep structure inside Markdown files rather than an external index
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  All three can be mixed and matched, and all ultimately produce <strong>Markdown</strong> that you can feed back into <code>apex</code> to generate the final HTML, PDF (via Pandoc), or other formats in your toolchain.
+</p>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

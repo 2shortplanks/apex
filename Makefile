@@ -125,13 +125,21 @@ install: build
 
 # Man page generation
 man:
-	@echo "Generating man page..."
+	@echo "Generating man pages..."
 	@if command -v pandoc >/dev/null 2>&1; then \
 		pandoc -s -t man -o man/apex.1 man/apex.1.md && \
 		echo "Man page generated: man/apex.1 (using pandoc)"; \
+		pandoc -s -t man -o man/apex-config.5 man/apex-config.5.md && \
+		echo "Man page generated: man/apex-config.5 (using pandoc)"; \
+		pandoc -s -t man -o man/apex-plugins.7 man/apex-plugins.7.md && \
+		echo "Man page generated: man/apex-plugins.7 (using pandoc)"; \
 	elif command -v go-md2man >/dev/null 2>&1; then \
 		go-md2man -in=man/apex.1.md -out=man/apex.1 && \
 		echo "Man page generated: man/apex.1 (using go-md2man)"; \
+		go-md2man -in=man/apex-config.5.md -out=man/apex-config.5 && \
+		echo "Man page generated: man/apex-config.5 (using go-md2man)"; \
+		go-md2man -in=man/apex-plugins.7.md -out=man/apex-plugins.7 && \
+		echo "Man page generated: man/apex-plugins.7 (using go-md2man)"; \
 	else \
 		echo "Error: Neither pandoc nor go-md2man found."; \
 		echo "  Install pandoc: brew install pandoc"; \

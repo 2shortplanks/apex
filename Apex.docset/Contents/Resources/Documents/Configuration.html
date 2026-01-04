@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="configuration">
+      Configuration
+    </h1>
+<nav class="page-toc"><ul><li><a href="#configuration">Configuration</a><ul><li><a href="#configuration-sources">Configuration sources</a></li><li><a href="#global-config-file-configyml">Global config file: config.yml</a><ul><li><a href="#example-configyml">Example config.yml</a></li></ul></li><li><a href="#reusable-config-files-with-meta-file">Reusable config files with --meta-file</a><ul><li><a href="#example-project-config-project-defaultsyml">Example project config (project-defaults.yml)</a></li></ul></li><li><a href="#per-document-metadata">Per-document metadata</a><ul><li><a href="#yaml-front-matter-example">YAML front matter example</a></li><li><a href="#multimarkdown-metadata-example">MultiMarkdown metadata example</a></li></ul></li><li><a href="#precedence-and-merging">Precedence and merging</a></li><li><a href="#available-configuration-keys">Available configuration keys</a><ul><li><a href="#boolean-options">Boolean options</a></li><li><a href="#string-options">String options</a></li></ul></li><li><a href="#putting-it-all-together">Putting it all together</a></li></ul></li></ul></nav>
+
+    <p>
+      Apex offers a flexible configuration system so you can define defaults once and reuse them across many documents, while still allowing per-document and per-invocation overrides.
+    </p>
+
+    <p>
+      This page covers:
+    </p>
+
+    <ul>
+
+      <li>
+        Where configuration comes from
+      </li>
+
+      <li>
+        The global <code>config.yml</code> file (XDG-aware)
+      </li>
+
+      <li>
+        Using <code>--meta-file</code> with reusable config files
+      </li>
+
+      <li>
+        Per-document metadata (front matter)
+      </li>
+
+      <li>
+        Precedence rules between these sources
+      </li>
+
+      <li>
+        Available configuration keys and their possible values
+      </li>
+
+    </ul>
+
+<hr />
+    <h2 id="configuration-sources">
+      Configuration sources
+    </h2>
+
+    <p>
+      Apex can read configuration from three main places:
+    </p>
+
+    <ol>
+
+      <li>
+<strong>        Global configuration file</strong>
+        <ul>
+
+          <li>
+<code>$XDG_CONFIG_HOME/apex/config.yml</code> when <code>XDG_CONFIG_HOME</code> is set
+          </li>
+
+          <li>
+<code>~/.config/apex/config.yml</code> when <code>XDG_CONFIG_HOME</code> is not set
+          </li>
+
+          <li>
+            Loaded <strong>automatically</strong> when present if you do <strong>not</strong> pass <code>--meta-file</code>
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+<strong>        External metadata files</strong>
+        <ul>
+
+          <li>
+            Any file you pass explicitly with <code>--meta-file FILE</code>
+          </li>
+
+          <li>
+            Shared configuration for multiple documents
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+<strong>        Per-document metadata</strong>
+        <ul>
+
+          <li>
+            YAML, MultiMarkdown, or Pandoc-style metadata at the top of the document
+          </li>
+
+          <li>
+            Used for settings that are specific to a single document
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ol>
+
+    <p>
+      On top of all of these, you can always pass <strong>command-line flags</strong> such as <code>--mode</code>, <code>--pretty</code>, <code>--no-tables</code>, etc.
+    </p>
+
+<hr />
+    <h2 id="global-config-file-configyml">
+      Global config file: <code>config.yml</code>
+    </h2>
+
+    <p>
+      When you run <code>apex</code> <strong>without</strong> an explicit <code>--meta-file</code>, Apex will check for a global configuration file named <code>config.yml</code> in an XDG-aware location:
+    </p>
+
+    <ul>
+
+      <li>
+        If <code>$XDG_CONFIG_HOME</code> is set:
+        <ul>
+
+          <li>
+<code>$XDG_CONFIG_HOME/apex/config.yml</code>
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+        Otherwise:
+        <ul>
+
+          <li>
+<code>~/.config/apex/config.yml</code>
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+    <p>
+      If the file exists, Apex loads it <strong>as if you had passed it via <code>--meta-file</code></strong>, and merges its metadata with the document and any <code>--meta</code> command-line metadata using the normal precedence rules (see below).
+    </p>
+
+    <p>
+      This makes <code>config.yml</code> ideal for defining <strong>project‑agnostic defaults</strong>, such as:
+    </p>
+
+    <ul>
+
+      <li>
+        Default <code>mode</code> (e.g. <code>unified</code>, <code>gfm</code>, <code>mmd</code>)
+      </li>
+
+      <li>
+        Default <code>language</code> and <code>quoteslanguage</code>
+      </li>
+
+      <li>
+        Common feature flags (<code>pretty</code>, <code>standalone</code>, <code>indices</code>, <code>wikilinks</code>, etc.)
+      </li>
+
+      <li>
+        Default bibliography style for your writing workflow
+      </li>
+
+    </ul>
+
+    <h3 id="example-configyml">
+      Example <code>config.yml</code>
+    </h3>
+
+<pre lang="yaml"><code>---
+# Default processor mode and output style
+mode: unified
+standalone: true
+pretty: true
+
+# Locale and quotation style
+language: en
+quoteslanguage: english
+
+# Common feature flags
+autolink: true
+includes: true
+relaxed-tables: true
+sup-sub: true
+
+# Index and bibliography defaults
+indices: true
+group-index-by-letter: true
+bibliography: references.bib
+csl: apa.csl
+---
+</code>  </pre>
+
+  <p>
+    With this configuration in place, a simple command like:
+  </p>
+
+<pre lang="bash"><code>apex document.md
+</code></pre>
+
+<p>
+  will automatically use your global defaults. You can then override any of them with per-document metadata or CLI flags when needed.
+</p>
+
+<hr />
+<h2 id="reusable-config-files-with-meta-file">
+  Reusable config files with <code>--meta-file</code>
+</h2>
+
+<p>
+  For <strong>project-specific</strong> or <strong>task-specific</strong> configurations, use <code>--meta-file</code> to point to a reusable metadata file:
+</p>
+
+<pre lang="bash"><code>apex document.md --meta-file project-defaults.yml
+</code></pre>
+
+<p>
+  These files use the same metadata keys as <code>config.yml</code> and document front matter.
+</p>
+
+<h3 id="example-project-config-project-defaultsyml">
+  Example project config (<code>project-defaults.yml</code>)
+</h3>
+
+<pre lang="yaml"><code>---
+mode: unified
+standalone: true
+pretty: true
+
+# Project-specific bibliography
+bibliography: project-refs.bib
+csl: chicago-note-bibliography.csl
+
+# Enable wiki links and relaxed tables for this project
+wikilinks: true
+relaxed-tables: true
+---
+</code></pre>
+
+<p>
+  You can reuse the same <code>project-defaults.yml</code> for many documents:
+</p>
+
+<pre lang="bash"><code>apex chapter1.md --meta-file project-defaults.yml
+apex chapter2.md --meta-file project-defaults.yml
+apex appendix.md --meta-file project-defaults.yml
+</code></pre>
+
+<p>
+  If a global <code>config.yml</code> is also present, the <strong>explicit</strong> <code>--meta-file</code> still participates as the “file metadata” layer; precedence is determined by the rules below.
+</p>
+
+<hr />
+<h2 id="per-document-metadata">
+  Per-document metadata
+</h2>
+
+<p>
+  Each document can define its own metadata in YAML, MultiMarkdown, or Pandoc formats. Apex extracts this metadata <strong>before</strong> processing, merges it with any file/config metadata, and then applies it to options.
+</p>
+
+<h3 id="yaml-front-matter-example">
+  YAML front matter example
+</h3>
+
+<pre lang="markdown"><code>---
+title: My Research Paper
+author: Jane Doe
+mode: unified
+standalone: true
+pretty: true
+indices: false
+wikilinks: true
+bibliography: references.bib
+language: en
+quoteslanguage: english
+---
+
+# Introduction
+...
+</code></pre>
+
+<h3 id="multimarkdown-metadata-example">
+  MultiMarkdown metadata example
+</h3>
+
+<pre lang="markdown"><code>Title: My Research Paper
+Author: Jane Doe
+Mode: unified
+Standalone: true
+Pretty: true
+Indices: false
+WikiLinks: true
+Bibliography: references.bib
+Language: en
+Quotes Language: english
+
+# Introduction
+...
+</code></pre>
+
+<p>
+  Apex normalizes keys (case-insensitive, ignores spaces and dashes), so <code>Quotes Language</code>, <code>quoteslanguage</code>, and <code>quotes-language</code> are treated equivalently.
+</p>
+
+<hr />
+<h2 id="precedence-and-merging">
+  Precedence and merging
+</h2>
+
+<p>
+  When Apex builds the final configuration for a run, it merges all sources in this order:
+</p>
+
+<ol>
+
+  <li>
+<strong>    File metadata</strong> (lowest precedence)
+    <ul>
+
+      <li>
+        Global <code>config.yml</code> if present and no explicit <code>--meta-file</code> was given
+      </li>
+
+      <li>
+        Any metadata file provided via <code>--meta-file</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    Document metadata</strong>
+    <ul>
+
+      <li>
+        YAML/MultiMarkdown/Pandoc metadata inside the document
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    Command-line metadata</strong>
+    <ul>
+
+      <li>
+        Values passed via <code>--meta KEY=VALUE</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    Command-line flags</strong>
+    <ul>
+
+      <li>
+        Flags like <code>--mode</code>, <code>--pretty</code>, <code>--no-tables</code>, etc.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ol>
+
+<p>
+  Later sources override earlier ones. In practice:
+</p>
+
+<ul>
+
+  <li>
+    A document can <strong>override</strong> defaults from <code>config.yml</code> or <code>--meta-file</code>
+  </li>
+
+  <li>
+<code>--meta</code> values can override both document and file metadata
+  </li>
+
+  <li>
+    Explicit CLI flags (<code>--mode gfm</code>, <code>--no-tables</code>, etc.) still behave as final overrides where applicable
+  </li>
+
+</ul>
+
+<p>
+  Note: if <code>mode</code> is specified in metadata (file or document), Apex <strong>resets options to that mode’s defaults</strong> before applying other metadata keys, so the mode behaves as if you had passed it on the command line first.
+</p>
+
+<hr />
+<h2 id="available-configuration-keys">
+  Available configuration keys
+</h2>
+
+<p>
+  Configuration keys correspond closely to Apex command-line options. Most options can be controlled via metadata in <code>config.yml</code>, <code>--meta-file</code> files, or per-document metadata.
+</p>
+
+<h3 id="boolean-options">
+  Boolean options
+</h3>
+
+<p>
+  Boolean keys accept any of the following values (case-insensitive):
+</p>
+
+<ul>
+
+  <li>
+<code>true</code> / <code>false</code>
+  </li>
+
+  <li>
+<code>yes</code> / <code>no</code>
+  </li>
+
+  <li>
+<code>1</code> / <code>0</code>
+  </li>
+
+</ul>
+
+<p>
+<strong>  Supported boolean keys include:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>indices</code> – Enable index processing
+  </li>
+
+  <li>
+<code>wikilinks</code> – Enable wiki link syntax (<code>[[Page]]</code>)
+  </li>
+
+  <li>
+<code>includes</code> – Enable file inclusion
+  </li>
+
+  <li>
+<code>relaxed-tables</code> – Enable relaxed table parsing
+  </li>
+
+  <li>
+<code>alpha-lists</code> – Enable alphabetic list markers
+  </li>
+
+  <li>
+<code>mixed-lists</code> – Allow mixing list marker types at the same level
+  </li>
+
+  <li>
+<code>sup-sub</code> – Enable MultiMarkdown-style superscript/subscript
+  </li>
+
+  <li>
+<code>autolink</code> – Enable automatic URL/email linking
+  </li>
+
+  <li>
+<code>transforms</code> – Enable metadata transforms (<code>[%key:transform]</code>)
+  </li>
+
+  <li>
+<code>unsafe</code> – Allow raw HTML in output
+  </li>
+
+  <li>
+<code>tables</code> – Enable/disable table support
+  </li>
+
+  <li>
+<code>footnotes</code> – Enable/disable footnote support
+  </li>
+
+  <li>
+<code>smart</code> – Enable/disable smart typography
+  </li>
+
+  <li>
+<code>math</code> – Enable/disable math support
+  </li>
+
+  <li>
+<code>ids</code> – Enable/disable automatic header IDs
+  </li>
+
+  <li>
+<code>header-anchors</code> – Use <code>&lt;a&gt;</code> anchors instead of plain <code>id</code> attributes
+  </li>
+
+  <li>
+<code>embed-images</code> – Enable base64 image embedding
+  </li>
+
+  <li>
+<code>link-citations</code> – Link citations to bibliography entries
+  </li>
+
+  <li>
+<code>show-tooltips</code> – Add tooltips to citations
+  </li>
+
+  <li>
+<code>suppress-bibliography</code> – Suppress bibliography output
+  </li>
+
+  <li>
+<code>suppress-index</code> – Suppress index output while still creating markers
+  </li>
+
+  <li>
+<code>group-index-by-letter</code> – Group index entries alphabetically
+  </li>
+
+  <li>
+<code>obfuscate-emails</code> – Hex-encode <code>mailto:</code> links and visible email addresses
+  </li>
+
+  <li>
+<code>pretty</code> – Pretty-print HTML
+  </li>
+
+  <li>
+<code>standalone</code> – Generate a full HTML document (<code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>)
+  </li>
+
+  <li>
+<code>hardbreaks</code> – Treat newlines as <code>&lt;br&gt;</code>
+  </li>
+
+  <li>
+<code>plugins</code> – Enable plugin processing for this document (see <a href="Plugins.html">Plugins</a>)
+  </li>
+
+</ul>
+
+<h3 id="string-options">
+  String options
+</h3>
+
+<p>
+  String keys take a free-form string value (sometimes with a constrained set of options):
+</p>
+
+<ul>
+
+  <li>
+<code>mode</code>
+    <ul>
+
+      <li>
+        Values: <code>commonmark</code>, <code>gfm</code>, <code>mmd</code>/<code>multimarkdown</code>, <code>kramdown</code>, <code>unified</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>id-format</code>
+    <ul>
+
+      <li>
+        Values: <code>gfm</code>, <code>mmd</code>, <code>kramdown</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>title</code>
+    <ul>
+
+      <li>
+        Document title (used especially in standalone mode)
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>style</code> / <code>css</code>
+    <ul>
+
+      <li>
+        Stylesheet path for standalone documents
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>base-dir</code>
+    <ul>
+
+      <li>
+        Base directory used for resolving relative paths (images, includes, etc.)
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>bibliography</code>
+    <ul>
+
+      <li>
+        Path to a bibliography file (<code>.bib</code>, <code>.json</code>, <code>.yml</code>, <code>.yaml</code>)
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>csl</code>
+    <ul>
+
+      <li>
+        Path to a CSL style file
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>language</code>
+    <ul>
+
+      <li>
+        BCP 47 or similar language tag (e.g. <code>en</code>, <code>en-US</code>, <code>fr</code>); sets the HTML <code>lang</code> attribute
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<code>quoteslanguage</code> / <code>Quotes Language</code>
+    <ul>
+
+      <li>
+        Human-readable language name used for quote styling (e.g. <code>english</code>, <code>french</code>, <code>german</code>)
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  You can also use arbitrary keys for your own templates and transforms; Apex simply passes them through to the metadata system so they can be referenced via <code>[%key]</code> and <code>[%key:transform]</code>.
+</p>
+
+<hr />
+<h2 id="putting-it-all-together">
+  Putting it all together
+</h2>
+
+<p>
+  A typical setup might look like this:
+</p>
+
+<ol>
+
+  <li>
+<strong>    Global defaults</strong> in <code>config.yml</code> for your overall writing style and locale.
+  </li>
+
+  <li>
+<strong>    Project config</strong> via <code>--meta-file project.yml</code> for bibliography and project-specific settings.
+  </li>
+
+  <li>
+<strong>    Per-document metadata</strong> for title, author, and any exceptions to the defaults.
+  </li>
+
+  <li>
+    Occasional <strong>CLI overrides</strong> for ad-hoc one-off changes (e.g. <code>--mode gfm</code> for a specific run).
+  </li>
+
+</ol>
+
+<p>
+  Because all three configuration layers use the same metadata keys, you can gradually refine behavior without repeating yourself:
+</p>
+
+<ul>
+
+  <li>
+    Put long‑lived, cross‑project settings in <code>config.yml</code>
+  </li>
+
+  <li>
+    Put project‑scoped settings in <code>--meta-file</code> configs
+  </li>
+
+  <li>
+    Put document‑specific settings in front matter
+  </li>
+
+</ul>
+
+<p>
+  For more examples of metadata usage and transforms, see <a href="Command-Line-Options#metadata-options">Metadata Options</a> and <a href="Metadata-Transforms.html">Metadata Transforms</a>.
+</p>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

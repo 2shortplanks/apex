@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="metadata-transforms">
+      Metadata Transforms
+    </h1>
+<nav class="page-toc"><ul><li><a href="#metadata-transforms">Metadata Transforms</a><ul><li><a href="#metadata-sources">Metadata Sources</a></li><li><a href="#basic-usage">Basic Usage</a></li><li><a href="#enabling-transforms">Enabling Transforms</a></li><li><a href="#case-transforms">Case Transforms</a><ul><li><a href="#upper">upper</a></li><li><a href="#lower">lower</a></li><li><a href="#title">title</a></li><li><a href="#capitalize">capitalize</a></li></ul></li><li><a href="#string-manipulation">String Manipulation</a><ul><li><a href="#trim">trim</a></li><li><a href="#slug-slugify">slug / slugify</a></li><li><a href="#replaceoldnew-replaceregexpatternreplacement">replace(OLD,NEW) / replace(regex:PATTERN,REPLACEMENT)</a></li><li><a href="#substringstartend-substrstartend">substring(START,END) / substr(START,END)</a></li><li><a href="#truncatelengthsuffix">truncate(LENGTH,SUFFIX)</a></li><li><a href="#reverse">reverse</a></li></ul></li><li><a href="#array-transforms">Array Transforms</a><ul><li><a href="#splitdelimiter">split(DELIMITER)</a></li><li><a href="#joindelimiter">join(DELIMITER)</a></li><li><a href="#first">first</a></li><li><a href="#last">last</a></li><li><a href="#slicestartlength">slice(START,LENGTH)</a></li></ul></li><li><a href="#utility-transforms">Utility Transforms</a><ul><li><a href="#defaultvalue">default(VALUE)</a></li><li><a href="#escape-htmlescape">escape / html_escape</a></li><li><a href="#basename">basename</a></li><li><a href="#urlencode">urlencode</a></li><li><a href="#urldecode">urldecode</a></li><li><a href="#prefixvalue">prefix(VALUE)</a></li><li><a href="#suffixvalue">suffix(VALUE)</a></li><li><a href="#removestring">remove(STRING)</a></li><li><a href="#repeatcount">repeat(COUNT)</a></li></ul></li><li><a href="#formatting-transforms">Formatting Transforms</a><ul><li><a href="#formatformatstring">format(FORMAT_STRING)</a></li><li><a href="#length">length</a></li><li><a href="#padwidthchar">pad(WIDTH,CHAR)</a></li><li><a href="#containsstring">contains(STRING)</a></li></ul></li><li><a href="#datetime-transforms">Date/Time Transforms</a><ul><li><a href="#strftimeformat">strftime(FORMAT)</a></li></ul></li><li><a href="#transform-chaining">Transform Chaining</a></li><li><a href="#notes">Notes</a></li></ul></li></ul></nav>
+
+    <p>
+      Metadata transforms allow you to modify metadata values using the <code>[%key:transform]</code> syntax. Transforms can be chained together, and many accept optional parameters.
+    </p>
+
+    <h2 id="metadata-sources">
+      Metadata Sources
+    </h2>
+
+    <p>
+      Metadata can come from three sources (merged in priority order):
+    </p>
+
+    <ol>
+
+      <li>
+<strong>        Command-line</strong>: <code>--meta KEY=VALUE</code> (highest priority)
+      </li>
+
+      <li>
+<strong>        Document</strong>: Metadata embedded in the document (YAML, MMD, or Pandoc format)
+      </li>
+
+      <li>
+<strong>        External file</strong>: <code>--meta-file FILE</code> (lowest priority)
+      </li>
+
+    </ol>
+
+    <p>
+      See <a href="Command-Line-Options.html">Command Line Options</a> for details on <code>--meta-file</code> and <code>--meta</code> flags.
+    </p>
+
+    <h2 id="basic-usage">
+      Basic Usage
+    </h2>
+
+    <p>
+      The basic syntax is <code>[%key:transform]</code> where <code>key</code> is a metadata key and <code>transform</code> is one of the available transforms:
+    </p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+# [%title:upper]
+&lt;!-- Outputs: # HELLO WORLD --&gt;
+</code>  </pre>
+
+  <p>
+    Transforms can be chained using colons:
+  </p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+# [%title🐢split( ):first]
+&lt;!-- Outputs: # Hello --&gt;
+</code></pre>
+
+<h2 id="enabling-transforms">
+  Enabling Transforms
+</h2>
+
+<p>
+  Metadata transforms are <strong>enabled by default in unified mode</strong>. For other modes, use the <code>--transforms</code> flag:
+</p>
+
+<pre lang="bash"><code>apex document.md --transforms
+</code></pre>
+
+<p>
+  To disable transforms (even in unified mode), use <code>--no-transforms</code>.
+</p>
+
+<h2 id="case-transforms">
+  Case Transforms
+</h2>
+
+<h3 id="upper">
+<code>upper</code>
+</h3>
+
+<p>
+  Converts the value to uppercase.
+</p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+[%title:upper]
+&lt;!-- Outputs: HELLO WORLD --&gt;
+</code></pre>
+
+<h3 id="lower">
+<code>lower</code>
+</h3>
+
+<p>
+  Converts the value to lowercase.
+</p>
+
+<pre lang="markdown"><code>---
+title: HELLO WORLD
+---
+
+[%title:lower]
+&lt;!-- Outputs: hello world --&gt;
+</code></pre>
+
+<h3 id="title">
+<code>title</code>
+</h3>
+
+<p>
+  Converts the value to title case (capitalizes first letter of each word).
+</p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+[%title:title]
+&lt;!-- Outputs: Hello World --&gt;
+</code></pre>
+
+<h3 id="capitalize">
+<code>capitalize</code>
+</h3>
+
+<p>
+  Capitalizes only the first letter of the value.
+</p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+[%title:capitalize]
+&lt;!-- Outputs: Hello world --&gt;
+</code></pre>
+
+<h2 id="string-manipulation">
+  String Manipulation
+</h2>
+
+<h3 id="trim">
+<code>trim</code>
+</h3>
+
+<p>
+  Removes leading and trailing whitespace.
+</p>
+
+<pre lang="markdown"><code>---
+title: &quot;  hello world  &quot;
+---
+
+[%title:trim]
+&lt;!-- Outputs: hello world --&gt;
+</code></pre>
+
+<h3 id="slug-slugify">
+<code>slug</code> / <code>slugify</code>
+</h3>
+
+<p>
+  Converts the value to a URL-friendly slug (lowercase, spaces and special characters replaced with hyphens).
+</p>
+
+<pre lang="markdown"><code>---
+title: My Great Post!
+---
+
+[%title:slug]
+&lt;!-- Outputs: my-great-post --&gt;
+</code></pre>
+
+<h3 id="replaceoldnew-replaceregexpatternreplacement">
+<code>replace(OLD,NEW)</code> / <code>replace(regex:PATTERN,REPLACEMENT)</code>
+</h3>
+
+<p>
+  Replaces occurrences of <code>OLD</code> with <code>NEW</code>. Supports both simple string replacement and regex patterns.
+</p>
+
+<pre lang="markdown"><code>---
+url: http://example.com
+---
+
+[%url:replace(http:,https:)]
+&lt;!-- Outputs: https://example.com --&gt;
+</code></pre>
+
+<p>
+<strong>  Regex replacement:</strong>
+</p>
+
+<pre lang="markdown"><code>---
+text: Hello 123 World
+---
+
+[%text:replace(regex:[0-9]+,N)]
+&lt;!-- Outputs: Hello N World --&gt;
+</code></pre>
+
+<h3 id="substringstartend-substrstartend">
+<code>substring(START,END)</code> / <code>substr(START,END)</code>
+</h3>
+
+<p>
+  Extracts a substring. Supports negative indices (from end).
+</p>
+
+<pre lang="markdown"><code>---
+title: Hello World
+---
+
+[%title:substr(0,5)]
+&lt;!-- Outputs: Hello --&gt;
+
+[%title:substr(-5)]
+&lt;!-- Outputs: World (last 5 characters) --&gt;
+</code></pre>
+
+<h3 id="truncatelengthsuffix">
+<code>truncate(LENGTH,SUFFIX)</code>
+</h3>
+
+<p>
+  Truncates the value to the specified length, optionally appending a suffix.
+</p>
+
+<pre lang="markdown"><code>---
+title: This is a very long title
+---
+
+[%title:truncate(15,...)]
+&lt;!-- Outputs: This is a very... --&gt;
+</code></pre>
+
+<h3 id="reverse">
+<code>reverse</code>
+</h3>
+
+<p>
+  Reverses the order of characters in the value.
+</p>
+
+<pre lang="markdown"><code>---
+text: Hello
+---
+
+[%text:reverse]
+&lt;!-- Outputs: olleH --&gt;
+</code></pre>
+
+<h2 id="array-transforms">
+  Array Transforms
+</h2>
+
+<h3 id="splitdelimiter">
+<code>split(DELIMITER)</code>
+</h3>
+
+<p>
+  Splits a string into an array using the specified delimiter (default: space).
+</p>
+
+<pre lang="markdown"><code>---
+tags: tag1,tag2,tag3
+---
+
+[%tags:split(,)]
+&lt;!-- Outputs: tag1 (first element as representation) --&gt;
+&lt;!-- Use with :first, :last, :slice, or :join to work with the array --&gt;
+</code></pre>
+
+<h3 id="joindelimiter">
+<code>join(DELIMITER)</code>
+</h3>
+
+<p>
+  Joins an array into a string using the specified delimiter.
+</p>
+
+<pre lang="markdown"><code>---
+tags: tag1,tag2,tag3
+---
+
+[%tags:split(,):join( | )]
+&lt;!-- Outputs: tag1 | tag2 | tag3 --&gt;
+</code></pre>
+
+<h3 id="first">
+<code>first</code>
+</h3>
+
+<p>
+  Returns the first element of an array.
+</p>
+
+<pre lang="markdown"><code>---
+tags: tag1,tag2,tag3
+---
+
+[%tags:split(,):first]
+&lt;!-- Outputs: tag1 --&gt;
+</code></pre>
+
+<h3 id="last">
+<code>last</code>
+</h3>
+
+<p>
+  Returns the last element of an array.
+</p>
+
+<pre lang="markdown"><code>---
+tags: tag1,tag2,tag3
+---
+
+[%tags:split(,):last]
+&lt;!-- Outputs: tag3 --&gt;
+</code></pre>
+
+<h3 id="slicestartlength">
+<code>slice(START,LENGTH)</code>
+</h3>
+
+<p>
+  Extracts a slice from an array. If applied to a non-array value, splits the string into individual characters.
+</p>
+
+<pre lang="markdown"><code>---
+tags: tag1,tag2,tag3
+---
+
+[%tags:split(,):slice(0,2):join(,)]
+&lt;!-- Outputs: tag1,tag2 --&gt;
+
+---
+text: Hello
+---
+
+[%text:slice(0,5)]
+&lt;!-- Outputs: Hello (characters 0-5) --&gt;
+</code></pre>
+
+<h2 id="utility-transforms">
+  Utility Transforms
+</h2>
+
+<h3 id="defaultvalue">
+<code>default(VALUE)</code>
+</h3>
+
+<p>
+  Returns the specified default value if the metadata value is empty.
+</p>
+
+<pre lang="markdown"><code>---
+desc: &quot;&quot;
+---
+
+[%desc:default(No description)]
+&lt;!-- Outputs: No description --&gt;
+</code></pre>
+
+<h3 id="escape-htmlescape">
+<code>escape</code> / <code>html_escape</code>
+</h3>
+
+<p>
+  Escapes HTML special characters (<code>&amp;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&quot;</code>, <code>'</code>).
+</p>
+
+<pre lang="markdown"><code>---
+title: A &amp; B
+---
+
+[%title:html_escape]
+&lt;!-- Outputs: A &amp;amp; B --&gt;
+</code></pre>
+
+<h3 id="basename">
+<code>basename</code>
+</h3>
+
+<p>
+  Extracts the filename from a path.
+</p>
+
+<pre lang="markdown"><code>---
+image: /path/to/image.jpg
+---
+
+[%image:basename]
+&lt;!-- Outputs: image.jpg --&gt;
+</code></pre>
+
+<h3 id="urlencode">
+<code>urlencode</code>
+</h3>
+
+<p>
+  URL-encodes the value.
+</p>
+
+<pre lang="markdown"><code>---
+search: hello world
+---
+
+[%search:urlencode]
+&lt;!-- Outputs: hello%20world --&gt;
+</code></pre>
+
+<h3 id="urldecode">
+<code>urldecode</code>
+</h3>
+
+<p>
+  URL-decodes the value.
+</p>
+
+<pre lang="markdown"><code>---
+search: hello%20world
+---
+
+[%search:urldecode]
+&lt;!-- Outputs: hello world --&gt;
+</code></pre>
+
+<h3 id="prefixvalue">
+<code>prefix(VALUE)</code>
+</h3>
+
+<p>
+  Adds a prefix to the value.
+</p>
+
+<pre lang="markdown"><code>---
+url: example.com
+---
+
+[%url:prefix(https://)]
+&lt;!-- Outputs: https://example.com --&gt;
+</code></pre>
+
+<h3 id="suffixvalue">
+<code>suffix(VALUE)</code>
+</h3>
+
+<p>
+  Adds a suffix to the value.
+</p>
+
+<pre lang="markdown"><code>---
+title: Hello
+---
+
+[%title:suffix(!)]
+&lt;!-- Outputs: Hello! --&gt;
+</code></pre>
+
+<h3 id="removestring">
+<code>remove(STRING)</code>
+</h3>
+
+<p>
+  Removes all occurrences of the specified string.
+</p>
+
+<pre lang="markdown"><code>---
+title: Hello'World
+---
+
+[%title:remove(')]
+&lt;!-- Outputs: HelloWorld --&gt;
+</code></pre>
+
+<h3 id="repeatcount">
+<code>repeat(COUNT)</code>
+</h3>
+
+<p>
+  Repeats the value the specified number of times.
+</p>
+
+<pre lang="markdown"><code>---
+sep: -
+---
+
+[%sep:repeat(3)]
+&lt;!-- Outputs: --- --&gt;
+</code></pre>
+
+<h2 id="formatting-transforms">
+  Formatting Transforms
+</h2>
+
+<h3 id="formatformatstring">
+<code>format(FORMAT_STRING)</code>
+</h3>
+
+<p>
+  Formats a numeric value using <code>sprintf</code>-style formatting.
+</p>
+
+<pre lang="markdown"><code>---
+price: 42.5
+---
+
+[%price:format($%.2f)]
+&lt;!-- Outputs: $42.50 --&gt;
+</code></pre>
+
+<h3 id="length">
+<code>length</code>
+</h3>
+
+<p>
+  Returns the length of the value as a string.
+</p>
+
+<pre lang="markdown"><code>---
+text: Hello
+---
+
+[%text:length]
+&lt;!-- Outputs: 5 --&gt;
+</code></pre>
+
+<h3 id="padwidthchar">
+<code>pad(WIDTH,CHAR)</code>
+</h3>
+
+<p>
+  Pads the value to the specified width with the specified character (default: space).
+</p>
+
+<pre lang="markdown"><code>---
+number: 42
+---
+
+[%number:pad(5,0)]
+&lt;!-- Outputs: 00042 --&gt;
+</code></pre>
+
+<h3 id="containsstring">
+<code>contains(STRING)</code>
+</h3>
+
+<p>
+  Returns <code>&quot;true&quot;</code> if the value contains the specified string, <code>&quot;false&quot;</code> otherwise.
+</p>
+
+<pre lang="markdown"><code>---
+tags: javascript,html,css
+---
+
+[%tags:contains(javascript)]
+&lt;!-- Outputs: true --&gt;
+</code></pre>
+
+<h2 id="datetime-transforms">
+  Date/Time Transforms
+</h2>
+
+<h3 id="strftimeformat">
+<code>strftime(FORMAT)</code>
+</h3>
+
+<p>
+  Formats a date using <code>strftime</code>-style format strings. Parses dates in formats like <code>YYYY-MM-DD</code>, <code>YYYY-MM-DD HH:MM</code>, or <code>YYYY-MM-DD HHⓂ️SS</code>.
+</p>
+
+<pre lang="markdown"><code>---
+date: 2024-03-15
+---
+
+[%date:strftime(%Y)]
+&lt;!-- Outputs: 2024 --&gt;
+
+[%date:strftime(%B %d, %Y)]
+&lt;!-- Outputs: March 15, 2024 --&gt;
+</code></pre>
+
+<h2 id="transform-chaining">
+  Transform Chaining
+</h2>
+
+<p>
+  Multiple transforms can be chained together using colons. Each transform operates on the result of the previous transform:
+</p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+[%title🐢split( ):first]
+&lt;!--
+  1. title -&gt; &quot;Hello World&quot;
+  2. split( ) -&gt; [&quot;Hello&quot;, &quot;World&quot;] (array)
+  3. first -&gt; &quot;Hello&quot;
+--&gt;
+</code></pre>
+
+<p>
+<strong>  Example with dates:</strong>
+</p>
+
+<pre lang="markdown"><code>---
+date: 2024-03-15 14:30
+---
+
+[%date:strftime(%Y)]
+&lt;!-- Outputs: 2024 --&gt;
+</code></pre>
+
+<h2 id="notes">
+  Notes
+</h2>
+
+<ul>
+
+  <li>
+    Transforms are case-sensitive
+  </li>
+
+  <li>
+    Array transforms (<code>split</code>, <code>join</code>, <code>first</code>, <code>last</code>, <code>slice</code>) work together - use <code>split</code> to create an array, then apply other array transforms
+  </li>
+
+  <li>
+    The <code>slice</code> transform automatically converts non-array strings into character arrays if needed
+  </li>
+
+  <li>
+    Regex patterns in <code>replace</code> support POSIX Extended Regular Expressions and can include character classes like <code>[0-9]+</code>
+  </li>
+
+  <li>
+    Date parsing supports common formats but may not handle all date string formats
+  </li>
+
+  <li>
+    Unknown transforms are ignored and return the original value
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

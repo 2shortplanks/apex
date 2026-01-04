@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h2 id="integrating-with-pandoc">
+      Integrating with Pandoc
+    </h2>
+
+    <p>
+      Apex focuses on producing high‑quality HTML. For richer publishing targets like DOCX, PDF, RTF, OPML, ODT, and more, you can combine Apex with <a href="https://pandoc.org">Pandoc</a> by piping Apex’s HTML output into Pandoc.
+    </p>
+
+    <p>
+      The general pattern is:
+    </p>
+
+<pre lang="bash"><code>apex input.md --standalone | pandoc -f html -t FORMAT -o output.FILE
+</code>  </pre>
+
+  <ul>
+
+    <li>
+<code>--standalone</code> tells Apex to generate a full HTML5 document (<code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>).
+    </li>
+
+    <li>
+<code>-f html</code> tells Pandoc to read HTML.
+    </li>
+
+    <li>
+<code>-t FORMAT</code> and <code>-o output.FILE</code> select Pandoc’s output format and destination file.
+    </li>
+
+  </ul>
+
+  <p>
+    Pandoc must be installed separately (<code>brew install pandoc</code> on macOS, or your platform’s package manager).
+  </p>
+
+<hr />
+  <h2 id="converting-to-docx">
+    Converting to DOCX
+  </h2>
+
+  <p>
+    Use Pandoc’s DOCX writer to produce Word documents from Apex HTML output:
+  </p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t docx -o output.docx
+</code></pre>
+
+<p>
+  You can also write the HTML to a file first:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone -o output.html
+pandoc -f html -t docx output.html -o output.docx
+</code></pre>
+
+<p>
+  To set the document title from Apex:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone --title &quot;My Document&quot; \
+  | pandoc -f html -t docx -o output.docx
+</code></pre>
+
+<p>
+  Pandoc will use the <code>&lt;title&gt;</code> element from the HTML when available.
+</p>
+
+<hr />
+<h2 id="converting-to-pdf">
+  Converting to PDF
+</h2>
+
+<p>
+  You can generate PDFs by letting Pandoc handle the PDF engine (usually via LaTeX or a PDF HTML engine, depending on your Pandoc setup):
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t pdf -o output.pdf
+</code></pre>
+
+<p>
+  With an explicit title:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone --title &quot;My PDF Document&quot; \
+  | pandoc -f html -t pdf -o output.pdf
+</code></pre>
+
+<p>
+  If you prefer an intermediate HTML file:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone -o output.html
+pandoc -f html -t pdf output.html -o output.pdf
+</code></pre>
+
+<hr />
+<h2 id="including-a-css-stylesheet">
+  Including a CSS Stylesheet
+</h2>
+
+<p>
+  Apex can link or embed a CSS stylesheet in the generated HTML. Pandoc will respect this styling when converting formats that support it (especially PDF via HTML engines, and some DOCX templates).
+</p>
+
+<h3 id="linking-an-external-stylesheet">
+  Linking an external stylesheet
+</h3>
+
+<pre lang="bash"><code>apex input.md --standalone --style styles.css \
+  | pandoc -f html -t pdf -o output.pdf
+</code></pre>
+
+<p>
+  This produces HTML with:
+</p>
+
+<pre lang="html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
+</code></pre>
+
+<p>
+  Pandoc uses this when rendering HTML‑based outputs.
+</p>
+
+<h3 id="embedding-css-into-the-html">
+  Embedding CSS into the HTML
+</h3>
+
+<p>
+  To avoid external file dependencies, embed CSS directly:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone --style styles.css --embed-css \
+  | pandoc -f html -t pdf -o output.pdf
+</code></pre>
+
+<p>
+  This inlines <code>styles.css</code> into a <code>&lt;style&gt;</code> block in the HTML <code>&lt;head&gt;</code>, which is convenient for sharing a single self‑contained document pipeline.
+</p>
+
+<hr />
+<h2 id="using-metadata-and-title">
+  Using Metadata and Title
+</h2>
+
+<p>
+  Apex supports metadata via YAML front matter, external metadata files, and <code>--meta</code> CLI flags. This metadata can influence both Apex output and what Pandoc sees.
+</p>
+
+<h3 id="yaml-front-matter">
+  YAML front matter
+</h3>
+
+<p>
+  In your Markdown:
+</p>
+
+<pre lang="yaml"><code>---
+title: My Research Paper
+author: Jane Example
+date: 2024-01-01
+---
+</code></pre>
+
+<p>
+  Then:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t docx -o output.docx
+</code></pre>
+
+<p>
+  Apex will turn this into appropriate HTML metadata (including <code>&lt;title&gt;</code>), which Pandoc can map into the target format’s title and author fields.
+</p>
+
+<h3 id="external-metadata-file">
+  External metadata file
+</h3>
+
+<p>
+  You can load shared metadata for multiple documents:
+</p>
+
+<pre lang="yaml"><code># meta.yml
+title: Shared Title
+author: Team Apex
+</code></pre>
+
+<pre lang="bash"><code>apex input.md --standalone --meta-file meta.yml \
+  | pandoc -f html -t pdf -o output.pdf
+</code></pre>
+
+<h3 id="inline-cli-metadata">
+  Inline CLI metadata
+</h3>
+
+<p>
+  You can set or override metadata from the command line:
+</p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t docx -o output.docx \
+      --metadata=author=&quot;Your Name&quot; \
+      --metadata=subject=&quot;Project Report&quot;
+</code></pre>
+
+<p>
+  This lets you mix Apex’s metadata (front matter, <code>--meta-file</code>) with Pandoc’s own metadata flags.
+</p>
+
+<hr />
+<h2 id="other-useful-formats">
+  Other Useful Formats
+</h2>
+
+<p>
+  The same pattern works for many other Pandoc targets:
+</p>
+
+<ul>
+
+  <li>
+
+    <p>
+      RTF
+    </p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t rtf -o output.rtf
+</code>  </pre>
+
+</li>
+
+<li>
+
+  <p>
+    OPML (outline)
+  </p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t opml -o output.opml
+</code></pre>
+
+</li>
+
+<li>
+
+  <p>
+    ODT (LibreOffice/OpenOffice)
+  </p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t odt -o output.odt
+</code></pre>
+
+</li>
+
+<li>
+
+  <p>
+    EPUB
+  </p>
+
+<pre lang="bash"><code>apex input.md --standalone \
+  | pandoc -f html -t epub -o output.epub
+</code></pre>
+
+</li>
+
+</ul>
+
+<p>
+  By combining Apex and Pandoc, you can keep Apex focused on Markdown parsing and HTML generation while Pandoc handles the heavy lifting for complex document formats.
+</p>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

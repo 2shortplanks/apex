@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="troubleshooting">
+      Troubleshooting
+    </h1>
+<nav class="page-toc"><ul><li><a href="#troubleshooting">Troubleshooting</a><ul><li><a href="#build-issues">Build Issues</a><ul><li><a href="#cmake-not-found">CMake Not Found</a></li><li><a href="#compilation-errors">Compilation Errors</a></li><li><a href="#linking-errors">Linking Errors</a></li></ul></li><li><a href="#runtime-issues">Runtime Issues</a><ul><li><a href="#table-not-rendering">Table Not Rendering</a></li><li><a href="#header-ids-not-generated">Header IDs Not Generated</a></li><li><a href="#math-not-rendering">Math Not Rendering</a></li><li><a href="#wiki-links-not-working">Wiki Links Not Working</a></li><li><a href="#file-includes-not-working">File Includes Not Working</a></li></ul></li><li><a href="#output-issues">Output Issues</a><ul><li><a href="#no-output">No Output</a></li><li><a href="#html-not-formatted">HTML Not Formatted</a></li><li><a href="#missing-styles">Missing Styles</a></li></ul></li><li><a href="#mode-specific-issues">Mode-Specific Issues</a><ul><li><a href="#feature-not-available">Feature Not Available</a></li><li><a href="#id-format-wrong">ID Format Wrong</a></li></ul></li><li><a href="#api-issues">API Issues</a><ul><li><a href="#memory-leaks">Memory Leaks</a></li><li><a href="#thread-safety">Thread Safety</a></li><li><a href="#framework-not-found-xcode">Framework Not Found (Xcode)</a></li></ul></li><li><a href="#performance-issues">Performance Issues</a><ul><li><a href="#slow-conversion">Slow Conversion</a></li><li><a href="#high-memory-usage">High Memory Usage</a></li></ul></li><li><a href="#getting-help">Getting Help</a></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      Common issues and solutions when using Apex.
+    </p>
+
+    <h2 id="build-issues">
+      Build Issues
+    </h2>
+
+    <h3 id="cmake-not-found">
+      CMake Not Found
+    </h3>
+
+    <p>
+<strong>      Error:</strong> <code>cmake: command not found</code>
+    </p>
+
+    <p>
+<strong>      Solution:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        macOS: <code>brew install cmake</code>
+      </li>
+
+      <li>
+        Ubuntu/Debian: <code>sudo apt-get install cmake</code>
+      </li>
+
+      <li>
+        Fedora: <code>sudo dnf install cmake</code>
+      </li>
+
+    </ul>
+
+    <h3 id="compilation-errors">
+      Compilation Errors
+    </h3>
+
+    <p>
+<strong>      Error:</strong> Compiler not found or incompatible
+    </p>
+
+    <p>
+<strong>      Solution:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        macOS: Install Xcode Command Line Tools: <code>xcode-select --install</code>
+      </li>
+
+      <li>
+        Linux: Install build essentials: <code>sudo apt-get install build-essential</code>
+      </li>
+
+    </ul>
+
+    <h3 id="linking-errors">
+      Linking Errors
+    </h3>
+
+    <p>
+<strong>      Error:</strong> <code>undefined reference to apex_*</code>
+    </p>
+
+    <p>
+<strong>      Solution:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Ensure library is built: <code>make</code> in build directory
+      </li>
+
+      <li>
+        Check library path: <code>LD_LIBRARY_PATH</code> (Linux) or <code>DYLD_LIBRARY_PATH</code> (macOS)
+      </li>
+
+      <li>
+        Verify linking: <code>-lapex</code> flag is present
+      </li>
+
+    </ul>
+
+    <h2 id="runtime-issues">
+      Runtime Issues
+    </h2>
+
+    <h3 id="table-not-rendering">
+      Table Not Rendering
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Tables appear as code or plain text
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Ensure tables are enabled: Don’t use <code>--no-tables</code>
+      </li>
+
+      <li>
+        Check mode: Some modes disable tables
+      </li>
+
+      <li>
+        Verify table syntax: Requires proper pipe alignment
+      </li>
+
+    </ul>
+
+    <h3 id="header-ids-not-generated">
+      Header IDs Not Generated
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Headers don’t have <code>id</code> attributes
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Check if IDs are disabled: Remove <code>--no-ids</code> flag
+      </li>
+
+      <li>
+        Verify mode: All modes generate IDs by default
+      </li>
+
+      <li>
+        Check manual ID syntax: May be incorrectly formatted
+      </li>
+
+    </ul>
+
+    <h3 id="math-not-rendering">
+      Math Not Rendering
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Math appears as plain text
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Ensure math is enabled: Don’t use <code>--no-math</code>
+      </li>
+
+      <li>
+        Check mode: CommonMark and GFM modes disable math
+      </li>
+
+      <li>
+        Verify MathJax/KaTeX: Apex outputs HTML, you need a math renderer
+      </li>
+
+    </ul>
+
+    <h3 id="wiki-links-not-working">
+      Wiki Links Not Working
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Wiki links appear as plain text
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Enable wiki links: Use <code>--wikilinks</code> flag (disabled by default in all modes)
+      </li>
+
+      <li>
+        Check syntax: <code>[[Page]]</code> not <code>[Page]</code>
+      </li>
+
+      <li>
+        Example: <code>apex document.md --wikilinks</code>
+      </li>
+
+    </ul>
+
+    <h3 id="file-includes-not-working">
+      File Includes Not Working
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Include syntax not processed
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Enable includes: Use <code>--includes</code> flag (enabled by default in unified mode)
+      </li>
+
+      <li>
+        Check file paths: Relative to document or use <code>base_directory</code> in API
+      </li>
+
+      <li>
+        Verify syntax: `` or <code>{{file.md}}</code>
+      </li>
+
+    </ul>
+
+    <h2 id="output-issues">
+      Output Issues
+    </h2>
+
+    <h3 id="no-output">
+      No Output
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Command produces no output
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Check input: Verify file exists or stdin has content
+      </li>
+
+      <li>
+        Check errors: Run with verbose output if available
+      </li>
+
+      <li>
+        Verify mode: Some modes may filter content
+      </li>
+
+    </ul>
+
+    <h3 id="html-not-formatted">
+      HTML Not Formatted
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> HTML is all on one line
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Use <code>--pretty</code> flag for formatted output
+      </li>
+
+      <li>
+        Check if pretty printing is disabled in options
+      </li>
+
+    </ul>
+
+    <h3 id="missing-styles">
+      Missing Styles
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Standalone document has no styling
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Add stylesheet: <code>--style styles.css</code>
+      </li>
+
+      <li>
+        Use inline styles: Apex includes basic default styles
+      </li>
+
+      <li>
+        Check CSS path: Ensure file exists and path is correct
+      </li>
+
+    </ul>
+
+    <h2 id="mode-specific-issues">
+      Mode-Specific Issues
+    </h2>
+
+    <h3 id="feature-not-available">
+      Feature Not Available
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Syntax feature doesn’t work
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Check mode: Feature may not be available in current mode
+      </li>
+
+      <li>
+        Switch to unified mode: <code>--mode unified</code> has all features
+      </li>
+
+      <li>
+        See <a href="Modes.html">Modes</a> for feature availability
+      </li>
+
+    </ul>
+
+    <h3 id="id-format-wrong">
+      ID Format Wrong
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Header IDs don’t match expected format
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Check mode: Each mode has its own ID format
+      </li>
+
+      <li>
+        Override format: Use <code>--id-format</code> in unified mode
+      </li>
+
+      <li>
+        See <a href="Header-IDs.html">Header IDs</a> for format details
+      </li>
+
+    </ul>
+
+    <h2 id="api-issues">
+      API Issues
+    </h2>
+
+    <h3 id="memory-leaks">
+      Memory Leaks
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Application memory usage grows
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Free all strings: Always call <code>apex_free_string()</code> on returned strings
+      </li>
+
+      <li>
+        Check for NULL: Don’t free NULL pointers (safe, but unnecessary)
+      </li>
+
+      <li>
+        Reuse options: Create options once, reuse for multiple conversions
+      </li>
+
+    </ul>
+
+    <h3 id="thread-safety">
+      Thread Safety
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Crashes or incorrect output in multi-threaded code
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Use separate options: Each thread needs its own <code>apex_options</code>
+      </li>
+
+      <li>
+        Don’t share nodes: Document nodes are not thread-safe
+      </li>
+
+      <li>
+        See <a href="C-API.html">C API</a> for thread safety details
+      </li>
+
+    </ul>
+
+    <h3 id="framework-not-found-xcode">
+      Framework Not Found (Xcode)
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> <code>Apex.framework</code> not found at runtime
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Embed framework: Set to “Embed &amp; Sign” in Xcode
+      </li>
+
+      <li>
+        Check search paths: Verify framework search paths
+      </li>
+
+      <li>
+        Verify architecture: Ensure framework matches app architecture
+      </li>
+
+    </ul>
+
+    <h2 id="performance-issues">
+      Performance Issues
+    </h2>
+
+    <h3 id="slow-conversion">
+      Slow Conversion
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Conversion takes too long
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Disable unused features: Turn off extensions you don’t need
+      </li>
+
+      <li>
+        Check input size: Large documents take longer
+      </li>
+
+      <li>
+        Profile: Use profiling tools to identify bottlenecks
+      </li>
+
+    </ul>
+
+    <p>
+      You can also enable Apex’s built-in profiling output with environment variables: setting <code>APEX_PROFILE=1</code> (or <code>yes</code>/<code>true</code>) will print per-phase timings from the core converter (e.g. metadata, citations, autolinks) to stderr, while <code>APEX_PROFILE_PLUGINS=1</code> enables detailed timing for plugin execution, including a total time for each plugin phase (<code>pre_parse</code> and <code>post_render</code>) and individual timings for every discovered plugin; this is especially useful for tracking down slow external handlers or regex plugins—run commands like <code>APEX_PROFILE_PLUGINS=1 apex --plugins input.md &gt; /dev/null</code> to capture just the timing lines.
+    </p>
+
+    <h3 id="high-memory-usage">
+      High Memory Usage
+    </h3>
+
+    <p>
+<strong>      Problem:</strong> Application uses too much memory
+    </p>
+
+    <p>
+<strong>      Solutions:</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Free strings promptly: Don’t keep HTML strings longer than needed
+      </li>
+
+      <li>
+        Process in chunks: For very large documents, consider splitting
+      </li>
+
+      <li>
+        Check for leaks: Use memory profiling tools
+      </li>
+
+    </ul>
+
+    <h2 id="getting-help">
+      Getting Help
+    </h2>
+
+    <p>
+      If you encounter issues not covered here:
+    </p>
+
+    <ol>
+
+      <li>
+        Check the <a href="Syntax.html">Syntax</a> page for correct syntax
+      </li>
+
+      <li>
+        Review <a href="Modes.html">Modes</a> to ensure feature is available
+      </li>
+
+      <li>
+        See <a href="Command-Line-Options.html">Command Line Options</a> for flag usage
+      </li>
+
+      <li>
+        Check <a href="C-API.html">C API</a> for programmatic issues
+      </li>
+
+    </ol>
+
+    <h2 id="related">
+      Related
+    </h2>
+
+    <ul>
+
+      <li>
+<a href="Installation.html">        Installation</a> - Build and installation issues
+      </li>
+
+      <li>
+<a href="Usage.html">        Usage</a> - Usage examples
+      </li>
+
+      <li>
+<a href="C-API.html">        C API</a> - API-specific troubleshooting
+      </li>
+
+    </ul>
+
+  <footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

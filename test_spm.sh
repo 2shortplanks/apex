@@ -12,7 +12,7 @@ echo "Creating test project in: $TEST_PROJECT"
 mkdir -p "$TEST_PROJECT/Sources/ApexSPMTest"
 
 # Create Package.swift for test project
-cat > "$TEST_PROJECT/Package.swift" << 'EOF'
+cat >"$TEST_PROJECT/Package.swift" <<'EOF'
 // swift-tools-version:5.7
 import PackageDescription
 
@@ -32,7 +32,7 @@ let package = Package(
 EOF
 
 # Create test main.swift
-cat > "$TEST_PROJECT/Sources/ApexSPMTest/main.swift" << 'EOF'
+cat >"$TEST_PROJECT/Sources/ApexSPMTest/main.swift" <<'EOF'
 import Foundation
 import Apex
 

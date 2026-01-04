@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="c-api">
+      C API
+    </h1>
+<nav class="page-toc"><ul><li><a href="#c-api">C API</a><ul><li><a href="#overview">Overview</a></li><li><a href="#core-types">Core Types</a><ul><li><a href="#apexmodet">apex_mode_t</a></li><li><a href="#apexoptions">apex_options</a></li></ul></li><li><a href="#core-functions">Core Functions</a><ul><li><a href="#apexoptionsdefault">apex_options_default</a></li><li><a href="#apexoptionsformode">apex_options_for_mode</a></li><li><a href="#apexmarkdowntohtml">apex_markdown_to_html</a></li><li><a href="#apexfreestring">apex_free_string</a></li><li><a href="#apexwraphtmldocument">apex_wrap_html_document</a></li><li><a href="#apexprettyprinthtml">apex_pretty_print_html</a></li></ul></li><li><a href="#version-functions">Version Functions</a><ul><li><a href="#apexversionstring">apex_version_string</a></li><li><a href="#apexversionmajor-apexversionminor-apexversionpatch">apex_version_major / apex_version_minor / apex_version_patch</a></li></ul></li><li><a href="#list-options">List Options</a><ul><li><a href="#mixed-list-markers">Mixed List Markers</a></li><li><a href="#alpha-lists">Alpha Lists</a></li></ul></li><li><a href="#feature-flags">Feature Flags</a></li><li><a href="#metadata-options">Metadata Options</a></li><li><a href="#file-inclusion">File Inclusion</a></li><li><a href="#output-options">Output Options</a></li><li><a href="#line-break-options">Line Break Options</a></li><li><a href="#header-id-options">Header ID Options</a></li><li><a href="#table-options">Table Options</a></li><li><a href="#complete-example">Complete Example</a></li><li><a href="#compiling-and-linking">Compiling and Linking</a><ul><li><a href="#with-cmake">With CMake</a></li><li><a href="#manual-compilation">Manual Compilation</a></li><li><a href="#static-linking">Static Linking</a></li></ul></li><li><a href="#thread-safety">Thread Safety</a></li><li><a href="#memory-management">Memory Management</a></li><li><a href="#error-handling">Error Handling</a></li><li><a href="#performance-tips">Performance Tips</a></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      Apex provides a simple C API for programmatic Markdown to HTML conversion.
+    </p>
+
+    <h2 id="overview">
+      Overview
+    </h2>
+
+    <p>
+      The Apex C API is thread-safe and designed for integration into C and C++ applications. All functions are declared in <code>apex/apex.h</code>.
+    </p>
+
+    <h2 id="core-types">
+      Core Types
+    </h2>
+
+    <h3 id="apexmodet">
+      apex_mode_t
+    </h3>
+
+    <p>
+      Processor compatibility modes:
+    </p>
+
+<pre lang="c"><code>typedef enum {
+    APEX_MODE_COMMONMARK = 0,      /* Pure CommonMark spec */
+    APEX_MODE_GFM = 1,              /* GitHub Flavored Markdown */
+    APEX_MODE_MULTIMARKDOWN = 2,    /* MultiMarkdown compatibility */
+    APEX_MODE_KRAMDOWN = 3,         /* Kramdown compatibility */
+    APEX_MODE_UNIFIED = 4           /* All features enabled */
+} apex_mode_t;
+</code>  </pre>
+
+  <h3 id="apexoptions">
+    apex_options
+  </h3>
+
+  <p>
+    Configuration structure for processing:
+  </p>
+
+<pre lang="c"><code>typedef struct {
+    apex_mode_t mode;
+
+    /* Feature flags */
+    bool enable_tables;
+    bool enable_footnotes;
+    bool enable_definition_lists;
+    bool enable_smart_typography;
+    bool enable_math;
+    bool enable_critic_markup;
+    bool enable_wiki_links;
+    bool enable_task_lists;
+    bool enable_attributes;
+    bool enable_callouts;
+    bool enable_marked_extensions;
+
+    /* Critic markup mode */
+    int critic_mode;  /* 0=accept, 1=reject, 2=markup (default) */
+
+    /* Metadata handling */
+    bool strip_metadata;
+    bool enable_metadata_variables;
+
+    /* File inclusion */
+    bool enable_file_includes;
+    int max_include_depth;
+    const char *base_directory;
+
+    /* Output options */
+    bool unsafe;  /* Allow raw HTML */
+    bool validate_utf8;
+    bool github_pre_lang;
+    bool standalone;  /* Generate complete HTML document */
+    bool pretty;      /* Pretty-print HTML */
+    const char *stylesheet_path;
+    const char *document_title;
+
+    /* Line break handling */
+    bool hardbreaks;  /* Treat newlines as hard breaks */
+    bool nobreaks;    /* Render soft breaks as spaces */
+
+    /* Header ID generation */
+    bool generate_header_ids;
+    bool header_anchors;  /* Generate &lt;a&gt; tags instead of id attributes */
+    int id_format;  /* 0=GFM, 1=MMD, 2=Kramdown */
+
+    /* Table options */
+    bool relaxed_tables;
+
+    /* List options */
+    bool allow_mixed_list_markers;  /* Allow mixed list markers at same level (inherit type from first item) */
+    bool allow_alpha_lists;  /* Support alpha list markers (a., b., c. and A., B., C.) */
+} apex_options;
+</code></pre>
+
+<h2 id="core-functions">
+  Core Functions
+</h2>
+
+<h3 id="apexoptionsdefault">
+  apex_options_default
+</h3>
+
+<p>
+  Get default options with all features enabled (unified mode).
+</p>
+
+<pre lang="c"><code>apex_options apex_options_default(void);
+</code></pre>
+
+<p>
+<strong>  Returns:</strong> Default options structure
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>apex_options opts = apex_options_default();
+opts.enable_math = true;
+opts.pretty = true;
+</code></pre>
+
+<h3 id="apexoptionsformode">
+  apex_options_for_mode
+</h3>
+
+<p>
+  Get options configured for a specific processor mode.
+</p>
+
+<pre lang="c"><code>apex_options apex_options_for_mode(apex_mode_t mode);
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>mode</code> - Desired processor mode
+  </li>
+
+</ul>
+
+<p>
+<strong>  Returns:</strong> Options configured for the specified mode
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>apex_options gfm_opts = apex_options_for_mode(APEX_MODE_GFM);
+apex_options mmd_opts = apex_options_for_mode(APEX_MODE_MULTIMARKDOWN);
+</code></pre>
+
+<h3 id="apexmarkdowntohtml">
+  apex_markdown_to_html
+</h3>
+
+<p>
+  Main conversion function - converts Markdown to HTML.
+</p>
+
+<pre lang="c"><code>char *apex_markdown_to_html(const char *markdown, size_t len,
+                            const apex_options *options);
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>markdown</code> - Input Markdown text (UTF-8)
+  </li>
+
+  <li>
+<code>len</code> - Length of input text (use <code>strlen()</code> if null-terminated)
+  </li>
+
+  <li>
+<code>options</code> - Processing options (NULL for defaults)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Returns:</strong> Newly allocated HTML string (must be freed with <code>apex_free_string</code>), or NULL on error
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>const char *markdown = &quot;# Hello\n\nThis is **bold**.&quot;;
+apex_options opts = apex_options_default();
+char *html = apex_markdown_to_html(markdown, strlen(markdown), &amp;opts);
+
+if (html) {
+    printf(&quot;%s\n&quot;, html);
+    apex_free_string(html);
+}
+</code></pre>
+
+<h3 id="apexfreestring">
+  apex_free_string
+</h3>
+
+<p>
+  Free a string allocated by Apex.
+</p>
+
+<pre lang="c"><code>void apex_free_string(char *str);
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>str</code> - String to free (can be NULL, safe to call on NULL)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, NULL);
+ Use html...
+apex_free_string(html);
+</code></pre>
+
+<h3 id="apexwraphtmldocument">
+  apex_wrap_html_document
+</h3>
+
+<p>
+  Wrap HTML content in a complete HTML5 document structure.
+</p>
+
+<pre lang="c"><code>char *apex_wrap_html_document(const char *content, const char *title,
+                              const char *stylesheet_path);
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>content</code> - HTML content to wrap
+  </li>
+
+  <li>
+<code>title</code> - Document title (NULL for default “Document”)
+  </li>
+
+  <li>
+<code>stylesheet_path</code> - Path to CSS file to link (NULL for none)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Returns:</strong> Newly allocated HTML document string (must be freed with <code>apex_free_string</code>)
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>char *fragment = apex_markdown_to_html(markdown, len, &amp;opts);
+char *document = apex_wrap_html_document(fragment, &quot;My Document&quot;, &quot;style.css&quot;);
+apex_free_string(fragment);
+ Use document...
+apex_free_string(document);
+</code></pre>
+
+<h3 id="apexprettyprinthtml">
+  apex_pretty_print_html
+</h3>
+
+<p>
+  Pretty-print HTML with proper indentation.
+</p>
+
+<pre lang="c"><code>char *apex_pretty_print_html(const char *html);
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>html</code> - HTML to format
+  </li>
+
+</ul>
+
+<p>
+<strong>  Returns:</strong> Newly allocated formatted HTML string (must be freed with <code>apex_free_string</code>)
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, &amp;opts);
+char *pretty = apex_pretty_print_html(html);
+apex_free_string(html);
+ Use pretty...
+apex_free_string(pretty);
+</code></pre>
+
+<h2 id="version-functions">
+  Version Functions
+</h2>
+
+<h3 id="apexversionstring">
+  apex_version_string
+</h3>
+
+<p>
+  Get version string.
+</p>
+
+<pre lang="c"><code>const char *apex_version_string(void);
+</code></pre>
+
+<p>
+<strong>  Returns:</strong> Version string (e.g., “0.1.0”)
+</p>
+
+<h3 id="apexversionmajor-apexversionminor-apexversionpatch">
+  apex_version_major / apex_version_minor / apex_version_patch
+</h3>
+
+<p>
+  Get individual version components.
+</p>
+
+<pre lang="c"><code>int apex_version_major(void);
+int apex_version_minor(void);
+int apex_version_patch(void);
+</code></pre>
+
+<p>
+<strong>  Returns:</strong> Version component as integer
+</p>
+
+<h2 id="list-options">
+  List Options
+</h2>
+
+<h3 id="mixed-list-markers">
+  Mixed List Markers
+</h3>
+
+<p>
+  When <code>allow_mixed_list_markers</code> is enabled, lists with different marker types at the same indentation level will inherit the type from the first item. This is enabled by default in <strong>MultiMarkdown</strong> and <strong>Unified</strong> modes.
+</p>
+
+<pre lang="c"><code>apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
+ opts.allow_mixed_list_markers is true by default
+
+ To enable in other modes:
+opts.allow_mixed_list_markers = true;
+
+ To disable in unified/multimarkdown modes:
+opts.allow_mixed_list_markers = false;
+</code></pre>
+
+<p>
+<strong>  Example markdown:</strong>
+</p>
+
+<pre lang="markdown"><code>1. First numbered item
+* Second item (becomes numbered)
+* Third item (becomes numbered)
+</code></pre>
+
+<h3 id="alpha-lists">
+  Alpha Lists
+</h3>
+
+<p>
+  When <code>allow_alpha_lists</code> is enabled, alphabetic markers (<code>a.</code>, <code>b.</code>, <code>c.</code> for lower-alpha and <code>A.</code>, <code>B.</code>, <code>C.</code> for upper-alpha) are converted to HTML lists with appropriate <code>list-style-type</code> CSS. This is enabled by default in <strong>Unified</strong> mode only.
+</p>
+
+<pre lang="c"><code>apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
+ opts.allow_alpha_lists is true by default
+
+ To enable in other modes:
+opts.allow_alpha_lists = true;
+
+ To disable in unified mode:
+opts.allow_alpha_lists = false;
+</code></pre>
+
+<p>
+<strong>  Example markdown:</strong>
+</p>
+
+<pre lang="markdown"><code>[apex-alpha-list:lower]
+
+1.  First item
+2.  Second item
+3.  Third item
+</code></pre>
+
+<p>
+  This produces HTML with <code>style=&quot;list-style-type: lower-alpha&quot;</code> on the <code>&lt;ol&gt;</code> tag.
+</p>
+
+<h2 id="feature-flags">
+  Feature Flags
+</h2>
+
+<p>
+  All feature flags control whether specific Markdown extensions are enabled:
+</p>
+
+<ul>
+
+  <li>
+<code>enable_tables</code> - GFM-style tables
+  </li>
+
+  <li>
+<code>enable_footnotes</code> - Reference and inline footnotes
+  </li>
+
+  <li>
+<code>enable_definition_lists</code> - Definition lists (term: definition)
+  </li>
+
+  <li>
+<code>enable_smart_typography</code> - Smart quotes, dashes, ellipsis
+  </li>
+
+  <li>
+<code>enable_math</code> - LaTeX math (inline <code>$...$</code> and display <code>$$...$$</code>)
+  </li>
+
+  <li>
+<code>enable_critic_markup</code> - Critic Markup for change tracking
+  </li>
+
+  <li>
+<code>enable_wiki_links</code> - <code>[[WikiLink]]</code> syntax
+  </li>
+
+  <li>
+<code>enable_task_lists</code> - GFM task lists (<code>- [ ]</code> and <code>- [x]</code>)
+  </li>
+
+  <li>
+<code>enable_attributes</code> - Inline Attribute Lists (IAL)
+  </li>
+
+  <li>
+<code>enable_callouts</code> - Bear/Obsidian-style callouts
+  </li>
+
+  <li>
+<code>enable_marked_extensions</code> - Marked app extensions (TOC, page breaks, etc.)
+  </li>
+
+</ul>
+
+<p>
+  These are typically enabled/disabled based on the selected mode, but can be overridden.
+</p>
+
+<h2 id="metadata-options">
+  Metadata Options
+</h2>
+
+<ul>
+
+  <li>
+<code>strip_metadata</code> - Remove metadata from output (default: true)
+  </li>
+
+  <li>
+<code>enable_metadata_variables</code> - Enable <code>[%key]</code> variable replacement (default: true in MMD/Kramdown/Unified modes)
+  </li>
+
+</ul>
+
+<h2 id="file-inclusion">
+  File Inclusion
+</h2>
+
+<ul>
+
+  <li>
+<code>enable_file_includes</code> - Enable file inclusion syntax (``, <code>{{file.md}}</code>, `/file.md`)
+  </li>
+
+  <li>
+<code>max_include_depth</code> - Maximum nesting depth for includes (default: 10)
+  </li>
+
+  <li>
+<code>base_directory</code> - Base directory for resolving relative include paths (NULL = current directory)
+  </li>
+
+</ul>
+
+<h2 id="output-options">
+  Output Options
+</h2>
+
+<ul>
+
+  <li>
+<code>unsafe</code> - Allow raw HTML in output (default: true)
+  </li>
+
+  <li>
+<code>validate_utf8</code> - Validate UTF-8 encoding (default: true)
+  </li>
+
+  <li>
+<code>github_pre_lang</code> - Use GitHub-style code block language format (default: true)
+  </li>
+
+  <li>
+<code>standalone</code> - Generate complete HTML document with <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code> (default: false)
+  </li>
+
+  <li>
+<code>pretty</code> - Pretty-print HTML with indentation (default: false)
+  </li>
+
+  <li>
+<code>stylesheet_path</code> - Path to CSS file to link in <code>&lt;head&gt;</code> (requires <code>standalone</code>)
+  </li>
+
+  <li>
+<code>document_title</code> - Title for HTML document (requires <code>standalone</code>)
+  </li>
+
+</ul>
+
+<h2 id="line-break-options">
+  Line Break Options
+</h2>
+
+<ul>
+
+  <li>
+<code>hardbreaks</code> - Treat newlines as hard breaks (<code>&lt;br&gt;</code>) like GFM (default: false, true in GFM mode)
+  </li>
+
+  <li>
+<code>nobreaks</code> - Render soft breaks as spaces instead of newlines (default: false)
+  </li>
+
+</ul>
+
+<h2 id="header-id-options">
+  Header ID Options
+</h2>
+
+<ul>
+
+  <li>
+<code>generate_header_ids</code> - Automatically generate IDs for headers (default: true)
+  </li>
+
+  <li>
+<code>header_anchors</code> - Generate <code>&lt;a&gt;</code> anchor tags instead of <code>id</code> attributes (default: false)
+  </li>
+
+  <li>
+<code>id_format</code> - ID format: <code>0</code> = GFM (with dashes), <code>1</code> = MMD (no dashes), <code>2</code> = Kramdown
+  </li>
+
+</ul>
+
+<h2 id="table-options">
+  Table Options
+</h2>
+
+<ul>
+
+  <li>
+<code>relaxed_tables</code> - Support tables without separator rows (Kramdown-style, default: true in Unified/Kramdown modes)
+  </li>
+
+</ul>
+
+<h2 id="complete-example">
+  Complete Example
+</h2>
+
+<pre lang="c"><code>#include &lt;apex/apex.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main() {
+    const char *markdown =
+        &quot;---\n&quot;
+        &quot;title: Test Document\n&quot;
+        &quot;author: John Doe\n&quot;
+        &quot;---\n&quot;
+        &quot;\n&quot;
+        &quot;# [%title]\n&quot;
+        &quot;\n&quot;
+        &quot;By [%author]\n&quot;
+        &quot;\n&quot;
+        &quot;This has **bold** and a [[WikiLink]].\n&quot;
+        &quot;\n&quot;
+        &quot;Math: $E = mc^2$\n&quot;
+        &quot;\n&quot;
+        &quot;1. Mixed markers\n&quot;
+        &quot;* Second item\n&quot;
+        &quot;\n&quot;
+        &quot;a. Alpha list\n&quot;
+        &quot;b. Second alpha\n&quot;;
+
+    // Use unified mode with all features
+    apex_options opts = apex_options_for_mode(APEX_MODE_UNIFIED);
+    // Mixed markers and alpha lists are enabled by default in unified mode
+    opts.pretty = true;
+    opts.standalone = true;
+    opts.document_title = &quot;Test Document&quot;;
+
+    // Convert to HTML
+    char *html = apex_markdown_to_html(markdown, strlen(markdown), &amp;opts);
+
+    if (html) {
+        printf(&quot;%s\n&quot;, html);
+        apex_free_string(html);
+        return 0;
+    } else {
+        fprintf(stderr, &quot;Conversion failed\n&quot;);
+        return 1;
+    }
+}
+</code></pre>
+
+<h2 id="compiling-and-linking">
+  Compiling and Linking
+</h2>
+
+<h3 id="with-cmake">
+  With CMake
+</h3>
+
+<pre lang="cmake"><code># In your CMakeLists.txt
+find_package(apex REQUIRED)
+target_link_libraries(your_app apex)
+</code></pre>
+
+<h3 id="manual-compilation">
+  Manual Compilation
+</h3>
+
+<pre lang="bash"><code># Compile
+gcc -c -I/usr/local/include your_app.c
+
+# Link
+gcc your_app.o -L/usr/local/lib -lapex -o your_app
+
+# Run (may need library path)
+DYLD_LIBRARY_PATH=/usr/local/lib ./your_app  # macOS
+LD_LIBRARY_PATH=/usr/local/lib ./your_app    # Linux
+</code></pre>
+
+<h3 id="static-linking">
+  Static Linking
+</h3>
+
+<pre lang="bash"><code>gcc your_app.c -I/usr/local/include -L/usr/local/lib -lapex -static -o your_app
+</code></pre>
+
+<h2 id="thread-safety">
+  Thread Safety
+</h2>
+
+<p>
+  Apex is thread-safe as long as:
+</p>
+
+<ol>
+
+  <li>
+    Each thread uses its own <code>apex_options</code> structure
+  </li>
+
+  <li>
+    Document nodes are not shared between threads
+  </li>
+
+  <li>
+    The conversion function can be called from multiple threads simultaneously
+  </li>
+
+</ol>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code> Thread-safe: each thread has its own options
+void *thread_func(void *arg) {
+    apex_options opts = apex_options_default();
+    char *html = apex_markdown_to_html(markdown, len, &amp;opts);
+    // Use html...
+    apex_free_string(html);
+    return NULL;
+}
+</code></pre>
+
+<h2 id="memory-management">
+  Memory Management
+</h2>
+
+<ul>
+
+  <li>
+    All strings returned by Apex must be freed with <code>apex_free_string()</code>
+  </li>
+
+  <li>
+<code>apex_options</code> structures are typically stack-allocated (no freeing needed)
+  </li>
+
+  <li>
+    Safe to call <code>apex_free_string(NULL)</code>
+  </li>
+
+  <li>
+    Always check return values before use
+  </li>
+
+</ul>
+
+<h2 id="error-handling">
+  Error Handling
+</h2>
+
+<ul>
+
+  <li>
+    Functions return <code>NULL</code> or empty strings on error
+  </li>
+
+  <li>
+    Check return values before use
+  </li>
+
+  <li>
+    Errors are generally due to:
+    <ul>
+
+      <li>
+        Memory allocation failures
+      </li>
+
+      <li>
+        Invalid input
+      </li>
+
+      <li>
+        Missing dependencies
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code>char *html = apex_markdown_to_html(markdown, len, &amp;opts);
+if (!html) {
+    fprintf(stderr, &quot;Conversion failed\n&quot;);
+    return 1;
+}
+ Use html...
+apex_free_string(html);
+</code></pre>
+
+<h2 id="performance-tips">
+  Performance Tips
+</h2>
+
+<ol>
+
+  <li>
+<strong>    Reuse options</strong>: Create <code>apex_options</code> once and reuse for multiple conversions
+  </li>
+
+  <li>
+<strong>    Provide accurate length</strong>: Avoid unnecessary <code>strlen()</code> calls
+  </li>
+
+  <li>
+<strong>    Disable unused features</strong>: Turn off extensions you don’t need
+  </li>
+
+  <li>
+<strong>    Batch processing</strong>: Process multiple documents in parallel (thread-safe)
+  </li>
+
+</ol>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="c"><code> Good: reuse options
+apex_options opts = apex_options_default();
+for (int i = 0; i &lt; count; i++) {
+    char *html = apex_markdown_to_html(docs[i], lens[i], &amp;opts);
+    // Process...
+    apex_free_string(html);
+}
+</code></pre>
+
+<h2 id="related">
+  Related
+</h2>
+
+<ul>
+
+  <li>
+<a href="Xcode-Integration.html">    Xcode Integration</a> - Using Apex in Xcode projects
+  </li>
+
+  <li>
+<a href="Modes.html">    Modes</a> - Understanding processor modes
+  </li>
+
+  <li>
+<a href="Header-IDs.html">    Header IDs</a> - Header ID generation options
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

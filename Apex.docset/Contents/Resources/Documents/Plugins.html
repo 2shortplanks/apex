@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h2 id="plugins">
+      Plugins
+    </h2>
+
+    <p>
+      Apex supports a lightweight plugin system that lets you add new syntax and post‑processing behavior <strong>without patching the core</strong>. Plugins can be small scripts (Ruby, Python, etc.) or simple declarative regex rules defined in YAML.
+    </p>
+
+    <p>
+      This page covers:
+    </p>
+
+    <ul>
+
+      <li>
+<strong>        Where plugins live</strong>
+      </li>
+
+      <li>
+<strong>        How to enable/disable plugins</strong>
+      </li>
+
+      <li>
+<strong>        Processing phases</strong>
+      </li>
+
+      <li>
+<strong>        Plugin manifest format (<code>plugin.yml</code>)</strong>
+      </li>
+
+      <li>
+<strong>        External handler plugins (scripts/commands)</strong>
+      </li>
+
+      <li>
+<strong>        Declarative regex plugins (pure YAML)</strong>
+      </li>
+
+      <li>
+<strong>        Plugin bundles (<code>bundle</code> key)</strong>
+      </li>
+
+      <li>
+<strong>        Support directory and environment variables</strong>
+      </li>
+
+      <li>
+<strong>        Plugin metadata for directories and installers</strong>
+      </li>
+
+      <li>
+<strong>        Installing plugins from the directory or a Git URL</strong>
+      </li>
+
+      <li>
+<strong>        Examples: <code>kbd</code> liquid tag and <code>📝</code> spans</strong>
+      </li>
+
+    </ul>
+
+<hr />
+    <h2 id="enabling-and-disabling-plugins">
+      Enabling and disabling plugins
+    </h2>
+
+    <p>
+      By design, <strong>plugins are disabled by default</strong> so Apex’s performance and behavior are unchanged unless you explicitly opt in.
+    </p>
+
+    <ul>
+
+      <li>
+
+        <p>
+<strong>          CLI flags</strong>
+        </p>
+
+        <ul>
+
+          <li>
+<strong>            Enable plugins</strong>: <code>apex --plugins input.md</code>
+          </li>
+
+          <li>
+<strong>            Disable plugins</strong>: <code>apex --no-plugins input.md</code>
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+
+        <p>
+<strong>          Metadata keys</strong> (in the document’s front matter)
+        </p>
+
+        <ul>
+
+          <li>
+
+            <p>
+              Any of these keys are recognized (case-insensitive):
+            </p>
+
+            <ul>
+
+              <li>
+<code>plugins</code>
+              </li>
+
+              <li>
+<code>enable-plugins</code>
+              </li>
+
+              <li>
+<code>enable_plugins</code>
+              </li>
+
+            </ul>
+
+          </li>
+
+          <li>
+
+            <p>
+              Example:
+            </p>
+
+<pre lang="yaml"><code>---
+title: Plugin demo
+plugins: true
+---
+</code>          </pre>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+    <li>
+
+      <p>
+<strong>        Precedence</strong>
+      </p>
+
+      <ul>
+
+        <li>
+          If metadata enables or disables plugins, you can still override it from the CLI:
+          <ul>
+
+            <li>
+<code>--plugins</code> forces plugins <strong>on</strong>
+            </li>
+
+            <li>
+<code>--no-plugins</code> forces plugins <strong>off</strong>
+            </li>
+
+          </ul>
+
+        </li>
+
+        <li>
+          CLI flags always win over metadata.
+        </li>
+
+      </ul>
+
+    </li>
+
+  </ul>
+
+  <p>
+    If you never set <code>plugins: true</code> or pass <code>--plugins</code>, Apex will not load or run any plugins.
+  </p>
+
+<hr />
+  <h2 id="where-plugins-live">
+    Where plugins live
+  </h2>
+
+  <p>
+    Plugins are discovered from <strong>two locations</strong>, in this order:
+  </p>
+
+  <ul>
+
+    <li>
+
+      <p>
+<strong>        Project-local plugins</strong>
+      </p>
+
+      <ul>
+
+        <li>
+          Directory: <code>.apex/plugins/</code> in the same project as your documents
+        </li>
+
+        <li>
+          Structure: <strong>one subdirectory per plugin</strong>, for example:
+          <ul>
+
+            <li>
+<code>.apex/plugins/kbd/plugin.yml</code>
+            </li>
+
+            <li>
+<code>.apex/plugins/kbd/kbd_plugin.rb</code>
+            </li>
+
+            <li>
+<code>.apex/plugins/emoji/plugin.yml</code>
+            </li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+    <li>
+
+      <p>
+<strong>        Global (user) plugins</strong>
+      </p>
+
+      <ul>
+
+        <li>
+          Directory (XDG-aware):
+          <ul>
+
+            <li>
+              If <code>$XDG_CONFIG_HOME</code> is set:
+              <ul>
+
+                <li>
+<code>$XDG_CONFIG_HOME/apex/plugins/</code>
+                </li>
+
+              </ul>
+
+            </li>
+
+            <li>
+              Otherwise:
+              <ul>
+
+                <li>
+<code>~/.config/apex/plugins/</code>
+                </li>
+
+              </ul>
+
+            </li>
+
+          </ul>
+
+        </li>
+
+        <li>
+          Same structure: one subdirectory per plugin:
+          <ul>
+
+            <li>
+<code>~/.config/apex/plugins/kbd/plugin.yml</code>
+            </li>
+
+            <li>
+<code>~/.config/apex/plugins/emoji/plugin.yml</code>
+            </li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+  </ul>
+
+  <p>
+<strong>    Plugin IDs must be unique.</strong> If a project plugin and a global plugin share the same <code>id</code>, the <strong>project plugin wins</strong> and the global one is ignored.
+  </p>
+
+<hr />
+  <h2 id="processing-phases">
+    Processing phases
+  </h2>
+
+  <p>
+    Apex exposes several <strong>phases</strong> in its pipeline. Plugins can hook into one or more phases; for now, two are wired up:
+  </p>
+
+  <ul>
+
+    <li>
+
+      <p>
+<strong><code>pre_parse</code></strong>
+      </p>
+
+      <ul>
+
+        <li>
+          Runs on the <strong>raw Markdown text</strong> <em>before</em> it is parsed.
+        </li>
+
+        <li>
+          Good for:
+          <ul>
+
+            <li>
+              Custom syntax (e.g. <code>{% kbd ... %}</code>)
+            </li>
+
+            <li>
+              Textual rewrites
+            </li>
+
+            <li>
+              Adding/removing markup before Apex sees it
+            </li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+    <li>
+
+      <p>
+<strong><code>post_render</code></strong>
+      </p>
+
+      <ul>
+
+        <li>
+          Runs on the <strong>final HTML output</strong> after Apex finishes rendering.
+        </li>
+
+        <li>
+          Good for:
+          <ul>
+
+            <li>
+              Wrapping elements in spans/divs
+            </li>
+
+            <li>
+              Adding CSS classes
+            </li>
+
+            <li>
+              Simple HTML post-processing (e.g. turning <code>📝</code> into <code>&lt;span&gt;</code>)
+            </li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+  </ul>
+
+  <p>
+    Internally, plugins for each phase are run in a <strong>deterministic order</strong>:
+  </p>
+
+  <ol>
+
+    <li>
+      Sorted by <strong>priority</strong> (lower numbers first; default is <code>100</code>).
+    </li>
+
+    <li>
+      Ties broken by <strong>plugin <code>id</code></strong> (lexicographically).
+    </li>
+
+  </ol>
+
+<hr />
+  <h2 id="plugin-manifest-pluginyml">
+    Plugin manifest: <code>plugin.yml</code>
+  </h2>
+
+  <p>
+    Each plugin is defined by a <strong>manifest</strong> file:
+  </p>
+
+  <ul>
+
+    <li>
+
+      <p>
+<strong>        File name</strong>: <code>plugin.yml</code>
+      </p>
+
+    </li>
+
+    <li>
+
+      <p>
+<strong>        Location</strong>: inside the plugin’s directory, e.g.:
+      </p>
+
+<pre lang="text"><code>.apex/plugins/kbd/plugin.yml
+~/.config/apex/plugins/emoji/plugin.yml
+</code>    </pre>
+
+  </li>
+
+</ul>
+
+<p>
+  At minimum, a plugin needs:
+</p>
+
+<pre lang="yaml"><code>---
+id: my-plugin
+# Optional, but strongly recommended metadata:
+# title: Human-friendly name (if omitted, tools may fall back to id)
+# author: Name or handle of the plugin author
+# description: Short, human-readable description of what the plugin does
+# homepage: URL for the plugin landing page or README
+# repo: Canonical Git repository URL used for installation/updates
+phase: pre_parse           # or post_render
+priority: 100              # optional, lower runs earlier
+timeout_ms: 0              # optional, 0 = no extra timeout logic (best-effort)
+---
+</code></pre>
+
+<p>
+  From there, you choose <strong>one of two plugin types</strong>:
+</p>
+
+<ul>
+
+  <li>
+<strong>    External handler plugin</strong>
+    <ul>
+
+      <li>
+        Runs an external command (Ruby, Python, shell, etc.).
+      </li>
+
+      <li>
+        Declared with a <code>handler.command</code> field.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    Declarative regex plugin</strong>
+    <ul>
+
+      <li>
+        No external code; in-process regex search/replace.
+      </li>
+
+      <li>
+        Declared with <code>pattern</code> and <code>replacement</code> fields.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  You can’t mix both styles in a single plugin; if <code>handler.command</code> is present, the plugin is treated as external.
+</p>
+
+<h3 id="metadata-fields-for-directories-and-installers">
+  Metadata fields for directories and installers
+</h3>
+
+<p>
+  To support plugin directories, automatic installation, and future auto-update tools, Apex understands several <strong>optional metadata fields</strong> in <code>plugin.yml</code>:
+</p>
+
+<ul>
+
+  <li>
+<strong><code>title</code></strong>: Short, human-friendly name for the plugin (e.g. <code>Keyboard Shortcuts</code>).
+  </li>
+
+  <li>
+<strong><code>author</code></strong>: Free-form author string (your name, handle, or organization).
+  </li>
+
+  <li>
+<strong><code>description</code></strong>: One–two sentence description of what the plugin does. This is already used in examples and is what directory listings will usually display.
+  </li>
+
+  <li>
+<strong><code>homepage</code></strong>: Informational URL where users can learn more about the plugin—often a README, documentation site, or the GitHub project page. This field is <strong>not</strong> used for cloning, but may be shown in <code>--list-plugins</code> output.
+  </li>
+
+  <li>
+<strong><code>repo</code></strong>: <strong>Canonical Git URL</strong> for the plugin repository, used by Apex when installing plugins from the central directory (for example, <code>https://github.com/ApexMarkdown/apex-kbd-plugin.git</code>). The repository must contain the <code>plugin.yml</code> manifest (and any supporting files) at its root.
+  </li>
+
+  <li>
+<strong><code>post_install</code></strong>: Optional command that Apex will run after cloning the plugin during <code>--install-plugin</code>. See “Post-install hooks” below.
+  </li>
+
+</ul>
+
+<p>
+  Only <code>id</code>, <code>phase</code>, and either <code>handler.command</code> (for external plugins) or <code>pattern</code>/<code>replacement</code> (for declarative plugins) are required for execution—everything else is optional metadata used by tools.
+</p>
+
+<h3 id="post-install-hooks-postinstall">
+  Post-install hooks (<code>post_install</code>)
+</h3>
+
+<p>
+  External plugins can define an optional <code>post_install</code> command in <code>plugin.yml</code> that Apex will run immediately after cloning the plugin during <code>--install-plugin</code>:
+</p>
+
+<pre lang="yaml"><code>---
+id: kbd
+# ... other fields ...
+post_install: ./post_install.sh
+---
+</code></pre>
+
+<p>
+  When you run:
+</p>
+
+<pre lang="bash"><code>apex --install-plugin kbd
+</code></pre>
+
+<p>
+  Apex will:
+</p>
+
+<ol>
+
+  <li>
+    Clone the plugin repository into your user plugin directory (e.g. <code>~/.config/apex/plugins/kbd</code>).
+  </li>
+
+  <li>
+    Look for <code>plugin.yml</code> (or <code>plugin.yaml</code>) in the root of that directory.
+  </li>
+
+  <li>
+    If it finds a <code>post_install</code> key, run the value as a shell command from the plugin directory (equivalent to <code>cd &lt;plugin_dir&gt; &amp;&amp; &lt;post_install&gt;</code>).
+  </li>
+
+</ol>
+
+<p>
+  This hook is useful for:
+</p>
+
+<ul>
+
+  <li>
+    Creating initial configuration files or support data under <code>APEX_SUPPORT_DIR</code>.
+  </li>
+
+  <li>
+    Printing a welcome or usage message via <code>echo</code>.
+  </li>
+
+  <li>
+    Running an interactive setup script that asks the user questions and writes config.
+  </li>
+
+</ul>
+
+<p>
+  If the <code>post_install</code> command exits with a non-zero status, Apex prints a warning but considers the plugin installed successfully (the clone is not rolled back).
+</p>
+
+<hr />
+<h2 id="plugin-bundles-bundle-key">
+  Plugin bundles (<code>bundle</code> key)
+</h2>
+
+<p>
+  Sometimes it is convenient for a single repository to provide <strong>multiple related plugins</strong> as a bundle—for example, a “documentation” bundle that contains:
+</p>
+
+<ul>
+
+  <li>
+<code>kbd</code> – expands <code>{% kbd @3 %}</code> keyboard shortcuts
+  </li>
+
+  <li>
+<code>prefpane</code> – expands <code>{% prefspane Advanced, Processor %}</code>
+  </li>
+
+  <li>
+<code>menubar</code> – expands <code>{% menubar File, Open %}</code>
+  </li>
+
+</ul>
+
+<p>
+  Instead of creating a separate repo (and <code>plugin.yml</code>) for each, Apex supports a <strong>bundle</strong> syntax in <code>plugin.yml</code> when built with full YAML (libyaml) support.
+</p>
+
+<h3 id="bundle-structure">
+  Bundle structure
+</h3>
+
+<p>
+  A <strong>bundle manifest</strong> has:
+</p>
+
+<ul>
+
+  <li>
+    Top-level metadata that applies to the bundle as a whole.
+  </li>
+
+  <li>
+    A <code>bundle:</code> key whose value is a YAML sequence (array) of per-plugin configs.
+  </li>
+
+</ul>
+
+<p>
+  Example:
+</p>
+
+<pre lang="yaml"><code>---
+id: documentation
+title: Documentation helpers
+author: Brett Terpstra
+description: A bundle of documentation-related helpers (kbd, menubar, prefpane).
+homepage: https://github.com/ApexMarkdown/apex-plugin-documentation
+repo: https://github.com/ApexMarkdown/apex-plugin-documentation.git
+
+# Each entry in bundle defines a child plugin
+bundle:
+  - id: kbd
+    title: Keyboard Shortcuts
+    description: Render {% kbd ... %} key combos to HTML &lt;kbd&gt; elements
+    phase: pre_parse
+    priority: 100
+    handler:
+      command: &quot;ruby kbd_plugin.rb&quot;
+
+  - id: menubar
+    title: Menubar Paths
+    description: Render {% menubar File, Open %} to a styled menu path
+    phase: pre_parse
+    handler:
+      command: &quot;ruby menubar_plugin.rb&quot;
+
+  - id: prefspane
+    title: Preferences Pane
+    description: Render {% prefspane Advanced, Processor %} to a styled preference path
+    phase: pre_parse
+    handler:
+      command: &quot;ruby prefspane_plugin.rb&quot;
+---
+</code></pre>
+
+<p>
+  Apex will treat this as <strong>three distinct plugins</strong>:
+</p>
+
+<ul>
+
+  <li>
+<code>kbd</code>
+  </li>
+
+  <li>
+<code>menubar</code>
+  </li>
+
+  <li>
+<code>prefspane</code>
+  </li>
+
+</ul>
+
+<p>
+  all sourced from the same repository and manifest.
+</p>
+
+<h3 id="inheritance-and-overrides">
+  Inheritance and overrides
+</h3>
+
+<p>
+  When loading a bundle, Apex:
+</p>
+
+<ol>
+
+  <li>
+    Parses the top-level mapping (the “bundle header”), and the <code>bundle:</code> sequence, using full YAML.
+  </li>
+
+  <li>
+    For each entry in <code>bundle</code>:
+    <ul>
+
+      <li>
+        Starts with the <strong>top-level metadata</strong>.
+      </li>
+
+      <li>
+        Applies the child entry’s fields as <strong>overrides</strong>.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ol>
+
+<p>
+  Concretely:
+</p>
+
+<ul>
+
+  <li>
+    Top-level <code>author</code>, <code>homepage</code>, and <code>repo</code> are used as defaults for every child plugin.
+  </li>
+
+  <li>
+    Each child <strong>must</strong> define its own:
+    <ul>
+
+      <li>
+<code>id</code>
+      </li>
+
+      <li>
+<code>phase</code>
+      </li>
+
+      <li>
+        and either:
+        <ul>
+
+          <li>
+<code>handler.command</code> (external plugin), or
+          </li>
+
+          <li>
+<code>pattern</code> + <code>replacement</code> (declarative plugin)
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+    A child <strong>may</strong> also define its own:
+    <ul>
+
+      <li>
+<code>title</code>
+      </li>
+
+      <li>
+<code>description</code>
+      </li>
+
+      <li>
+<code>priority</code>
+      </li>
+
+      <li>
+<code>timeout_ms</code>
+      </li>
+
+      <li>
+<code>flags</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+    If a child defines <code>author</code>, <code>homepage</code>, or <code>repo</code>, those values <strong>override</strong> the bundle-level defaults for that child only.
+  </li>
+
+</ul>
+
+<p>
+  After merging, each child is turned into a normal internal plugin record, just like if it had its own standalone <code>plugin.yml</code>.
+</p>
+
+<h3 id="behavior-and-limitations">
+  Behavior and limitations
+</h3>
+
+<ul>
+
+  <li>
+<strong>    Discovery</strong>:
+    <ul>
+
+      <li>
+        Bundle manifests live in the same places as normal plugins:
+        <ul>
+
+          <li>
+            Project-local: <code>.apex/plugins/documentation/plugin.yml</code>
+          </li>
+
+          <li>
+            Global: <code>~/.config/apex/plugins/documentation/plugin.yml</code>
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    Phases and IDs</strong>:
+    <ul>
+
+      <li>
+        Each child plugin’s <code>id</code> and <code>phase</code> are used when registering and running plugins.
+      </li>
+
+      <li>
+        All normal rules apply:
+        <ul>
+
+          <li>
+            IDs must be unique across all loaded plugins.
+          </li>
+
+          <li>
+            Phase must be <code>pre_parse</code> or <code>post_render</code> (for now).
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong>    libyaml requirement</strong>:
+    <ul>
+
+      <li>
+        The <code>bundle</code> syntax relies on full YAML parsing via <code>libyaml</code>.
+      </li>
+
+      <li>
+        If Apex is built <strong>without</strong> libyaml support, <code>bundle:</code> is not recognized as a special structure; in that case, you should fall back to separate manifests for each plugin if you need cross-platform behavior on builds that omit libyaml.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="external-handler-plugins-scriptscommands">
+  External handler plugins (scripts/commands)
+</h2>
+
+<p>
+  An external handler plugin defines a <strong>command</strong> to run, which receives JSON on stdin and writes the transformed text to stdout.
+</p>
+
+<h3 id="manifest-fields">
+  Manifest fields
+</h3>
+
+<pre lang="yaml"><code>---
+id: kbd
+title: Keyboard Shortcuts
+author: Brett Terpstra
+description: Render {% kbd ... %} key combos to HTML
+homepage: https://github.com/ApexMarkdown/apex-kbd-plugin
+repo: https://github.com/ApexMarkdown/apex-kbd-plugin.git
+phase: pre_parse
+priority: 100
+timeout_ms: 0        # optional
+handler:
+  command: &quot;ruby kbd_plugin.rb&quot;
+---
+</code></pre>
+
+<ul>
+
+  <li>
+<strong><code>id</code></strong>: unique identifier (no spaces recommended).
+  </li>
+
+  <li>
+<strong><code>title</code>/<code>author</code>/<code>description</code>/<code>homepage</code>/<code>repo</code></strong>: optional metadata used by listing/installation tools and plugin directories.
+  </li>
+
+  <li>
+<strong><code>phase</code></strong>: <code>pre_parse</code> or <code>post_render</code>.
+  </li>
+
+  <li>
+<strong><code>priority</code></strong>: integer; lower runs first.
+  </li>
+
+  <li>
+<strong><code>timeout_ms</code></strong>: optional; host may use this as a soft cap.
+  </li>
+
+  <li>
+<strong><code>handler.command</code></strong>:
+    <ul>
+
+      <li>
+        Executed via <code>sh -c</code> from the plugin’s directory (<code>APEX_PLUGIN_DIR</code>).
+      </li>
+
+      <li>
+        Must be runnable in your environment (e.g. Ruby installed if you use <code>ruby</code>).
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<h3 id="json-protocol">
+  JSON protocol
+</h3>
+
+<p>
+  For text phases (<code>pre_parse</code>, <code>post_render</code>), Apex sends your command a JSON object on <strong>stdin</strong>:
+</p>
+
+<pre lang="json"><code>{
+  &quot;version&quot;: 1,
+  &quot;plugin_id&quot;: &quot;kbd&quot;,
+  &quot;phase&quot;: &quot;pre_parse&quot;,
+  &quot;text&quot;: &quot;raw or rendered text here&quot;
+}
+</code></pre>
+
+<p>
+  Your plugin should:
+</p>
+
+<ol>
+
+  <li>
+    Read all of stdin.
+  </li>
+
+  <li>
+    Parse the JSON.
+  </li>
+
+  <li>
+    Transform the <code>text</code> field.
+  </li>
+
+  <li>
+    Print the <strong>new text only</strong> to stdout (no extra JSON, headers, or logging).
+  </li>
+
+</ol>
+
+<p>
+  If your plugin fails, times out, or prints nothing, Apex will treat it as a no-op and continue gracefully.
+</p>
+
+<hr />
+<h2 id="declarative-regex-plugins-no-scripting">
+  Declarative regex plugins (no scripting)
+</h2>
+
+<p>
+  For many cases, you don’t need a script at all. A <strong>declarative regex plugin</strong> uses <code>regex.h</code> inside Apex for fast in-process search/replace.
+</p>
+
+<h3 id="manifest-fields">
+  Manifest fields
+</h3>
+
+<pre lang="yaml"><code>---
+id: emoji-span
+title: Emoji span wrapper
+author: Brett Terpstra
+description: Wrap 📝 markers in a span for styling
+homepage: https://github.com/ApexMarkdown/apex-emoji-plugin
+repo: https://github.com/ApexMarkdown/apex-emoji-plugin.git
+phase: post_render
+pattern: &quot;(:[a-zA-Z0-9_+-]+:)&quot;
+replacement: &quot;&lt;span class=\&quot;emoji\&quot;&gt;$1&lt;/span&gt;&quot;
+flags: &quot;i&quot;          # optional: e.g. i, m, s
+priority: 200
+timeout_ms: 0
+---
+</code></pre>
+
+<ul>
+
+  <li>
+<strong><code>pattern</code></strong>: POSIX regular expression (compiled via <code>regcomp</code>).
+  </li>
+
+  <li>
+<strong><code>replacement</code></strong>:
+    <ul>
+
+      <li>
+        Replacement string with capture groups like <code>$1</code>, <code>$2</code>, etc.
+      </li>
+
+      <li>
+        Runs repeatedly across the text until no more matches.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+<strong><code>flags</code></strong> (optional):
+    <ul>
+
+      <li>
+        Currently supports:
+        <ul>
+
+          <li>
+<code>i</code> – case-insensitive
+          </li>
+
+          <li>
+<code>m</code> – multi-line
+          </li>
+
+          <li>
+<code>s</code> – dot matches newline (if supported by underlying regex flavor)
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  This is ideal when:
+</p>
+
+<ul>
+
+  <li>
+    You only need straightforward pattern substitution.
+  </li>
+
+  <li>
+    Performance matters and you want to avoid <code>fork/exec</code>.
+  </li>
+
+</ul>
+
+<hr />
+<h2 id="support-directory-and-environment-variables">
+  Support directory and environment variables
+</h2>
+
+<p>
+  Plugins sometimes need a place to store <strong>cache/data files</strong> or know which file is being processed. To keep plugin code directories clean and give plugins enough context, Apex exposes a <strong>support directory</strong> and several environment variables.
+</p>
+
+<h3 id="support-directory-apexsupportdir">
+  Support directory (<code>APEX_SUPPORT_DIR</code>)
+</h3>
+
+<p>
+  Base path:
+</p>
+
+<ul>
+
+  <li>
+    If <code>$XDG_CONFIG_HOME</code> is set:
+    <ul>
+
+      <li>
+<code>$XDG_CONFIG_HOME/apex/support/</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+    Otherwise:
+    <ul>
+
+      <li>
+<code>~/.config/apex/support/</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  For each plugin, Apex creates:
+</p>
+
+<pre lang="text"><code>APEX_SUPPORT_DIR/&lt;plugin-id&gt;/
+</code></pre>
+
+<p>
+  You can safely write caches, logs, or temporary files there.
+</p>
+
+<h3 id="environment-variables-for-external-plugins">
+  Environment variables for external plugins
+</h3>
+
+<p>
+  When Apex runs an external handler plugin, it sets:
+</p>
+
+<ul>
+
+  <li>
+
+    <p>
+<strong><code>APEX_PLUGIN_DIR</code></strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Filesystem path to the plugin’s directory (where <code>plugin.yml</code> lives).
+      </li>
+
+      <li>
+        Useful for loading sidecar files, templates, etc.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong><code>APEX_SUPPORT_DIR</code></strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Base support directory as described above.
+      </li>
+
+      <li>
+        You’ll usually combine it with your plugin id, e.g. <code>$APEX_SUPPORT_DIR/kbd</code>.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong><code>APEX_FILE_PATH</code></strong>
+    </p>
+
+    <ul>
+
+      <li>
+        When Apex is invoked on a file (for example <code>apex path/to/file.md</code>), this is the <strong>original path</strong> that was passed on the command line. Plugins can use this to make decisions based on path, directory, or extension.
+      </li>
+
+      <li>
+        When Apex reads from stdin (for example <code>cat file.md | apex</code>), <code>APEX_FILE_PATH</code> is set to:
+        <ul>
+
+          <li>
+            The current <code>base_directory</code> (if one was set via <code>--base-dir</code> or metadata), or
+          </li>
+
+          <li>
+            An empty string (<code>&quot;&quot;</code>) if no base directory is known.
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+        An empty <code>APEX_FILE_PATH</code> is a clear signal that there is no concrete source file path.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+  All of these variables apply only during the external command’s execution and are restored afterward.
+</p>
+
+<hr />
+<h2 id="installing-plugins-from-the-directory">
+  Installing plugins from the directory
+</h2>
+
+<p>
+  Apex can install plugins directly from a central directory hosted in the <code>ApexMarkdown/apex-plugins</code> GitHub repository. The directory is published as a JSON file:
+</p>
+
+<ul>
+
+  <li>
+<code>https://github.com/ApexMarkdown/apex-plugins</code> (repository)
+  </li>
+
+  <li>
+<code>https://raw.githubusercontent.com/ApexMarkdown/apex-plugins/refs/heads/main/apex-plugins.json</code> (JSON index)
+  </li>
+
+</ul>
+
+<p>
+  Each entry in <code>apex-plugins.json</code> looks like this:
+</p>
+
+<pre lang="json"><code>{
+  &quot;plugins&quot;: [
+    {
+      &quot;id&quot;: &quot;kbd&quot;,
+      &quot;title&quot;: &quot;Keyboard Shortcuts&quot;,
+      &quot;description&quot;: &quot;Renders {% kbd %} tags as &lt;kbd&gt; elements.&quot;,
+      &quot;author&quot;: &quot;Brett Terpstra&quot;,
+      &quot;homepage&quot;: &quot;https://github.com/ApexMarkdown/apex-plugin-kbd&quot;,
+      &quot;repo&quot;: &quot;https://github.com/ApexMarkdown/apex-plugin-kbd&quot;
+    }
+  ]
+}
+</code></pre>
+
+<ul>
+
+  <li>
+<strong><code>id</code></strong> must match the plugin <code>id</code> declared in that repo’s <code>plugin.yml</code>.
+  </li>
+
+  <li>
+<strong><code>repo</code></strong> is the canonical Git URL that Apex will pass to <code>git clone</code>.
+  </li>
+
+  <li>
+<strong><code>title</code></strong>, <strong><code>author</code></strong>, <strong><code>description</code></strong>, and <strong><code>homepage</code></strong> are used for human-readable listings.
+  </li>
+
+</ul>
+
+<h3 id="listing-available-plugins">
+  Listing available plugins
+</h3>
+
+<p>
+  To see what plugins are available in the central directory, use:
+</p>
+
+<pre lang="bash"><code>apex --list-plugins
+</code></pre>
+
+<p>
+  This command:
+</p>
+
+<ul>
+
+  <li>
+    Fetches <code>apex-plugins.json</code> using <code>curl</code>.
+  </li>
+
+  <li>
+    Parses the <code>plugins</code> array.
+  </li>
+
+  <li>
+    Prints a concise listing to stdout, for example:
+  </li>
+
+</ul>
+
+<pre lang="text"><code>## Installed Plugins
+
+kbd                  - Keyboard Shortcuts  (author: Brett Terpstra)
+    Renders {% kbd %} tags as &lt;kbd&gt; elements.
+    homepage: https://github.com/ApexMarkdown/apex-kbd-plugin
+
+---
+
+## Available Plugins
+
+emoji-span           - Emoji span wrapper  (author: Brett Terpstra)
+    Wrap 📝 markers in a span for styling.
+    homepage: https://github.com/ApexMarkdown/apex-emoji-plugin
+</code></pre>
+
+<h3 id="installing-a-plugin">
+  Installing a plugin
+</h3>
+
+<p>
+  The <code>--install-plugin</code> command accepts three types of arguments:
+</p>
+
+<ol>
+
+  <li>
+
+    <p>
+<strong>      Plugin ID from the directory</strong> (recommended for curated plugins):
+    </p>
+
+<pre lang="bash"><code>apex --install-plugin kbd
+</code>  </pre>
+
+  <p>
+    This will:
+  </p>
+
+  <ol>
+
+    <li>
+      Fetch <code>apex-plugins.json</code> from the central directory.
+    </li>
+
+    <li>
+      Find the entry whose <code>id</code> matches <code>kbd</code>.
+    </li>
+
+    <li>
+      Read the <code>repo</code> field and clone the repository.
+    </li>
+
+    <li>
+      Install into <code>$XDG_CONFIG_HOME/apex/plugins/kbd</code> or <code>~/.config/apex/plugins/kbd</code>.
+    </li>
+
+  </ol>
+
+</li>
+
+<li>
+
+  <p>
+<strong>    Full Git URL</strong> (for plugins not in the directory):
+  </p>
+
+<pre lang="bash"><code>apex --install-plugin https://github.com/ttscoff/apex-plugin-kbd.git
+</code></pre>
+
+<p>
+  Also works with SSH URLs:
+</p>
+
+<pre lang="bash"><code>apex --install-plugin git@github.com:ttscoff/apex-plugin-kbd.git
+</code></pre>
+
+</li>
+
+<li>
+
+  <p>
+<strong>    GitHub shorthand</strong> (<code>user/repo</code> format):
+  </p>
+
+<pre lang="bash"><code>apex --install-plugin ttscoff/apex-plugin-kbd
+</code></pre>
+
+<p>
+  This is automatically expanded to <code>https://github.com/ttscoff/apex-plugin-kbd.git</code>.
+</p>
+
+</li>
+
+</ol>
+
+<h4 id="security-confirmation-for-direct-installs">
+  Security confirmation for direct installs
+</h4>
+
+<p>
+  When installing from a <strong>direct Git URL or GitHub shorthand</strong> (i.e., anything outside the curated directory), Apex will prompt:
+</p>
+
+<pre lang="text"><code>Apex plugins execute unverified code. Only install plugins from trusted sources.
+Continue? (y/n)
+</code></pre>
+
+<ul>
+
+  <li>
+    Answer <code>y</code> or <code>Y</code> to proceed with the installation.
+  </li>
+
+  <li>
+    Any other response (including <code>n</code>, <code>N</code>, or just pressing Enter) aborts the install.
+  </li>
+
+</ul>
+
+<p>
+<strong>  Directory ID installs</strong> (like <code>--install-plugin kbd</code> from the curated list) do <strong>not</strong> show this prompt, as those plugins have been reviewed and included in the central directory.
+</p>
+
+<h4 id="installation-process">
+  Installation process
+</h4>
+
+<p>
+  For all installation methods, Apex will:
+</p>
+
+<ol>
+
+  <li>
+
+    <p>
+      Create (if necessary) the user plugin directory:
+    </p>
+
+    <ul>
+
+      <li>
+<code>$XDG_CONFIG_HOME/apex/plugins</code> if <code>$XDG_CONFIG_HOME</code> is set, or
+      </li>
+
+      <li>
+<code>~/.config/apex/plugins</code> otherwise.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+      For <strong>direct URL/shorthand installs</strong>:
+    </p>
+
+    <ul>
+
+      <li>
+        Clone the repository into a temporary directory.
+      </li>
+
+      <li>
+        Read <code>plugin.yml</code> (or <code>plugin.yaml</code>) from the cloned repo to determine the plugin <code>id</code>.
+      </li>
+
+      <li>
+        Move the cloned directory to the final location: <code>~/.config/apex/plugins/&lt;id&gt;/</code>.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+      For <strong>directory ID installs</strong>:
+    </p>
+
+    <ul>
+
+      <li>
+        Clone directly into the final location: <code>~/.config/apex/plugins/&lt;id&gt;/</code>.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+      If the target directory already exists, Apex will refuse to overwrite it and print an error. You can remove or rename the existing directory and rerun <code>--install-plugin</code> to reinstall.
+    </p>
+
+  </li>
+
+  <li>
+
+    <p>
+      After successful cloning, look for a <code>post_install</code> hook in <code>plugin.yml</code> and run it if present.
+    </p>
+
+  </li>
+
+</ol>
+
+<blockquote>
+
+  <p>
+<strong>    Security note:</strong> Apex plugins execute unverified code. Only install plugins from trusted sources. When installing from a direct Git URL or GitHub repo name, you will be prompted to confirm before the plugin is cloned.
+  </p>
+
+</blockquote>
+
+<p>
+  Once installed, the plugin is just like any other user-global plugin:
+</p>
+
+<ul>
+
+  <li>
+    It will be discovered from <code>$XDG_CONFIG_HOME/apex/plugins</code> or <code>~/.config/apex/plugins</code>.
+  </li>
+
+  <li>
+    You still need to enable plugins via <code>--plugins</code> or metadata (<code>plugins: true</code>).
+  </li>
+
+</ul>
+
+<p>
+  If you are authoring a plugin for inclusion in the directory:
+</p>
+
+<ul>
+
+  <li>
+    Make sure your <code>plugin.yml</code> has at least <code>id</code>, <code>phase</code>, and either <code>handler.command</code> or <code>pattern</code>/<code>replacement</code>.
+  </li>
+
+  <li>
+    Add <code>title</code>, <code>author</code>, <code>description</code>, <code>homepage</code>, and <code>repo</code> to <code>plugin.yml</code> so directory tools and installers have complete metadata.
+  </li>
+
+  <li>
+    Ensure the <code>plugin.yml</code> and any scripts live at the <strong>root</strong> of the Git repository referenced by <code>repo</code>.
+  </li>
+
+</ul>
+
+<h3 id="uninstalling-a-plugin">
+  Uninstalling a plugin
+</h3>
+
+<p>
+  To remove a locally installed plugin, use:
+</p>
+
+<pre lang="bash"><code>apex --uninstall-plugin kbd
+</code></pre>
+
+<p>
+  The <code>--uninstall-plugin</code> command:
+</p>
+
+<ul>
+
+  <li>
+    Verifies that the plugin directory exists under the user plugin path (<code>$XDG_CONFIG_HOME/apex/plugins</code> or <code>~/.config/apex/plugins</code>).
+  </li>
+
+  <li>
+    Prompts for confirmation before deleting the plugin directory.
+  </li>
+
+  <li>
+    Removes only the plugin’s directory; support data under <code>.../apex/support/&lt;plugin-id&gt;/</code> is left intact.
+  </li>
+
+</ul>
+
+<p>
+  This command only works for plugins installed in the user plugin directory. Project-local plugins (in <code>.apex/plugins/</code>) must be removed manually by deleting the plugin directory.
+</p>
+
+<h2 id="share-your-plugin">
+  Share Your Plugin
+</h2>
+
+<p>
+  To request that your plugin be added to the central directory:
+</p>
+
+<ol>
+
+  <li>
+<strong>    Fork</strong> the <code>ApexMarkdown/apex-plugins</code> repository on GitHub to your own account or organization.
+  </li>
+
+  <li>
+<strong>    Clone</strong> your fork locally and create a new branch for your plugin entry (for example, <code>add-kbd-plugin</code>).
+  </li>
+
+  <li>
+    Open the <code>apex-plugins.json</code> file in the root of your fork and add a new object to the <code>plugins</code> array with the fields:
+    <ul>
+
+      <li>
+<code>id</code> (matching the <code>id</code> in your plugin’s <code>plugin.yml</code>),
+      </li>
+
+      <li>
+<code>title</code>,
+      </li>
+
+      <li>
+<code>description</code>,
+      </li>
+
+      <li>
+<code>author</code>,
+      </li>
+
+      <li>
+<code>homepage</code>,
+      </li>
+
+      <li>
+<code>repo</code> (canonical Git URL for the plugin repo).
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+    Commit your changes and <strong>push</strong> the branch to your fork on GitHub.
+  </li>
+
+  <li>
+    From your fork, open a <strong>pull request</strong> against the <code>main</code> branch of <code>ApexMarkdown/apex-plugins</code>, briefly describing your plugin and confirming that the <code>id</code> and <code>repo</code> match your published plugin repository.
+  </li>
+
+  <li>
+    Once the pull request is reviewed and merged, your plugin will show up in <code>apex --list-plugins</code> and be installable via <code>apex --install-plugin &lt;id&gt;</code>.
+  </li>
+
+</ol>
+
+<hr />
+<h2 id="example-kbd-liquid-tag-plugin">
+  Example: <code>kbd</code> liquid tag plugin
+</h2>
+
+<p>
+  This example shows how to support a liquid-style <code>{% kbd ... %}</code> syntax, turning key combos into <code>&lt;kbd&gt;</code> markup.
+</p>
+
+<h3 id="directory-layout">
+  Directory layout
+</h3>
+
+<p>
+  Project-local example:
+</p>
+
+<pre lang="text"><code>.apex/
+  plugins/
+    kbd/
+      plugin.yml
+      kbd_plugin.rb
+</code></pre>
+
+<p>
+  Global example:
+</p>
+
+<pre lang="text"><code>~/.config/apex/plugins/
+  kbd/
+    plugin.yml
+    kbd_plugin.rb
+</code></pre>
+
+<h3 id="pluginyml">
+<code>plugin.yml</code>
+</h3>
+
+<pre lang="yaml"><code>---
+id: kbd
+title: Keyboard Shortcuts
+author: Brett Terpstra
+description: Render {% kbd ... %} key combos to HTML &lt;kbd&gt; elements
+homepage: https://github.com/ApexMarkdown/apex-kbd-plugin
+repo: https://github.com/ApexMarkdown/apex-kbd-plugin.git
+phase: pre_parse
+priority: 100
+timeout_ms: 0
+handler:
+  command: &quot;ruby kbd_plugin.rb&quot;
+---
+</code></pre>
+
+<h3 id="kbdpluginrb-simplified-shape">
+<code>kbd_plugin.rb</code> (simplified shape)
+</h3>
+
+<p>
+  The full script lives in the <code>examples</code> directory of the Apex repo as a reference. Conceptually, it:
+</p>
+
+<ul>
+
+  <li>
+    Reads JSON from stdin.
+  </li>
+
+  <li>
+    Extracts <code>text</code>.
+  </li>
+
+  <li>
+    Replaces each <code>{% kbd ... %}</code> occurrence with properly formatted <code>&lt;kbd&gt;</code> HTML.
+  </li>
+
+  <li>
+    Prints the full transformed text to stdout.
+  </li>
+
+</ul>
+
+<p>
+  A very abridged sketch:
+</p>
+
+<pre lang="ruby"><code>#!/usr/bin/env ruby
+require &quot;json&quot;
+
+payload = JSON.parse($stdin.read)
+text = payload[&quot;text&quot;] || &quot;&quot;
+
+# ... helper methods for normalizing modifier names, etc. ...
+
+def render_kbd(markup)
+  # convert markup like &quot;^~@r&quot; to HTML
+  # returning something like:
+  #   &lt;kbd&gt;⌃&lt;/kbd&gt;+&lt;kbd&gt;⌥&lt;/kbd&gt;+&lt;kbd&gt;⌘&lt;/kbd&gt;+&lt;kbd&gt;R&lt;/kbd&gt;
+end
+
+result = text.gsub(/\{%\s*kbd\s+([^%]+)%\}/) do
+  render_kbd(Regexp.last_match(1))
+end
+
+print result
+</code></pre>
+
+<p>
+  You can customize this script as you like; the only requirement is that it obey the stdin JSON / stdout contract.
+</p>
+
+<hr />
+<h2 id="example-memo-span-plugin-declarative">
+  Example: <code>📝</code> span plugin (declarative)
+</h2>
+
+<p>
+  This plugin turns <code>📝</code> tokens in the final HTML into <code>&lt;span class=&quot;emoji&quot;&gt;📝&lt;/span&gt;</code>.
+</p>
+
+<h3 id="directory-layout">
+  Directory layout
+</h3>
+
+<pre lang="text"><code>~/.config/apex/plugins/
+  emoji/
+    plugin.yml
+</code></pre>
+
+<h3 id="pluginyml">
+<code>plugin.yml</code>
+</h3>
+
+<pre lang="yaml"><code>---
+id: emoji-span
+title: Emoji span wrapper
+author: Brett Terpstra
+description: Wrap 📝 markers in a span for styling
+homepage: https://github.com/ApexMarkdown/apex-emoji-plugin
+repo: https://github.com/ApexMarkdown/apex-emoji-plugin.git
+phase: post_render
+pattern: &quot;(:[a-zA-Z0-9_+-]+:)&quot;
+replacement: &quot;&lt;span class=\&quot;emoji\&quot;&gt;$1&lt;/span&gt;&quot;
+flags: &quot;i&quot;
+priority: 200
+timeout_ms: 0
+---
+</code></pre>
+
+<p>
+  Because this is a declarative plugin, <strong>no external command is run</strong>. Apex compiles the regex and runs the replacements internally.
+</p>
+
+<hr />
+<h2 id="putting-it-all-together">
+  Putting it all together
+</h2>
+
+<p>
+  A typical workflow:
+</p>
+
+<ol>
+
+  <li>
+
+    <p>
+<strong>      Create a plugin directory</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Project-local: <code>.apex/plugins/my-plugin/</code>
+      </li>
+
+      <li>
+        Or global: <code>~/.config/apex/plugins/my-plugin/</code>
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Add <code>plugin.yml</code></strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Choose <code>phase</code> (<code>pre_parse</code> or <code>post_render</code>).
+      </li>
+
+      <li>
+        Choose plugin type:
+        <ul>
+
+          <li>
+            External: add <code>handler.command</code>.
+          </li>
+
+          <li>
+            Declarative: add <code>pattern</code>, <code>replacement</code>, and optional <code>flags</code>.
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+        Optionally, add metadata fields (<code>title</code>, <code>author</code>, <code>description</code>, <code>homepage</code>, <code>repo</code>) so your plugin shows up nicely in directories and can be auto-installed.
+      </li>
+
+      <li>
+        For bundles, use <code>bundle:</code> to define multiple related child plugins in one manifest.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Add code (if external)</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Put your script alongside <code>plugin.yml</code>.
+      </li>
+
+      <li>
+        Implement the JSON stdin → text stdout contract.
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Enable plugins</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Either:
+        <ul>
+
+          <li>
+            Add <code>plugins: true</code> (or <code>enable-plugins: true</code>) to your document metadata, <strong>or</strong>
+          </li>
+
+          <li>
+            Run with <code>--plugins</code> on the command line.
+          </li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+  </li>
+
+  <li>
+
+    <p>
+<strong>      Test</strong>
+    </p>
+
+    <ul>
+
+      <li>
+        Run Apex on a sample document that exercises your plugin syntax.
+      </li>
+
+      <li>
+        If something goes wrong, log to a file under <code>$APEX_SUPPORT_DIR/&lt;id&gt;/</code> rather than printing debugging output to stdout.
+      </li>
+
+    </ul>
+
+  </li>
+
+</ol>
+
+<p>
+  Once you’re comfortable, you can share the <code>plugin.yml</code> plus any scripts with others; they just need to drop the directory into their <code>.apex/plugins/</code> or <code>~/.config/apex/plugins/</code> and enable plugins as needed.
+</p>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

@@ -498,6 +498,8 @@ Apex supports a wide range of Markdown extensions:
 
 # SEE ALSO
 
+**apex-config**(5), **apex-plugins**(7), **pandoc**(1), **markdown**(7)
+
 For complete documentation, see the [Apex Wiki](https://github.com/ttscoff/apex/wiki).
 
 Project homepage: <https://github.com/ApexMarkdown/apex>

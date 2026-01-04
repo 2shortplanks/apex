@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="citations-and-bibliography">
+      Citations and Bibliography
+    </h1>
+<nav class="page-toc"><ul><li><a href="#citations-and-bibliography">Citations and Bibliography</a><ul><li><a href="#quick-start">Quick Start</a></li><li><a href="#citation-syntaxes">Citation Syntaxes</a><ul><li><a href="#pandoc-syntax">Pandoc Syntax</a></li><li><a href="#multimarkdown-syntax">MultiMarkdown Syntax</a></li><li><a href="#mmark-syntax">mmark Syntax</a></li></ul></li><li><a href="#bibliography-formats">Bibliography Formats</a><ul><li><a href="#bibtex-bib">BibTeX (.bib)</a></li><li><a href="#csl-json-json">CSL JSON (.json)</a></li><li><a href="#csl-yaml-yml-yaml">CSL YAML (.yml, .yaml)</a></li></ul></li><li><a href="#specifying-bibliography">Specifying Bibliography</a><ul><li><a href="#command-line">Command Line</a></li><li><a href="#document-metadata">Document Metadata</a></li></ul></li><li><a href="#bibliography-generation">Bibliography Generation</a></li><li><a href="#citation-options">Citation Options</a><ul><li><a href="#link-citations">Link Citations</a></li><li><a href="#suppress-bibliography">Suppress Bibliography</a></li><li><a href="#citation-style-csl">Citation Style (CSL)</a></li></ul></li><li><a href="#mode-support">Mode Support</a></li><li><a href="#performance">Performance</a></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      Apex supports citations and bibliographies with multiple syntax styles and bibliography formats. Citations are processed in <strong>MultiMarkdown</strong> and <strong>unified</strong> modes.
+    </p>
+
+    <h2 id="quick-start">
+      Quick Start
+    </h2>
+
+    <p>
+<strong>      1. Create a bibliography file:</strong>
+    </p>
+
+    <p>
+      Create a BibTeX file (<code>references.bib</code>):
+    </p>
+
+<pre lang="bibtex"><code>@article{doe99,
+  author = {Doe, John},
+  title = {Article Title},
+  journal = {Journal Name},
+  year = {1999},
+  volume = {1},
+  pages = {1--10}
+}
+
+@book{smith2000,
+  author = {Smith, Jane},
+  title = {Book Title},
+  publisher = {Publisher},
+  year = {2000}
+}
+</code>  </pre>
+
+  <p>
+<strong>    2. Add citations to your document:</strong>
+  </p>
+
+<pre lang="markdown"><code>---
+bibliography: references.bib
+---
+
+See [@doe99] for details. Smith discusses this in [@smith2000].
+
+## References
+
+&lt;!-- REFERENCES --&gt;
+</code></pre>
+
+<p>
+<strong>  3. Process with Apex:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography references.bib
+</code></pre>
+
+<p>
+  Or specify in metadata (as shown above) and just run:
+</p>
+
+<pre lang="bash"><code>apex document.md
+</code></pre>
+
+<h2 id="citation-syntaxes">
+  Citation Syntaxes
+</h2>
+
+<p>
+  Apex supports three citation syntax styles, automatically detected in unified mode:
+</p>
+
+<h3 id="pandoc-syntax">
+  Pandoc Syntax
+</h3>
+
+<p>
+  Pandoc-style citations use square brackets with <code>@</code> prefix:
+</p>
+
+<p>
+<strong>  Basic citation:</strong>
+</p>
+
+<pre lang="markdown"><code>See [@doe99] for details.
+</code></pre>
+
+<p>
+<strong>  Multiple citations:</strong>
+</p>
+
+<pre lang="markdown"><code>See [@doe99; @smith2000; @smith2004] for more information.
+</code></pre>
+
+<p>
+<strong>  Author in text:</strong>
+</p>
+
+<pre lang="markdown"><code>@smith04 says blah.
+</code></pre>
+
+<p>
+<strong>  Author suppressed (year only):</strong>
+</p>
+
+<pre lang="markdown"><code>Smith says blah [-@smith04].
+</code></pre>
+
+<p>
+<strong>  With locator (page numbers):</strong>
+</p>
+
+<pre lang="markdown"><code>@smith04 [p. 33] says blah.
+See @doe99, pp. 33-35 and *passim*.
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; for details.&lt;/p&gt;
+&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99 smith2000 smith2004&quot;&gt;(Doe, John 1999; Smith, Jane 2000, 2004)&lt;/span&gt; for more information.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;citation&quot; data-cites=&quot;smith04&quot;&gt;Smith, John (2004)&lt;/span&gt; says blah.&lt;/p&gt;
+&lt;p&gt;Smith says blah &lt;span class=&quot;citation&quot; data-cites=&quot;smith04&quot;&gt;(2004)&lt;/span&gt;.&lt;/p&gt;
+</code></pre>
+
+<h3 id="multimarkdown-syntax">
+  MultiMarkdown Syntax
+</h3>
+
+<p>
+  MultiMarkdown-style citations use <code>#</code> prefix:
+</p>
+
+<p>
+<strong>  Basic citation:</strong>
+</p>
+
+<pre lang="markdown"><code>This is a statement[#Doe:2006].
+</code></pre>
+
+<p>
+<strong>  With locator:</strong>
+</p>
+
+<pre lang="markdown"><code>This is a statement[p. 23][#Doe:2006].
+</code></pre>
+
+<p>
+<strong>  Empty locator:</strong>
+</p>
+
+<pre lang="markdown"><code>This is a statement[][#Doe:2006].
+</code></pre>
+
+<p>
+<strong>  Inline citation:</strong>
+</p>
+
+<pre lang="markdown"><code>As per Doe.[#John Doe. *A Totally Fake Book 1*. Vanity Press, 2006.]
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This is a statement&lt;span class=&quot;citation&quot; data-cites=&quot;Doe:2006&quot;&gt;(Doe:2006)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;This is a statement[p. 23]&lt;span class=&quot;citation&quot; data-cites=&quot;Doe:2006&quot;&gt;(Doe:2006)&lt;/span&gt;.&lt;/p&gt;
+</code></pre>
+
+<h3 id="mmark-syntax">
+  mmark Syntax
+</h3>
+
+<p>
+  mmark-style citations use <code>@</code> prefix (similar to Pandoc but with different conventions):
+</p>
+
+<p>
+<strong>  Basic citation:</strong>
+</p>
+
+<pre lang="markdown"><code>This references [@RFC2535].
+</code></pre>
+
+<p>
+<strong>  Normative citation:</strong>
+</p>
+
+<pre lang="markdown"><code>This references [@!RFC1034] (normative).
+</code></pre>
+
+<p>
+<strong>  Multiple citations:</strong>
+</p>
+
+<pre lang="markdown"><code>Multiple citations: [@RFC1034;@RFC1035].
+</code></pre>
+
+<p>
+<strong>  Combined reference:</strong>
+</p>
+
+<pre lang="markdown"><code>Combined reference: [@RFC1034@STD3].
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This references &lt;span class=&quot;citation&quot; data-cites=&quot;RFC2535&quot;&gt;(RFC2535)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Multiple citations: &lt;span class=&quot;citation&quot; data-cites=&quot;RFC1034&quot;&gt;(RFC1034)&lt;/span&gt;;&lt;span class=&quot;citation&quot; data-cites=&quot;RFC1035&quot;&gt;(RFC1035)&lt;/span&gt;.&lt;/p&gt;
+</code></pre>
+
+<h2 id="bibliography-formats">
+  Bibliography Formats
+</h2>
+
+<p>
+  Apex supports three bibliography formats:
+</p>
+
+<h3 id="bibtex-bib">
+  BibTeX (<code>.bib</code>)
+</h3>
+
+<p>
+  Standard BibTeX format:
+</p>
+
+<pre lang="bibtex"><code>@article{doe99,
+  author = {Doe, John},
+  title = {Article Title},
+  journal = {Journal Name},
+  year = {1999},
+  volume = {1},
+  pages = {1--10}
+}
+
+@book{smith2000,
+  author = {Smith, Jane},
+  title = {Book Title},
+  publisher = {Publisher},
+  year = {2000}
+}
+</code></pre>
+
+<h3 id="csl-json-json">
+  CSL JSON (<code>.json</code>)
+</h3>
+
+<p>
+  Citation Style Language JSON format:
+</p>
+
+<pre lang="json"><code>[
+  {
+    &quot;id&quot;: &quot;doe99&quot;,
+    &quot;type&quot;: &quot;article-journal&quot;,
+    &quot;title&quot;: &quot;Article Title&quot;,
+    &quot;author&quot;: [
+      {
+        &quot;family&quot;: &quot;Doe&quot;,
+        &quot;given&quot;: &quot;John&quot;
+      }
+    ],
+    &quot;container-title&quot;: &quot;Journal Name&quot;,
+    &quot;issued&quot;: {
+      &quot;date-parts&quot;: [[1999]]
+    },
+    &quot;volume&quot;: &quot;1&quot;,
+    &quot;page&quot;: &quot;1-10&quot;
+  }
+]
+</code></pre>
+
+<h3 id="csl-yaml-yml-yaml">
+  CSL YAML (<code>.yml</code>, <code>.yaml</code>)
+</h3>
+
+<p>
+  Citation Style Language YAML format:
+</p>
+
+<pre lang="yaml"><code>- id: doe99
+  type: article-journal
+  title: Article Title
+  author:
+    - family: Doe
+      given: John
+  container-title: Journal Name
+  issued:
+    date-parts:
+      - - 1999
+  volume: 1
+  page: 1-10
+</code></pre>
+
+<h2 id="specifying-bibliography">
+  Specifying Bibliography
+</h2>
+
+<h3 id="command-line">
+  Command Line
+</h3>
+
+<pre lang="bash"><code># Single file
+apex document.md --bibliography references.bib
+
+# Multiple files
+apex document.md --bibliography refs1.bib --bibliography refs2.bib
+
+# With base directory
+apex document.md --bibliography refs.bib --base-dir /path/to/docs
+</code></pre>
+
+<h3 id="document-metadata">
+  Document Metadata
+</h3>
+
+<p>
+<strong>  YAML front matter:</strong>
+</p>
+
+<pre lang="markdown"><code>---
+bibliography: references.bib
+---
+
+See [@doe99] for details.
+</code></pre>
+
+<p>
+<strong>  Multiple files:</strong>
+</p>
+
+<pre lang="markdown"><code>---
+bibliography:
+  - refs1.bib
+  - refs2.bib
+---
+
+See [@doe99] for details.
+</code></pre>
+
+<p>
+<strong>  MultiMarkdown metadata:</strong>
+</p>
+
+<pre lang="markdown"><code>Bibliography: references.bib
+
+See [@doe99] for details.
+</code></pre>
+
+<p>
+<strong>  Pandoc title block:</strong>
+</p>
+
+<pre lang="markdown"><code>% Bibliography: references.bib
+
+See [@doe99] for details.
+</code></pre>
+
+<h2 id="bibliography-generation">
+  Bibliography Generation
+</h2>
+
+<p>
+  Bibliography is automatically generated from all cited entries and inserted at the <code>&lt;!-- REFERENCES --&gt;</code> marker:
+</p>
+
+<pre lang="markdown"><code>See [@doe99] and [@smith2000] for details.
+
+## References
+
+&lt;!-- REFERENCES --&gt;
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; and &lt;span class=&quot;citation&quot; data-cites=&quot;smith2000&quot;&gt;(Smith, Jane 2000)&lt;/span&gt; for details.&lt;/p&gt;
+
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;div id=&quot;refs&quot; class=&quot;references csl-bib-body&quot;&gt;
+&lt;div id=&quot;ref-doe99&quot; class=&quot;csl-entry&quot;&gt;Doe, John 1999. &lt;em&gt;Article Title&lt;/em&gt;. &lt;em&gt;Journal Name&lt;/em&gt; 1: 1--10&lt;/div&gt;
+&lt;div id=&quot;ref-smith2000&quot; class=&quot;csl-entry&quot;&gt;Smith, Jane 2000. &lt;em&gt;Book Title&lt;/em&gt;. Publisher&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+  If no <code>&lt;!-- REFERENCES --&gt;</code> marker is found, the bibliography is appended to the end of the document.
+</p>
+
+<h2 id="citation-options">
+  Citation Options
+</h2>
+
+<h3 id="link-citations">
+  Link Citations
+</h3>
+
+<p>
+  Use <code>--link-citations</code> to make citations link to their bibliography entries:
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --link-citations
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;a href=&quot;#ref-doe99&quot; class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/a&gt; for details.&lt;/p&gt;
+</code></pre>
+
+<h3 id="suppress-bibliography">
+  Suppress Bibliography
+</h3>
+
+<p>
+  Use <code>--no-bibliography</code> to suppress bibliography output while still processing citations:
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --no-bibliography
+</code></pre>
+
+<h3 id="citation-style-csl">
+  Citation Style (CSL)
+</h3>
+
+<p>
+  Specify a Citation Style Language file to control citation and bibliography formatting:
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --csl apa.csl
+</code></pre>
+
+<p>
+  CSL files can also be specified in metadata:
+</p>
+
+<pre lang="markdown"><code>---
+bibliography: refs.bib
+csl: apa.csl
+---
+</code></pre>
+
+<h2 id="mode-support">
+  Mode Support
+</h2>
+
+<p>
+<strong>  Unified mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+    All citation syntaxes supported (auto-detected)
+  </li>
+
+  <li>
+    All bibliography formats supported
+  </li>
+
+  <li>
+    Citations enabled by default when bibliography is provided
+  </li>
+
+</ul>
+
+<p>
+<strong>  MultiMarkdown mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+    MultiMarkdown citation syntax (<code>[#key]</code>)
+  </li>
+
+  <li>
+    All bibliography formats supported
+  </li>
+
+  <li>
+    Citations enabled by default when bibliography is provided
+  </li>
+
+</ul>
+
+<p>
+<strong>  CommonMark/GFM modes:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Citations disabled (pure CommonMark/GFM)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Kramdown mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Citations disabled (Kramdown uses different citation system)
+  </li>
+
+</ul>
+
+<h2 id="performance">
+  Performance
+</h2>
+
+<p>
+  Citations are only processed when a bibliography is actually provided (via <code>--bibliography</code> flag or metadata). This ensures no performance impact when citations aren’t being used.
+</p>
+
+<h2 id="related">
+  Related
+</h2>
+
+<ul>
+
+  <li>
+<a href="Command-Line-Options.html">    Command Line Options</a> - Citation-related CLI flags
+  </li>
+
+  <li>
+<a href="Syntax.html">    Syntax</a> - Citation syntax reference
+  </li>
+
+  <li>
+<a href="Modes.html">    Modes</a> - Mode-specific citation support
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

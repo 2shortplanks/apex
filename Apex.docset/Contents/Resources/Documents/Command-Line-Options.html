@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="command-line-options">
+      Command Line Options
+    </h1>
+<nav class="page-toc"><ul><li><a href="#command-line-options">Command Line Options</a><ul><li><a href="#basic-options">Basic Options</a><ul><li><a href="#h-help">-h, --help</a></li><li><a href="#v-version">-v, --version</a></li><li><a href="#no-progress">--[no-]progress</a></li><li><a href="#combine">--combine</a></li><li><a href="#mmd-merge">--mmd-merge</a></li><li><a href="#m-mode-mode">-m, --mode MODE</a></li><li><a href="#o-output-file">-o, --output FILE</a></li></ul></li><li><a href="#output-options">Output Options</a><ul><li><a href="#s-standalone">-s, --standalone</a></li><li><a href="#style-file-css-file">--style FILE, --css FILE</a></li><li><a href="#embed-css">--embed-css</a></li><li><a href="#script-value">--script VALUE</a></li><li><a href="#title-title">--title TITLE</a></li><li><a href="#pretty">--pretty</a></li><li><a href="#aria">--aria</a></li></ul></li><li><a href="#plugin-management">Plugin Management</a><ul><li><a href="#plugins-no-plugins">--plugins, --no-plugins</a></li><li><a href="#list-plugins">--list-plugins</a></li><li><a href="#install-plugin-id-or-url">--install-plugin ID-or-URL</a></li><li><a href="#uninstall-plugin-id">--uninstall-plugin ID</a></li></ul></li><li><a href="#header-id-options">Header ID Options</a><ul><li><a href="#id-format-format">--id-format FORMAT</a></li><li><a href="#no-ids">--no-ids</a></li><li><a href="#header-anchors">--header-anchors</a></li></ul></li><li><a href="#table-options">Table Options</a><ul><li><a href="#relaxed-tables">--relaxed-tables</a></li><li><a href="#no-relaxed-tables">--no-relaxed-tables</a></li><li><a href="#captions-position">--captions POSITION</a></li><li><a href="#no-tables">--no-tables</a></li></ul></li><li><a href="#list-options">List Options</a><ul><li><a href="#no-alpha-lists">--[no-]alpha-lists</a></li><li><a href="#no-mixed-lists">--[no-]mixed-lists</a></li></ul></li><li><a href="#feature-flags">Feature Flags</a><ul><li><a href="#no-footnotes">--no-footnotes</a></li><li><a href="#no-smart">--no-smart</a></li><li><a href="#no-math">--no-math</a></li><li><a href="#no-autolink">--[no-]autolink</a></li><li><a href="#obfuscate-emails">--obfuscate-emails</a></li><li><a href="#includes-no-includes">--includes, --no-includes</a></li></ul></li><li><a href="#image-embedding">Image Embedding</a><ul><li><a href="#embed-images">--embed-images</a></li></ul></li><li><a href="#path-resolution">Path Resolution</a><ul><li><a href="#base-dir-dir">--base-dir DIR</a></li><li><a href="#no-transforms">--[no-]transforms</a></li></ul></li><li><a href="#metadata-options">Metadata Options</a><ul><li><a href="#meta-file-file">--meta-file FILE</a></li><li><a href="#meta-keyvalue">--meta KEY=VALUE</a></li><li><a href="#controlling-options-via-metadata">Controlling Options via Metadata</a></li></ul></li><li><a href="#citations-and-bibliography">Citations and Bibliography</a><ul><li><a href="#bibliography-file">--bibliography FILE</a></li><li><a href="#csl-file">--csl FILE</a></li><li><a href="#no-bibliography">--no-bibliography</a></li><li><a href="#link-citations">--link-citations</a></li><li><a href="#show-tooltips">--show-tooltips</a></li></ul></li><li><a href="#indices">Indices</a><ul><li><a href="#indices">--indices</a></li><li><a href="#no-indices">--no-indices</a></li><li><a href="#no-index">--no-index</a></li><li><a href="#hardbreaks">--hardbreaks</a></li><li><a href="#no-sup-sub">--[no-]sup-sub</a></li><li><a href="#no-divs">--[no-]divs</a></li><li><a href="#no-spans">--[no-]spans</a></li><li><a href="#no-emoji-autocorrect">--[no-]emoji-autocorrect</a></li><li><a href="#no-unsafe">--[no-]unsafe</a></li><li><a href="#no-wikilinks">--[no-]wikilinks</a></li><li><a href="#wikilink-space-mode">--wikilink-space MODE</a></li><li><a href="#wikilink-extension-ext">--wikilink-extension EXT</a></li></ul></li><li><a href="#critic-markup-options">Critic Markup Options</a><ul><li><a href="#accept">--accept</a></li><li><a href="#reject">--reject</a></li></ul></li><li><a href="#inputoutput">Input/Output</a><ul><li><a href="#reading-from-stdin">Reading from stdin</a></li><li><a href="#writing-to-stdout">Writing to stdout</a></li></ul></li><li><a href="#combining-options">Combining Options</a></li><li><a href="#option-precedence">Option Precedence</a></li><li><a href="#examples">Examples</a><ul><li><a href="#blog-post">Blog Post</a></li><li><a href="#github-compatible-output">GitHub-Compatible Output</a></li><li><a href="#documentation-with-custom-ids">Documentation with Custom IDs</a></li><li><a href="#review-document-with-critic-markup">Review Document with Critic Markup</a></li><li><a href="#academic-document-with-citations">Academic Document with Citations</a></li></ul></li><li><a href="#related">Related</a></li><li><a href="#plugin-options">Plugin Options</a><ul><li><a href="#no-plugins">--[no-]plugins</a></li><li><a href="#list-plugins">--list-plugins</a></li><li><a href="#install-plugin-id">--install-plugin ID</a></li><li><a href="#uninstall-plugin-id">--uninstall-plugin ID</a></li></ul></li></ul></li></ul></nav>
+
+    <p>
+      Complete reference for all Apex command-line flags.
+    </p>
+
+    <h2 id="basic-options">
+      Basic Options
+    </h2>
+
+    <h3 id="h-help">
+<code>-h, --help</code>
+    </h3>
+
+    <p>
+      Display help message and exit.
+    </p>
+
+<pre lang="bash"><code>apex --help
+</code>  </pre>
+
+  <h3 id="v-version">
+<code>-v, --version</code>
+  </h3>
+
+  <p>
+    Display version information and exit.
+  </p>
+
+<pre lang="bash"><code>apex --version
+</code></pre>
+
+<h3 id="no-progress">
+<code>--[no-]progress</code>
+</h3>
+
+<p>
+  Show progress indicator during processing. Progress is displayed on stderr for operations that take longer than 1 second.
+</p>
+
+<p>
+<strong>  Default behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> when stderr is a TTY (interactive terminal)
+  </li>
+
+  <li>
+<strong>    Disabled</strong> when stderr is not a TTY (pipes, redirects, etc.)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Explicitly enable progress (useful when piping)
+
+apex document.md --progress | less
+# Explicitly disable progress
+apex document.md --no-progress
+
+# Progress is automatically enabled in interactive terminals
+apex document.md
+</code></pre>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Progress messages appear on stderr (not stdout)
+  </li>
+
+  <li>
+    Only shown for operations taking longer than 1 second
+  </li>
+
+  <li>
+    Automatically cleared when processing completes
+  </li>
+
+  <li>
+    Useful for monitoring long-running operations or when processing large files
+  </li>
+
+</ul>
+
+<p>
+<strong>  Note:</strong> Progress can also be controlled via the <code>APEX_PROGRESS</code> environment variable:
+</p>
+
+<pre lang="bash"><code>export APEX_PROGRESS=1  # Enable
+export APEX_PROGRESS=0  # Disable
+</code></pre>
+
+<h3 id="combine">
+<code>--combine</code>
+</h3>
+
+<p>
+  Concatenate one or more Markdown files into a single Markdown stream, expanding all supported include syntaxes (Marked ``, MultiMarkdown <code>{{file}}</code>, iA Writer `/file`, CSV/TSV includes, etc.).
+</p>
+
+<ul>
+
+  <li>
+    File arguments are processed <strong>in the order given</strong>.
+  </li>
+
+  <li>
+    Includes inside those files are expanded exactly as in normal processing.
+  </li>
+
+  <li>
+    Output is <strong>raw Markdown</strong>, suitable for piping back into Apex for full rendering (indices, TOCs, citations, etc.).
+  </li>
+
+</ul>
+
+<p>
+  When a <code>SUMMARY.md</code> file is provided, Apex treats it as a <strong>GitBook-style index</strong>:
+</p>
+
+<ul>
+
+  <li>
+    Parses Markdown links in <code>SUMMARY.md</code> (e.g. <code>[Intro](intro.md)</code>).
+  </li>
+
+  <li>
+    Resolves linked files relative to the <code>SUMMARY.md</code> location.
+  </li>
+
+  <li>
+    Combines the linked files in link order.
+  </li>
+
+  <li>
+    Ignores external links containing <code>://</code> for combination purposes.
+  </li>
+
+</ul>
+
+<h3 id="mmd-merge">
+<code>--mmd-merge</code>
+</h3>
+
+<p>
+  Merge files from one or more MultiMarkdown <code>mmd_merge</code>-style index files into a single Markdown stream.
+</p>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Each non-empty, non-comment line in an index file specifies a document to include
+  </li>
+
+  <li>
+    Lines whose first non-whitespace character is <code>#</code> are treated as comments and ignored
+  </li>
+
+  <li>
+    Indentation (tabs or groups of four spaces) before the filename controls header level shifting
+  </li>
+
+  <li>
+    Each indent level shifts all Markdown headings in that file down one level (adds one <code>#</code>)
+  </li>
+
+  <li>
+    Output is raw Markdown suitable for piping into Apex
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example index file (<code>index.txt</code>):</strong>
+</p>
+
+<pre><code>chapter1.md
+    section1.md
+    section2.md
+chapter2.md
+    section1.md
+</code></pre>
+
+<p>
+<strong>  Usage:</strong>
+</p>
+
+<pre lang="bash"><code># Merge and process in one step
+
+apex --mmd-merge index.txt | apex --mode mmd --standalone -o book.html
+# Merge multiple index files
+apex --mmd-merge index1.txt index2.txt | apex --standalone -o combined.html
+</code></pre>
+
+<h3 id="m-mode-mode">
+<code>-m, --mode MODE</code>
+</h3>
+
+<p>
+  Set processor mode. See <a href="Modes.html">Modes</a> for details.
+</p>
+
+<p>
+<strong>  Values:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>commonmark</code> - Pure CommonMark specification
+  </li>
+
+  <li>
+<code>gfm</code> - GitHub Flavored Markdown
+  </li>
+
+  <li>
+<code>mmd</code> or <code>multimarkdown</code> - MultiMarkdown compatibility
+  </li>
+
+  <li>
+<code>kramdown</code> - Kramdown compatibility
+  </li>
+
+  <li>
+<code>unified</code> - All features enabled (default)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex --mode gfm document.md
+</code></pre>
+
+<h3 id="o-output-file">
+<code>-o, --output FILE</code>
+</h3>
+
+<p>
+  Write output to a file instead of stdout.
+</p>
+
+<pre lang="bash"><code>apex document.md -o output.html
+</code></pre>
+
+<h2 id="output-options">
+  Output Options
+</h2>
+
+<h3 id="s-standalone">
+<code>-s, --standalone</code>
+</h3>
+
+<p>
+  Generate a complete HTML document with <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.
+</p>
+
+<pre lang="bash"><code>apex document.md --standalone
+</code></pre>
+
+<h3 id="style-file-css-file">
+<code>--style FILE</code>, <code>--css FILE</code>
+</h3>
+
+<p>
+  Link to a CSS file in the document head. Requires <code>--standalone</code>. <code>--css</code> is an alias for <code>--style</code>. Overrides CSS metadata if present.
+</p>
+
+<pre lang="bash"><code>apex document.md --standalone --style styles.css
+apex document.md --standalone --css styles.css
+</code></pre>
+
+<h3 id="embed-css">
+<code>--embed-css</code>
+</h3>
+
+<p>
+  Embed the CSS file contents into a <code>&lt;style&gt;</code> tag in the document head instead of using a <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code> tag. Intended to be used together with <code>--css</code>.
+</p>
+
+<pre lang="bash"><code>apex document.md --standalone --css styles.css --embed-css
+</code></pre>
+
+<h3 id="script-value">
+<code>--script VALUE</code>
+</h3>
+
+<p>
+  Inject <code>&lt;script&gt;</code> tags either before <code>&lt;/body&gt;</code> in standalone mode or at the end of the HTML fragment in snippet mode.
+</p>
+
+<ul>
+
+  <li>
+<strong>    VALUE</strong>: A path, URL, or one of the following shorthands: <code>mermaid</code>, <code>mathjax</code>, <code>katex</code>, <code>highlightjs</code>, <code>highlight.js</code>, <code>prism</code>, <code>prismjs</code>, <code>htmx</code>, <code>alpine</code>, <code>alpinejs</code>.
+  </li>
+
+  <li>
+<strong>    Multiple values</strong>: Use the flag multiple times or provide a comma-separated list.
+  </li>
+
+</ul>
+
+<pre lang="bash"><code>apex document.md --standalone --script mermaid,mathjax
+apex document.md --script /assets/app.js --script https://cdn.example.com/widget.js
+</code></pre>
+
+<h3 id="title-title">
+<code>--title TITLE</code>
+</h3>
+
+<p>
+  Set the document title. Requires <code>--standalone</code>. Default is “Document”.
+</p>
+
+<pre lang="bash"><code>apex document.md --standalone --title &quot;My Document&quot;
+</code></pre>
+
+<h3 id="pretty">
+<code>--pretty</code>
+</h3>
+
+<p>
+  Pretty-print HTML with indentation and whitespace.
+</p>
+
+<pre lang="bash"><code>apex document.md --pretty
+</code></pre>
+
+<h3 id="aria">
+<code>--aria</code>
+</h3>
+
+<p>
+  Add ARIA labels and accessibility attributes to HTML output for better screen reader support.
+</p>
+
+<p>
+<strong>  When enabled, adds:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>aria-label=&quot;Table of contents&quot;</code> to TOC navigation elements (<code>&lt;nav class=&quot;toc&quot;&gt;</code>)
+  </li>
+
+  <li>
+<code>role=&quot;figure&quot;</code> to <code>&lt;figure&gt;</code> elements
+  </li>
+
+  <li>
+<code>role=&quot;table&quot;</code> to <code>&lt;table&gt;</code> elements
+  </li>
+
+  <li>
+<code>id</code> attributes to <code>&lt;figcaption&gt;</code> elements within table figures (generated if missing, e.g., <code>table-caption-1</code>, <code>table-caption-2</code>)
+  </li>
+
+  <li>
+<code>aria-describedby</code> attributes to tables linking them to their captions
+  </li>
+
+</ul>
+
+<p>
+<strong>  Default:</strong> Disabled (backward compatibility)
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Generate accessible HTML output
+apex document.md --aria
+
+# Combine with other options
+apex document.md --aria --standalone --pretty
+</code></pre>
+
+<p>
+<strong>  Output examples:</strong>
+</p>
+
+<p>
+  With <code>--aria</code> enabled, a table of contents generates:
+</p>
+
+<pre lang="html"><code>&lt;nav class=&quot;toc&quot; aria-label=&quot;Table of contents&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&quot;#section&quot;&gt;Section&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>
+  Tables with captions get proper ARIA attributes:
+</p>
+
+<pre lang="html"><code>&lt;figure class=&quot;table-figure&quot; role=&quot;figure&quot;&gt;
+  &lt;figcaption id=&quot;table-caption-1&quot;&gt;Table Title&lt;/figcaption&gt;
+  &lt;table role=&quot;table&quot; aria-describedby=&quot;table-caption-1&quot;&gt;
+    ...
+  &lt;/table&gt;
+&lt;/figure&gt;
+</code></pre>
+
+<p>
+<strong>  Note:</strong> This option enhances accessibility without changing the visual appearance of the HTML. It’s particularly useful for documents that will be read by screen readers or other assistive technologies.
+</p>
+
+<h2 id="plugin-management">
+  Plugin Management
+</h2>
+
+<h3 id="plugins-no-plugins">
+<code>--plugins</code>, <code>--no-plugins</code>
+</h3>
+
+<p>
+  Enable or disable external/plugin processing. Plugins are <strong>disabled by default</strong>; enable them per run or via metadata (<code>plugins: true</code> / <code>enable-plugins: true</code>).
+</p>
+
+<pre lang="bash"><code>apex document.md --plugins
+apex document.md --no-plugins
+</code></pre>
+
+<h3 id="list-plugins">
+<code>--list-plugins</code>
+</h3>
+
+<p>
+  List installed plugins and available plugins from the remote directory. Shows IDs, titles, authors, and descriptions when available.
+</p>
+
+<pre lang="bash"><code>apex --list-plugins
+</code></pre>
+
+<h3 id="install-plugin-id-or-url">
+<code>--install-plugin ID-or-URL</code>
+</h3>
+
+<p>
+  Install a plugin either:
+</p>
+
+<ul>
+
+  <li>
+    By <strong>ID</strong> from the central plugin directory (e.g. <code>kbd</code>), or
+  </li>
+
+  <li>
+    Directly from a <strong>Git URL</strong> or <strong>GitHub shorthand</strong> (<code>user/repo</code>).
+  </li>
+
+</ul>
+
+<p>
+  When installing from a URL, Apex prints a security warning before cloning, since plugins execute unverified code.
+</p>
+
+<pre lang="bash"><code>apex --install-plugin kbd
+apex --install-plugin https://github.com/user/apex-plugin-example.git
+apex --install-plugin user/apex-plugin-example
+</code></pre>
+
+<h3 id="uninstall-plugin-id">
+<code>--uninstall-plugin ID</code>
+</h3>
+
+<p>
+  Uninstall a locally installed plugin by ID. This removes the plugin’s directory from the user plugin location, but does not delete any external support data the plugin may have created.
+</p>
+
+<pre lang="bash"><code>apex --uninstall-plugin kbd
+</code></pre>
+
+<h2 id="header-id-options">
+  Header ID Options
+</h2>
+
+<h3 id="id-format-format">
+<code>--id-format FORMAT</code>
+</h3>
+
+<p>
+  Set header ID generation format. See <a href="Header-IDs.html">Header IDs</a> for details.
+</p>
+
+<p>
+<strong>  Values:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>gfm</code> - GitHub Flavored Markdown format (default)
+  </li>
+
+  <li>
+<code>mmd</code> - MultiMarkdown format
+  </li>
+
+  <li>
+<code>kramdown</code> - Kramdown format
+  </li>
+
+</ul>
+
+<p>
+<strong>  Note:</strong> Modes automatically set the format. This option is useful to override in unified mode.
+</p>
+
+<p>
+<strong>  GFM Format Features:</strong>
+</p>
+
+<ul>
+
+  <li>
+    In GFM format, emojis in headers are automatically converted to their textual names in IDs (e.g., <code># 😄 Support</code> → <code>id=&quot;smile-support&quot;</code>), matching Pandoc’s GFM behavior.
+  </li>
+
+</ul>
+
+<pre lang="bash"><code>apex document.md --id-format mmd
+</code></pre>
+
+<h3 id="no-ids">
+<code>--no-ids</code>
+</h3>
+
+<p>
+  Disable automatic header ID generation.
+</p>
+
+<pre lang="bash"><code>apex document.md --no-ids
+</code></pre>
+
+<h3 id="header-anchors">
+<code>--header-anchors</code>
+</h3>
+
+<p>
+  Generate <code>&lt;a&gt;</code> anchor tags instead of <code>id</code> attributes on headers.
+</p>
+
+<pre lang="bash"><code>apex document.md --header-anchors
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;!-- Default --&gt;
+&lt;h1 id=&quot;my-header&quot;&gt;My Header&lt;/h1&gt;
+
+&lt;!-- With --header-anchors --&gt;
+&lt;h1&gt;&lt;a id=&quot;my-header&quot; href=&quot;#my-header&quot;&gt;My Header&lt;/a&gt;&lt;/h1&gt;
+</code></pre>
+
+<h2 id="table-options">
+  Table Options
+</h2>
+
+<h3 id="relaxed-tables">
+<code>--relaxed-tables</code>
+</h3>
+
+<p>
+  Enable relaxed table parsing (tables without separator rows). Default in unified and kramdown modes.
+</p>
+
+<pre lang="bash"><code>apex document.md --relaxed-tables
+</code></pre>
+
+<h3 id="no-relaxed-tables">
+<code>--no-relaxed-tables</code>
+</h3>
+
+<p>
+  Disable relaxed table parsing.
+</p>
+
+<pre lang="bash"><code>apex document.md --no-relaxed-tables
+</code></pre>
+
+<h3 id="captions-position">
+<code>--captions POSITION</code>
+</h3>
+
+<p>
+  Control the position of table captions. Captions are rendered as <code>&lt;figcaption&gt;</code> elements within <code>&lt;figure class=&quot;table-figure&quot;&gt;</code> wrappers.
+</p>
+
+<p>
+<strong>  Values:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>above</code> - Place captions above the table
+  </li>
+
+  <li>
+<code>below</code> - Place captions below the table (default)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Default:</strong> <code>below</code>
+</p>
+
+<pre lang="bash"><code># Place captions above tables
+apex document.md --captions above
+
+# Place captions below tables (default)
+apex document.md --captions below
+</code></pre>
+
+<p>
+<strong>  Note:</strong> In standalone HTML output, table figures are styled with default CSS that centers and formats captions appropriately. The figure element shrinks to fit the table width, ensuring captions are properly aligned with the table.
+</p>
+
+<h3 id="no-tables">
+<code>--no-tables</code>
+</h3>
+
+<p>
+  Disable table support entirely.
+</p>
+
+<pre lang="bash"><code>apex document.md --no-tables
+</code></pre>
+
+<h2 id="list-options">
+  List Options
+</h2>
+
+<h3 id="no-alpha-lists">
+<code>--[no-]alpha-lists</code>
+</h3>
+
+<p>
+  Control support for alphabetic list markers (a., b., c. and A., B., C.).
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: commonmark, gfm, mmd, kramdown
+  </li>
+
+</ul>
+
+<p>
+  Alpha lists are automatically converted to HTML with <code>style=&quot;list-style-type: lower-alpha&quot;</code> or <code>style=&quot;list-style-type: upper-alpha&quot;</code>.
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable alpha lists in GFM mode
+apex document.md --mode gfm --alpha-lists
+
+# Disable alpha lists in unified mode
+apex document.md --mode unified --no-alpha-lists
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>[apex-alpha-list:lower]
+
+1.  First item
+2.  Second item
+3.  Third item
+
+[apex-alpha-list:upper]
+
+1.  Uppercase item
+2.  Another uppercase
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;ol style=&quot;list-style-type: lower-alpha&quot;&gt;
+  &lt;li&gt;First item&lt;/li&gt;
+  &lt;li&gt;Second item&lt;/li&gt;
+  &lt;li&gt;Third item&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ol style=&quot;list-style-type: upper-alpha&quot;&gt;
+  &lt;li&gt;Uppercase item&lt;/li&gt;
+  &lt;li&gt;Another uppercase&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<h3 id="no-mixed-lists">
+<code>--[no-]mixed-lists</code>
+</h3>
+
+<p>
+  Control whether different list marker types can be mixed at the same indentation level.
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified, multimarkdown
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: commonmark, gfm, kramdown
+  </li>
+
+</ul>
+
+<p>
+  When enabled, mixed markers inherit the type from the first item in the list.
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable mixed lists in GFM mode
+apex document.md --mode gfm --mixed-lists
+
+# Disable mixed lists in unified mode
+apex document.md --mode unified --no-mixed-lists
+</code></pre>
+
+<p>
+<strong>  Input with mixed-lists enabled:</strong>
+</p>
+
+<pre lang="markdown"><code>1. First numbered item
+* Second item (becomes numbered)
+* Third item (becomes numbered)
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;ol&gt;
+  &lt;li&gt;First numbered item&lt;/li&gt;
+  &lt;li&gt;Second item (becomes numbered)&lt;/li&gt;
+  &lt;li&gt;Third item (becomes numbered)&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<h2 id="feature-flags">
+  Feature Flags
+</h2>
+
+<h3 id="no-footnotes">
+<code>--no-footnotes</code>
+</h3>
+
+<p>
+  Disable footnote support.
+</p>
+
+<pre lang="bash"><code>apex document.md --no-footnotes
+</code></pre>
+
+<h3 id="no-smart">
+<code>--no-smart</code>
+</h3>
+
+<p>
+  Disable smart typography (smart quotes, dashes, ellipsis).
+</p>
+
+<pre lang="bash"><code>apex document.md --no-smart
+</code></pre>
+
+<h3 id="no-math">
+<code>--no-math</code>
+</h3>
+
+<p>
+  Disable math support.
+</p>
+
+<pre lang="bash"><code>apex document.md --no-math
+</code></pre>
+
+<h3 id="no-autolink">
+<code>--[no-]autolink</code>
+</h3>
+
+<p>
+  Control automatic linking of URLs and email addresses.
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: GFM, MultiMarkdown, Kramdown, unified
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: CommonMark
+  </li>
+
+</ul>
+
+<p>
+<strong>  What gets autolinked:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Angle-bracket URLs: <code>&lt;https://example.com&gt;</code>, <code>&lt;http://example.com&gt;</code>, <code>&lt;mailto:user@example.com&gt;</code>
+  </li>
+
+  <li>
+    Bare URLs: <code>https://example.com</code>, <code>http://example.com</code>
+  </li>
+
+  <li>
+    Email addresses: <code>user@example.com</code>
+  </li>
+
+</ul>
+
+<p>
+<strong>  Important:</strong> Autolinks are <strong>not</strong> processed inside code spans (<code>`code`</code>) or code blocks (<code> </code> ```).
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable autolinking in CommonMark mode
+apex document.md --mode commonmark --autolink
+
+# Disable autolinking in unified mode
+apex document.md --mode unified --no-autolink
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>Visit [https://example.com](https://example.com) or contact [me@example.com](mailto:me@example.com).
+See `&lt;https://example.com&gt;` in code.
+</code></pre>
+
+<p>
+<strong>  Output with autolink enabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Visit &lt;a href=&quot;https://example.com&quot;&gt;[https://example.com](https://example.com)&lt;/a&gt; or contact &lt;a [href=&quot;me@example.com&quot;](mailto:href=%22me@example.com%22)&gt;me@example.com&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;See &lt;code&gt;&amp;lt;[https://example.com&amp;gt](https://example.com&amp;gt);&lt;/code&gt; in code.&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Output with autolink disabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Visit [https://example.com](https://example.com) or contact [me@example.com](mailto:me@example.com).&lt;/p&gt;
+&lt;p&gt;See &lt;code&gt;&amp;lt;[https://example.com&amp;gt](https://example.com&amp;gt);&lt;/code&gt; in code.&lt;/p&gt;
+</code></pre>
+
+<h3 id="obfuscate-emails">
+<code>--obfuscate-emails</code>
+</h3>
+
+<p>
+  Obfuscate email links (including autolinked emails) by hex-encoding both the <code>mailto:</code> href and the visible address. Useful to deter scraping.
+</p>
+
+<p>
+<strong>  Default:</strong> Off (emails are plain <code>mailto:</code> links)
+</p>
+
+<pre lang="bash"><code># Encode all mailto links in the output
+apex document.md --obfuscate-emails
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;a href=&quot;&amp;#x6D;&amp;#x61;&amp;#x69;&amp;#x6C;&amp;#x74;&amp;#x6F;&amp;#x3A;&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;&quot;&gt;
+&amp;#x6D;&amp;#x65;&amp;#x40;&amp;#x65;&amp;#x78;&amp;#x61;&amp;#x6D;&amp;#x70;&amp;#x6C;&amp;#x65;&amp;#x2E;&amp;#x63;&amp;#x6F;&amp;#x6D;
+&lt;/a&gt;
+</code></pre>
+
+<h3 id="includes-no-includes">
+<code>--includes</code>, <code>--no-includes</code>
+</h3>
+
+<p>
+  Enable or disable file inclusion features. Enabled by default in unified mode.
+</p>
+
+<pre lang="bash"><code>apex document.md --includes
+apex document.md --no-includes
+</code></pre>
+
+<h2 id="image-embedding">
+  Image Embedding
+</h2>
+
+<h3 id="embed-images">
+<code>--embed-images</code>
+</h3>
+
+<p>
+  Embed local images as base64 data URLs in HTML output.
+</p>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Only <strong>local images</strong> (file paths) are embedded
+  </li>
+
+  <li>
+<strong>    Remote images</strong> (http://, https://, //) are <strong>not</strong> processed and remain as URLs
+  </li>
+
+  <li>
+    Images are read from the filesystem and encoded as base64
+  </li>
+
+  <li>
+    Relative paths are resolved using the base directory (see <code>--base-dir</code>)
+  </li>
+
+  <li>
+    Images that are already data URLs are not processed again
+  </li>
+
+  <li>
+    If an image file doesn’t exist, the original path is preserved
+  </li>
+
+</ul>
+
+<p>
+<strong>  Supported image formats:</strong>
+</p>
+
+<ul>
+
+  <li>
+    JPEG (<code>.jpg</code>, <code>.jpeg</code>)
+  </li>
+
+  <li>
+    PNG (<code>.png</code>)
+  </li>
+
+  <li>
+    GIF (<code>.gif</code>)
+  </li>
+
+  <li>
+    WebP (<code>.webp</code>)
+  </li>
+
+  <li>
+    SVG (<code>.svg</code>)
+  </li>
+
+  <li>
+    BMP (<code>.bmp</code>)
+  </li>
+
+  <li>
+    ICO (<code>.ico</code>)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Embed local images
+apex document.md --embed-images
+
+# Embed images with custom base directory
+apex document.md --embed-images --base-dir /path/to/images
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>![Local Image](images/photo.png)
+![Remote Image](https://example.com/image.jpg)
+![Already Embedded](data:image/png;base64,iVBORw0KGgo...)
+</code></pre>
+
+<p>
+<strong>  Output with <code>--embed-images</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;img src=&quot;data:image/png;base64,iVBORw0KGgo...&quot; alt=&quot;Local Image&quot;&gt;
+&lt;img src=&quot;https://example.com/image.jpg&quot; alt=&quot;Remote Image&quot;&gt;
+&lt;img src=&quot;data:image/png;base64,iVBORw0KGgo...&quot; alt=&quot;Already Embedded&quot;&gt;
+</code></pre>
+
+<h2 id="path-resolution">
+  Path Resolution
+</h2>
+
+<h3 id="base-dir-dir">
+<code>--base-dir DIR</code>
+</h3>
+
+<p>
+  Set the base directory for resolving relative paths.
+</p>
+
+<p>
+<strong>  Used for:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Image embedding (with <code>--embed-images</code>)
+  </li>
+
+  <li>
+    File includes/transclusions
+  </li>
+
+  <li>
+    Resolving relative paths when reading from stdin
+  </li>
+
+  <li>
+    Resolving relative paths when the working directory differs from the document location
+  </li>
+
+</ul>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    If not specified and reading from a <strong>file</strong>, the base directory is automatically set to the input file’s directory
+  </li>
+
+  <li>
+    When reading from <strong>stdin</strong>, this flag must be used to resolve relative paths
+  </li>
+
+  <li>
+    Absolute paths are not affected by this setting
+  </li>
+
+  <li>
+    Relative paths are resolved by combining the base directory with the relative path
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Read from file (base directory auto-set to file's directory)
+apex document.md --embed-images
+
+# Read from stdin with base directory
+
+cat document.md | apex --base-dir /path/to/document --embed-images
+# Override auto-detected base directory
+apex document.md --base-dir /custom/path --embed-images
+
+# Use for includes
+apex document.md --base-dir /path/to/project --includes
+</code></pre>
+
+<p>
+<strong>  Input (reading from stdin):</strong>
+</p>
+
+<pre lang="markdown"><code>![Image](images/photo.png)
+</code></pre>
+
+<p>
+<strong>  Without <code>--base-dir</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;!-- Image not found, path preserved --&gt;
+&lt;img src=&quot;images/photo.png&quot; alt=&quot;Image&quot;&gt;
+</code></pre>
+
+<p>
+<strong>  With <code>--base-dir /path/to/document</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;!-- Image found at /path/to/document/images/photo.png and embedded --&gt;
+&lt;img src=&quot;data:image/png;base64,...&quot; alt=&quot;Image&quot;&gt;
+</code></pre>
+
+<h3 id="no-transforms">
+<code>--[no-]transforms</code>
+</h3>
+
+<p>
+  Control metadata variable transforms. Enables <code>[%key:transform]</code> syntax for transforming metadata values.
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified (default)
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: commonmark, gfm, mmd, kramdown
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable transforms in GFM mode
+apex document.md --mode gfm --transforms
+
+# Disable transforms in unified mode
+apex document.md --mode unified --no-transforms
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>---
+title: hello world
+---
+
+# [%title:upper]
+</code></pre>
+
+<p>
+<strong>  Output with transforms enabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;h1&gt;HELLO WORLD&lt;/h1&gt;
+</code></pre>
+
+<p>
+<strong>  Output with transforms disabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;h1&gt;[%title:upper]&lt;/h1&gt;
+</code></pre>
+
+<p>
+  For complete documentation of available transforms, see <a href="Metadata-Transforms.html">Metadata Transforms</a>.
+</p>
+
+<h2 id="metadata-options">
+  Metadata Options
+</h2>
+
+<h3 id="meta-file-file">
+<code>--meta-file FILE</code>
+</h3>
+
+<p>
+  Load metadata from an external file. The file format is auto-detected (YAML, MultiMarkdown, or Pandoc format).
+</p>
+
+<p>
+<strong>  Supported formats:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    YAML</strong> (<code>.yml</code>, <code>.yaml</code>, or <code>---</code> delimited blocks)
+  </li>
+
+  <li>
+<strong>    MultiMarkdown</strong> (key: value pairs)
+  </li>
+
+  <li>
+<strong>    Pandoc</strong> (<code>%</code> lines)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Metadata precedence (highest to lowest):</strong>
+</p>
+
+<ol>
+
+  <li>
+    Command-line metadata (<code>--meta</code>)
+  </li>
+
+  <li>
+    Document metadata (in the document itself)
+  </li>
+
+  <li>
+    File metadata (<code>--meta-file</code>)
+  </li>
+
+</ol>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --meta-file defaults.yml
+</code></pre>
+
+<p>
+<strong>  Reusable Metadata Files:</strong>
+</p>
+
+<p>
+  You can create reusable metadata files for common settings like language and quotes language. This is especially useful for maintaining consistent settings across multiple documents.
+</p>
+
+<p>
+<strong>  Example metadata file (<code>lang-fr.yml</code>):</strong>
+</p>
+
+<pre lang="yaml"><code>---
+language: fr
+quoteslanguage: french
+---
+</code></pre>
+
+<p>
+<strong>  Note:</strong> In YAML, keys with spaces must be quoted (e.g., <code>&quot;Quotes Language&quot;: french</code>). Since Apex normalizes metadata keys (removes spaces, case-insensitive), you can use keys without spaces for cleaner YAML syntax. Both <code>quoteslanguage</code> and <code>&quot;Quotes Language&quot;</code> will work.
+</p>
+
+<p>
+<strong>  Example metadata file (<code>lang-de.mmd</code>):</strong>
+</p>
+
+<pre><code>Language: de
+Quotes Language: german
+</code></pre>
+
+<p>
+<strong>  Note:</strong> MultiMarkdown format allows spaces in keys, so <code>Quotes Language</code> works without quotes.
+</p>
+
+<p>
+<strong>  Usage:</strong>
+</p>
+
+<pre lang="bash"><code># Use French language settings for all documents
+apex document1.md --meta-file lang-fr.yml
+apex document2.md --meta-file lang-fr.yml
+
+# Use German language settings
+apex document.md --meta-file lang-de.mmd
+</code></pre>
+
+<p>
+<strong>  Global configuration file:</strong>
+</p>
+
+<p>
+  If you do not provide <code>--meta-file</code>, Apex will automatically look for a global configuration file named <code>config.yml</code> and load it as if it had been passed via <code>--meta-file</code> when it exists:
+</p>
+
+<ul>
+
+  <li>
+    If <code>$XDG_CONFIG_HOME</code> is set: <code>$XDG_CONFIG_HOME/apex/config.yml</code>
+  </li>
+
+  <li>
+    Otherwise: <code>~/.config/apex/config.yml</code>
+  </li>
+
+</ul>
+
+<p>
+  This makes it easy to define defaults (mode, language, feature flags, etc.) that apply to all documents unless overridden by document metadata or command-line options. See <a href="Configuration.html">Configuration</a> for example <code>config.yml</code> files and a complete list of available keys.
+</p>
+
+<p>
+<strong>  Benefits:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Consistency</strong>: Ensure all documents use the same language and feature defaults
+  </li>
+
+  <li>
+<strong>    Reusability</strong>: Define configuration once and reuse across many documents
+  </li>
+
+  <li>
+<strong>    Maintainability</strong>: Update defaults in one place
+  </li>
+
+  <li>
+<strong>    Flexibility</strong>: Override with document-specific metadata or command-line flags when needed
+  </li>
+
+</ul>
+
+<p>
+<strong>  Note:</strong> The <code>language</code> metadata sets the HTML <code>lang</code> attribute in standalone documents, and if <code>Quotes Language</code> is not specified, it will automatically use the <code>language</code> value for quote styling.
+</p>
+
+<h3 id="meta-keyvalue">
+<code>--meta KEY=VALUE</code>
+</h3>
+
+<p>
+  Set metadata from the command line. Can be used multiple times or with comma-separated pairs.
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Single metadata value
+apex document.md --meta title=&quot;My Document&quot;
+
+# Multiple metadata values
+apex document.md --meta title=&quot;My Document&quot; --meta author=&quot;John Doe&quot;
+
+# Comma-separated pairs
+apex document.md --meta title=&quot;My Document&quot;,author=&quot;John Doe&quot;
+
+# Quoted values with spaces
+apex document.md --meta title=&quot;My Document Title&quot;
+</code></pre>
+
+<p>
+<strong>  Precedence:</strong> Command-line metadata overrides both document metadata and file metadata.
+</p>
+
+<h3 id="controlling-options-via-metadata">
+  Controlling Options via Metadata
+</h3>
+
+<p>
+  Most command-line options can be controlled via document metadata, allowing different files to be processed with different settings when processing batches. This enables per-document configuration without needing separate command-line invocations.
+</p>
+
+<p>
+<strong>  Boolean options</strong> accept <code>true</code>/<code>false</code>, <code>yes</code>/<code>no</code>, or <code>1</code>/<code>0</code> (case-insensitive, downcased). <strong>String options</strong> use the value directly.
+</p>
+
+<p>
+<strong>  Supported boolean options:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>indices</code>, <code>wikilinks</code>, <code>includes</code>, <code>relaxed-tables</code>, <code>alpha-lists</code>, <code>mixed-lists</code>
+  </li>
+
+  <li>
+<code>sup-sub</code>, <code>autolink</code>, <code>transforms</code>, <code>unsafe</code>, <code>tables</code>, <code>footnotes</code>
+  </li>
+
+  <li>
+<code>smart</code>, <code>math</code>, <code>ids</code>, <code>header-anchors</code>, <code>embed-images</code>
+  </li>
+
+  <li>
+<code>link-citations</code>, <code>show-tooltips</code>, <code>suppress-bibliography</code>, <code>suppress-index</code>
+  </li>
+
+  <li>
+<code>group-index-by-letter</code>, <code>obfuscate-emails</code>, <code>pretty</code>, <code>standalone</code>, <code>hardbreaks</code>
+  </li>
+
+  <li>
+<code>plugins</code> (see <a href="Plugins.html">Plugins</a> for details on per-document plugin control)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Supported string options:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>bibliography</code>, <code>csl</code>, <code>title</code>, <code>style</code> (or <code>css</code>), <code>id-format</code>, <code>base-dir</code>, <code>mode</code>
+  </li>
+
+  <li>
+<code>language</code>, <code>quoteslanguage</code> (or <code>Quotes Language</code>), for locale and quote-style control
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example YAML front matter:</strong>
+</p>
+
+<pre lang="yaml"><code>---
+indices: false
+wikilinks: true
+bibliography: references.bib
+title: My Research Paper
+pretty: true
+standalone: true
+language: en
+quoteslanguage: english
+---
+</code></pre>
+
+<p>
+<strong>  Example MultiMarkdown metadata:</strong>
+</p>
+
+<pre><code>indices: false
+wikilinks: true
+bibliography: references.bib
+title: My Research Paper
+</code></pre>
+
+<p>
+<strong>  Batch Processing:</strong>
+  When processing multiple files with <code>apex *.md</code>, each file can use its own configuration via metadata. You can also use <code>--meta-file</code> or a global <code>config.yml</code> to specify shared configuration that applies to all processed files.
+</p>
+
+<pre lang="bash"><code># Process all markdown files, each with its own configuration
+apex *.md
+
+# Process all files with a shared configuration file
+apex *.md --meta-file defaults.yml
+</code></pre>
+
+<p>
+<strong>  Note:</strong> If <code>mode</code> is specified in metadata, it resets all options to that mode’s defaults before applying other metadata options. This ensures mode-specific defaults are applied first.
+</p>
+
+<h2 id="citations-and-bibliography">
+  Citations and Bibliography
+</h2>
+
+<h3 id="bibliography-file">
+<code>--bibliography FILE</code>
+</h3>
+
+<p>
+  Specify a bibliography file in BibTeX, CSL JSON, or CSL YAML format. Can be used multiple times to load multiple bibliography files.
+</p>
+
+<p>
+<strong>  Supported formats:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    BibTeX</strong> (<code>.bib</code>) - Standard bibliography format
+  </li>
+
+  <li>
+<strong>    CSL JSON</strong> (<code>.json</code>) - Citation Style Language JSON format
+  </li>
+
+  <li>
+<strong>    CSL YAML</strong> (<code>.yml</code>, <code>.yaml</code>) - Citation Style Language YAML format
+  </li>
+
+</ul>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Citations are automatically enabled when this option is used
+  </li>
+
+  <li>
+    Bibliography can also be specified in document metadata (see <a href="Citations.html">Citations</a>)
+  </li>
+
+  <li>
+    Multiple bibliography files are merged together
+  </li>
+
+  <li>
+    Relative paths are resolved using the base directory (see <code>--base-dir</code>)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Single bibliography file
+apex document.md --bibliography refs.bib
+
+# Multiple bibliography files
+apex document.md --bibliography refs1.bib --bibliography refs2.bib
+
+# With base directory for relative paths
+apex document.md --bibliography references.bib --base-dir /path/to/docs
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>See [@doe99] for details.
+
+&lt;!-- REFERENCES --&gt;
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; for details.&lt;/p&gt;
+&lt;div id=&quot;refs&quot; class=&quot;references csl-bib-body&quot;&gt;
+&lt;div id=&quot;ref-doe99&quot; class=&quot;csl-entry&quot;&gt;Doe, John 1999. &lt;em&gt;Article Title&lt;/em&gt;. &lt;em&gt;Journal Name&lt;/em&gt; 1: 1--10&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h3 id="csl-file">
+<code>--csl FILE</code>
+</h3>
+
+<p>
+  Specify a Citation Style Language (CSL) file for formatting citations and bibliography.
+</p>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Citations are automatically enabled when this option is used
+  </li>
+
+  <li>
+    CSL file can also be specified in document metadata
+  </li>
+
+  <li>
+    If no CSL file is specified, a default author-date style is used
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --csl apa.csl
+</code></pre>
+
+<h3 id="no-bibliography">
+<code>--no-bibliography</code>
+</h3>
+
+<p>
+  Suppress bibliography output even when citations are present in the document.
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --no-bibliography
+</code></pre>
+
+<p>
+<strong>  Note:</strong> Citations will still be processed and formatted, but the bibliography section will not be generated.
+</p>
+
+<h3 id="link-citations">
+<code>--link-citations</code>
+</h3>
+
+<p>
+  Link citations to their corresponding bibliography entries. Citations will include <code>href</code> attributes pointing to the bibliography entry.
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --link-citations
+</code></pre>
+
+<p>
+<strong>  Output with <code>--link-citations</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;a href=&quot;#ref-doe99&quot; class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/a&gt; for details.&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Output without <code>--link-citations</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;span class=&quot;citation&quot; data-cites=&quot;doe99&quot;&gt;(Doe, John 1999)&lt;/span&gt; for details.&lt;/p&gt;
+</code></pre>
+
+<h3 id="show-tooltips">
+<code>--show-tooltips</code>
+</h3>
+
+<p>
+  Enable tooltips on citations when hovering (requires CSS support).
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --bibliography refs.bib --show-tooltips
+</code></pre>
+
+<p>
+<strong>  Note:</strong> This adds <code>title</code> attributes to citation links. CSS is required to style the tooltips.
+</p>
+
+<p>
+  For complete documentation of citation syntax and bibliography features, see <a href="Citations.html">Citations</a>.
+</p>
+
+<h2 id="indices">
+  Indices
+</h2>
+
+<p>
+<strong>  Note:</strong> Indices are supported in <strong>MultiMarkdown</strong> and <strong>unified</strong> modes. Enabled by default in these modes.
+</p>
+
+<h3 id="indices">
+<code>--indices</code>
+</h3>
+
+<p>
+  Enable index processing with both mmark and TextIndex syntax support.
+</p>
+
+<p>
+<strong>  Default:</strong> Enabled in MultiMarkdown and unified modes
+</p>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Enables both mmark syntax (<code>(!item)</code>, <code>(!item, subitem)</code>, <code>(!!item, subitem)</code>) and TextIndex syntax (<code>{^}</code>, <code>[term]{^}</code>)
+  </li>
+
+  <li>
+    Index entries are collected during parsing
+  </li>
+
+  <li>
+    Index is automatically generated at the end of the document or at <code>&lt;!--INDEX--&gt;</code> marker
+  </li>
+
+  <li>
+    Entries are sorted alphabetically and can be grouped by first letter
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --indices
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>This is about protocols (!Protocol).
+
+And implementations (!Implementation).
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This is about protocols &lt;span class=&quot;index&quot; id=&quot;idxref:0&quot;&gt;&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;And implementations &lt;span class=&quot;index&quot; id=&quot;idxref:1&quot;&gt;&lt;/span&gt;.&lt;/p&gt;
+&lt;h1 id=&quot;index-section&quot;&gt;Index&lt;/h1&gt;
+&lt;div class=&quot;index&quot;&gt;
+...
+&lt;/div&gt;
+</code></pre>
+
+<h3 id="no-indices">
+<code>--no-indices</code>
+</h3>
+
+<p>
+  Disable index processing entirely.
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --no-indices
+</code></pre>
+
+<p>
+<strong>  Note:</strong> When disabled, index syntax is treated as plain text and no index markers or index section are generated.
+</p>
+
+<h3 id="no-index">
+<code>--no-index</code>
+</h3>
+
+<p>
+  Suppress index generation while still creating index markers in the document.
+</p>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="bash"><code>apex document.md --no-index
+</code></pre>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Index markers (<code>&lt;span class=&quot;index&quot;&gt;</code>) are still created in the document
+  </li>
+
+  <li>
+    Index section is not generated at the end
+  </li>
+
+  <li>
+    Useful when you want to mark terms but generate the index separately
+  </li>
+
+</ul>
+
+<p>
+  For complete documentation of index syntax, see <a href="Syntax#indices">Syntax</a>.
+</p>
+
+<h3 id="hardbreaks">
+<code>--hardbreaks</code>
+</h3>
+
+<p>
+  Treat newlines as hard breaks (GFM style). Newlines become <code>&lt;br&gt;</code> tags.
+</p>
+
+<pre lang="bash"><code>apex document.md --hardbreaks
+</code></pre>
+
+<h3 id="no-sup-sub">
+<code>--[no-]sup-sub</code>
+</h3>
+
+<p>
+  Control MultiMarkdown-style superscript and subscript syntax.
+</p>
+
+<p>
+<strong>  Syntax:</strong>
+</p>
+
+<ul>
+
+  <li>
+    The <code>^</code> character creates superscript for the text immediately following it. The superscript stops at the first space, punctuation, or newline.
+  </li>
+
+  <li>
+    The <code>~</code> character creates subscript when used <strong>within a word/identifier</strong> with paired tildes (e.g., <code>H~2~O</code> creates H₂O). When tildes are at word boundaries (e.g., <code>~text~</code>), they create underline instead.
+  </li>
+
+</ul>
+
+<p>
+<strong>  Important:</strong> Subscript uses <strong>paired tildes within word boundaries</strong>. The tildes must be part of a word/identifier (alphanumeric characters) to create subscript. Tildes at word boundaries create underline.
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified, multimarkdown
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: commonmark, gfm, kramdown
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable sup/sub in GFM mode
+apex document.md --mode gfm --sup-sub
+
+# Disable sup/sub in unified mode
+apex document.md --mode unified --no-sup-sub
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>Water: H&lt;sub&gt;2&lt;/sub&gt;O          # Subscript (tildes within word)
+Area: m&lt;sup&gt;2&lt;/sup&gt;              # Superscript
+Formula: E = mc&lt;sup&gt;2&lt;/sup&gt;      # Superscript
+Chemical: H&lt;sub&gt;2&lt;/sub&gt;SO&lt;sub&gt;4&lt;/sub&gt;    # Multiple subscripts within word
+&lt;u&gt;h2o&lt;/u&gt;                  # Underline (tildes at word boundaries)
+</code></pre>
+
+<h3 id="no-divs">
+<code>--[no-]divs</code>
+</h3>
+
+<p>
+  Control Pandoc fenced divs syntax processing. Fenced divs allow you to create HTML <code>&lt;div&gt;</code> elements with attributes using a special fence syntax (<code>::::: {#id .class} ... :::::</code>).
+</p>
+
+<p>
+<strong>  Default behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified mode
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: all other modes
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable fenced divs in unified mode (default)
+apex document.md --mode unified --divs
+
+# Disable fenced divs in unified mode
+apex document.md --mode unified --no-divs
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>&lt;div id=&quot;special&quot; class=&quot;sidebar&quot;&gt;&lt;p&gt;Here is a paragraph.&lt;/p&gt;
+&lt;p&gt;And another.&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;div id=&quot;special&quot; class=&quot;sidebar&quot;&gt;
+&lt;p&gt;Here is a paragraph.&lt;/p&gt;
+&lt;p&gt;And another.&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+<strong>  Features:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Opening fences require at least 3 colons and must have attributes
+  </li>
+
+  <li>
+    Closing fences need at least 3 colons (no attributes)
+  </li>
+
+  <li>
+    Supports nested divs
+  </li>
+
+  <li>
+    Attributes can include ID (<code>{#id}</code>), classes (<code>{.class}</code>), and custom attributes (<code>key=&quot;value&quot;</code>)
+  </li>
+
+  <li>
+    Single unbraced word is treated as a class name
+  </li>
+
+  <li>
+    Attributes can optionally be followed by trailing colons
+  </li>
+
+  <li>
+    Supports different HTML block elements using <code>&gt;blocktype</code> syntax (e.g., <code>::: &gt;aside {.sidebar} ... :::</code> creates <code>&lt;aside&gt;</code> instead of <code>&lt;div&gt;</code>)
+  </li>
+
+</ul>
+
+<p>
+  See <a href="Syntax#pandoc-fenced-divs">Syntax</a> for complete documentation, including block types like <code>&gt;aside</code>, <code>&gt;article</code>, <code>&gt;section</code>, <code>&gt;details</code>, and <code>&gt;summary</code>.
+</p>
+
+<h3 id="no-spans">
+<code>--[no-]spans</code>
+</h3>
+
+<p>
+  Control Pandoc-style bracketed spans syntax (<code>[text]{IAL}</code>). Bracketed spans convert to HTML <code>&lt;span&gt;</code> elements with attributes.
+</p>
+
+<p>
+<strong>  Default behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified mode
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: all other modes
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable bracketed spans in unified mode (default)
+apex document.md --mode unified --spans
+
+# Disable bracketed spans in unified mode
+apex document.md --mode unified --no-spans
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>This is &lt;span class=&quot;highlight&quot;&gt;highlighted text&lt;/span&gt;
+ in a sentence.
+&lt;span id=&quot;id&quot; class=&quot;class&quot; key=&quot;value&quot;&gt;Custom span&lt;/span&gt;
+
+</code></pre>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;This is &lt;span class=&quot;highlight&quot;&gt;highlighted text&lt;/span&gt; in a sentence.&lt;/p&gt;
+&lt;p&gt;&lt;span id=&quot;id&quot; class=&quot;class&quot; key=&quot;value&quot;&gt;Custom span&lt;/span&gt;&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Features:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Supports IAL syntax for attributes (ID, classes, custom attributes)
+  </li>
+
+  <li>
+    Works with both Kramdown-style <code>{: #id .class}</code> and Pandoc-style <code>{#id .class}</code> attribute formats
+  </li>
+
+  <li>
+    Can be nested within other inline elements
+  </li>
+
+</ul>
+
+<p>
+  See <a href="Syntax#bracketed-spans">Syntax</a> for complete documentation.
+</p>
+
+<h3 id="no-emoji-autocorrect">
+<code>--[no-]emoji-autocorrect</code>
+</h3>
+
+<p>
+  Control emoji name autocorrect. When enabled, emoji names like <code>🚀</code> are automatically converted to Unicode emoji characters.
+</p>
+
+<p>
+<strong>  Default behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified mode
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: all other modes
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable emoji autocorrect in unified mode (default)
+apex document.md --mode unified --emoji-autocorrect
+
+# Disable emoji autocorrect in unified mode
+apex document.md --mode unified --no-emoji-autocorrect
+
+# Enable emoji autocorrect in GFM mode
+apex document.md --mode gfm --emoji-autocorrect
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>Success! 🚀 🎉 ✨
+I ❤️ Markdown!
+</code></pre>
+
+<p>
+<strong>  Output with emoji-autocorrect enabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Success! 🚀 🎉 ✨&lt;/p&gt;
+&lt;p&gt;I ❤️ Markdown!&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Output with emoji-autocorrect disabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Success! 🚀 🎉 ✨&lt;/p&gt;
+&lt;p&gt;I ❤️ Markdown!&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Note:</strong> Apex supports 350+ GitHub emoji names. See <a href="Syntax#github-emoji">Syntax</a> for more information.
+</p>
+
+<p>
+<strong>  Output:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Water: H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
+&lt;p&gt;Area: m&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Formula: E = mc&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Chemical: H&lt;sub&gt;2&lt;/sub&gt;SO&lt;sub&gt;4&lt;/sub&gt;&lt;/p&gt;
+&lt;p&gt;&lt;u&gt;h2o&lt;/u&gt;&lt;/p&gt;
+</code></pre>
+
+<h3 id="no-unsafe">
+<code>--[no-]unsafe</code>
+</h3>
+
+<p>
+  Control whether raw HTML is allowed in output.
+</p>
+
+<p>
+<strong>  Default behavior by mode:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Enabled</strong> in: unified, multimarkdown, kramdown
+  </li>
+
+  <li>
+<strong>    Disabled</strong> in: commonmark, gfm
+  </li>
+
+</ul>
+
+<p>
+  When disabled, HTML tags are escaped or removed for security (GFM tag filter).
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable raw HTML in GFM mode
+apex document.md --mode gfm --unsafe
+
+# Disable raw HTML in unified mode
+apex document.md --mode unified --no-unsafe
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>&lt;div class=&quot;custom&quot;&gt;Custom HTML&lt;/div&gt;
+</code></pre>
+
+<p>
+<strong>  Output with unsafe enabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;div class=&quot;custom&quot;&gt;Custom HTML&lt;/div&gt;
+</code></pre>
+
+<p>
+<strong>  Output with unsafe disabled (GFM mode):</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;&amp;lt;div class=&quot;custom&quot;&amp;gt;Custom HTML&amp;lt;/div&amp;gt;&lt;/p&gt;
+</code></pre>
+
+<h3 id="no-wikilinks">
+<code>--[no-]wikilinks</code>
+</h3>
+
+<p>
+  Control wiki link syntax (<code>[[PageName]]</code>).
+</p>
+
+<p>
+<strong>  Default:</strong> Disabled in all modes
+</p>
+
+<p>
+  Wiki links must be explicitly enabled with <code>--wikilinks</code> to process <code>[[PageName]]</code>, <code>[[Page|Display]]</code>, and <code>[[Page#Section]]</code> syntax.
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Enable wiki links in unified mode
+apex document.md --mode unified --wikilinks
+
+# Enable wiki links in any mode
+apex document.md --mode gfm --wikilinks
+
+# Disable wiki links (explicit)
+apex document.md --no-wikilinks
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>Check out [[Main Page]] for details.
+Or see [[Main Page|the main page]] with custom text.
+Link to [[Main Page#Section]] for a specific section.
+</code></pre>
+
+<p>
+<strong>  Output with wikilinks enabled (default - spaces converted to dashes):</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Check out &lt;a href=&quot;Main-Page&quot;&gt;Main Page&lt;/a&gt; for details.&lt;/p&gt;
+&lt;p&gt;Or see &lt;a href=&quot;Main-Page&quot;&gt;the main page&lt;/a&gt; with custom text.&lt;/p&gt;
+&lt;p&gt;Link to &lt;a href=&quot;Main-Page#Section&quot;&gt;Main Page&lt;/a&gt; for a specific section.&lt;/p&gt;
+</code></pre>
+
+<p>
+<strong>  Output with wikilinks disabled:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;Check out [[Main Page]] for details.&lt;/p&gt;
+&lt;p&gt;Or see [[Main Page|the main page]] for custom text.&lt;/p&gt;
+&lt;p&gt;Link to [[Main Page#Section]] for a specific section.&lt;/p&gt;
+</code></pre>
+
+<h3 id="wikilink-space-mode">
+<code>--wikilink-space MODE</code>
+</h3>
+
+<p>
+  Control how spaces in wiki link page names are handled in the generated URL.
+</p>
+
+<p>
+<strong>  Default:</strong> <code>dash</code> (spaces converted to dashes)
+</p>
+
+<p>
+<strong>  Options:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>dash</code> - Convert spaces to dashes: <code>[[Home Page]]</code> → <code>href=&quot;Home-Page&quot;</code>
+  </li>
+
+  <li>
+<code>none</code> - Remove spaces: <code>[[Home Page]]</code> → <code>href=&quot;HomePage&quot;</code>
+  </li>
+
+  <li>
+<code>underscore</code> - Convert spaces to underscores: <code>[[Home Page]]</code> → <code>href=&quot;Home_Page&quot;</code>
+  </li>
+
+  <li>
+<code>space</code> - Keep spaces (rendered as <code>%20</code> in HTML): <code>[[Home Page]]</code> → <code>href=&quot;Home%20Page&quot;</code>
+  </li>
+
+</ul>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Use dashes (default)
+apex document.md --wikilinks --wikilink-space dash
+
+# Remove spaces
+apex document.md --wikilinks --wikilink-space none
+
+# Use underscores
+apex document.md --wikilinks --wikilink-space underscore
+
+# Keep spaces (not recommended for URLs)
+apex document.md --wikilinks --wikilink-space space
+</code></pre>
+
+<h3 id="wikilink-extension-ext">
+<code>--wikilink-extension EXT</code>
+</h3>
+
+<p>
+  Add a file extension to wiki link URLs.
+</p>
+
+<p>
+<strong>  Default:</strong> No extension
+</p>
+
+<p>
+  The extension is automatically prefixed with a dot if not provided. For example, <code>--wikilink-extension html</code> creates <code>href=&quot;Page.html&quot;</code> and <code>--wikilink-extension .html</code> also creates <code>href=&quot;Page.html&quot;</code>.
+</p>
+
+<p>
+<strong>  Examples:</strong>
+</p>
+
+<pre lang="bash"><code># Add .html extension
+apex document.md --wikilinks --wikilink-extension html
+
+# Add .md extension
+apex document.md --wikilinks --wikilink-extension md
+
+# Combine with space mode
+apex document.md --wikilinks --wikilink-space dash --wikilink-extension html
+</code></pre>
+
+<p>
+<strong>  Input:</strong>
+</p>
+
+<pre lang="markdown"><code>See [[Home Page]] for details.
+</code></pre>
+
+<p>
+<strong>  Output with <code>--wikilink-space dash --wikilink-extension html</code>:</strong>
+</p>
+
+<pre lang="html"><code>&lt;p&gt;See &lt;a href=&quot;Home-Page.html&quot;&gt;Home Page&lt;/a&gt; for details.&lt;/p&gt;
+</code></pre>
+
+<h2 id="critic-markup-options">
+  Critic Markup Options
+</h2>
+
+<h3 id="accept">
+<code>--accept</code>
+</h3>
+
+<p>
+  Accept all Critic Markup changes. Applies all additions, removes all deletions, keeps substitutions.
+</p>
+
+<pre lang="bash"><code>apex document.md --accept
+</code></pre>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>&lt;ins class=&quot;critic&quot;&gt;add&lt;/ins&gt;</code> → <code>add</code> (kept)
+  </li>
+
+  <li>
+<code>&lt;del class=&quot;critic&quot;&gt;del&lt;/del&gt;</code> → (removed)
+  </li>
+
+  <li>
+<code>&lt;del class=&quot;critic break&quot;&gt;old&lt;/del&gt;&lt;ins class=&quot;critic break&quot;&gt;new&lt;/ins&gt;</code> → <code>new</code> (kept)
+  </li>
+
+  <li>
+<code>&lt;mark class=&quot;critic&quot;&gt;mark&lt;/mark&gt;</code> → <code>mark</code> (markup removed)
+  </li>
+
+  <li>
+<code>&lt;span class=&quot;critic comment&quot;&gt;comment&lt;/span&gt;</code> → (removed)
+  </li>
+
+</ul>
+
+<h3 id="reject">
+<code>--reject</code>
+</h3>
+
+<p>
+  Reject all Critic Markup changes. Reverts all changes, keeps original text.
+</p>
+
+<pre lang="bash"><code>apex document.md --reject
+</code></pre>
+
+<p>
+<strong>  Behavior:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>&lt;ins class=&quot;critic&quot;&gt;add&lt;/ins&gt;</code> → (removed)
+  </li>
+
+  <li>
+<code>&lt;del class=&quot;critic&quot;&gt;del&lt;/del&gt;</code> → <code>del</code> (kept)
+  </li>
+
+  <li>
+<code>&lt;del class=&quot;critic break&quot;&gt;old&lt;/del&gt;&lt;ins class=&quot;critic break&quot;&gt;new&lt;/ins&gt;</code> → <code>old</code> (kept)
+  </li>
+
+  <li>
+<code>&lt;mark class=&quot;critic&quot;&gt;mark&lt;/mark&gt;</code> → <code>mark</code> (markup removed)
+  </li>
+
+  <li>
+<code>&lt;span class=&quot;critic comment&quot;&gt;comment&lt;/span&gt;</code> → (removed)
+  </li>
+
+</ul>
+
+<h2 id="inputoutput">
+  Input/Output
+</h2>
+
+<h3 id="reading-from-stdin">
+  Reading from stdin
+</h3>
+
+<p>
+  If no file is specified, Apex reads from stdin:
+</p>
+
+<pre lang="bash"><code>echo &quot;# Hello&quot; | apex
+---|---|
+cat document.md | apex &gt; output.html
+</code></pre>
+
+<h3 id="writing-to-stdout">
+  Writing to stdout
+</h3>
+
+<p>
+  By default, Apex writes to stdout. Use <code>-o</code> or <code>&gt;</code> to redirect:
+</p>
+
+<pre lang="bash"><code>apex document.md &gt; output.html
+apex document.md -o output.html
+</code></pre>
+
+<h2 id="combining-options">
+  Combining Options
+</h2>
+
+<p>
+  You can combine multiple options:
+</p>
+
+<pre lang="bash"><code># Standalone document with custom title and stylesheet, pretty-printed
+apex document.md --standalone --title &quot;Report&quot; --style report.css --pretty
+
+# GFM mode with no header IDs
+apex --mode gfm --no-ids document.md
+
+# Unified mode with MMD-style header IDs
+apex --mode unified --id-format mmd document.md
+</code></pre>
+
+<h2 id="option-precedence">
+  Option Precedence
+</h2>
+
+<p>
+  Options are processed in order. Later options override earlier ones:
+</p>
+
+<pre lang="bash"><code># This will use GFM mode (unified is default, but --mode gfm overrides)
+apex document.md --mode unified --mode gfm
+</code></pre>
+
+<h2 id="examples">
+  Examples
+</h2>
+
+<h3 id="blog-post">
+  Blog Post
+</h3>
+
+<pre lang="bash"><code>apex post.md --standalone --title &quot;My Blog Post&quot; --style blog.css --pretty -o post.html
+</code></pre>
+
+<h3 id="github-compatible-output">
+  GitHub-Compatible Output
+</h3>
+
+<pre lang="bash"><code>apex README.md --mode gfm --pretty &gt; README.html
+</code></pre>
+
+<h3 id="documentation-with-custom-ids">
+  Documentation with Custom IDs
+</h3>
+
+<pre lang="bash"><code>apex docs.md --standalone --title &quot;Documentation&quot; --id-format mmd --pretty
+</code></pre>
+
+<h3 id="review-document-with-critic-markup">
+  Review Document with Critic Markup
+</h3>
+
+<pre lang="bash"><code># Show all changes
+apex draft.md
+
+# Apply all changes (final version)
+apex draft.md --accept
+
+# Revert all changes (original version)
+apex draft.md --reject
+</code></pre>
+
+<h3 id="academic-document-with-citations">
+  Academic Document with Citations
+</h3>
+
+<pre lang="bash"><code># Process document with bibliography
+apex paper.md --bibliography refs.bib
+
+# With citation style and linked citations
+apex paper.md --bibliography refs.bib --csl apa.csl --link-citations
+
+# Multiple bibliography files
+apex paper.md --bibliography refs1.bib --bibliography refs2.bib
+</code></pre>
+
+<h2 id="related">
+  Related
+</h2>
+
+<ul>
+
+  <li>
+<a href="Modes.html">    Modes</a> - How modes affect available options
+  </li>
+
+  <li>
+<a href="Header-IDs.html">    Header IDs</a> - Header ID generation options
+  </li>
+
+  <li>
+<a href="Usage.html">    Usage</a> - Basic usage examples
+  </li>
+
+</ul>
+
+<h2 id="plugin-options">
+  Plugin Options
+</h2>
+
+<h3 id="no-plugins">
+<code>--[no-]plugins</code>
+</h3>
+
+<p>
+  Enable or disable plugin processing.
+</p>
+
+<ul>
+
+  <li>
+<strong>    Default</strong>: Plugins are disabled unless you explicitly enable them.
+  </li>
+
+  <li>
+<strong>    Enable</strong>: <code>--plugins</code>
+  </li>
+
+  <li>
+<strong>    Disable</strong>: <code>--no-plugins</code>
+  </li>
+
+</ul>
+
+<p>
+  Plugins can also be enabled per document using metadata (e.g. <code>plugins: true</code>). See <a href="Plugins.html">Plugins</a> for details.
+</p>
+
+<pre lang="bash"><code>apex --plugins document.md
+</code></pre>
+
+<h3 id="list-plugins">
+<code>--list-plugins</code>
+</h3>
+
+<p>
+  List installed plugins and available plugins from the central directory.
+</p>
+
+<ul>
+
+  <li>
+    Prints a <code>## Installed Plugins</code> section for plugins found in your user plugin directory.
+  </li>
+
+  <li>
+    Prints a <code>---</code> separator and a <code>## Available Plugins</code> section with plugins from the remote JSON directory that are <strong>not</strong> already installed.
+  </li>
+
+</ul>
+
+<pre lang="bash"><code>apex --list-plugins
+</code></pre>
+
+<h3 id="install-plugin-id">
+<code>--install-plugin ID</code>
+</h3>
+
+<p>
+  Install a plugin from the central directory by its <code>id</code>.
+</p>
+
+<ul>
+
+  <li>
+    Fetches <code>apex-plugins.json</code> from the <code>ApexMarkdown/apex-plugins</code> repository.
+  </li>
+
+  <li>
+    Locates the plugin entry with matching <code>id</code>.
+  </li>
+
+  <li>
+    Clones the plugin repository into your user plugin directory (e.g. <code>~/.config/apex/plugins/ID</code>).
+  </li>
+
+  <li>
+    If the plugin’s <code>plugin.yml</code> defines a <code>post_install</code> command, Apex runs it from the plugin directory after cloning.
+  </li>
+
+</ul>
+
+<pre lang="bash"><code>apex --install-plugin kbd
+</code></pre>
+
+<h3 id="uninstall-plugin-id">
+<code>--uninstall-plugin ID</code>
+</h3>
+
+<p>
+  Uninstall a locally installed plugin by its <code>id</code>.
+</p>
+
+<ul>
+
+  <li>
+    Verifies that the plugin directory exists under the user plugin path.
+  </li>
+
+  <li>
+    Prompts for confirmation before deleting the plugin directory.
+  </li>
+
+  <li>
+    Removes only the plugin’s directory; support data under <code>.../apex/support</code> is left intact.
+  </li>
+
+</ul>
+
+<pre lang="bash"><code>apex --uninstall-plugin kbd
+</code></pre>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

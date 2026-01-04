@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="processor-modes">
+      Processor Modes
+    </h1>
+<nav class="page-toc"><ul><li><a href="#processor-modes">Processor Modes</a><ul><li><a href="#overview">Overview</a></li><li><a href="#unified-mode-default">Unified Mode (Default)</a><ul><li><a href="#enabled-features">Enabled Features</a></li><li><a href="#id-format">ID Format</a></li></ul></li><li><a href="#gfm-mode">GFM Mode</a><ul><li><a href="#enabled-features">Enabled Features</a></li><li><a href="#disabled-features">Disabled Features</a></li><li><a href="#id-format">ID Format</a></li></ul></li><li><a href="#multimarkdown-mode">MultiMarkdown Mode</a><ul><li><a href="#enabled-features">Enabled Features</a></li><li><a href="#disabled-features">Disabled Features</a></li><li><a href="#id-format">ID Format</a></li></ul></li><li><a href="#kramdown-mode">Kramdown Mode</a><ul><li><a href="#enabled-features">Enabled Features</a></li><li><a href="#disabled-features">Disabled Features</a></li><li><a href="#id-format">ID Format</a></li></ul></li><li><a href="#commonmark-mode">CommonMark Mode</a><ul><li><a href="#enabled-features">Enabled Features</a></li><li><a href="#disabled-features">Disabled Features</a></li><li><a href="#id-format">ID Format</a></li></ul></li><li><a href="#feature-comparison-table">Feature Comparison Table</a></li><li><a href="#choosing-a-mode">Choosing a Mode</a></li><li><a href="#overriding-mode-defaults">Overriding Mode Defaults</a></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      Apex supports multiple processor modes, each optimized for compatibility with different Markdown flavors.
+    </p>
+
+    <h2 id="overview">
+      Overview
+    </h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Mode
+          </th>
+
+          <th>
+            Description
+          </th>
+
+          <th>
+            Default ID Format
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td>
+<code>unified</code>
+          </td>
+
+          <td>
+            All features enabled
+          </td>
+
+          <td>
+            GFM
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+<code>gfm</code>
+          </td>
+
+          <td>
+            GitHub Flavored Markdown
+          </td>
+
+          <td>
+            GFM
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+<code>mmd</code>
+          </td>
+
+          <td>
+            MultiMarkdown compatibility
+          </td>
+
+          <td>
+            MultiMarkdown
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+<code>kramdown</code>
+          </td>
+
+          <td>
+            Kramdown compatibility
+          </td>
+
+          <td>
+            Kramdown
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+<code>commonmark</code>
+          </td>
+
+          <td>
+            Pure CommonMark spec
+          </td>
+
+          <td>
+            GFM
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <h2 id="unified-mode-default">
+      Unified Mode (Default)
+    </h2>
+
+    <p>
+<strong>      Command:</strong> <code>apex document.md</code> or <code>apex --mode unified document.md</code>
+    </p>
+
+    <p>
+      Unified mode enables all features from all other modes. This is the default mode.
+    </p>
+
+    <h3 id="enabled-features">
+      Enabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ✅ Tables (GFM style)
+      </li>
+
+      <li>
+        ✅ Strikethrough (<code>~~text~~</code>)
+      </li>
+
+      <li>
+        ✅ Task lists (<code>- [ ]</code> and <code>- [x]</code>)
+      </li>
+
+      <li>
+        ✅ Autolinks (URLs and emails)
+      </li>
+
+      <li>
+        ✅ Footnotes (reference and inline styles)
+      </li>
+
+      <li>
+        ✅ Definition lists
+      </li>
+
+      <li>
+        ✅ Smart typography
+      </li>
+
+      <li>
+        ✅ Math support (<code>$inline$</code> and <code>$$display$$</code>)
+      </li>
+
+      <li>
+        ✅ Wiki links (<code>[[Page]]</code>) - <strong>Requires <code>--wikilinks</code> flag</strong> (disabled by default)
+      </li>
+
+      <li>
+        ✅ Critic Markup
+      </li>
+
+      <li>
+        ✅ Callouts
+      </li>
+
+      <li>
+        ✅ File includes
+      </li>
+
+      <li>
+        ✅ Metadata blocks (YAML, MMD, Pandoc)
+      </li>
+
+      <li>
+        ✅ Metadata variables (<code>[%key]</code>) - See <a href="Metadata-Transforms.html">Metadata Transforms</a> for transform syntax - See <a href="Metadata-Transforms.html">Metadata Transforms</a> for transform syntax
+      </li>
+
+      <li>
+        ✅ Abbreviations
+      </li>
+
+      <li>
+        ✅ Inline Attribute Lists (IAL)
+      </li>
+
+      <li>
+        ✅ Relaxed tables (default)
+      </li>
+
+      <li>
+        ✅ GitHub Emoji (<code>:emoji_name:</code>)
+      </li>
+
+    </ul>
+
+    <h3 id="id-format">
+      ID Format
+    </h3>
+
+    <ul>
+
+      <li>
+        Default: GFM format
+      </li>
+
+      <li>
+        Can be overridden with <code>--id-format</code>
+      </li>
+
+    </ul>
+
+    <h2 id="gfm-mode">
+      GFM Mode
+    </h2>
+
+    <p>
+<strong>      Command:</strong> <code>apex --mode gfm document.md</code>
+    </p>
+
+    <p>
+      GitHub Flavored Markdown compatibility mode.
+    </p>
+
+    <h3 id="enabled-features">
+      Enabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ✅ Tables
+      </li>
+
+      <li>
+        ✅ Strikethrough
+      </li>
+
+      <li>
+        ✅ Task lists
+      </li>
+
+      <li>
+        ✅ Autolinks
+      </li>
+
+      <li>
+        ✅ Hard line breaks (newlines become <code>&lt;br&gt;</code>)
+      </li>
+
+    </ul>
+
+    <h3 id="disabled-features">
+      Disabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ❌ Footnotes
+      </li>
+
+      <li>
+        ❌ Definition lists
+      </li>
+
+      <li>
+        ❌ Smart typography
+      </li>
+
+      <li>
+        ❌ Math
+      </li>
+
+      <li>
+        ❌ Wiki links
+      </li>
+
+      <li>
+        ❌ Critic Markup
+      </li>
+
+      <li>
+        ❌ Callouts
+      </li>
+
+      <li>
+        ❌ File includes
+      </li>
+
+      <li>
+        ❌ Metadata
+      </li>
+
+      <li>
+        ❌ Abbreviations
+      </li>
+
+      <li>
+        ❌ IAL
+      </li>
+
+      <li>
+        ❌ Relaxed tables
+      </li>
+
+    </ul>
+
+    <h3 id="id-format">
+      ID Format
+    </h3>
+
+    <ul>
+
+      <li>
+        GFM format (cannot be changed)
+      </li>
+
+    </ul>
+
+    <h2 id="multimarkdown-mode">
+      MultiMarkdown Mode
+    </h2>
+
+    <p>
+<strong>      Command:</strong> <code>apex --mode mmd document.md</code> or <code>apex --mode multimarkdown document.md</code>
+    </p>
+
+    <p>
+      MultiMarkdown compatibility mode.
+    </p>
+
+    <h3 id="enabled-features">
+      Enabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ✅ Tables
+      </li>
+
+      <li>
+        ✅ Footnotes (reference style)
+      </li>
+
+      <li>
+        ✅ Definition lists
+      </li>
+
+      <li>
+        ✅ Smart typography
+      </li>
+
+      <li>
+        ✅ Math support
+      </li>
+
+      <li>
+        ✅ Metadata blocks (YAML, MMD, Pandoc)
+      </li>
+
+      <li>
+        ✅ Metadata variables (<code>[%key]</code>) - See <a href="Metadata-Transforms.html">Metadata Transforms</a> for transform syntax
+      </li>
+
+      <li>
+        ✅ Abbreviations
+      </li>
+
+      <li>
+        ✅ File includes
+      </li>
+
+    </ul>
+
+    <h3 id="disabled-features">
+      Disabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ❌ Strikethrough
+      </li>
+
+      <li>
+        ❌ Task lists
+      </li>
+
+      <li>
+        ❌ Wiki links
+      </li>
+
+      <li>
+        ❌ Critic Markup
+      </li>
+
+      <li>
+        ❌ Callouts
+      </li>
+
+      <li>
+        ❌ IAL
+      </li>
+
+      <li>
+        ❌ Relaxed tables
+      </li>
+
+    </ul>
+
+    <h3 id="id-format">
+      ID Format
+    </h3>
+
+    <ul>
+
+      <li>
+        MultiMarkdown format (cannot be changed)
+      </li>
+
+    </ul>
+
+    <h2 id="kramdown-mode">
+      Kramdown Mode
+    </h2>
+
+    <p>
+<strong>      Command:</strong> <code>apex --mode kramdown document.md</code>
+    </p>
+
+    <p>
+      Kramdown compatibility mode.
+    </p>
+
+    <h3 id="enabled-features">
+      Enabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ✅ Tables
+      </li>
+
+      <li>
+        ✅ Footnotes (reference and inline styles)
+      </li>
+
+      <li>
+        ✅ Definition lists
+      </li>
+
+      <li>
+        ✅ Smart typography
+      </li>
+
+      <li>
+        ✅ Math support
+      </li>
+
+      <li>
+        ✅ Inline Attribute Lists (IAL)
+      </li>
+
+      <li>
+        ✅ Abbreviations
+      </li>
+
+      <li>
+        ✅ Relaxed tables (default)
+      </li>
+
+    </ul>
+
+    <h3 id="disabled-features">
+      Disabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ❌ Strikethrough
+      </li>
+
+      <li>
+        ❌ Task lists
+      </li>
+
+      <li>
+        ❌ Wiki links
+      </li>
+
+      <li>
+        ❌ Critic Markup
+      </li>
+
+      <li>
+        ❌ Callouts
+      </li>
+
+      <li>
+        ❌ File includes
+      </li>
+
+      <li>
+        ❌ Metadata
+      </li>
+
+      <li>
+        ❌ Autolinks
+      </li>
+
+    </ul>
+
+    <h3 id="id-format">
+      ID Format
+    </h3>
+
+    <ul>
+
+      <li>
+        Kramdown format (cannot be changed)
+      </li>
+
+    </ul>
+
+    <h2 id="commonmark-mode">
+      CommonMark Mode
+    </h2>
+
+    <p>
+<strong>      Command:</strong> <code>apex --mode commonmark document.md</code>
+    </p>
+
+    <p>
+      Pure CommonMark specification compliance. No extensions.
+    </p>
+
+    <h3 id="enabled-features">
+      Enabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ✅ Basic Markdown only (headers, lists, emphasis, links, code, blockquotes, etc.)
+      </li>
+
+    </ul>
+
+    <h3 id="disabled-features">
+      Disabled Features
+    </h3>
+
+    <ul>
+
+      <li>
+        ❌ All extensions (tables, footnotes, etc.)
+      </li>
+
+    </ul>
+
+    <h3 id="id-format">
+      ID Format
+    </h3>
+
+    <ul>
+
+      <li>
+        GFM format (for consistency)
+      </li>
+
+    </ul>
+
+    <h2 id="feature-comparison-table">
+      Feature Comparison Table
+    </h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Feature
+          </th>
+
+          <th>
+            Unified
+          </th>
+
+          <th>
+            GFM
+          </th>
+
+          <th>
+            MMD
+          </th>
+
+          <th>
+            Kramdown
+          </th>
+
+          <th>
+            CommonMark
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td>
+            Tables
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Strikethrough
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Task Lists
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Footnotes
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Definition Lists
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Smart Typography
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Math
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Wiki Links
+          </td>
+
+          <td>
+            ✅*
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Critic Markup
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Callouts
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            File Includes
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Metadata
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Abbreviations
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            IAL
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            Relaxed Tables
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+          <td>
+            ✅
+          </td>
+
+          <td>
+            ❌
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <p>
+      * Wiki links are available in unified mode but <strong>disabled by default</strong>. Use <code>--wikilinks</code> to enable.
+    </p>
+
+    <h2 id="choosing-a-mode">
+      Choosing a Mode
+    </h2>
+
+    <ul>
+
+      <li>
+<strong>        Unified</strong> - Use when you want all features or need compatibility with multiple Markdown flavors
+      </li>
+
+      <li>
+<strong>        GFM</strong> - Use for GitHub compatibility or when publishing to GitHub
+      </li>
+
+      <li>
+<strong>        MMD</strong> - Use for MultiMarkdown compatibility or when you need metadata
+      </li>
+
+      <li>
+<strong>        Kramdown</strong> - Use for Kramdown compatibility or when you need IAL attributes
+      </li>
+
+      <li>
+<strong>        CommonMark</strong> - Use for strict CommonMark compliance or minimal output
+      </li>
+
+    </ul>
+
+    <h2 id="overriding-mode-defaults">
+      Overriding Mode Defaults
+    </h2>
+
+    <p>
+      In unified mode, you can enable or disable specific features:
+    </p>
+
+<pre lang="bash"><code># Unified mode but disable footnotes
+apex --mode unified --no-footnotes document.md
+
+# Unified mode but disable math
+apex --mode unified --no-math document.md
+
+# Enable wiki links (disabled by default)
+apex --mode unified --wikilinks document.md
+</code>  </pre>
+
+  <h2 id="related">
+    Related
+  </h2>
+
+  <ul>
+
+    <li>
+<a href="Header-IDs.html">      Header IDs</a> - How ID formats differ by mode
+    </li>
+
+    <li>
+<a href="Syntax.html">      Syntax</a> - Syntax available in each mode
+    </li>
+
+    <li>
+<a href="Command-Line-Options.html">      Command Line Options</a> - Mode selection and feature flags
+    </li>
+
+  </ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+

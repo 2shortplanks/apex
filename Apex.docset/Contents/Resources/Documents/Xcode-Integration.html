@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="generator" content="Apex 0.1.49">
+      <title>Document</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          color: #333;
+        }
+        pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; }
+        code { background: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+        table { border-collapse: collapse; width: 100%%; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; }
+        th { background: #f5f5f5; }
+        tfoot td { background: #e8e8e8; }
+        figure.table-figure { width: fit-content; margin: 1em 0; }
+        figure.table-figure table { width: auto; }
+        figcaption { text-align: center; font-weight: bold; font-size: 0.8em; }
+        .page-break { page-break-after: always; }
+        .callout { padding: 1rem; margin: 1rem 0; border-left: 4px solid; }
+        .callout-note { border-color: #3b82f6; background: #eff6ff; }
+        .callout-warning { border-color: #f59e0b; background: #fffbeb; }
+        .callout-tip { border-color: #10b981; background: #f0fdf4; }
+        .callout-danger { border-color: #ef4444; background: #fef2f2; }
+        ins { background: #d4fcbc; text-decoration: none; }
+        del { background: #fbb6c2; text-decoration: line-through; }
+        mark { background: #fff3cd; }
+        .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }
+      </style>
+  <style>
+  .main-toc {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f5f5f5;
+    border-right: 2px solid #ddd;
+    padding: 20px;
+    font-size: 0.9em;
+    z-index: 100;
+    margin-right: 1rem;
+  }
+  .main-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .main-toc li {
+    margin: 0.25em 0;
+  }
+  .main-toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+  .main-toc a:hover {
+    background: #e0e0e0;
+  }
+  .page-toc {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .page-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .page-toc > ul {
+    padding-left: 0;
+  }
+  .page-toc li {
+    margin: 0.25em 0;
+  }
+  .page-toc a {
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    padding: 0.25em 0.5em;
+    border-radius: 3px;
+  }
+  .page-toc a:hover {
+    background: #e0e0e0;
+    color: #004499;
+  }
+  .page-toc ul ul {
+    list-style: none;
+    padding-left: 1.5em;
+    margin-top: 0.25em;
+    margin-left: 0;
+  }
+  .page-toc ul ul ul {
+    padding-left: 1.5em;
+  }
+  .page-toc ul ul a {
+    font-size: 0.9em;
+    color: #555;
+  }
+  .page-toc ul ul ul a {
+    font-size: 0.85em;
+    color: #666;
+  }
+  .page-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .page-footer p {
+    margin: 0.5em 0;
+  }
+  .page-footer a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+  body {
+    margin-left: 220px;
+  }
+  @media (max-width: 768px) {
+    .main-toc {
+      display: none;
+    }
+    body {
+      margin-left: 0;
+    }
+  }
+</style>
+</head>
+
+  <body>
+<nav class="main-toc"><ul><li><a href="Home.html">Home</a></li><li><a href="Getting-Started.html">Getting Started</a></li><li><a href="Installation.html">Installation</a></li><li><a href="Usage.html">Usage</a></li><li><a href="Syntax.html">Syntax</a></li><li><a href="Inline-Attribute-Lists.html">Inline Attribute Lists</a></li><li><a href="Modes.html">Modes</a></li><li><a href="Command-Line-Options.html">Command Line Options</a></li><li><a href="Multi-File-Documents.html">Multi-file Documents</a></li><li><a href="Citations.html">Citations</a></li><li><a href="Metadata-Transforms.html">Metadata Transforms</a></li><li><a href="Pandoc-Integration.html">Integrating with Pandoc</a></li><li><a href="Header-IDs.html">Header IDs</a></li><li><a href="C-API.html">C API</a></li><li><a href="Xcode-Integration.html">Xcode Integration</a></li><li><a href="Examples.html">Examples</a></li><li><a href="Plugins.html">Plugins</a></li><li><a href="Troubleshooting.html">Troubleshooting</a></li><li><a href="Credits.html">Credits</a></li></ul></nav>
+
+    <h1 id="xcode-integration">
+      Xcode Integration
+    </h1>
+<nav class="page-toc"><ul><li><a href="#xcode-integration">Xcode Integration</a><ul><li><a href="#production-readiness">Production Readiness</a></li><li><a href="#swift-package-manager-spm-recommended">Swift Package Manager (SPM) - Recommended</a><ul><li><a href="#adding-apex-via-spm">Adding Apex via SPM</a></li><li><a href="#using-apex-in-your-code">Using Apex in Your Code</a></li><li><a href="#platform-support">Platform Support</a></li><li><a href="#spm-benefits">SPM Benefits</a></li></ul></li><li><a href="#framework-build-alternative">Framework Build (Alternative)</a></li><li><a href="#adding-to-xcode-project">Adding to Xcode Project</a><ul><li><a href="#method-1-swift-package-manager-recommended">Method 1: Swift Package Manager (Recommended)</a></li><li><a href="#method-2-framework-reference">Method 2: Framework Reference</a></li><li><a href="#method-3-cmake-integration">Method 3: CMake Integration</a></li></ul></li><li><a href="#objective-c-wrapper">Objective-C Wrapper</a><ul><li><a href="#basic-usage">Basic Usage</a></li><li><a href="#api">API</a></li><li><a href="#convenience-methods">Convenience Methods</a><ul><li><a href="#standalone-html-documents">Standalone HTML Documents</a></li><li><a href="#pretty-printed-html">Pretty-Printed HTML</a></li><li><a href="#dictionary-based-options">Dictionary-Based Options</a></li><li><a href="#swift-friendly-convenience-method">Swift-Friendly Convenience Method</a></li><li><a href="#instance-methods">Instance Methods</a></li></ul></li></ul></li><li><a href="#mode-constants">Mode Constants</a></li><li><a href="#direct-c-api-usage">Direct C API Usage</a></li><li><a href="#integration-example">Integration Example</a><ul><li><a href="#adding-to-marked">Adding to Marked</a></li></ul></li><li><a href="#build-settings">Build Settings</a><ul><li><a href="#header-search-paths">Header Search Paths</a></li><li><a href="#framework-search-paths">Framework Search Paths</a></li><li><a href="#other-linker-flags">Other Linker Flags</a></li><li><a href="#swift-api-support">Swift API Support</a></li></ul></li><li><a href="#swift-integration">Swift Integration</a><ul><li><a href="#idiomatic-swift-api-recommended">Idiomatic Swift API (Recommended)</a></li><li><a href="#apexmode-enum">ApexMode Enum</a></li><li><a href="#apexoptions-struct">ApexOptions Struct</a></li><li><a href="#objective-c-bridge-alternative">Objective-C Bridge (Alternative)</a></li></ul></li><li><a href="#troubleshooting">Troubleshooting</a><ul><li><a href="#swift-package-manager-issues">Swift Package Manager Issues</a></li><li><a href="#framework-not-found">Framework Not Found</a></li><li><a href="#linker-errors">Linker Errors</a></li><li><a href="#runtime-errors">Runtime Errors</a></li></ul></li><li><a href="#performance">Performance</a></li><li><a href="#module-map">Module Map</a></li><li><a href="#comparison-of-integration-methods">Comparison of Integration Methods</a></li><li><a href="#related">Related</a></li></ul></li></ul></nav>
+
+    <p>
+      This guide covers integrating Apex into Xcode projects for macOS and iOS applications.
+    </p>
+
+    <h2 id="production-readiness">
+      Production Readiness
+    </h2>
+
+    <p>
+<strong>      Important:</strong> Apex is currently in a pre-1.0 development stage. The API and implementation are still evolving, and breaking changes may occur between versions. Apex should only be used for testing and development purposes at this time.
+    </p>
+
+    <p>
+      Once Apex reaches version 1.0, the project will follow <a href="https://semver.org/">Semantic Versioning</a>. This means:
+    </p>
+
+    <ul>
+
+      <li>
+<strong>        Major versions</strong> (1.0, 2.0, etc.) may include breaking API changes
+      </li>
+
+      <li>
+<strong>        Minor versions</strong> (1.1, 1.2, etc.) will add new features while maintaining backward compatibility
+      </li>
+
+      <li>
+<strong>        Patch versions</strong> (1.0.1, 1.0.2, etc.) will only include bug fixes and will maintain full backward compatibility
+      </li>
+
+    </ul>
+
+    <p>
+      For production use, please wait for the stable 1.0 release. Until then, please report any issues or provide feedback to help shape the final API.
+    </p>
+
+    <h2 id="swift-package-manager-spm-recommended">
+      Swift Package Manager (SPM) - Recommended
+    </h2>
+
+    <p>
+      The easiest way to integrate Apex into your Xcode project is using Swift Package Manager.
+    </p>
+
+    <h3 id="adding-apex-via-spm">
+      Adding Apex via SPM
+    </h3>
+
+    <ol>
+
+      <li>
+        In Xcode, select your project in the navigator
+      </li>
+
+      <li>
+        Select your target
+      </li>
+
+      <li>
+        Go to the “Package Dependencies” tab
+      </li>
+
+      <li>
+        Click the “+” button
+      </li>
+
+      <li>
+        Enter the repository URL: <code>https://github.com/ApexMarkdown/apex</code>
+      </li>
+
+      <li>
+        Select the version or branch you want to use
+      </li>
+
+      <li>
+        Click “Add Package”
+      </li>
+
+      <li>
+        Select the “Apex” library product
+      </li>
+
+      <li>
+        Click “Add Package”
+      </li>
+
+    </ol>
+
+    <h3 id="using-apex-in-your-code">
+      Using Apex in Your Code
+    </h3>
+
+    <p>
+      Once added via SPM, simply import and use:
+    </p>
+
+<pre lang="swift"><code>import Apex
+
+ Basic usage
+let markdown = &quot;# Hello World&quot;
+let html = markdown.apexHTML()
+
+ With mode
+let html2 = markdown.apexHTML(mode: .gfm)
+
+ With options
+var options = ApexOptions()
+options.pretty = true
+options.generateHeaderIDs = true
+let html3 = markdown.apexHTML(mode: .unified, options: options)
+</code>  </pre>
+
+  <h3 id="platform-support">
+    Platform Support
+  </h3>
+
+  <ul>
+
+    <li>
+<strong>      macOS</strong>: 10.13+ (High Sierra)
+    </li>
+
+    <li>
+<strong>      iOS</strong>: 11.0+
+    </li>
+
+  </ul>
+
+  <h3 id="spm-benefits">
+    SPM Benefits
+  </h3>
+
+  <ul>
+
+    <li>
+      Automatic dependency management
+    </li>
+
+    <li>
+      No manual framework embedding
+    </li>
+
+    <li>
+      Works with both macOS and iOS
+    </li>
+
+    <li>
+      Easy version updates
+    </li>
+
+    <li>
+      Integrated with Xcode’s build system
+    </li>
+
+  </ul>
+
+  <h2 id="framework-build-alternative">
+    Framework Build (Alternative)
+  </h2>
+
+  <p>
+    Apex can also be built as a framework for manual integration:
+  </p>
+
+<pre lang="bash"><code>cd apex
+mkdir build &amp;&amp; cd build
+cmake -DBUILD_FRAMEWORK=ON ..
+make
+</code></pre>
+
+<p>
+  The framework will be at <code>build/Apex.framework</code>.
+</p>
+
+<h2 id="adding-to-xcode-project">
+  Adding to Xcode Project
+</h2>
+
+<h3 id="method-1-swift-package-manager-recommended">
+  Method 1: Swift Package Manager (Recommended)
+</h3>
+
+<p>
+  See the SPM section above for the easiest integration method.
+</p>
+
+<h3 id="method-2-framework-reference">
+  Method 2: Framework Reference
+</h3>
+
+<ol>
+
+  <li>
+    Drag <code>Apex.framework</code> into your Xcode project
+  </li>
+
+  <li>
+    Add to “Frameworks, Libraries, and Embedded Content”
+  </li>
+
+  <li>
+    Set “Embed &amp; Sign” for the framework
+  </li>
+
+</ol>
+
+<h3 id="method-3-cmake-integration">
+  Method 3: CMake Integration
+</h3>
+
+<p>
+  If your project uses CMake:
+</p>
+
+<pre lang="cmake"><code>add_subdirectory(apex)
+target_link_libraries(your_app Apex)
+</code></pre>
+
+<h2 id="objective-c-wrapper">
+  Objective-C Wrapper
+</h2>
+
+<p>
+  Apex includes an Objective-C wrapper for easy integration:
+</p>
+
+<p>
+<strong>  Files:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>apex/objc/NSString+Apex.h</code>
+  </li>
+
+  <li>
+<code>apex/objc/NSString+Apex.m</code>
+  </li>
+
+</ul>
+
+<h3 id="basic-usage">
+  Basic Usage
+</h3>
+
+<pre lang="objective-c"><code>#import &quot;NSString+Apex.h&quot;
+
+ Convert with default unified mode
+NSString *html = [NSString convertWithApex:markdownText];
+
+ Convert with specific mode using constants (recommended)
+NSString *gfmHtml = [NSString convertWithApex:markdownText mode:ApexModeGFM];
+NSString *mmdHtml = [NSString convertWithApex:markdownText mode:ApexModeMultiMarkdown];
+NSString *kramdownHtml = [NSString convertWithApex:markdownText mode:ApexModeKramdown];
+NSString *commonmarkHtml = [NSString convertWithApex:markdownText mode:ApexModeCommonmark];
+NSString *unifiedHtml = [NSString convertWithApex:markdownText mode:ApexModeUnified];
+
+ String literals also work (for backward compatibility)
+NSString *gfmHtml2 = [NSString convertWithApex:markdownText mode:@&quot;gfm&quot;];
+NSString *mmdHtml2 = [NSString convertWithApex:markdownText mode:@&quot;multimarkdown&quot;];
+</code></pre>
+
+<h3 id="api">
+  API
+</h3>
+
+<pre lang="objective-c"><code> Mode constants
+extern NSString * const ApexModeCommonmark;
+extern NSString * const ApexModeGFM;
+extern NSString * const ApexModeMultiMarkdown;
+extern NSString * const ApexModeKramdown;
+extern NSString * const ApexModeUnified;
+
+@interface NSString (Apex)
+
+ Basic conversion methods
++ (NSString *)convertWithApex:(NSString *)markdown;
++ (NSString *)convertWithApex:(NSString *)markdown mode:(NSString *)mode;
+
+ Standalone HTML document generation
++ (NSString *)convertWithApex:(NSString *)markdown
+                         mode:(NSString *)mode
+                   standalone:(BOOL)standalone
+                    stylesheet:(NSString * _Nullable)stylesheetPath
+                         title:(NSString * _Nullable)title;
+
+ Pretty-printed HTML output
++ (NSString *)convertWithApex:(NSString *)markdown
+                         mode:(NSString *)mode
+                        pretty:(BOOL)pretty;
+
+ Dictionary-based options configuration
++ (NSString *)convertWithApex:(NSString *)markdown
+                         mode:(NSString *)mode
+                    options:(NSDictionary&lt;NSString *, id&gt; * _Nullable)options;
+
+ Swift-friendly convenience method with common options
++ (NSString *)convertWithApex:(NSString *)markdown
+                         mode:(NSString *)mode
+              generateHeaderIDs:(BOOL)generateHeaderIDs
+                    hardBreaks:(BOOL)hardBreaks
+                        pretty:(BOOL)pretty;
+
+ Instance methods for convenient usage
+- (NSString *)apexHTML;
+- (NSString *)apexHTMLWithMode:(NSString *)mode;
+
+@end
+</code></pre>
+
+<p>
+<strong>  Parameters:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>markdown</code> - Input Markdown text
+  </li>
+
+  <li>
+<code>mode</code> - Processor mode: Use <code>ApexMode*</code> constants (recommended) or string literals:
+    <ul>
+
+      <li>
+<code>ApexModeCommonmark</code> or <code>@&quot;commonmark&quot;</code> - Pure CommonMark specification
+      </li>
+
+      <li>
+<code>ApexModeGFM</code> or <code>@&quot;gfm&quot;</code> - GitHub Flavored Markdown
+      </li>
+
+      <li>
+<code>ApexModeMultiMarkdown</code> or <code>@&quot;multimarkdown&quot;</code> / <code>@&quot;mmd&quot;</code> - MultiMarkdown compatibility
+      </li>
+
+      <li>
+<code>ApexModeKramdown</code> or <code>@&quot;kramdown&quot;</code> - Kramdown compatibility
+      </li>
+
+      <li>
+<code>ApexModeUnified</code> or <code>@&quot;unified&quot;</code> - All features enabled (default)
+      </li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<p>
+<strong>  Returns:</strong> HTML string (autoreleased)
+</p>
+
+<p>
+<strong>  Note:</strong> Using the <code>ApexMode*</code> constants is recommended to avoid typos and provides autocomplete support in Xcode. String literals are still supported for backward compatibility.
+</p>
+
+<h3 id="convenience-methods">
+  Convenience Methods
+</h3>
+
+<p>
+  Apex provides additional convenience methods for common use cases:
+</p>
+
+<h4 id="standalone-html-documents">
+  Standalone HTML Documents
+</h4>
+
+<p>
+  Generate complete HTML5 documents with stylesheet and title:
+</p>
+
+<pre lang="objective-c"><code> Generate standalone HTML document
+NSString *html = [NSString convertWithApex:markdown
+                                     mode:ApexModeUnified
+                               standalone:YES
+                                stylesheet:@&quot;style.css&quot;
+                                     title:@&quot;My Document&quot;];
+
+ Without stylesheet or title
+NSString *html2 = [NSString convertWithApex:markdown
+                                       mode:ApexModeGFM
+                                 standalone:YES
+                                  stylesheet:nil
+                                       title:nil];
+</code></pre>
+
+<h4 id="pretty-printed-html">
+  Pretty-Printed HTML
+</h4>
+
+<p>
+  Generate formatted HTML with indentation:
+</p>
+
+<pre lang="objective-c"><code> Pretty-print HTML output
+NSString *html = [NSString convertWithApex:markdown
+                                     mode:ApexModeUnified
+                                    pretty:YES];
+</code></pre>
+
+<h4 id="dictionary-based-options">
+  Dictionary-Based Options
+</h4>
+
+<p>
+  Configure multiple options at once using a dictionary:
+</p>
+
+<pre lang="objective-c"><code> Configure multiple options
+NSDictionary *options = @{
+    @&quot;pretty&quot;: @YES,
+    @&quot;standalone&quot;: @YES,
+    @&quot;stylesheet&quot;: @&quot;style.css&quot;,
+    @&quot;title&quot;: @&quot;My Document&quot;,
+    @&quot;hardBreaks&quot;: @YES,
+    @&quot;generateHeaderIDs&quot;: @YES,
+    @&quot;headerAnchors&quot;: @NO,
+    @&quot;obfuscateEmails&quot;: @YES,
+    @&quot;embedImages&quot;: @NO
+};
+
+NSString *html = [NSString convertWithApex:markdown
+                                     mode:ApexModeUnified
+                                   options:options];
+</code></pre>
+
+<p>
+<strong>  Supported dictionary keys:</strong>
+</p>
+
+<ul>
+
+  <li>
+<code>@&quot;pretty&quot;</code> - NSNumber (BOOL): Pretty-print HTML with indentation
+  </li>
+
+  <li>
+<code>@&quot;standalone&quot;</code> - NSNumber (BOOL): Generate complete HTML5 document
+  </li>
+
+  <li>
+<code>@&quot;stylesheet&quot;</code> - NSString: Path to CSS file to link in document head
+  </li>
+
+  <li>
+<code>@&quot;title&quot;</code> - NSString: Document title
+  </li>
+
+  <li>
+<code>@&quot;hardBreaks&quot;</code> - NSNumber (BOOL): Treat newlines as hard breaks
+  </li>
+
+  <li>
+<code>@&quot;generateHeaderIDs&quot;</code> - NSNumber (BOOL): Generate IDs for headers
+  </li>
+
+  <li>
+<code>@&quot;unsafe&quot;</code> - NSNumber (BOOL): Allow raw HTML in output
+  </li>
+
+  <li>
+<code>@&quot;headerAnchors&quot;</code> - NSNumber (BOOL): Generate anchor tags instead of header IDs
+  </li>
+
+  <li>
+<code>@&quot;obfuscateEmails&quot;</code> - NSNumber (BOOL): Obfuscate email links using HTML entities
+  </li>
+
+  <li>
+<code>@&quot;embedImages&quot;</code> - NSNumber (BOOL): Embed local images as base64 data URLs
+  </li>
+
+</ul>
+
+<h4 id="swift-friendly-convenience-method">
+  Swift-Friendly Convenience Method
+</h4>
+
+<p>
+  Combine common options in a single method call (ideal for Swift):
+</p>
+
+<pre lang="objective-c"><code> Combine common options
+NSString *html = [NSString convertWithApex:markdown
+                                     mode:ApexModeUnified
+                          generateHeaderIDs:YES
+                                hardBreaks:YES
+                                    pretty:YES];
+</code></pre>
+
+<h4 id="instance-methods">
+  Instance Methods
+</h4>
+
+<p>
+  Use instance methods for more natural, fluent syntax:
+</p>
+
+<pre lang="objective-c"><code> Instance method with default unified mode
+NSString *markdown = @&quot;# Hello World&quot;;
+NSString *html = [markdown apexHTML];
+
+ Instance method with specific mode
+NSString *html2 = [markdown apexHTMLWithMode:ApexModeGFM];
+</code></pre>
+
+<h2 id="mode-constants">
+  Mode Constants
+</h2>
+
+<p>
+  Apex provides NSString constants for processor modes to avoid ambiguity and typos:
+</p>
+
+<pre lang="objective-c"><code> Available constants
+ApexModeCommonmark      // @&quot;commonmark&quot;
+ApexModeGFM             // @&quot;gfm&quot;
+ApexModeMultiMarkdown   // @&quot;multimarkdown&quot;
+ApexModeKramdown        // @&quot;kramdown&quot;
+ApexModeUnified         // @&quot;unified&quot;
+</code></pre>
+
+<p>
+<strong>  Benefits:</strong>
+</p>
+
+<ul>
+
+  <li>
+<strong>    Type safety</strong>: Xcode autocomplete suggests available modes
+  </li>
+
+  <li>
+<strong>    No typos</strong>: Compile-time checking prevents invalid mode strings
+  </li>
+
+  <li>
+<strong>    Self-documenting</strong>: Constants make code more readable
+  </li>
+
+  <li>
+<strong>    Refactoring</strong>: Easy to find all usages if mode names change
+  </li>
+
+</ul>
+
+<p>
+<strong>  Example:</strong>
+</p>
+
+<pre lang="objective-c"><code> Good: Using constants
+NSString *html = [NSString convertWithApex:markdown mode:ApexModeMultiMarkdown];
+
+ Also works: String literals (for backward compatibility)
+NSString *html2 = [NSString convertWithApex:markdown mode:@&quot;multimarkdown&quot;];
+</code></pre>
+
+<h2 id="direct-c-api-usage">
+  Direct C API Usage
+</h2>
+
+<p>
+  For more control, use the C API directly:
+</p>
+
+<pre lang="objective-c"><code>#include &lt;Apex/apex.h&gt;
+
+- (NSString *)convertMarkdown:(NSString *)markdown {
+    apex_options opts = apex_options_default();
+    opts.pretty = true;
+
+    const char *md = [markdown UTF8String];
+    char *html = apex_markdown_to_html(md, strlen(md), &amp;opts);
+
+    if (html) {
+        NSString *result = [NSString stringWithUTF8String:html];
+        apex_free_string(html);
+        return result;
+    }
+
+    return nil;
+}
+</code></pre>
+
+<h2 id="integration-example">
+  Integration Example
+</h2>
+
+<h3 id="adding-to-marked">
+  Adding to Marked
+</h3>
+
+<p>
+  Here’s how to add Apex support to an existing Marked-style application:
+</p>
+
+<p>
+<strong>  1. Add to processor selection:</strong>
+</p>
+
+<pre lang="objective-c"><code> In MKConductorTransformer.m or similar
+} else if ([processor isEqualToString:@&quot;Apex&quot;]) {
+    result = [NSString convertWithApex:text];
+} else if ([processor isEqualToString:@&quot;MultiMarkdown&quot;]) {
+    result = [NSString convertWithMultiMarkdown:text];
+}
+</code></pre>
+
+<p>
+<strong>  2. Add to preferences:</strong>
+</p>
+
+<pre lang="objective-c"><code> In processor dropdown
+NSArray *processors = @[
+    @&quot;MultiMarkdown&quot;,
+    @&quot;Discount (GFM)&quot;,
+    @&quot;CommonMark&quot;,
+    @&quot;Kramdown&quot;,
+    @&quot;Apex&quot;  // Add this
+];
+</code></pre>
+
+<p>
+<strong>  3. Handle custom processor rules:</strong>
+</p>
+
+<pre lang="objective-c"><code> In custom processor handling
+} else if ([outputString.uppercaseString isEqualToString:@&quot;APEX&quot;]) {
+    [defaults setValue:@&quot;Apex&quot; forKey:@&quot;defaultProcessor&quot;];
+}
+</code></pre>
+
+<h2 id="build-settings">
+  Build Settings
+</h2>
+
+<h3 id="header-search-paths">
+  Header Search Paths
+</h3>
+
+<p>
+  Add to “Header Search Paths”:
+</p>
+
+<pre><code>$(SRCROOT)/apex/include
+</code></pre>
+
+<h3 id="framework-search-paths">
+  Framework Search Paths
+</h3>
+
+<p>
+  Add to “Framework Search Paths”:
+</p>
+
+<pre><code>$(SRCROOT)/apex/build
+</code></pre>
+
+<h3 id="other-linker-flags">
+  Other Linker Flags
+</h3>
+
+<p>
+  If using static library:
+</p>
+
+<pre><code>-L$(SRCROOT)/apex/build -lapex
+</code></pre>
+
+<h3 id="swift-api-support">
+  Swift API Support
+</h3>
+
+<p>
+  To use the idiomatic Swift API (<code>Apex.swift</code>):
+</p>
+
+<ol>
+
+  <li>
+<strong>    If using the framework:</strong> The Swift file is automatically included when you link <code>Apex.framework</code>
+  </li>
+
+  <li>
+<strong>    If using source files directly:</strong> Add <code>apex/objc/Apex.swift</code> to your Xcode project
+  </li>
+
+  <li>
+<strong>    Swift/Objective-C Bridging:</strong> Xcode will automatically create a bridging header if needed
+  </li>
+
+</ol>
+
+<p>
+  The Swift API provides:
+</p>
+
+<ul>
+
+  <li>
+    Type-safe <code>ApexMode</code> enum instead of string constants
+  </li>
+
+  <li>
+<code>ApexOptions</code> struct for configuration
+  </li>
+
+  <li>
+    Idiomatic String extensions
+  </li>
+
+  <li>
+    Static <code>Apex</code> converter struct
+  </li>
+
+</ul>
+
+<h2 id="swift-integration">
+  Swift Integration
+</h2>
+
+<p>
+  Apex provides an idiomatic Swift API wrapper (<code>Apex.swift</code>) that offers type-safe enums and structs over the Objective-C API.
+</p>
+
+<h3 id="idiomatic-swift-api-recommended">
+  Idiomatic Swift API (Recommended)
+</h3>
+
+<pre lang="swift"><code>import Foundation
+ Import Apex.swift (automatically available when framework is linked)
+
+ Basic conversion with default unified mode
+let markdown = &quot;# Hello World&quot;
+let html = markdown.apexHTML()
+
+ With type-safe mode enum
+let gfmHtml = markdown.apexHTML(mode: .gfm)
+let mmdHtml = markdown.apexHTML(mode: .multimarkdown)
+let kramdownHtml = markdown.apexHTML(mode: .kramdown)
+let commonmarkHtml = markdown.apexHTML(mode: .commonmark)
+let unifiedHtml = markdown.apexHTML(mode: .unified)
+
+ Using ApexOptions struct (type-safe)
+var options = ApexOptions()
+options.pretty = true
+options.standalone = true
+options.stylesheet = &quot;style.css&quot;
+options.title = &quot;My Document&quot;
+options.generateHeaderIDs = true
+options.hardBreaks = true
+options.obfuscateEmails = true
+
+let configuredHtml = markdown.apexHTML(mode: .unified, options: options)
+
+ Or use static Apex converter
+let html2 = Apex.convert(markdown)
+let html3 = Apex.convert(markdown, mode: .gfm)
+let html4 = Apex.convert(markdown, mode: .unified, options: options)
+
+ Standalone HTML document
+let standaloneHtml = markdown.apexHTML(
+    mode: .unified,
+    standalone: true,
+    stylesheet: &quot;style.css&quot;,
+    title: &quot;My Document&quot;
+)
+
+ Pretty-printed HTML
+let prettyHtml = markdown.apexHTML(pretty: true, mode: .unified)
+
+ Common options combined
+let commonOptionsHtml = markdown.apexHTML(
+    mode: .unified,
+    generateHeaderIDs: true,
+    hardBreaks: true,
+    pretty: true
+)
+</code></pre>
+
+<h3 id="apexmode-enum">
+  ApexMode Enum
+</h3>
+
+<p>
+  Type-safe processor mode enum:
+</p>
+
+<pre lang="swift"><code>public enum ApexMode: String, CaseIterable {
+    case commonmark
+    case gfm
+    case multimarkdown
+    case kramdown
+    case unified
+}
+</code></pre>
+
+<h3 id="apexoptions-struct">
+  ApexOptions Struct
+</h3>
+
+<p>
+  Type-safe options configuration:
+</p>
+
+<pre lang="swift"><code>public struct ApexOptions {
+    public var pretty: Bool = false
+    public var standalone: Bool = false
+    public var stylesheet: String? = nil
+    public var title: String? = nil
+    public var hardBreaks: Bool = false
+    public var generateHeaderIDs: Bool = false
+    public var unsafe: Bool = false
+    public var headerAnchors: Bool = false
+    public var obfuscateEmails: Bool = false
+    public var embedImages: Bool = false
+
+    public static let `default` = ApexOptions()
+}
+</code></pre>
+
+<p>
+<strong>  Example usage:</strong>
+</p>
+
+<pre lang="swift"><code>var options = ApexOptions.default
+options.pretty = true
+options.generateHeaderIDs = true
+let html = markdown.apexHTML(mode: .gfm, options: options)
+</code></pre>
+
+<h3 id="objective-c-bridge-alternative">
+  Objective-C Bridge (Alternative)
+</h3>
+
+<p>
+  You can also use the Objective-C API directly from Swift:
+</p>
+
+<pre lang="swift"><code>import Foundation
+
+ Use Objective-C wrapper
+let html = NSString.convert(withApex: markdownText)
+
+ With mode constants
+let gfmHtml = NSString.convert(withApex: markdownText, mode: ApexModeGFM)
+
+ Dictionary-based options
+let options: [String: Any] = [
+    &quot;pretty&quot;: true,
+    &quot;standalone&quot;: true,
+    &quot;stylesheet&quot;: &quot;style.css&quot;
+]
+let configuredHtml = NSString.convert(
+    withApex: markdownText,
+    mode: ApexModeUnified,
+    options: options
+)
+</code></pre>
+
+<p>
+  For direct C API access, create a Swift bridging header:
+</p>
+
+<pre lang="swift"><code> Bridging header
+#import &lt;Apex/apex.h&gt;
+
+ Swift code
+func convertMarkdown(_ text: String) -&gt; String? {
+    let opts = apex_options_default()
+    let cString = text.utf8CString
+    guard let html = apex_markdown_to_html(cString, text.utf8.count, &amp;opts) else {
+        return nil
+    }
+    defer { apex_free_string(html) }
+    return String(cString: html)
+}
+</code></pre>
+
+<h2 id="troubleshooting">
+  Troubleshooting
+</h2>
+
+<h3 id="swift-package-manager-issues">
+  Swift Package Manager Issues
+</h3>
+
+<p>
+<strong>  Package Resolution Fails:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Ensure you have an active internet connection
+  </li>
+
+  <li>
+    Check that the repository URL is correct: <code>https://github.com/ApexMarkdown/apex</code>
+  </li>
+
+  <li>
+    Try cleaning derived data: <code>File &gt; Packages &gt; Reset Package Caches</code>
+  </li>
+
+  <li>
+    Verify your Xcode version supports the required Swift tools version (5.7+)
+  </li>
+
+</ul>
+
+<p>
+<strong>  Build Errors:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Ensure your deployment target matches Apex’s requirements (macOS 10.13+, iOS 11+)
+  </li>
+
+  <li>
+    Clean build folder: <code>Product &gt; Clean Build Folder</code> (Shift+Cmd+K)
+  </li>
+
+  <li>
+    Try removing and re-adding the package dependency
+  </li>
+
+</ul>
+
+<p>
+<strong>  Module Not Found:</strong>
+</p>
+
+<ul>
+
+  <li>
+    Ensure you’ve imported the module: <code>import Apex</code>
+  </li>
+
+  <li>
+    Check that the Apex library product is added to your target’s dependencies
+  </li>
+
+  <li>
+    Verify the package resolved successfully in the Package Dependencies tab
+  </li>
+
+</ul>
+
+<h3 id="framework-not-found">
+  Framework Not Found
+</h3>
+
+<p>
+  Ensure the framework is:
+</p>
+
+<ol>
+
+  <li>
+    Added to “Frameworks, Libraries, and Embedded Content”
+  </li>
+
+  <li>
+    Set to “Embed &amp; Sign”
+  </li>
+
+  <li>
+    Framework search paths are correct
+  </li>
+
+</ol>
+
+<h3 id="linker-errors">
+  Linker Errors
+</h3>
+
+<ul>
+
+  <li>
+    Ensure <code>Apex.framework</code> is linked (or Apex package is added via SPM)
+  </li>
+
+  <li>
+    Check framework search paths
+  </li>
+
+  <li>
+    Verify architecture matches (arm64 vs x86_64)
+  </li>
+
+</ul>
+
+<h3 id="runtime-errors">
+  Runtime Errors
+</h3>
+
+<ul>
+
+  <li>
+    Ensure framework is embedded (not just linked) if using framework method
+  </li>
+
+  <li>
+    Check code signing settings
+  </li>
+
+  <li>
+    Verify framework is built for correct deployment target
+  </li>
+
+  <li>
+    For SPM: Ensure the package is properly resolved and built
+  </li>
+
+</ul>
+
+<h2 id="performance">
+  Performance
+</h2>
+
+<p>
+  Apex is built on cmark-gfm, which is highly optimized:
+</p>
+
+<ul>
+
+  <li>
+    Small documents (&lt; 10KB): &lt; 10ms
+  </li>
+
+  <li>
+    Medium documents (&lt; 100KB): &lt; 100ms
+  </li>
+
+  <li>
+    Large documents (&lt; 1MB): &lt; 1s
+  </li>
+
+</ul>
+
+<p>
+  The Objective-C wrapper adds minimal overhead.
+</p>
+
+<h2 id="module-map">
+  Module Map
+</h2>
+
+<p>
+  Apex includes a module map (<code>include/apex/module.modulemap</code>) that allows Swift to import the C API directly:
+</p>
+
+<pre lang="swift"><code>import Apex
+
+ Direct C API access (advanced usage)
+let opts = apex_options_default()
+ ... configure options ...
+let html = apex_markdown_to_html(markdown, markdown.count, &amp;opts)
+</code></pre>
+
+<p>
+  The module map is automatically included when using SPM or the framework.
+</p>
+
+<h2 id="comparison-of-integration-methods">
+  Comparison of Integration Methods
+</h2>
+
+<table>
+
+  <thead>
+
+    <tr>
+
+      <th>
+        Method
+      </th>
+
+      <th>
+        Ease of Use
+      </th>
+
+      <th>
+        Platform Support
+      </th>
+
+      <th>
+        Maintenance
+      </th>
+
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+    <tr>
+
+      <td>
+<strong>        Swift Package Manager</strong>
+      </td>
+
+      <td>
+        ⭐⭐⭐⭐⭐
+      </td>
+
+      <td>
+        macOS + iOS
+      </td>
+
+      <td>
+        Automatic updates
+      </td>
+
+    </tr>
+    <tr>
+
+      <td>
+        Framework
+      </td>
+
+      <td>
+        ⭐⭐⭐
+      </td>
+
+      <td>
+        macOS only
+      </td>
+
+      <td>
+        Manual updates
+      </td>
+
+    </tr>
+    <tr>
+
+      <td>
+        CMake
+      </td>
+
+      <td>
+        ⭐⭐
+      </td>
+
+      <td>
+        macOS + Linux
+      </td>
+
+      <td>
+        Manual integration
+      </td>
+
+    </tr>
+  </tbody>
+
+</table>
+
+<p>
+<strong>  Recommendation:</strong> Use Swift Package Manager for the easiest integration and best cross-platform support.
+</p>
+
+<h2 id="related">
+  Related
+</h2>
+
+<ul>
+
+  <li>
+<a href="C-API.html">    C API</a> - Direct C API documentation
+  </li>
+
+  <li>
+<a href="Usage.html">    Usage</a> - Basic usage examples
+  </li>
+
+  <li>
+<a href="Modes.html">    Modes</a> - Processor mode details
+  </li>
+
+</ul>
+
+<footer class="page-footer"><p>Copyright 2025 Brett Terpstra, All Rights Reserved | MIT License</p></footer></body>
+
+</html>
+
