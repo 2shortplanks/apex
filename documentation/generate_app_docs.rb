@@ -41,9 +41,6 @@ APP_PAGES = [
 
 # Find Apex binary
 def find_apex_binary
-  system_apex = `which apex 2>/dev/null`.strip
-  return system_apex if system_apex != '' && File.exist?(system_apex)
-
   # Prioritize build/apex if it exists (most recent build)
   build_apex = File.expand_path('../build/apex', __dir__)
   return build_apex if File.exist?(build_apex)
@@ -55,6 +52,10 @@ def find_apex_binary
     full_path = File.expand_path(path, __dir__)
     return full_path if File.exist?(full_path)
   end
+
+  # Fall back to system-installed apex
+  system_apex = `which apex 2>/dev/null`.strip
+  return system_apex if system_apex != '' && File.exist?(system_apex)
 
   nil
 end

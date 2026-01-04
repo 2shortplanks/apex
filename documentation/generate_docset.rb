@@ -42,12 +42,8 @@ DOCSETS_DIR = File.join(DOCS_DIR, 'documentation', 'docsets')
 WIKI_DIR = File.join(DOCS_DIR, 'documentation', 'apex.wiki')
 MMD2CHEATSET = File.expand_path('~/Desktop/Code/mmd2cheatset/mmd2cheatset.rb')
 
-# Find Apex binary - prefer system install, fall back to build-release
+# Find Apex binary - prioritize build/apex (most recent build)
 def find_apex_binary
-  # Try system install first
-  system_apex = `which apex 2>/dev/null`.strip
-  return system_apex if system_apex != '' && File.exist?(system_apex)
-
   # Prioritize build/apex if it exists (most recent build)
   build_apex = File.expand_path('../build/apex', __dir__)
   return build_apex if File.exist?(build_apex)
@@ -61,6 +57,10 @@ def find_apex_binary
     full_path = File.expand_path(path, __dir__)
     return full_path if File.exist?(full_path)
   end
+
+  # Fall back to system-installed apex
+  system_apex = `which apex 2>/dev/null`.strip
+  return system_apex if system_apex != '' && File.exist?(system_apex)
 
   nil
 end
