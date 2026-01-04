@@ -21,7 +21,10 @@ rescue LoadError
 end
 
 MODE = ARGV[0] || 'multi'  # Default to multi-page docset
-WIKI_DIR = File.expand_path('../apex.wiki', __dir__)
+SCRIPT_DIR = File.expand_path(__dir__)
+DOCS_DIR = File.join(SCRIPT_DIR, '..')
+DOCSETS_DIR = File.join(DOCS_DIR, 'documentation', 'docsets')
+WIKI_DIR = File.join(DOCS_DIR, 'documentation', 'apex.wiki')
 MMD2CHEATSET = File.expand_path('~/Desktop/Code/mmd2cheatset/mmd2cheatset.rb')
 
 # Find Apex binary - prefer system install, fall back to build-release
@@ -30,12 +33,12 @@ def find_apex_binary
   system_apex = `which apex 2>/dev/null`.strip
   return system_apex if system_apex != '' && File.exist?(system_apex)
 
-  # Try build-release
-  build_apex = File.expand_path('build-release/apex', __dir__)
+  # Try build-release (relative to repo root, not script dir)
+  build_apex = File.expand_path('../build-release/apex', __dir__)
   return build_apex if File.exist?(build_apex)
 
   # Try other common build directories
-  ['build/apex', 'build-debug/apex'].each do |path|
+  ['../build/apex', '../build-debug/apex'].each do |path|
     full_path = File.expand_path(path, __dir__)
     return full_path if File.exist?(full_path)
   end
@@ -47,6 +50,13 @@ APEX_BIN = find_apex_binary
 
 def generate_single_page_docset
   puts "Generating single-page docset using mmd2cheatset..."
+
+  # Ensure output directory exists
+  FileUtils.mkdir_p(DOCSETS_DIR)
+
+  # Change to docsets directory for output
+  original_dir = Dir.pwd
+  Dir.chdir(DOCSETS_DIR)
 
   # Create a cheatsheet markdown file for command-line options
   cheatsheet_md = <<~MARKDOWN
@@ -128,12 +138,16 @@ def generate_single_page_docset
     system("#{MMD2CHEATSET} Apex_Command_Line_Options.md")
     FileUtils.rm('Apex_Command_Line_Options.md')
     puts "\nSingle-page docset generated successfully!"
-    puts "Docset location: ApexCLI.docset"
+    puts "Docset location: #{File.join(DOCSETS_DIR, "ApexCLI.docset")}"
   else
     puts "Error: mmd2cheatset.rb not found at #{MMD2CHEATSET}"
     puts "Please check the path or install mmd2cheatset"
+    Dir.chdir(original_dir)
     exit 1
   end
+
+  # Return to original directory
+  Dir.chdir(original_dir)
 end
 
 def extract_headers(html_content)
@@ -312,6 +326,32 @@ def inject_toc_into_html(html_content, main_toc_html, page_toc_html)
       .page-footer a:hover {
         text-decoration: underline;
       }
+      /* Nested lists in page content */
+      ul ul, ol ol, ul ol, ol ul {
+        padding-left: 1.5em;
+        margin-top: 0.25em;
+      }
+      /* Code blocks */
+      code {
+        background: #f0f0f0;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.9em;
+        margin: 0 0.1em;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 1rem;
+        overflow-x: auto;
+        border-radius: 4px;
+        margin: 1em 0;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        margin: 0;
+      }
       body {
         margin-left: 220px;
       }
@@ -424,10 +464,39 @@ def fix_links_in_html(html_content, available_files)
   end
 end
 
+def clone_wiki
+  wiki_url = 'https://github.com/ApexMarkdown/apex.wiki.git'
+  puts "Cloning wiki from GitHub..."
+
+  if File.exist?(WIKI_DIR)
+    puts "Wiki directory already exists, removing..."
+    FileUtils.rm_rf(WIKI_DIR)
+  end
+
+  success = system("git clone #{wiki_url} \"#{WIKI_DIR}\" 2>&1")
+  unless success
+    puts "Error: Failed to clone wiki from #{wiki_url}"
+    exit 1
+  end
+
+  puts "Wiki cloned successfully"
+end
+
+def cleanup_wiki
+  if File.exist?(WIKI_DIR)
+    puts "\nCleaning up wiki clone..."
+    FileUtils.rm_rf(WIKI_DIR)
+    puts "Wiki clone removed"
+  end
+end
+
 def generate_multi_page_docset
   require_sqlite3  # Only needed for multi-page mode
 
   puts "Generating multi-page docset from wiki files..."
+
+  # Clone wiki if needed
+  clone_wiki unless File.exist?(WIKI_DIR)
 
   unless File.exist?(WIKI_DIR)
     puts "Error: Wiki directory not found at #{WIKI_DIR}"
@@ -437,11 +506,16 @@ def generate_multi_page_docset
   unless File.exist?(APEX_BIN)
     puts "Error: Apex binary not found at #{APEX_BIN}"
     puts "Please build Apex first: cd build-release && make"
+    puts "Or ensure 'apex' is in your PATH"
+    cleanup_wiki
     exit 1
   end
 
+  # Ensure output directory exists
+  FileUtils.mkdir_p(DOCSETS_DIR)
+
   docset_name = 'Apex.docset'
-  docset_path = File.join(Dir.pwd, docset_name)
+  docset_path = File.join(DOCSETS_DIR, docset_name)
   contents_path = File.join(docset_path, 'Contents')
   resources_path = File.join(contents_path, 'Resources')
   documents_path = File.join(resources_path, 'Documents')
@@ -645,6 +719,9 @@ def generate_multi_page_docset
   puts "\nMulti-page docset generated successfully!"
   puts "Docset location: #{docset_path}"
   puts "Total entries: #{entries.length}"
+
+  # Clean up wiki clone
+  cleanup_wiki
 end
 
 case MODE
