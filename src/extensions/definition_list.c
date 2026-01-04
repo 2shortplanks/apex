@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 /* Node type IDs */
 cmark_node_type APEX_NODE_DEFINITION_LIST;
@@ -558,16 +559,54 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         const char *code_check = line_start;
         while (code_check < line_end && (*code_check == ' ' || *code_check == '\t')) code_check++;
         bool is_code_fence = false;
+        bool is_closing_fence = false;  /* True if this is a closing fence (no language identifier) */
         if (code_check + 3 <= line_end &&
             code_check[0] == '`' && code_check[1] == '`' && code_check[2] == '`') {
             is_code_fence = true;
+            /* Check if this is a closing fence (just ``` with optional whitespace, no language identifier) */
+            const char *after_fence = code_check + 3;
+            while (after_fence < line_end && (*after_fence == ' ' || *after_fence == '\t')) after_fence++;
+            is_closing_fence = (after_fence >= line_end || *after_fence == '\n' || *after_fence == '\r');
         }
 
         /* If we're inside a code block OR this is a code fence line, just copy the line as-is */
         if (in_code_block || is_code_fence) {
-            /* Toggle code block state when we see a fence */
+            /* Handle code block state when we see a fence */
             if (is_code_fence) {
-                in_code_block = !in_code_block;
+                bool was_in_code_block = in_code_block;
+                /* If we're inside a code block, only a closing fence (no language identifier) closes it.
+                   Otherwise, any fence opens a new code block. */
+                if (in_code_block) {
+                    if (is_closing_fence) {
+                        in_code_block = false;
+                    }
+                    /* If it's an opening fence with language identifier inside a code block, treat as content (don't change state) */
+                } else {
+                    in_code_block = true;
+                }
+                /* If we're entering a code block, clear any pending definition list state */
+                if (in_code_block && !was_in_code_block) {
+                    if (in_def_list) {
+                        /* Close any open definition list */
+                        const char *dl_end = "</dl>\n";
+                        size_t dl_end_len = strlen(dl_end);
+                        ENSURE_SPACE(dl_end_len + 1);
+                        memcpy(write, dl_end, dl_end_len);
+                        write += dl_end_len;
+                        remaining -= dl_end_len;
+                    }
+                    in_def_list = false;
+                    term_len = 0;
+                    term_has_blockquote = false;
+                    term_blockquote_depth = 0;
+                }
+                /* If we're exiting a code block, clear any pending definition list state */
+                if (!in_code_block && was_in_code_block) {
+                    in_def_list = false;
+                    term_len = 0;
+                    term_has_blockquote = false;
+                    term_blockquote_depth = 0;
+                }
             }
             ENSURE_SPACE(line_length + 1);
             memcpy(write, line_start, line_length);
@@ -639,11 +678,14 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         bool is_def_line = false;
         /* Only check for definition line if it's not a table row or list item */
         /* Definition lines must start with : (after whitespace/blockquote), not contain : */
-        if (!is_table_row && !is_list_item && p < line_end && *p == ':' && (p + 1) < line_end &&
+        /* Also skip if we're inside a code block (shouldn't happen due to early continue, but be safe) */
+        if (!in_code_block && !is_table_row && !is_list_item && p < line_end && *p == ':' && (p + 1) < line_end &&
             (p[1] == ' ' || p[1] == '\t')) {
             /* Double-check: make sure : is at the start of the line content (after whitespace/blockquote) */
             /* p already points after whitespace and blockquote, so if *p == ':', it's a definition line */
             is_def_line = true;
+        } else if (in_code_block && p < line_end && *p == ':') {
+            /* Found ':' in code block, skip definition list processing */
         }
 
         if (is_def_line) {
@@ -1084,6 +1126,21 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
             }
         } else {
             /* Regular line */
+            /* Skip definition list processing if we're inside a code block (shouldn't happen, but be safe) */
+            if (in_code_block) {
+                /* Copy line as-is */
+                ENSURE_SPACE(line_length + 1);
+                memcpy(write, line_start, line_length);
+                write += line_length;
+                remaining -= line_length;
+                *write++ = '\n';
+                remaining--;
+                read = line_end;
+                if (*read == '\n') {
+                    read++;
+                }
+                continue;
+            }
             if (in_def_list) {
                 /* This could be a new term */
                 /* End current list first */
@@ -1332,6 +1389,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     /* Free reference definitions if we extracted them */
     if (ref_definitions) {
         free(ref_definitions);
+        ref_definitions = NULL;  /* Prevent double-free */
     }
 
     /* Ensure space for null terminator */
@@ -1354,7 +1412,9 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         /* No definition lists were created - if we processed but didn't create any DLs,
          * something went wrong. Return NULL to use original text. */
         free(output);
-        free(ref_definitions);
+        if (ref_definitions) {
+            free(ref_definitions);
+        }
         return NULL;
     }
 
@@ -1365,7 +1425,9 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     /* If we didn't write anything, return original text to avoid empty output */
     if (write == output) {
         free(output);
-        free(ref_definitions);
+        if (ref_definitions) {
+            free(ref_definitions);
+        }
         return NULL;  /* Return NULL to indicate no processing was done */
     }
 
