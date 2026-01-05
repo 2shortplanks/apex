@@ -11,9 +11,10 @@ Found 7 tools:
 - kramdown
 - marked
 
-## Apex Mode Comparison
+## Processor Comparison
 
-**Test File:** `/Users/ttscoff/Desktop/Code/apex/tests/comprehensive_test.md`
+**File:** `/Users/ttscoff/Desktop/Code/apex/tests/fixtures/comprehensive_test.md` (17008 bytes, 619 lines)
 
-| Mode | Time (ms) | Relative |
-|------|-----------|----------|
+| Processor | Time (ms) | Relative |
+|-----------|-----------|----------|
+| apex | 32.00 | 1.00x |
