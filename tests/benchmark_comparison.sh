@@ -10,7 +10,7 @@ cd "$PROJECT_ROOT" || exit 1
 
 ITERATIONS=20
 TEST_FILES=(
-	"$PROJECT_ROOT/tests/comprehensive_test.md"
+	"$PROJECT_ROOT/tests/fixtures/comprehensive_test.md"
 )
 
 # Add larger test files if they exist
@@ -51,7 +51,7 @@ benchmark_tool() {
 	# Timed runs using hyperfine if available, else manual timing
 	if command -v hyperfine >/dev/null 2>&1; then
 		result=$(hyperfine --warmup 3 --runs "$iterations" --export-json /dev/stdout \
-			"$cmd \"$file\"" 2>/dev/null | jq -r '.results[0].mean * 1000' 2>/dev/null)
+			"$cmd \"$file\"" 2>/dev/null | tail -n +5 | jq -r '.results[0].mean * 1000' 2>/dev/null)
 		echo "${result:-N/A}"
 	else
 		local total=0

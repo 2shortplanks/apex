@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT" || exit 1
 
 APEX="$PROJECT_ROOT/build/apex"
-TEST_FILE="$PROJECT_ROOT/tests/comprehensive_test.md"
+TEST_FILE="$PROJECT_ROOT/tests/fixtures/comprehensive_test.md"
 ITERATIONS=50
 
 # Verify files exist

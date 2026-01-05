@@ -224,17 +224,17 @@ apex_test_runner/fast:
 .PHONY : apex_test_runner/fast
 
 #=============================================================================
-# Target rules for targets named man_page_copy
+# Target rules for targets named man_pages_copy
 
 # Build rule for target.
-man_page_copy: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 man_page_copy
-.PHONY : man_page_copy
+man_pages_copy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 man_pages_copy
+.PHONY : man_pages_copy
 
 # fast build rule for target.
-man_page_copy/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/man_page_copy.dir/build.make CMakeFiles/man_page_copy.dir/build
-.PHONY : man_page_copy/fast
+man_pages_copy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/man_pages_copy.dir/build.make CMakeFiles/man_pages_copy.dir/build
+.PHONY : man_pages_copy/fast
 
 #=============================================================================
 # Target rules for targets named cmark-gfm
@@ -1391,7 +1391,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... man_page_copy"
+	@echo "... man_pages_copy"
 	@echo "... apex"
 	@echo "... apex_cli"
 	@echo "... apex_static"
