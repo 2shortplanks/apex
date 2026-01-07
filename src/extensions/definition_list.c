@@ -341,14 +341,82 @@ static cmark_node *open_block(cmark_syntax_extension *ext,
                               unsigned char *input,
                               int len) {
     (void)ext;
-    if (indented > 3) return NULL; /* Too indented */
+    if (indented > 3) {
+        return NULL; /* Too indented */
+    }
+
+    /* Check for 4+ leading spaces - these are table captions, not definition lists */
+    int leading_spaces = 0;
+    while (leading_spaces < len && leading_spaces < 10 && input[leading_spaces] == ' ') {
+        leading_spaces++;
+    }
+    if (leading_spaces >= 4) {
+        return NULL; /* Table caption, not definition list */
+    }
 
     int def_indent;
-    if (!is_definition_line(input, len, &def_indent)) return NULL;
+    if (!is_definition_line(input, len, &def_indent)) {
+        return NULL;
+    }
+
+    /* Check if the line contains an IAL (Inline Attribute List) like {#id .class} */
+    /* Lines with IALs are almost always table captions, not definition lists */
+    const unsigned char *p = input;
+    const unsigned char *end = input + len;
+    while (p < end) {
+        if (*p == '{') {
+            p++;
+            /* Check if it looks like an IAL: {# or {. or {: */
+            if (p < end && (*p == '#' || *p == '.' || *p == ':')) {
+                /* Look for closing } */
+                while (p < end && *p != '}') {
+                    p++;
+                }
+                if (p < end && *p == '}') {
+                    return NULL; /* This is a table caption, not a definition list */
+                }
+            }
+        }
+        p++;
+    }
+
+    /* Safety check: parent_container must be valid */
+    if (!parent_container) {
+        return NULL;
+    }
+
+    /* Additional safety: verify parent_container is a valid node type */
+    cmark_node_type parent_type = cmark_node_get_type(parent_container);
 
     /* Check if previous block was a paragraph (term) */
-    cmark_node *prev = cmark_node_last_child(parent_container);
-    if (!prev || cmark_node_get_type(prev) != CMARK_NODE_PARAGRAPH) return NULL;
+    /* Only try to get last child for node types that support children */
+    cmark_node *prev = NULL;
+    if (parent_type == CMARK_NODE_DOCUMENT ||
+        parent_type == CMARK_NODE_BLOCK_QUOTE ||
+        parent_type == CMARK_NODE_LIST ||
+        parent_type == CMARK_NODE_ITEM ||
+        parent_type == APEX_NODE_DEFINITION_LIST ||
+        parent_type == APEX_NODE_DEFINITION_DATA) {
+        prev = cmark_node_last_child(parent_container);
+    } else {
+        /* For other node types, don't try to get last child */
+        return NULL;
+    }
+
+    if (!prev) {
+        return NULL;
+    }
+
+    cmark_node_type prev_type = cmark_node_get_type(prev);
+    if (prev_type != CMARK_NODE_PARAGRAPH) {
+        return NULL;
+    }
+
+    /* Additional safety: verify prev is still valid and attached to parent */
+    cmark_node *prev_parent = cmark_node_parent(prev);
+    if (prev_parent != parent_container) {
+        return NULL;
+    }
 
     /* Create definition list container */
     cmark_node *def_list = cmark_node_new_with_mem(APEX_NODE_DEFINITION_LIST, parser->mem);
@@ -356,18 +424,20 @@ static cmark_node *open_block(cmark_syntax_extension *ext,
 
     /* Convert previous paragraph to term */
     cmark_node *term = cmark_node_new_with_mem(APEX_NODE_DEFINITION_TERM, parser->mem);
-    if (term) {
-        /* Move paragraph children to term */
-        cmark_node *child;
-        while ((child = cmark_node_first_child(prev))) {
-            cmark_node_unlink(child);
-            cmark_node_append_child(term, child);
-        }
-        cmark_node_unlink(prev);
-        cmark_node_free(prev);
-        cmark_node_append_child(def_list, term);
+    if (!term) {
+        cmark_node_free(def_list);
+        return NULL;
     }
 
+    /* Move paragraph children to term - but DON'T unlink prev itself */
+    /* Unlinking prev during parsing causes segfaults because the parser is still using it */
+    cmark_node *child;
+    while ((child = cmark_node_first_child(prev))) {
+        cmark_node_unlink(child);
+        cmark_node_append_child(term, child);
+    }
+
+    cmark_node_append_child(def_list, term);
     return def_list;
 }
 
@@ -520,6 +590,7 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
     int term_blockquote_depth = 0;  /* Track blockquote depth of buffered term */
     bool found_any_def_list = false;  /* Track if we actually created any definition lists */
     bool in_code_block = false;  /* Track if we're inside a fenced code block */
+    bool prev_line_was_blank = false;  /* Track if the previous line was blank */
 
     const char *prev_read_pos = NULL;
     int iteration_count = 0;
@@ -554,6 +625,11 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
         }
 
         size_t line_length = line_end - line_start;
+
+        /* Check if this line is blank (for tracking prev_line_was_blank) */
+        bool current_line_is_blank = (line_length == 0 ||
+                                      (line_length == 1 && (*line_start == '\r' || *line_start == '\n')) ||
+                                      (line_length > 0 && line_start[0] == '\r' && line_length == 1));
 
         /* Check for fenced code blocks (```) */
         const char *code_check = line_start;
@@ -685,43 +761,133 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
             /* p already points after whitespace and blockquote, so if *p == ':', it's a definition line */
             is_def_line = true;
 
+            /* If there's NO blank line before this : definition line, it's definitely a definition list,
+             * not a table caption. Only check for table caption if there's a blank line. */
+            if (!prev_line_was_blank) {
+                /* Process as definition list - don't check for table caption */
+            } else {
+                /* There's a blank line - could be a table caption, check if followed by table */
+
             /* Check if this : Caption line is followed by a table */
             /* If so, skip processing it as a definition list - let table caption detection handle it */
+            /* Calculate end of text buffer safely - use original text parameter */
+            const char *text_end = text + text_len; /* End of entire text buffer */
             const char *next_line_start = line_end;
-            if (*next_line_start == '\n') {
+            if (next_line_start < text_end && *next_line_start == '\n') {
                 next_line_start++; /* Skip the newline */
             }
 
             /* Skip blank lines to find the next non-blank line */
-            while (*next_line_start != '\0') {
+            /* Safety: limit look-ahead to prevent infinite loops or buffer overruns */
+            int look_ahead_count = 0;
+            const int MAX_LOOK_AHEAD = 100;
+            bool found_table = false;
+            while (next_line_start < text_end && *next_line_start != '\0' && look_ahead_count < MAX_LOOK_AHEAD) {
+                look_ahead_count++;
                 const char *check_line = next_line_start;
-                const char *check_line_end = strchr(check_line, '\n');
-                if (!check_line_end) {
-                    check_line_end = check_line;
-                    while (*check_line_end != '\0') check_line_end++;
+
+                /* Find end of line - only search within remaining buffer */
+                const char *check_line_end = NULL;
+                if (check_line < text_end) {
+                    /* Search for newline only within remaining buffer */
+                    const char *search_start = check_line;
+                    while (search_start < text_end && *search_start != '\n' && *search_start != '\0') {
+                        search_start++;
+                    }
+                    if (search_start < text_end && *search_start == '\n') {
+                        check_line_end = search_start;
+                    } else {
+                        /* No newline found - this is the last line */
+                        check_line_end = text_end;
+                    }
+                } else {
+                    /* Already past end */
+                    check_line_end = text_end;
                 }
 
-                /* Skip whitespace on this line */
-                while (check_line < check_line_end && (*check_line == ' ' || *check_line == '\t')) {
+                /* Skip whitespace on this line - ensure we don't go past check_line_end */
+                while (check_line < check_line_end && check_line < text_end &&
+                       (*check_line == ' ' || *check_line == '\t')) {
                     check_line++;
                 }
 
                 /* If line is empty (just whitespace), continue to next line */
-                if (check_line >= check_line_end || *check_line == '\r') {
+                if (check_line >= check_line_end || check_line >= text_end ||
+                    *check_line == '\r' || *check_line == '\0') {
                     next_line_start = check_line_end;
-                    if (*next_line_start == '\n') next_line_start++;
+                    if (next_line_start < text_end && *next_line_start == '\n') {
+                        next_line_start++;
+                    }
                     continue;
                 }
 
-                /* Check if this line starts with | (table row) */
-                if (*check_line == '|') {
-                    /* This : Caption is followed by a table - skip definition list processing */
-                    is_def_line = false;
+                /* Check if this line starts with | (table row) - ensure we're within bounds */
+                if (check_line < text_end && *check_line == '|') {
+                    /* This : Caption is followed by a table - check if it has an IAL to determine if it's a caption */
+                    /* Only treat it as a table caption (and add 4 spaces) if it has an IAL like {#id .class} */
+                    /* Otherwise, let it be processed as a definition list */
+                    bool has_ial = false;
+                    const char *line_check = p; /* p points after spaces and blockquote, at the : */
+                    if (line_check < line_end) {
+                        /* Look for IAL pattern {# or {. or {: */
+                        const char *search = line_check;
+                        while (search < line_end) {
+                            if (*search == '{') {
+                                if (search + 1 < line_end &&
+                                    (search[1] == '#' || search[1] == '.' || search[1] == ':')) {
+                                    /* Found IAL pattern */
+                                    has_ial = true;
+                                    break;
+                                }
+                            }
+                            search++;
+                        }
+                    }
+
+                    if (has_ial) {
+                        /* Has IAL - this is a table caption, add 4 spaces to prevent definition list processing */
+                        is_def_line = false;
+                        found_table = true;
+                        /* Output line with 4 spaces added at the very beginning to prevent definition list matching */
+                        /* Calculate how many spaces we already have at the start */
+                        int existing_spaces = spaces;
+                        /* We need 4 total spaces at the start, so add (4 - existing_spaces) more */
+                        int spaces_to_add = 4 - existing_spaces;
+                        if (spaces_to_add < 0) spaces_to_add = 0;
+
+                    ENSURE_SPACE(spaces_to_add + line_length + 1);
+                    /* Add extra spaces at the very beginning */
+                    for (int i = 0; i < spaces_to_add; i++) {
+                        *write++ = ' ';
+                        remaining--;
+                    }
+                    /* Copy the entire original line */
+                    memcpy(write, line_start, line_length);
+                    write += line_length;
+                    remaining -= line_length;
+                    *write++ = '\n';
+                    remaining--;
+                    read = line_end;
+                    if (*read == '\n') {
+                        read++;
+                    }
+                        break; /* Break out of look-ahead loop */
+                    } else {
+                        /* No IAL - this might be a definition list, don't add spaces */
+                        /* Continue processing as definition list - don't break, just stop looking ahead */
+                        break;
+                    }
                 }
 
                 /* Found a non-blank line, stop looking */
                 break;
             }
+
+            /* If we found a table with IAL, skip the rest of the line processing */
+            if (found_table) {
+                continue; /* Skip to next iteration of main while loop */
+            }
+            } /* End of "else" block for blank line check */
         } else if (in_code_block && p < line_end && *p == ':') {
             /* Found ':' in code block, skip definition list processing */
         }
@@ -1364,6 +1530,9 @@ char *apex_process_definition_lists(const char *text, bool unsafe) {
                 }
             }
         }
+
+        /* Update prev_line_was_blank for next iteration */
+        prev_line_was_blank = current_line_is_blank;
 
         /* Move to next line - ensure we always advance */
         const char *old_read = read;

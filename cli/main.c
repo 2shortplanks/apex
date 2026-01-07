@@ -416,8 +416,9 @@ static char *read_stdin(size_t *len) {
     int fd = fileno(stdin);
     ssize_t bytes_read;
 
-    while ((bytes_read = read(fd, buffer + size, BUFFER_SIZE)) > 0) {
+    while ((bytes_read = read(fd, buffer + size, capacity - size)) > 0) {
         size += bytes_read;
+        /* Ensure we have space for at least one more BUFFER_SIZE read */
         if (size + BUFFER_SIZE > capacity) {
             capacity *= 2;
             char *new_buffer = realloc(buffer, capacity);

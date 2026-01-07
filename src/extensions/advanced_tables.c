@@ -756,6 +756,182 @@ static char *attributes_to_html_string(apex_attributes *attrs) {
     return strdup(buffer);
 }
 
+/**
+ * Check if a paragraph is a table caption format (without adjacency check)
+ * Used when we're already looking backwards from a table and know it's adjacent
+ */
+static bool is_table_caption_format(cmark_node *para, char **caption_text, const char **original_text_ptr) {
+    if (!para || cmark_node_get_type(para) != CMARK_NODE_PARAGRAPH) {
+        return false;
+    }
+
+    /* Collect all text from all text nodes in the paragraph */
+    cmark_node *text_node = cmark_node_first_child(para);
+    if (!text_node) {
+        return false;
+    }
+
+    /* Build full text by concatenating all text nodes */
+    size_t text_len = 0;
+    cmark_node *node = text_node;
+    while (node) {
+        if (cmark_node_get_type(node) == CMARK_NODE_TEXT) {
+            const char *node_text = cmark_node_get_literal(node);
+            if (node_text) {
+                text_len += strlen(node_text);
+            }
+        }
+        node = cmark_node_next(node);
+    }
+
+    if (text_len == 0) return false;
+
+    /* Allocate buffer for full text */
+    char *full_text = malloc(text_len + 1);
+    if (!full_text) return false;
+    full_text[0] = '\0';
+
+    /* Concatenate all text nodes */
+    node = text_node;
+    while (node) {
+        if (cmark_node_get_type(node) == CMARK_NODE_TEXT) {
+            const char *node_text = cmark_node_get_literal(node);
+            if (node_text) {
+                strcat(full_text, node_text);
+            }
+        }
+        node = cmark_node_next(node);
+    }
+
+    const char *text = full_text;
+
+    /* Check for [Caption] format */
+    if (text[0] == '[') {
+        const char *end = strchr(text + 1, ']');
+        if (end) {
+            const char *after = end + 1;
+            while (*after && isspace((unsigned char)*after)) after++;
+
+            bool has_ial = false;
+            if (*after == '{') {
+                if ((after[1] == ':' || after[1] == '#' || after[1] == '.') &&
+                    strchr(after, '}')) {
+                    has_ial = true;
+                }
+            }
+
+            if (!has_ial && *after == '\0') {
+                size_t len = end - (text + 1);
+                *caption_text = malloc(len + 1);
+                if (*caption_text) {
+                    memcpy(*caption_text, text + 1, len);
+                    (*caption_text)[len] = '\0';
+                }
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
+                if (original_text_ptr) {
+                    *original_text_ptr = text;
+                }
+                return true;
+            } else if (has_ial) {
+                size_t len = end - (text + 1);
+                *caption_text = malloc(len + 1);
+                if (*caption_text) {
+                    memcpy(*caption_text, text + 1, len);
+                    (*caption_text)[len] = '\0';
+                }
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
+                if (original_text_ptr) {
+                    *original_text_ptr = text;
+                }
+                return true;
+            }
+        }
+    }
+
+    /* Check for : caption format (without adjacency check since we're already looking backwards) */
+    const char *p = text;
+    size_t text_length = strlen(p);
+    int spaces = 0;
+    /* Allow up to 4 spaces (definition list allows 3, so 4+ prevents definition list matching) */
+    while (spaces < 4 && spaces < (int)text_length && p[spaces] == ' ') {
+        spaces++;
+    }
+
+    if (spaces < (int)text_length && p[spaces] == ':' && (spaces + 1) < (int)text_length) {
+        if (p[spaces + 1] == ' ' || p[spaces + 1] == '\t') {
+            const char *caption_start = p + spaces + 2;
+            const char *caption_end = p + strlen(p);
+            const char *ial_start = NULL;
+
+            /* Look for IAL at the end */
+            const char *text_end = p + text_length;
+            const char *search = caption_end - 1;
+            while (search >= caption_start) {
+                if (*search == '}') {
+                    const char *open = search;
+                    while (open >= caption_start && *open != '{') {
+                        open--;
+                    }
+                    if (open >= caption_start && *open == '{' && (open + 1) < text_end) {
+                        if ((open[1] == ':' || open[1] == '#' || open[1] == '.') &&
+                            search > open) {
+                            ial_start = open;
+                            caption_end = open;
+                            break;
+                        }
+                    }
+                }
+                search--;
+            }
+
+            /* Extract caption text (trim whitespace) */
+            while (caption_start < caption_end && isspace((unsigned char)*caption_start)) {
+                caption_start++;
+            }
+            while (caption_end > caption_start && isspace((unsigned char)*(caption_end - 1))) {
+                caption_end--;
+            }
+
+            if (caption_end > caption_start) {
+                size_t len = caption_end - caption_start;
+                *caption_text = malloc(len + 1);
+                if (*caption_text) {
+                    memcpy(*caption_text, caption_start, len);
+                    (*caption_text)[len] = '\0';
+                }
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
+                if (original_text_ptr) {
+                    *original_text_ptr = text;
+                }
+                return true;
+            } else if (ial_start) {
+                *caption_text = strdup("");
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
+                if (original_text_ptr) {
+                    *original_text_ptr = text;
+                }
+                return true;
+            }
+        }
+    }
+
+    /* Not a caption format - free allocated memory */
+    free(full_text);
+    return false;
+}
+
 static bool is_table_caption(cmark_node *para, char **caption_text, const char **original_text_ptr) {
     if (!para || cmark_node_get_type(para) != CMARK_NODE_PARAGRAPH) {
         return false;
@@ -874,6 +1050,7 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
 
                 /* Look for IAL pattern from the end */
                 const char *search = caption_end - 1;
+                const char *text_end_here = text + strlen(text);
                 while (search >= caption_start) {
                     if (*search == '}') {
                         /* Found closing brace, look backwards for opening brace */
@@ -881,7 +1058,7 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
                         while (open >= caption_start && *open != '{') {
                             open--;
                         }
-                        if (open >= caption_start && *open == '{') {
+                        if (open >= caption_start && *open == '{' && (open + 1) < text_end_here) {
                             /* Check if it's a valid IAL pattern */
                             if ((open[1] == ':' || open[1] == '#' || open[1] == '.') &&
                                 search > open) {
@@ -948,6 +1125,8 @@ static void add_table_caption(cmark_node *table, const char *caption, const char
     }
 
     /* Store caption in user_data */
+    char *existing_user_data = (char *)cmark_node_get_user_data(table);
+
     char *attrs = malloc(strlen(caption) + 50);
     if (attrs) {
         snprintf(attrs, strlen(caption) + 50, " data-caption=\"%s\"", caption);
@@ -967,6 +1146,11 @@ static void add_table_caption(cmark_node *table, const char *caption, const char
                 }
             }
             apex_free_attributes(ial_attrs);
+        }
+
+        /* Free existing user_data if present */
+        if (existing_user_data) {
+            free(existing_user_data);
         }
 
         /* Append to existing user_data if present */
@@ -1036,24 +1220,37 @@ cmark_node *apex_process_advanced_tables(cmark_node *root) {
                 /* Skip blank paragraphs to find the actual caption */
                 cmark_node *prev = cmark_node_previous(cur);
                 while (prev) {
-                    cmark_node_type prev_type = cmark_node_get_type(prev);
+                    /* Validate node before accessing - check if it's a valid node pointer */
+                    /* Try to get type - if this segfaults, the node is invalid */
+                    cmark_node_type prev_type;
+                    /* Use a safe access pattern - get type first to validate node */
+                    prev_type = cmark_node_get_type(prev);
+                    /* Allow all valid node types - custom node types can be > 100 */
+                    /* Only reject if type is 0 (which shouldn't happen) */
+                    if (prev_type == 0) {
+                        /* Invalid node type - likely corrupted pointer */
+                        break;
+                    }
                     /* Skip blank paragraphs and other non-paragraph nodes */
                     if (prev_type == CMARK_NODE_PARAGRAPH) {
                         /* Check if paragraph is blank (empty or only whitespace) */
                         cmark_node *child = cmark_node_first_child(prev);
                         bool is_blank = true;
                         if (child) {
-                            if (cmark_node_get_type(child) == CMARK_NODE_TEXT) {
+                            cmark_node_type child_type = cmark_node_get_type(child);
+                            if (child_type == CMARK_NODE_TEXT) {
                                 const char *text = cmark_node_get_literal(child);
                                 if (text) {
                                     const char *p = text;
-                                    while (*p) {
+                                    while (*p != '\0') {
                                         if (!isspace((unsigned char)*p)) {
                                             is_blank = false;
                                             break;
                                         }
                                         p++;
                                     }
+                                } else {
+                                    /* No text literal - treat as blank */
                                 }
                             } else {
                                 is_blank = false; /* Has non-text content */
@@ -1065,34 +1262,80 @@ cmark_node *apex_process_advanced_tables(cmark_node *root) {
                             char *prev_data = (char *)cmark_node_get_user_data(prev);
                             /* Skip paragraphs that have already been used as captions */
                             if (!prev_data || !strstr(prev_data, "data-remove")) {
-                                char *caption = NULL;
-                                const char *original_text = NULL;
-                                if (is_table_caption(prev, &caption, &original_text)) {
-                                    add_table_caption(cur, caption, original_text);
-                                    /* Free the allocated full_text that was stored in user_data */
-                                    char *stored_text = (char *)cmark_node_get_user_data(prev);
-                                    if (stored_text && stored_text == original_text) {
-                                        free(stored_text);
+                                /* Quick check: does this paragraph start with [ or : (caption indicators)? */
+                                /* This avoids calling is_table_caption_format on paragraphs that clearly aren't captions */
+                                cmark_node *first_text = cmark_node_first_child(prev);
+                                bool might_be_caption = false;
+                                if (first_text) {
+                                    cmark_node_type first_text_type = cmark_node_get_type(first_text);
+                                    if (first_text_type == CMARK_NODE_TEXT) {
+                                        const char *first_char = cmark_node_get_literal(first_text);
+                                        if (first_char && strlen(first_char) > 0) {
+                                            size_t first_char_len = strlen(first_char);
+                                            /* Skip leading whitespace (up to 3 spaces) */
+                                            int check_spaces = 0;
+                                            while (check_spaces < 3 && check_spaces < (int)first_char_len && first_char[check_spaces] == ' ') {
+                                                check_spaces++;
+                                            }
+                                            if (check_spaces < (int)first_char_len &&
+                                                (first_char[check_spaces] == '[' || first_char[check_spaces] == ':')) {
+                                                might_be_caption = true;
+                                            }
+                                        }
                                     }
-                                    /* Mark caption paragraph for removal so it is not reused */
-                                    cmark_node_set_user_data(prev, strdup(" data-remove=\"true\""));
-                                    free(caption);
-                                    break; /* Found caption, stop looking */
+                                }
+
+                                if (might_be_caption) {
+                                    char *caption = NULL;
+                                    const char *original_text = NULL;
+                                    /* We're already looking backwards from a table, so we know this paragraph
+                                     * is before the table. We can check if it's a caption format without
+                                     * needing to verify adjacency (which might fail if there are headers
+                                     * or other nodes between the caption and table). */
+                                    if (is_table_caption_format(prev, &caption, &original_text)) {
+                                        add_table_caption(cur, caption, original_text);
+                                        /* Free the allocated full_text that was stored in user_data */
+                                        char *stored_text = (char *)cmark_node_get_user_data(prev);
+                                        if (stored_text && stored_text == original_text) {
+                                            free(stored_text);
+                                        }
+                                        /* Mark caption paragraph for removal so it is not reused */
+                                        cmark_node_set_user_data(prev, strdup(" data-remove=\"true\""));
+                                        free(caption);
+                                        break; /* Found caption, stop looking */
+                                    }
                                 }
                             }
-                            break; /* Found non-blank paragraph that's not a caption, stop looking */
+                            /* Found non-blank paragraph that's not a caption - continue looking
+                             * backwards in case there's a caption further up (e.g., after a header
+                             * and regular paragraph) */
+                            prev = cmark_node_previous(prev);
+                            /* Continue loop to check the next node (prev is checked at start of while) */
+                            continue;
                         }
                         /* This paragraph is blank, continue to previous sibling */
                         prev = cmark_node_previous(prev);
+                        /* Continue loop to check the next node (prev is checked at start of while) */
+                        continue;
                     } else {
-                        /* Not a paragraph, stop looking */
-                        break;
+                        /* Not a paragraph - could be a header or other block element */
+                        /* Headers can appear between caption and table, so continue looking */
+                        /* But stop for other block types that shouldn't have captions after them */
+                        if (prev_type == CMARK_NODE_HEADING) {
+                            /* Header found - continue looking backwards for caption */
+                            prev = cmark_node_previous(prev);
+                            continue;
+                        } else {
+                            /* Other block type - stop looking */
+                            break;
+                        }
                     }
                 }
 
                 /* Check for caption after table */
                 cmark_node *next = cmark_node_next(cur);
                 if (next) {
+                    cmark_node_type next_type = cmark_node_get_type(next);
                     char *next_data = (char *)cmark_node_get_user_data(next);
                     /* Skip paragraphs that have already been used as captions */
                     if (!next_data || !strstr(next_data, "data-remove")) {
@@ -1108,6 +1351,19 @@ cmark_node *apex_process_advanced_tables(cmark_node *root) {
                             /* Mark caption paragraph for removal so it is not reused */
                             cmark_node_set_user_data(next, strdup(" data-remove=\"true\""));
                             free(caption);
+                        } else {
+                            /* Also check if it's a : Caption format (which is_table_caption might not handle) */
+                            if (next_type == CMARK_NODE_PARAGRAPH) {
+                                if (is_table_caption_format(next, &caption, &original_text)) {
+                                    add_table_caption(cur, caption, original_text);
+                                    char *stored_text = (char *)cmark_node_get_user_data(next);
+                                    if (stored_text && stored_text == original_text) {
+                                        free(stored_text);
+                                    }
+                                    cmark_node_set_user_data(next, strdup(" data-remove=\"true\""));
+                                    free(caption);
+                                }
+                            }
                         }
                     }
                 }
