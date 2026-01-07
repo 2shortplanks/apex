@@ -14,6 +14,9 @@ extern int tests_run;
 extern int tests_passed;
 extern int tests_failed;
 
+/* When non-zero, only failing tests (and their context) are printed */
+extern int errors_only_output;
+
 /* Color codes for terminal output */
 #define COLOR_GREEN "\033[0;32m"
 #define COLOR_RED "\033[0;31m"

@@ -62,3 +62,4 @@ documentation/app-transformed/
 documentation/transform_for_app.md
 /documentation/html/apex-app-docs.html
 /documentation/app-settings-table.md
+/build-asan

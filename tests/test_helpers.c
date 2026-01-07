@@ -10,6 +10,9 @@ int tests_run = 0;
 int tests_passed = 0;
 int tests_failed = 0;
 
+/* When non-zero, only failing tests (and their context) are printed */
+int errors_only_output = 0;
+
 /**
  * Assert that string contains substring
  */
@@ -18,7 +21,9 @@ bool assert_contains(const char *haystack, const char *needle, const char *test_
 
     if (strstr(haystack, needle) != NULL) {
         tests_passed++;
-        printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        if (!errors_only_output) {
+            printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        }
         return true;
     } else {
         tests_failed++;
@@ -37,7 +42,9 @@ bool assert_not_contains(const char *haystack, const char *needle, const char *t
 
     if (strstr(haystack, needle) == NULL) {
         tests_passed++;
-        printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        if (!errors_only_output) {
+            printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        }
         return true;
     } else {
         tests_failed++;
@@ -55,7 +62,9 @@ bool assert_option_bool(bool actual, bool expected, const char *test_name) {
     tests_run++;
     if (actual == expected) {
         tests_passed++;
-        printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        if (!errors_only_output) {
+            printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        }
         return true;
     } else {
         tests_failed++;
@@ -72,7 +81,9 @@ bool assert_option_string(const char *actual, const char *expected, const char *
     tests_run++;
     if (actual && expected && strcmp(actual, expected) == 0) {
         tests_passed++;
-        printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        if (!errors_only_output) {
+            printf(COLOR_GREEN "✓" COLOR_RESET " %s\n", test_name);
+        }
         return true;
     } else {
         tests_failed++;

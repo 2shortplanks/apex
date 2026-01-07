@@ -7,8 +7,24 @@
 #include "apex/apex.h"
 
 #include <string.h>
+#include <stddef.h>
+#include <signal.h>
+#include <stdlib.h>
 
-/* Forward declarations */
+/* Track current test name for error reporting */
+static const char *current_test_name = NULL;
+
+/* Signal handler for assertion failures */
+static void sigabrt_handler(int sig) {
+    (void)sig;
+    if (current_test_name) {
+        fprintf(stderr, "\n*** Assertion failure in test: %s ***\n", current_test_name);
+    }
+    fprintf(stderr, "This is likely a cmark block finalization issue.\n");
+    fprintf(stderr, "Set APEX_SKIP_PROBLEMATIC_TESTS=1 to skip tests that trigger this.\n");
+}
+
+/* Forward declarations for individual test suites */
 void test_basic_markdown(void);
 void test_gfm_features(void);
 void test_metadata(void);
@@ -51,141 +67,123 @@ void test_citations(void);
 void test_aria_labels(void);
 
 /**
+ * Test suite registry
+ *
+ * Maps human-friendly suite names (command-line arguments) to the
+ * corresponding test functions.
+ */
+typedef void (*test_fn)(void);
+
+typedef struct {
+    const char *name;
+    test_fn fn;
+} test_suite;
+
+static test_suite suites[] = {
+    { "tests_basic",                   test_basic_markdown },
+    { "basic",                         test_basic_markdown },
+    { "gfm",                           test_gfm_features },
+    { "metadata",                      test_metadata },
+    { "metadata_transforms",           test_metadata_transforms },
+    { "mmd_metadata_keys",             test_mmd_metadata_keys },
+    { "metadata_control_options",      test_metadata_control_options },
+    { "wiki_links",                    test_wiki_links },
+    { "math",                          test_math },
+    { "critic_markup",                 test_critic_markup },
+    { "processor_modes",               test_processor_modes },
+    { "file_includes",                 test_file_includes },
+    { "ial",                           test_ial },
+    { "bracketed_spans",               test_bracketed_spans },
+    { "definition_lists",              test_definition_lists },
+    { "advanced_tables",               test_advanced_tables },
+    { "relaxed_tables",                test_relaxed_tables },
+    { "comprehensive_table_features",  test_comprehensive_table_features },
+    { "combine_gitbook_like",          test_combine_gitbook_like },
+    { "callouts",                      test_callouts },
+    { "blockquote_lists",              test_blockquote_lists },
+    { "toc",                           test_toc },
+    { "html_markdown_attributes",      test_html_markdown_attributes },
+    { "fenced_divs",                   test_fenced_divs },
+    { "sup_sub",                       test_sup_sub },
+    { "mixed_lists",                   test_mixed_lists },
+    { "unsafe_mode",                   test_unsafe_mode },
+    { "abbreviations",                 test_abbreviations },
+    { "mmd6_features",                 test_mmd6_features },
+    { "emoji",                         test_emoji },
+    { "special_markers",               test_special_markers },
+    { "inline_tables",                 test_inline_tables },
+    { "advanced_footnotes",            test_advanced_footnotes },
+    { "standalone_output",             test_standalone_output },
+    { "pretty_html",                   test_pretty_html },
+    { "header_ids",                    test_header_ids },
+    { "image_embedding",               test_image_embedding },
+    { "image_width_height_conversion", test_image_width_height_conversion },
+    { "indices",                       test_indices },
+    { "citations",                     test_citations },
+    { "aria_labels",                   test_aria_labels },
+};
+
+static const size_t suite_count = sizeof(suites) / sizeof(suites[0]);
+
+/**
  * Main test runner
  */
 int main(int argc, char *argv[]) {
+    /* Install signal handler for better error reporting */
+    signal(SIGABRT, sigabrt_handler);
+
     printf("Apex Test Suite v%s\n", apex_version_string());
     printf("==========================================\n");
 
-    if (argc > 1 && argv[1]) {
-        // Run only the specified test suite
-        if (strcmp(argv[1], "tests_basic") == 0 || strcmp(argv[1], "basic") == 0) {
-            test_basic_markdown();
-        } else if (strcmp(argv[1], "gfm") == 0) {
-            test_gfm_features();
-        } else if (strcmp(argv[1], "metadata") == 0) {
-            test_metadata();
-        } else if (strcmp(argv[1], "metadata_transforms") == 0) {
-            test_metadata_transforms();
-        } else if (strcmp(argv[1], "mmd_metadata_keys") == 0) {
-            test_mmd_metadata_keys();
-        } else if (strcmp(argv[1], "metadata_control_options") == 0) {
-            test_metadata_control_options();
-        } else if (strcmp(argv[1], "wiki_links") == 0) {
-            test_wiki_links();
-        } else if (strcmp(argv[1], "math") == 0) {
-            test_math();
-        } else if (strcmp(argv[1], "critic_markup") == 0) {
-            test_critic_markup();
-        } else if (strcmp(argv[1], "processor_modes") == 0) {
-            test_processor_modes();
-        } else if (strcmp(argv[1], "file_includes") == 0) {
-            test_file_includes();
-        } else if (strcmp(argv[1], "ial") == 0) {
-            test_ial();
-        } else if (strcmp(argv[1], "bracketed_spans") == 0) {
-            test_bracketed_spans();
-        } else if (strcmp(argv[1], "definition_lists") == 0) {
-            test_definition_lists();
-        } else if (strcmp(argv[1], "advanced_tables") == 0) {
-            test_advanced_tables();
-        } else if (strcmp(argv[1], "relaxed_tables") == 0) {
-            test_relaxed_tables();
-        } else if (strcmp(argv[1], "comprehensive_table_features") == 0) {
-            test_comprehensive_table_features();
-        } else if (strcmp(argv[1], "combine_gitbook_like") == 0) {
-            test_combine_gitbook_like();
-        } else if (strcmp(argv[1], "callouts") == 0) {
-            test_callouts();
-        } else if (strcmp(argv[1], "blockquote_lists") == 0) {
-            test_blockquote_lists();
-        } else if (strcmp(argv[1], "toc") == 0) {
-            test_toc();
-        } else if (strcmp(argv[1], "html_markdown_attributes") == 0) {
-            test_html_markdown_attributes();
-        } else if (strcmp(argv[1], "fenced_divs") == 0) {
-            test_fenced_divs();
-        } else if (strcmp(argv[1], "sup_sub") == 0) {
-            test_sup_sub();
-        } else if (strcmp(argv[1], "mixed_lists") == 0) {
-            test_mixed_lists();
-        } else if (strcmp(argv[1], "unsafe_mode") == 0) {
-            test_unsafe_mode();
-        } else if (strcmp(argv[1], "abbreviations") == 0) {
-            test_abbreviations();
-        } else if (strcmp(argv[1], "mmd6_features") == 0) {
-            test_mmd6_features();
-        } else if (strcmp(argv[1], "emoji") == 0) {
-            test_emoji();
-        } else if (strcmp(argv[1], "special_markers") == 0) {
-            test_special_markers();
-        } else if (strcmp(argv[1], "inline_tables") == 0) {
-            test_inline_tables();
-        } else if (strcmp(argv[1], "advanced_footnotes") == 0) {
-            test_advanced_footnotes();
-        } else if (strcmp(argv[1], "standalone_output") == 0) {
-            test_standalone_output();
-        } else if (strcmp(argv[1], "pretty_html") == 0) {
-            test_pretty_html();
-        } else if (strcmp(argv[1], "header_ids") == 0) {
-            test_header_ids();
-        } else if (strcmp(argv[1], "image_embedding") == 0) {
-            test_image_embedding();
-        } else if (strcmp(argv[1], "image_width_height_conversion") == 0) {
-            test_image_width_height_conversion();
-        } else if (strcmp(argv[1], "indices") == 0) {
-            test_indices();
-        } else if (strcmp(argv[1], "citations") == 0) {
-            test_citations();
-        } else if (strcmp(argv[1], "aria_labels") == 0) {
-            test_aria_labels();
-        } else {
-            printf("Unknown test suite: %s\n", argv[1]);
-            return 2;
+    /* Parse command-line arguments */
+    int errors_only = 0;
+    const char *requested_suite = NULL;
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--errors-only") == 0 || strcmp(argv[i], "-e") == 0) {
+            errors_only = 1;
+        } else if (!requested_suite) {
+            requested_suite = argv[i];
         }
+    }
+
+    /* Propagate errors-only mode to test helpers */
+    if (errors_only) {
+        errors_only_output = 1;
+    }
+
+    if (requested_suite) {
+        // List available test suites
+        if (strcmp(requested_suite, "list") == 0 || strcmp(requested_suite, "--list") == 0) {
+            printf("Available test suites:\n");
+            for (size_t i = 0; i < suite_count; i++) {
+                printf("  %s\n", suites[i].name);
+            }
+            return 0;
+        }
+
+        // Run only the specified test suite
+        for (size_t i = 0; i < suite_count; i++) {
+            if (strcmp(requested_suite, suites[i].name) == 0) {
+                current_test_name = suites[i].name;
+                suites[i].fn();
+                current_test_name = NULL;
+                goto done_single_suite;
+            }
+        }
+
+        printf("Unknown test suite: %s\n", requested_suite);
+        return 2;
     } else {
         // Run all test suites
-        test_basic_markdown();
-        test_gfm_features();
-        test_metadata();
-        test_metadata_transforms();
-        test_mmd_metadata_keys();
-        test_metadata_control_options();
-        test_wiki_links();
-        test_math();
-        test_critic_markup();
-        test_processor_modes();
-        test_file_includes();
-        test_ial();
-        test_bracketed_spans();
-        test_definition_lists();
-        test_advanced_tables();
-        test_relaxed_tables();
-        test_comprehensive_table_features();
-        test_combine_gitbook_like();
-        test_callouts();
-        test_blockquote_lists();
-        test_toc();
-        test_html_markdown_attributes();
-        test_fenced_divs();
-        test_sup_sub();
-        test_mixed_lists();
-        test_unsafe_mode();
-        test_abbreviations();
-        test_mmd6_features();
-        test_emoji();
-        test_special_markers();
-        test_inline_tables();
-        test_advanced_footnotes();
-        test_standalone_output();
-        test_pretty_html();
-        test_header_ids();
-        test_image_embedding();
-        test_image_width_height_conversion();
-        test_indices();
-        test_citations();
-        test_aria_labels();
+        for (size_t i = 0; i < suite_count; i++) {
+            current_test_name = suites[i].name;
+            suites[i].fn();
+            current_test_name = NULL;
+        }
     }
+
+done_single_suite:
 
     /* Print results */
     printf("\n==========================================\n");
