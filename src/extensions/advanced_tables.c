@@ -928,6 +928,8 @@ static bool is_table_caption_format(cmark_node *para, char **caption_text, const
     }
 
     /* Not a caption format - free allocated memory */
+    /* Note: We don't modify user_data here because it might contain important state
+     * from previous checks. The caller should handle cleanup if needed. */
     free(full_text);
     return false;
 }
@@ -976,12 +978,6 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
 
     const char *text = full_text;
 
-    /* Store full_text pointer in paragraph user_data so we can free it later */
-    /* We'll free it after add_table_caption uses it */
-    char *existing_data = (char *)cmark_node_get_user_data(para);
-    if (existing_data) free(existing_data);
-    cmark_node_set_user_data(para, full_text); /* Store pointer for later freeing */
-
     /* Check for [Caption] format */
     if (text[0] == '[') {
         const char *end = strchr(text + 1, ']');
@@ -1007,6 +1003,10 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
                     memcpy(*caption_text, text + 1, len);
                     (*caption_text)[len] = '\0';
                 }
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
                 if (original_text_ptr) {
                     *original_text_ptr = text;
                 }
@@ -1019,6 +1019,10 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
                     memcpy(*caption_text, text + 1, len);
                     (*caption_text)[len] = '\0';
                 }
+                /* Store full_text pointer in paragraph user_data so we can free it later */
+                char *existing_data = (char *)cmark_node_get_user_data(para);
+                if (existing_data) free(existing_data);
+                cmark_node_set_user_data(para, full_text);
                 if (original_text_ptr) {
                     *original_text_ptr = text;
                 }
@@ -1086,6 +1090,10 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
                         memcpy(*caption_text, caption_start, len);
                         (*caption_text)[len] = '\0';
                     }
+                    /* Store full_text pointer in paragraph user_data so we can free it later */
+                    char *existing_data = (char *)cmark_node_get_user_data(para);
+                    if (existing_data) free(existing_data);
+                    cmark_node_set_user_data(para, full_text);
                     if (original_text_ptr) {
                         *original_text_ptr = text;
                     }
@@ -1093,6 +1101,10 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
                 } else if (ial_start) {
                     /* Caption is empty but has IAL - still valid */
                     *caption_text = strdup("");
+                    /* Store full_text pointer in paragraph user_data so we can free it later */
+                    char *existing_data = (char *)cmark_node_get_user_data(para);
+                    if (existing_data) free(existing_data);
+                    cmark_node_set_user_data(para, full_text);
                     if (original_text_ptr) {
                         *original_text_ptr = text;
                     }
@@ -1103,12 +1115,7 @@ static bool is_table_caption(cmark_node *para, char **caption_text, const char *
     }
 
     /* If we got here, no caption format was found - free allocated memory */
-    char *stored_text = (char *)cmark_node_get_user_data(para);
-    if (stored_text == full_text) {
-        free(full_text);
-        cmark_node_set_user_data(para, NULL);
-    }
-
+    free(full_text);
     return false;
 }
 
@@ -1358,8 +1365,10 @@ cmark_node *apex_process_advanced_tables(cmark_node *root) {
                                     add_table_caption(cur, caption, original_text);
                                     char *stored_text = (char *)cmark_node_get_user_data(next);
                                     if (stored_text && stored_text == original_text) {
+                                        /* stored_text is the full_text allocated by is_table_caption_format */
                                         free(stored_text);
                                     }
+                                    /* Mark caption paragraph for removal so it is not reused */
                                     cmark_node_set_user_data(next, strdup(" data-remove=\"true\""));
                                     free(caption);
                                 }
