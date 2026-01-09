@@ -413,6 +413,103 @@ void test_comprehensive_table_features(void) {
 }
 
 /**
+ * Test that table parsing works correctly when file doesn't end with a newline.
+ * This ensures the last row of the first table is properly parsed and not rendered as text.
+ */
+void test_table_no_trailing_newline(void) {
+    printf("\n=== Table No Trailing Newline Test ===\n");
+
+    apex_options opts = apex_options_default();
+    opts.enable_tables = true;
+    opts.relaxed_tables = false;
+    char *html = NULL;
+
+    /* Read table_no_trailing_newline.md file (which intentionally doesn't end with newline) */
+    FILE *f = fopen("tests/fixtures/tables/table_no_trailing_newline.md", "r");
+    if (!f) {
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_no_trailing_newline.md: Could not open file\n");
+        return;
+    }
+
+    /* Get file size */
+    fseek(f, 0, SEEK_END);
+    long file_size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    /* Read file content */
+    char *markdown = (char *)malloc(file_size + 1);
+    if (!markdown) {
+        fclose(f);
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_no_trailing_newline.md: Memory allocation failed\n");
+        return;
+    }
+
+    size_t bytes_read = fread(markdown, 1, file_size, f);
+    markdown[bytes_read] = '\0';
+    fclose(f);
+
+    /* Verify file doesn't end with newline (key part of the test) */
+    if (bytes_read > 0 && (markdown[bytes_read - 1] == '\n' || markdown[bytes_read - 1] == '\r')) {
+        free(markdown);
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_no_trailing_newline.md: File ends with newline (should not)\n");
+        return;
+    }
+
+    /* Convert to HTML */
+    html = apex_markdown_to_html(markdown, bytes_read, &opts);
+    free(markdown);
+
+    if (!html) {
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_no_trailing_newline.md: Failed to convert to HTML\n");
+        return;
+    }
+
+    /* Test 1: First table's last row should be parsed correctly - A and B should be in table cells */
+    assert_contains(html, "<td>A</td>", "First table last row: A cell parsed correctly");
+    assert_contains(html, "<td>B</td>", "First table last row: B cell parsed correctly");
+
+    /* Test 2: The last row should NOT appear as raw text like "| A | B |" */
+    assert_not_contains(html, "<p>| A    | B    |</p>", "First table last row: not rendered as paragraph text");
+    assert_not_contains(html, "<p>| A | B |</p>", "First table last row: not rendered as paragraph text (alternate format)");
+
+    /* Test 3: First table should be properly closed before the caption */
+    assert_contains(html, "</table>", "First table properly closed");
+    assert_contains(html, "<figcaption>", "Caption present after first table");
+
+    /* Test 4: Second table should also be parsed correctly */
+    assert_contains(html, "<table", "Second table renders");
+    assert_contains(html, "My Table", "Caption text present");
+
+    /* Test 5: Both tables should have their data rows */
+    /* Count occurrences of table cells - should have at least 4 (2 tables * 2 cells each) */
+    int td_count = 0;
+    const char *td_pos = html;
+    while ((td_pos = strstr(td_pos, "<td>")) != NULL) {
+        td_count++;
+        td_pos += 4;
+    }
+    if (td_count >= 4) {
+        tests_passed++;
+        tests_run++;
+        printf(COLOR_GREEN "✓" COLOR_RESET " Both tables have all data rows parsed (found %d cells)\n", td_count);
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Both tables should have all data rows (found %d cells, expected at least 4)\n", td_count);
+    }
+
+    apex_free_string(html);
+}
+
+/**
  * Test callouts (Bear/Obsidian/Xcode)
  */
 
