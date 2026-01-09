@@ -45,6 +45,7 @@ void test_advanced_tables(void);
 void test_relaxed_tables(void);
 void test_comprehensive_table_features(void);
 void test_table_no_trailing_newline(void);
+void test_table_cr_line_endings(void);
 void test_combine_gitbook_like(void);
 void test_callouts(void);
 void test_blockquote_lists(void);
@@ -100,6 +101,7 @@ static test_suite suites[] = {
     { "relaxed_tables",                test_relaxed_tables },
     { "comprehensive_table_features",  test_comprehensive_table_features },
     { "table_no_trailing_newline",     test_table_no_trailing_newline },
+    { "table_cr_line_endings",         test_table_cr_line_endings },
     { "combine_gitbook_like",          test_combine_gitbook_like },
     { "callouts",                      test_callouts },
     { "blockquote_lists",              test_blockquote_lists },

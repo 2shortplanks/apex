@@ -510,6 +510,107 @@ void test_table_no_trailing_newline(void) {
 }
 
 /**
+ * Test that table parsing works correctly when file uses CR line endings.
+ * This ensures Table: Caption syntax is processed correctly with CR line endings.
+ */
+void test_table_cr_line_endings(void) {
+    printf("\n=== Table CR Line Endings Test ===\n");
+
+    apex_options opts = apex_options_default();
+    opts.enable_tables = true;
+    opts.relaxed_tables = false;
+    char *html = NULL;
+
+    /* Read table_cr_line_endings.md file (which intentionally uses CR line endings) */
+    FILE *f = fopen("tests/fixtures/tables/table_cr_line_endings.md", "rb");
+    if (!f) {
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_cr_line_endings.md: Could not open file\n");
+        return;
+    }
+
+    /* Get file size */
+    fseek(f, 0, SEEK_END);
+    long file_size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    /* Read file content as binary to preserve CR characters */
+    char *markdown = (char *)malloc(file_size + 1);
+    if (!markdown) {
+        fclose(f);
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_cr_line_endings.md: Memory allocation failed\n");
+        return;
+    }
+
+    size_t bytes_read = fread(markdown, 1, file_size, f);
+    markdown[bytes_read] = '\0';
+    fclose(f);
+
+    /* Verify file uses CR line endings (key part of the test) */
+    bool has_cr = false;
+    bool has_lf = false;
+    for (size_t i = 0; i < bytes_read; i++) {
+        if (markdown[i] == '\r') has_cr = true;
+        if (markdown[i] == '\n') has_lf = true;
+    }
+    if (!has_cr) {
+        free(markdown);
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_cr_line_endings.md: File does not use CR line endings (should not)\n");
+        return;
+    }
+
+    /* Convert to HTML */
+    html = apex_markdown_to_html(markdown, bytes_read, &opts);
+    free(markdown);
+
+    if (!html) {
+        tests_run++;
+        tests_failed++;
+        printf(COLOR_RED "✗" COLOR_RESET " table_cr_line_endings.md: Failed to convert to HTML\n");
+        return;
+    }
+
+    /* Test 1: First table should be parsed correctly */
+    assert_contains(html, "<td>A</td>", "CR line endings: First table last row A cell parsed correctly");
+    assert_contains(html, "<td>B</td>", "CR line endings: First table last row B cell parsed correctly");
+
+    /* Test 2: Table: Caption should be processed correctly (not rendered as paragraph) */
+    assert_contains(html, "<figcaption>", "CR line endings: Table: Caption has figcaption tag");
+    assert_contains(html, "My Table", "CR line endings: Table: Caption text is present");
+    assert_contains(html, "table-id2", "CR line endings: Table: Caption IAL ID applied");
+
+    /* Test 3: Table: Caption should NOT appear as raw text like "<p>Table: My Table" */
+    assert_not_contains(html, "<p>Table: My Table", "CR line endings: Table: Caption not rendered as paragraph text");
+
+    /* Test 4: : Caption syntax should also work with CR line endings */
+    assert_contains(html, "table-id", "CR line endings: : Caption IAL ID applied");
+
+    /* Test 5: Both tables should be properly rendered */
+    int table_count = 0;
+    const char *table_pos = html;
+    while ((table_pos = strstr(table_pos, "<table")) != NULL) {
+        table_count++;
+        table_pos += 6;
+    }
+    if (table_count >= 2) {
+        tests_passed++;
+        tests_run++;
+        printf(COLOR_GREEN "✓" COLOR_RESET " CR line endings: Both tables rendered correctly (found %d tables)\n", table_count);
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " CR line endings: Both tables should be rendered (found %d tables, expected at least 2)\n", table_count);
+    }
+
+    apex_free_string(html);
+}
+
+/**
  * Test callouts (Bear/Obsidian/Xcode)
  */
 
