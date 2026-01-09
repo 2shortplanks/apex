@@ -1493,6 +1493,11 @@ static char *apex_preprocess_table_captions(const char *text) {
         }
     }
 
+    /* Ensure output always ends with a newline (required for cmark-gfm table parsing) */
+    if (write > out && write[-1] != '\n' && write[-1] != '\r') {
+        *write++ = '\n';
+    }
+
     *write = '\0';
     return out;
 }
@@ -2893,13 +2898,40 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
 
     /* Process relaxed tables before parsing (preprocessing) */
     char *relaxed_tables_processed = NULL;
+    char *normalized_for_relaxed = NULL;
     if (options->relaxed_tables && options->enable_tables) {
+        /* Normalize text_ptr for relaxed tables processing if it doesn't end with newline */
+        size_t pre_relaxed_len = strlen(text_ptr);
+        bool needs_newline_for_relaxed = (pre_relaxed_len > 0 &&
+                                          text_ptr[pre_relaxed_len - 1] != '\n' &&
+                                          text_ptr[pre_relaxed_len - 1] != '\r');
+        if (needs_newline_for_relaxed) {
+            normalized_for_relaxed = malloc(pre_relaxed_len + 2);
+            if (normalized_for_relaxed) {
+                memcpy(normalized_for_relaxed, text_ptr, pre_relaxed_len);
+                normalized_for_relaxed[pre_relaxed_len] = '\n';
+                normalized_for_relaxed[pre_relaxed_len + 1] = '\0';
+            }
+        }
+
         PROGRESS_REPORT("Processing relaxed tables", -1);
         PROFILE_START(relaxed_tables);
-        relaxed_tables_processed = apex_process_relaxed_tables(text_ptr);
+        relaxed_tables_processed = apex_process_relaxed_tables(normalized_for_relaxed ? normalized_for_relaxed : text_ptr);
         PROFILE_END(relaxed_tables);
         /* Refresh progress after processing completes (in case it took a while) */
         PROGRESS_REPORT(NULL, -1);  /* NULL stage = refresh last known stage */
+
+        /* Handle cleanup */
+        if (normalized_for_relaxed) {
+            if (relaxed_tables_processed) {
+                /* Processing returned a new buffer - free our normalization buffer */
+                free(normalized_for_relaxed);
+            } else {
+                /* Processing returned NULL - free normalization buffer and continue with original */
+                free(normalized_for_relaxed);
+            }
+        }
+
         if (relaxed_tables_processed) {
             text_ptr = relaxed_tables_processed;
         }
@@ -2910,10 +2942,37 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
      * This must run after relaxed tables processing
      */
     char *headerless_tables_processed = NULL;
+    char *normalized_for_headerless = NULL;
     if (options->enable_tables) {
+        /* Normalize text_ptr for headerless tables processing if it doesn't end with newline */
+        size_t pre_headerless_len = strlen(text_ptr);
+        bool needs_newline_for_headerless = (pre_headerless_len > 0 &&
+                                             text_ptr[pre_headerless_len - 1] != '\n' &&
+                                             text_ptr[pre_headerless_len - 1] != '\r');
+        if (needs_newline_for_headerless) {
+            normalized_for_headerless = malloc(pre_headerless_len + 2);
+            if (normalized_for_headerless) {
+                memcpy(normalized_for_headerless, text_ptr, pre_headerless_len);
+                normalized_for_headerless[pre_headerless_len] = '\n';
+                normalized_for_headerless[pre_headerless_len + 1] = '\0';
+            }
+        }
+
         PROFILE_START(headerless_tables);
-        headerless_tables_processed = apex_process_headerless_tables(text_ptr);
+        headerless_tables_processed = apex_process_headerless_tables(normalized_for_headerless ? normalized_for_headerless : text_ptr);
         PROFILE_END(headerless_tables);
+
+        /* Handle cleanup */
+        if (normalized_for_headerless) {
+            if (headerless_tables_processed) {
+                /* Processing returned a new buffer - free our normalization buffer */
+                free(normalized_for_headerless);
+            } else {
+                /* Processing returned NULL - free normalization buffer and continue with original */
+                free(normalized_for_headerless);
+            }
+        }
+
         if (headerless_tables_processed) {
             text_ptr = headerless_tables_processed;
         }
@@ -2922,12 +2981,42 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     /* Normalize table captions before parsing (preprocessing)
      * - Ensure contiguous [Caption] lines become separate paragraphs
      * - Convert Pandoc-style 'Table: Caption' lines to [Caption]
+     *
+     * Note: apex_preprocess_table_captions now ensures output ends with newline, but we
+     * normalize here too for safety, in case previous preprocessing removed it.
      */
     char *table_captions_processed = NULL;
+    char *normalized_for_caption = NULL;
     if (options->enable_tables) {
+        /* Normalize text_ptr for table caption preprocessing if it doesn't end with newline */
+        size_t pre_caption_len = strlen(text_ptr);
+        bool needs_newline_for_caption = (pre_caption_len > 0 &&
+                                          text_ptr[pre_caption_len - 1] != '\n' &&
+                                          text_ptr[pre_caption_len - 1] != '\r');
+        if (needs_newline_for_caption) {
+            normalized_for_caption = malloc(pre_caption_len + 2);
+            if (normalized_for_caption) {
+                memcpy(normalized_for_caption, text_ptr, pre_caption_len);
+                normalized_for_caption[pre_caption_len] = '\n';
+                normalized_for_caption[pre_caption_len + 1] = '\0';
+            }
+        }
+
         PROFILE_START(table_captions_preprocess);
-        table_captions_processed = apex_preprocess_table_captions(text_ptr);
+        table_captions_processed = apex_preprocess_table_captions(normalized_for_caption ? normalized_for_caption : text_ptr);
         PROFILE_END(table_captions_preprocess);
+
+        /* Handle cleanup: apex_preprocess_table_captions always returns a new allocated buffer (or NULL on malloc failure) */
+        if (normalized_for_caption) {
+            if (table_captions_processed) {
+                /* Preprocessing returned a new buffer - free our normalization buffer */
+                free(normalized_for_caption);
+            } else {
+                /* Preprocessing returned NULL (malloc failure) - free normalization buffer and continue with original text_ptr */
+                free(normalized_for_caption);
+            }
+        }
+
         if (table_captions_processed) {
             text_ptr = table_captions_processed;
         }
@@ -2986,6 +3075,47 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
         text_ptr = liquid_protected;
     }
 
+    /* Normalize input after ALL preprocessing: ensure it ends with a newline.
+     * This is critical because various preprocessing steps (definition lists,
+     * HTML markdown, critic markup, liquid protection) might remove the trailing
+     * newline. cmark-gfm requires a trailing newline for proper table parsing,
+     * especially for the last row of a table. */
+    char *final_normalized = NULL;
+    if (!text_ptr) {
+        /* text_ptr should never be NULL, but be defensive */
+        free(working_text);
+        apex_free_metadata(metadata);
+        return NULL;
+    }
+    size_t text_len = strlen(text_ptr);
+    if (text_len == 0) {
+        /* Empty text after preprocessing - use empty string with newline for consistency */
+        final_normalized = malloc(2);
+        if (final_normalized) {
+            final_normalized[0] = '\n';
+            final_normalized[1] = '\0';
+            text_ptr = final_normalized;
+            text_len = 1;
+        }
+    } else {
+        /* Check if we need to add trailing newline - ensure text_len > 0 before accessing text_ptr[text_len - 1] */
+        bool needs_newline = (text_len > 0 && text_ptr[text_len - 1] != '\n' && text_ptr[text_len - 1] != '\r');
+        if (needs_newline) {
+            /* Need to add a trailing line ending - use \n (LF) for consistency */
+            final_normalized = malloc(text_len + 2);  /* +1 for newline, +1 for null term */
+            if (final_normalized) {
+                memcpy(final_normalized, text_ptr, text_len);
+                final_normalized[text_len] = '\n';
+                final_normalized[text_len + 1] = '\0';
+                text_ptr = final_normalized;
+                text_len = text_len + 1;
+            } else {
+                /* If malloc fails, we can't normalize - but this should never happen in practice */
+                /* Continue with original text_ptr (will likely cause table parsing issue, but better than crashing) */
+            }
+        }
+    }
+
     /* Convert options to cmark-gfm format */
     int cmark_opts = apex_to_cmark_options(options);
 
@@ -2993,6 +3123,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     PROFILE_START(parsing);
     cmark_parser *parser = cmark_parser_new(cmark_opts);
     if (!parser) {
+        if (final_normalized) free(final_normalized);
         free(working_text);
         apex_free_metadata(metadata);
         return NULL;
@@ -3001,44 +3132,15 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     /* Register extensions based on mode and options */
     apex_register_extensions(parser, options);
 
-    /* Normalize input: ensure it ends with a line ending character (\n or \r) before parsing.
-     * This is important because cmark-gfm expects input to end with a line ending
-     * for proper parsing, especially for tables. Without this, the last line of a table may not be
-     * parsed correctly. Note: cmark recognizes both \n (LF) and \r (CR) as line endings. */
-    if (!text_ptr) {
-        /* text_ptr should never be NULL, but be defensive */
-        cmark_parser_free(parser);
-        free(working_text);
-        apex_free_metadata(metadata);
-        return NULL;
-    }
-    size_t text_len = strlen(text_ptr);
-    if (text_len == 0) {
-        /* Empty text after preprocessing - still parse it (will create empty document) */
-        cmark_parser_feed(parser, "", 0);
-    } else {
-        /* Check if we need to add trailing newline */
-        bool needs_newline = (text_ptr[text_len - 1] != '\n' && text_ptr[text_len - 1] != '\r');
-        if (needs_newline) {
-            /* Need to add a trailing line ending - use \n (LF) for consistency */
-            char *normalized_text = malloc(text_len + 2);  /* +1 for newline, +1 for null term */
-            if (normalized_text) {
-                memcpy(normalized_text, text_ptr, text_len);
-                normalized_text[text_len] = '\n';
-                normalized_text[text_len + 1] = '\0';
-                cmark_parser_feed(parser, normalized_text, text_len + 1);
-                free(normalized_text);
-            } else {
-                /* If malloc fails, use original text (better than crashing) */
-                cmark_parser_feed(parser, text_ptr, text_len);
-            }
-        } else {
-            /* Text already ends with newline - use as-is */
-            cmark_parser_feed(parser, text_ptr, text_len);
-        }
-    }
+    /* Feed normalized text to parser */
+    cmark_parser_feed(parser, text_ptr, text_len);
     cmark_node *document = cmark_parser_finish(parser);
     PROFILE_END(parsing);
+
+    /* Free normalized buffer if we allocated it (after parser is finished) */
+    if (final_normalized) {
+        free(final_normalized);
+    }
 
     if (!document) {
         cmark_parser_free(parser);
