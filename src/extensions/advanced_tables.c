@@ -123,6 +123,122 @@ static bool is_rowspan_cell(cmark_node *cell) {
 }
 
 /**
+ * Process cell alignment markers (: at start/end) and strip them from content.
+ * Returns alignment type: "left", "right", "center", or NULL for default.
+ * Modifies the cell's text content by removing the colons.
+ */
+static char *process_cell_alignment(cmark_node *cell) {
+    if (!cell) return NULL;
+
+    /* Recursively find all text nodes in the cell */
+    cmark_node *text_node = NULL;
+    
+    /* Try to find the first text node */
+    cmark_node *child = cmark_node_first_child(cell);
+    while (child && !text_node) {
+        if (cmark_node_get_type(child) == CMARK_NODE_TEXT) {
+            text_node = child;
+            break;
+        }
+        /* Check nested nodes (paragraphs, etc.) */
+        cmark_node *nested = cmark_node_first_child(child);
+        while (nested && !text_node) {
+            if (cmark_node_get_type(nested) == CMARK_NODE_TEXT) {
+                text_node = nested;
+                break;
+            }
+            nested = cmark_node_next(nested);
+        }
+        child = cmark_node_next(child);
+    }
+
+    if (!text_node) return NULL;
+
+    const char *original_text = cmark_node_get_literal(text_node);
+    if (!original_text) return NULL;
+
+    /* Check for alignment markers */
+    const char *text = original_text;
+    const char *start = text;
+    const char *end = text + strlen(text) - 1;
+
+    /* Trim leading whitespace */
+    while (start <= end && isspace((unsigned char)*start)) start++;
+    /* Trim trailing whitespace */
+    while (end >= start && isspace((unsigned char)*end)) end--;
+
+    if (start > end) return NULL; /* Empty after trimming */
+
+    bool has_leading_colon = (*start == ':');
+    bool has_trailing_colon = (*end == ':');
+
+    if (!has_leading_colon && !has_trailing_colon) {
+        return NULL; /* No alignment markers */
+    }
+
+    /* Determine alignment */
+    char *align = NULL;
+    if (has_leading_colon && has_trailing_colon) {
+        align = "center";
+    } else if (has_leading_colon) {
+        align = "left";
+    } else if (has_trailing_colon) {
+        align = "right";
+    }
+
+    /* Strip the colons from the text */
+    const char *new_start = has_leading_colon ? start + 1 : start;
+    const char *new_end = has_trailing_colon ? end - 1 : end;
+
+    /* Also preserve leading/trailing whitespace that was there originally */
+    const char *original_start = text;
+    const char *original_end = text + strlen(text) - 1;
+
+    /* Find where the original leading whitespace ends */
+    const char *leading_ws_end = original_start;
+    while (leading_ws_end < start && isspace((unsigned char)*leading_ws_end)) {
+        leading_ws_end++;
+    }
+
+    /* Find where the original trailing whitespace starts */
+    const char *trailing_ws_start = original_end;
+    while (trailing_ws_start > end && isspace((unsigned char)*trailing_ws_start)) {
+        trailing_ws_start--;
+    }
+
+    /* Build the new text: leading ws + content (without colons) + trailing ws */
+    size_t leading_ws_len = leading_ws_end - original_start;
+    size_t content_len = (new_end >= new_start) ? (new_end - new_start + 1) : 0;
+    size_t trailing_ws_len = original_end - trailing_ws_start;
+
+    size_t new_len = leading_ws_len + content_len + trailing_ws_len;
+    char *new_text = malloc(new_len + 1);
+    if (!new_text) return align; /* Return alignment even if we can't modify text */
+
+    char *write = new_text;
+    /* Copy leading whitespace */
+    memcpy(write, original_start, leading_ws_len);
+    write += leading_ws_len;
+    /* Copy content without colons */
+    if (content_len > 0) {
+        memcpy(write, new_start, content_len);
+        write += content_len;
+    }
+    /* Copy trailing whitespace */
+    if (trailing_ws_len > 0) {
+        memcpy(write, trailing_ws_start + 1, trailing_ws_len);
+        write += trailing_ws_len;
+    }
+    *write = '\0';
+
+    /* Update the text node */
+    cmark_node_set_literal(text_node, new_text);
+    free(new_text);
+
+    return align;
+}
+
+/**
  * Check if a row should be in tfoot (contains === markers)
  */
 static bool is_tfoot_row(cmark_node *row) {
@@ -332,6 +448,27 @@ static void process_table_spans(cmark_node *table) {
 
             while (cell) {
                 if (cmark_node_get_type(cell) == CMARK_NODE_TABLE_CELL) {
+                    /* Process per-cell alignment markers (:) BEFORE colspan/rowspan processing
+                     * so that alignment is preserved when cells are merged. */
+                    char *cell_attrs_check = (char *)cmark_node_get_user_data(cell);
+                    if (!cell_attrs_check || !strstr(cell_attrs_check, "data-remove")) {
+                        char *align = process_cell_alignment(cell);
+                        if (align) {
+                            /* Add style attribute for alignment */
+                            char *existing_attrs = (char *)cmark_node_get_user_data(cell);
+                            char new_attrs[256];
+                            
+                            if (existing_attrs && strlen(existing_attrs) > 0) {
+                                snprintf(new_attrs, sizeof(new_attrs), "%s style=\"text-align: %s\"", existing_attrs, align);
+                            } else {
+                                snprintf(new_attrs, sizeof(new_attrs), " style=\"text-align: %s\"", align);
+                            }
+                            
+                            if (existing_attrs) free(existing_attrs);
+                            cmark_node_set_user_data(cell, strdup(new_attrs));
+                        }
+                    }
+
                             /* Check for colspan */
                     bool is_colspan = is_colspan_cell(cell);
                     if (is_colspan) {
@@ -422,15 +559,39 @@ static void process_table_spans(cmark_node *table) {
                                     sscanf(strstr(prev_attrs, "colspan="), "colspan=\"%d\"", &current_colspan);
                                 }
 
-                                /* Increment colspan - append or replace */
-                                char new_attrs[256];
-                                if (prev_attrs && !strstr(prev_attrs, "colspan=")) {
-                                    /* Append to existing attributes */
-                                    snprintf(new_attrs, sizeof(new_attrs), "%s colspan=\"%d\"", prev_attrs, current_colspan + 1);
+                                /* Extract style attribute if it exists */
+                                char style_attr[256] = "";
+                                if (prev_attrs && strstr(prev_attrs, "style=")) {
+                                    const char *style_start = strstr(prev_attrs, "style=");
+                                    const char *style_end = style_start;
+                                    /* Find the opening quote after style= */
+                                    while (*style_end && *style_end != '"') style_end++;
+                                    if (*style_end == '"') {
+                                        style_end++; /* Skip opening quote */
+                                        /* Find the closing quote */
+                                        while (*style_end && *style_end != '"') style_end++;
+                                        if (*style_end == '"') {
+                                            style_end++; /* Include the closing quote */
+                                            /* Now find the end: space or end of string */
+                                            const char *attr_end = style_end;
+                                            while (*attr_end && *attr_end != ' ' && *attr_end != '\t') attr_end++;
+                                            size_t style_len = attr_end - style_start;
+                                            if (style_len < sizeof(style_attr)) {
+                                                strncpy(style_attr, style_start, style_len);
+                                                style_attr[style_len] = '\0';
+                                            }
+                                        }
+                                    }
+                                }
+
+                                /* Build new attributes - combine style (if any) and colspan */
+                                char new_attrs[512];
+                                if (style_attr[0] != '\0') {
+                                    snprintf(new_attrs, sizeof(new_attrs), " %s colspan=\"%d\"", style_attr, current_colspan + 1);
                                 } else {
-                                    /* Replace or create new */
                                     snprintf(new_attrs, sizeof(new_attrs), " colspan=\"%d\"", current_colspan + 1);
                                 }
+                                
                                 /* Free old user_data before setting new */
                                 if (prev_attrs) free(prev_attrs);
                                 cmark_node_set_user_data(target_cell, strdup(new_attrs));
