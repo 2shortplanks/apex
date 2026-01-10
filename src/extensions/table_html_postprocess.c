@@ -144,9 +144,27 @@ static cell_attr *collect_table_cell_attributes(cmark_node *document) {
             } else if (type == CMARK_NODE_TABLE_CELL) {
                 char *attrs = (char *)cmark_node_get_user_data(node);
                 if (attrs) {
-                    /* Get cell content for debugging */
-                    cmark_node *text_node = cmark_node_first_child(node);
-                    const char *cell_text = text_node ? cmark_node_get_literal(text_node) : "?";
+                    /* Get cell content - check recursively for text nodes */
+                    const char *cell_text = NULL;
+                    cmark_node *child = cmark_node_first_child(node);
+                    while (child) {
+                        if (cmark_node_get_type(child) == CMARK_NODE_TEXT) {
+                            cell_text = cmark_node_get_literal(child);
+                            break;
+                        }
+                        /* Check nested nodes (paragraphs, etc.) */
+                        cmark_node *nested = cmark_node_first_child(child);
+                        while (nested) {
+                            if (cmark_node_get_type(nested) == CMARK_NODE_TEXT) {
+                                cell_text = cmark_node_get_literal(nested);
+                                break;
+                            }
+                            nested = cmark_node_next(nested);
+                        }
+                        if (cell_text) break;
+                        child = cmark_node_next(child);
+                    }
+                    if (!cell_text) cell_text = "?";
 
                     /* Store this cell's attributes */
                     cell_attr *attr = malloc(sizeof(cell_attr));
@@ -1848,23 +1866,42 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                     }
                 }
             }
-            if (attrs != NULL && !matching && cell_preview[0] != '\0' && ast_row_idx >= 0) {
-                /* For very large tables, skip content-based matching to avoid timeout */
-                /* Position-based matching should be sufficient for most cases */
-                int attr_count = 0;
-                for (cell_attr *check = attrs; check && attr_count < 1000; check = check->next) attr_count++;
-                if (attr_count <= 500) {
-                    /* Only do expensive content-based matching if we don't have too many attributes */
-                    cell_attr *content_match = NULL;
-                    cell_attr *span_match = NULL;
+            if (attrs != NULL && !matching && ast_row_idx >= 0) {
+                /* Extract cell content if we haven't already */
+                if (cell_preview[0] == '\0') {
+                    bool is_th_tag = strncmp(read, "<th", 3) == 0;
+                    const char *close_tag_str = is_th_tag ? "</th>" : "</td>";
+                    const char *content_start = strchr(read, '>');
+                    if (content_start) {
+                        const char *content_end = strstr(content_start + 1, close_tag_str);
+                        if (content_end && content_end - content_start - 1 < 99) {
+                            size_t len = content_end - content_start - 1;
+                            strncpy(cell_preview, content_start + 1, len);
+                            cell_preview[len] = '\0';
+                            while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
+                                cell_preview[--len] = '\0';
+                            }
+                        }
+                    }
+                }
+                
+                if (cell_preview[0] != '\0') {
+                    /* For very large tables, skip content-based matching to avoid timeout */
+                    /* Position-based matching should be sufficient for most cases */
+                    int attr_count = 0;
+                    for (cell_attr *check = attrs; check && attr_count < 1000; check = check->next) attr_count++;
+                    if (attr_count <= 500) {
+                        /* Only do expensive content-based matching if we don't have too many attributes */
+                        cell_attr *content_match = NULL;
+                        cell_attr *span_match = NULL;
 
-                /* Try to find a cell in the same AST row by matching content */
-                for (cell_attr *a = attrs; a; a = a->next) {
-                    if (a->table_index == table_idx &&
-                        a->row_index == ast_row_idx &&
-                        a->cell_text) {
-                        const char *attr_text = a->cell_text;
-                        const char *html_text = cell_preview;
+                    /* Try to find a cell in the same AST row by matching content */
+                    for (cell_attr *a = attrs; a; a = a->next) {
+                        if (a->table_index == table_idx &&
+                            a->row_index == ast_row_idx &&
+                            a->cell_text) {
+                            const char *attr_text = a->cell_text;
+                            const char *html_text = cell_preview;
                         /* Skip leading whitespace */
                         while (*attr_text && isspace((unsigned char)*attr_text)) attr_text++;
                         while (*html_text && isspace((unsigned char)*html_text)) html_text++;
@@ -1888,13 +1925,91 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                             }
                         }
                     }
-                }
+                    }
 
                     /* Use span_match if available, otherwise use content_match */
                     if (span_match) {
                         matching = span_match;
                     } else if (content_match) {
                         matching = content_match;
+                    }
+                    }
+                }
+            }
+            
+            /* Additional fallback: If we still don't have a match, try to find any cell in the same 
+             * table/row with matching content that has colspan. This is important when cells with << 
+             * are removed and column indices shift. Extract cell content if we haven't already. */
+            if (!matching && ast_row_idx >= 0 && attrs != NULL) {
+                /* Extract cell content if we haven't already */
+                if (cell_preview[0] == '\0') {
+                    bool is_th_tag = strncmp(read, "<th", 3) == 0;
+                    const char *close_tag_str = is_th_tag ? "</th>" : "</td>";
+                    const char *content_start = strchr(read, '>');
+                    if (content_start) {
+                        const char *content_end = strstr(content_start + 1, close_tag_str);
+                        if (content_end && content_end - content_start - 1 < 99) {
+                            size_t len = content_end - content_start - 1;
+                            strncpy(cell_preview, content_start + 1, len);
+                            cell_preview[len] = '\0';
+                            while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
+                                cell_preview[--len] = '\0';
+                            }
+                        }
+                    }
+                }
+                
+                if (cell_preview[0] != '\0') {
+                    /* Try matching within the same AST row first */
+                    for (cell_attr *a = attrs; a; a = a->next) {
+                        if (a->table_index == table_idx &&
+                            a->row_index == ast_row_idx &&
+                            strstr(a->attributes, "colspan") &&
+                            a->cell_text) {
+                            const char *attr_text = a->cell_text;
+                            const char *html_text = cell_preview;
+                            /* Trim whitespace */
+                            while (*attr_text && isspace((unsigned char)*attr_text)) attr_text++;
+                            while (*html_text && isspace((unsigned char)*html_text)) html_text++;
+                            size_t attr_len = strlen(attr_text);
+                            size_t html_len = strlen(html_text);
+                            while (attr_len > 0 && isspace((unsigned char)attr_text[attr_len - 1])) attr_len--;
+                            while (html_len > 0 && isspace((unsigned char)html_text[html_len - 1])) html_len--;
+                            if (attr_len > 0 && html_len > 0 &&
+                                attr_len == html_len &&
+                                strncmp(attr_text, html_text, attr_len) == 0) {
+                                fprintf(stderr, "DEBUG MATCH: Found colspan cell by content fallback (same row) - text=[%s] attrs=[%s]\n",
+                                        html_text, a->attributes);
+                                matching = a;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    /* If no match found, try nearby rows (row index might be off by 1 due to removed rows) */
+                    if (!matching) {
+                        for (cell_attr *a = attrs; a; a = a->next) {
+                            if (a->table_index == table_idx &&
+                                (a->row_index == ast_row_idx || a->row_index == ast_row_idx - 1 || a->row_index == ast_row_idx + 1) &&
+                                strstr(a->attributes, "colspan") &&
+                                a->cell_text) {
+                                const char *attr_text = a->cell_text;
+                                const char *html_text = cell_preview;
+                                /* Trim whitespace */
+                                while (*attr_text && isspace((unsigned char)*attr_text)) attr_text++;
+                                while (*html_text && isspace((unsigned char)*html_text)) html_text++;
+                                size_t attr_len = strlen(attr_text);
+                                size_t html_len = strlen(html_text);
+                                while (attr_len > 0 && isspace((unsigned char)attr_text[attr_len - 1])) attr_len--;
+                                while (html_len > 0 && isspace((unsigned char)html_text[html_len - 1])) html_len--;
+                                if (attr_len > 0 && html_len > 0 &&
+                                    attr_len == html_len &&
+                                    strncmp(attr_text, html_text, attr_len) == 0) {
+                                    matching = a;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1992,14 +2107,35 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                 }
             }
 
+            /* Also check if this cell contains "<< " or "&lt;&lt;" (colspan marker) - these should be removed */
+            /* Check both the preview and the actual content in the HTML */
+            bool is_colspan_marker = (strstr(cell_preview, "<<") != NULL || strstr(cell_preview, "&lt;&lt;") != NULL);
+            if (!is_colspan_marker) {
+                /* Also check the actual HTML content for "<< " or "&lt;&lt;" */
+                const char *content_check = strstr(read, ">");
+                if (content_check) {
+                    const char *close_check = strstr(content_check + 1, "</td>");
+                    if (!close_check) close_check = strstr(content_check + 1, "</th>");
+                    if (close_check && close_check - content_check - 1 < 100) {
+                        char check_buf[100];
+                        strncpy(check_buf, content_check + 1, close_check - content_check - 1);
+                        check_buf[close_check - content_check - 1] = '\0';
+                        is_colspan_marker = (strstr(check_buf, "<<") != NULL || strstr(check_buf, "&lt;&lt;") != NULL);
+                    }
+                }
+            }
+
             /* Check if this cell should be removed:
              * 1. If it's matched and marked for removal
              * 2. If it contains "^^" (rowspan marker)
-             * 3. If it's empty and the previous cell in the same row has colspan (empty cells after colspan should be removed) */
+             * 3. If it contains "<< " or "&lt;&lt;" (colspan marker)
+             * 4. If it's empty and the previous cell in the same row has colspan (empty cells after colspan should be removed) */
             bool should_remove_cell = false;
             if (matching && strstr(matching->attributes, "data-remove")) {
                 should_remove_cell = true;
             } else if (is_rowspan_marker) {
+                should_remove_cell = true;
+            } else if (is_colspan_marker) {
                 should_remove_cell = true;
             }
 

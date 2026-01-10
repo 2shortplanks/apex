@@ -22,30 +22,77 @@
 #include <stdio.h>
 
 /**
- * Check if a cell should span (is empty or contains <<)
+ * Extract and check text content from a node recursively
+ * Returns true if the content is just "<< " (possibly with whitespace)
+ */
+static bool cell_content_is_colspan_marker(cmark_node *node) {
+    if (!node) return false;
+
+    if (cmark_node_get_type(node) == CMARK_NODE_TEXT) {
+        const char *text = cmark_node_get_literal(node);
+        if (text) {
+            /* Simple check: trim whitespace and see if content is just << */
+            const char *start = text;
+            const char *end = text + strlen(text) - 1;
+
+            /* Trim leading whitespace */
+            while (start <= end && isspace((unsigned char)*start)) start++;
+
+            /* Trim trailing whitespace */
+            while (end >= start && isspace((unsigned char)*end)) end--;
+
+            /* Check if we have exactly << */
+            size_t len = end - start + 1;
+            if (len == 2 && start[0] == '<' && start[1] == '<') {
+                return true;
+            }
+
+            /* Also check for HTML entity encoded version (in case encoding happened early) */
+            /* Check exact match */
+            const char *trimmed_encoded_start = start;
+            const char *trimmed_encoded_end = end;
+            size_t encoded_len = trimmed_encoded_end - trimmed_encoded_start + 1;
+            if ((encoded_len == 10 && strncmp(trimmed_encoded_start, "&lt;&lt;", 10) == 0) ||
+                strstr(text, "&lt;&lt;")) {
+                fprintf(stderr, "DEBUG: Found encoded &lt;&lt; marker!\n");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* For non-text nodes, recursively check all children */
+    cmark_node *child = cmark_node_first_child(node);
+    while (child) {
+        if (cell_content_is_colspan_marker(child)) {
+            return true;
+        }
+        child = cmark_node_next(child);
+    }
+
+    return false;
+}
+
+/**
+ * Check if a cell should span (contains << marker)
+ *
+ * NOTE: Plain empty cells should NOT trigger colspan - only cells with the
+ * << marker (from consecutive pipes like |||) should create colspans.
+ * Empty cells with whitespace between pipes should remain as separate cells.
  */
 static bool is_colspan_cell(cmark_node *cell) {
     if (!cell) return false;
 
     cmark_node *child = cmark_node_first_child(cell);
-    if (!child) return true; /* Empty cell */
+    if (!child) return false; /* Empty cell without << marker - don't merge */
 
-    /* Check if it's text node with just "<< " or whitespace */
-    if (cmark_node_get_type(child) == CMARK_NODE_TEXT) {
-        const char *text = cmark_node_get_literal(child);
-        if (!text) return true;
-
-        /* Trim whitespace */
-        while (*text && isspace((unsigned char)*text)) text++;
-
-        if (*text == '\0') return true; /* Just whitespace */
-
-        /* Check for << marker */
-        if (text[0] == '<' && text[1] == '<') {
-            const char *rest = text + 2;
-            while (*rest && isspace((unsigned char)*rest)) rest++;
-            if (*rest == '\0') return true; /* Just << */
+    /* Check all children recursively for the << marker */
+    /* Start from the first child and check recursively */
+    while (child) {
+        if (cell_content_is_colspan_marker(child)) {
+            return true;
         }
+        child = cmark_node_next(child);
     }
 
     return false;
@@ -285,7 +332,7 @@ static void process_table_spans(cmark_node *table) {
 
             while (cell) {
                 if (cmark_node_get_type(cell) == CMARK_NODE_TABLE_CELL) {
-                    /* Check for colspan */
+                            /* Check for colspan */
                     bool is_colspan = is_colspan_cell(cell);
                     if (is_colspan) {
                         /* Only process colspan if we have a previous cell in the SAME ROW */
@@ -360,8 +407,10 @@ static void process_table_spans(cmark_node *table) {
 
                             /* Merge if:
                              * 1. Target is empty (consecutive empty cells merge together), OR
-                             * 2. Target has content AND next is empty/end (empty cells after content merge with content) */
-                            bool should_merge = target_is_empty || (!target_is_empty && !next_has_content);
+                             * 2. Target has content AND next is empty/end (empty cells after content merge with content), OR
+                             * 3. Current cell has << marker (explicit colspan marker, always merge) */
+                            /* For << markers (explicit colspan), always merge regardless of next cell content */
+                            bool should_merge = target_is_empty || (!target_is_empty && !next_has_content) || is_colspan;
 
                             if (should_merge) {
                                 /* Target cell is empty or has << marker - merge them (colspan) */
@@ -1549,7 +1598,8 @@ cmark_syntax_extension *create_advanced_tables_extension(void) {
     cmark_syntax_extension_set_postprocess_func(ext, postprocess);
 
     /* NOTE: We don't use html_render_func here because it conflicts with GFM table renderer.
-     * Instead, we do HTML postprocessing in apex.c after rendering. */
+     * Instead, we do HTML postprocessing in apex.c after rendering.
+     * The post-processing should remove cells with data-remove and inject colspan/rowspan attributes. */
     /* cmark_syntax_extension_set_html_render_func(ext, html_render_table); */
 
     /* Register to handle table and table cell rendering */

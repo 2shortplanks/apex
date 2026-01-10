@@ -176,8 +176,8 @@ Empty cells merge with the previous cell (colspan):
 | Header 1       | Header 2    | Header 3 | Header 4 |
 | -------------- | ----------- | -------- | -------- |
 | Regular        | Regular     | Regular  | Regular  |
-| Span 3 columns |             |          | Regular  |
-| Regular        | Span 2 cols |          | Regular  |
+| Span 3 columns ||| Regular  |
+| Regular        | Span 2 cols || Regular  |
 
 #### Row Span (^^ Marker)
 
@@ -200,7 +200,7 @@ This table combines both rowspan and colspan features:
 | ----------- | -------- | ------------- | --- | ----- | ------- |
 | Engineering | Alice    | 93.5          | 94  | 96    | 94.25   |
 | ^^          | Bob      | 89.0          | 87  | 91    | 89.00   |
-| Marketing   | Charlie  | Absent        |     | 92.00 |         |
+| Marketing   | Charlie  | Absent        | 92.00:              |||
 | Sales       | Diana    | 87.5          | 88  | 90    | 88.50   |
 | ^^          | Eve      | 93.0          | 95  | 93    | 93.50   |
 {: .performance-table #q4-results}

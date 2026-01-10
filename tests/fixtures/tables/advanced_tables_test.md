@@ -8,6 +8,7 @@ This table uses Pandoc captions and attributes
 : Key value table {:.testing}
 
 
+
 This table combines both rowspan and colspan features:
 
 [Employee Performance Q4 2025]
@@ -19,6 +20,17 @@ This table combines both rowspan and colspan features:
 | Sales       | Diana    | 87.5          | 88     | 90  | 88.50   |
 | ^^          | Eve      | 93.0          | 95     | 93  | 93.50   |
 {: .performance-table #q4-results}
+
+More colspan testing:
+
+|       | This    | Has   | Colspans       |
+| ----: | ------- | ----- | -------------- |
+| row 1 |         | blank | cell           |
+| row 2 | colspan |||
+| row 3 | cell    || &larr; colspan |
+| row 4 | forced colspan | << | &larr; colspan |
+
+: Just some colspan testing
 
 ---
 

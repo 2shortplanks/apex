@@ -519,10 +519,8 @@ void test_table_cr_line_endings(void) {
 
     /* Verify file uses CR line endings (key part of the test) */
     bool has_cr = false;
-    bool has_lf = false;
     for (size_t i = 0; i < bytes_read; i++) {
         if (markdown[i] == '\r') has_cr = true;
-        if (markdown[i] == '\n') has_lf = true;
     }
     if (!has_cr) {
         free(markdown);

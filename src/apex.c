@@ -1675,6 +1675,240 @@ static char *apex_restore_liquid_tags(const char *html,
 }
 
 /**
+ * Preprocess table rows to convert consecutive pipes without whitespace into << markers
+ * for colspan detection.
+ *
+ * This distinguishes between:
+ * - `| 1 |  |  |` - whitespace between pipes, should create separate empty cells
+ * - `| 1 |||` - consecutive pipes, should create colspan
+ *
+ * Converts consecutive pipes (||) to | << | pattern so the existing colspan logic
+ * can recognize them.
+ */
+static char *apex_preprocess_table_colspans(const char *text) {
+    if (!text) return NULL;
+
+    size_t len = strlen(text);
+    /* Worst case: every || becomes | << | (grows by 4 chars per occurrence) */
+    size_t cap = len * 2 + 1;
+    char *out = malloc(cap);
+    if (!out) return NULL;
+
+    const char *read = text;
+    char *write = out;
+    size_t remaining = cap;
+    bool in_code_block = false;
+
+    while (*read) {
+        const char *line_start = read;
+        /* Find line ending - handle CRLF, CR, and LF */
+        const char *line_end = NULL;
+        const char *cr_pos = strchr(read, '\r');
+        const char *lf_pos = strchr(read, '\n');
+
+        /* Determine which line ending we have (prefer CRLF, then CR, then LF) */
+        if (cr_pos && lf_pos && cr_pos < lf_pos && (lf_pos - cr_pos) == 1) {
+            line_end = cr_pos;
+        } else if (cr_pos && (!lf_pos || cr_pos < lf_pos)) {
+            line_end = cr_pos;
+        } else if (lf_pos) {
+            line_end = lf_pos;
+        } else {
+            line_end = read + strlen(read);
+        }
+
+        bool has_newline = (line_end != NULL && line_end < read + strlen(read));
+        bool has_crlf = (has_newline && line_end[0] == '\r' && line_end[1] == '\n');
+
+        /* Track fenced code blocks (``` or ~~~) and skip processing inside */
+        const char *p = line_start;
+        while (p < line_end && (*p == ' ' || *p == '\t')) {
+            p++;
+        }
+
+        if (!in_code_block &&
+            (line_end - p) >= 3 &&
+            ((p[0] == '`' && p[1] == '`' && p[2] == '`') ||
+             (p[0] == '~' && p[1] == '~' && p[2] == '~'))) {
+            in_code_block = true;
+        } else if (in_code_block &&
+                   (line_end - p) >= 3 &&
+                   ((p[0] == '`' && p[1] == '`' && p[2] == '`') ||
+                    (p[0] == '~' && p[1] == '~' && p[2] == '~'))) {
+            in_code_block = false;
+        }
+
+        /* Check if this line contains a table row (has | character) */
+        bool is_table_row = false;
+        if (!in_code_block) {
+            for (const char *q = line_start; q < line_end; q++) {
+                if (*q == '|') {
+                    is_table_row = true;
+                    break;
+                }
+            }
+        }
+
+        if (is_table_row && !in_code_block) {
+            /* Process this table row to convert consecutive pipes */
+            const char *line_cur = line_start;
+            while (line_cur < line_end) {
+                if (*line_cur == '|') {
+                    /* Count consecutive pipes */
+                    int pipe_count = 1;
+                    const char *check = line_cur + 1;
+                    while (check < line_end && *check == '|') {
+                        pipe_count++;
+                        check++;
+                    }
+
+                    if (pipe_count >= 2) {
+                        /* Found consecutive pipes with no whitespace - convert to | << | pattern */
+                        /* For || (2 pipes), convert to | << | (one colspan marker) */
+                        /* For ||| (3 pipes), convert to | << | << | (two colspan markers) */
+                        /* This distinguishes ||| from |  |  | */
+                        /* Write the first pipe */
+                        if (remaining < 5) {
+                            /* Need more space */
+                            size_t written = write - out;
+                            cap = (written + (line_end - line_cur) * 2 + 1) * 2;
+                            char *new_out = realloc(out, cap);
+                            if (!new_out) {
+                                free(out);
+                                return NULL;
+                            }
+                            write = new_out + written;
+                            out = new_out;
+                            remaining = cap - written;
+                        }
+                        *write++ = '|';
+                        remaining--;
+
+                        /* For each additional pipe beyond the first, add | << | */
+                        /* pipe_count=2 (||) -> add 1 marker */
+                        /* pipe_count=3 (|||) -> add 2 markers */
+                        for (int i = 1; i < pipe_count; i++) {
+                            if (remaining < 5) {
+                                size_t written = write - out;
+                                cap = (written + (line_end - line_cur) * 2 + 1) * 2;
+                                char *new_out = realloc(out, cap);
+                                if (!new_out) {
+                                    free(out);
+                                    return NULL;
+                                }
+                                write = new_out + written;
+                                out = new_out;
+                                remaining = cap - written;
+                            }
+                            *write++ = ' ';
+                            remaining--;
+                            *write++ = '<';
+                            remaining--;
+                            *write++ = '<';
+                            remaining--;
+                            *write++ = ' ';
+                            remaining--;
+                            *write++ = '|';
+                            remaining--;
+                        }
+                        line_cur += pipe_count; /* Skip all consecutive pipes */
+                        continue;
+                    }
+                }
+                /* Copy character as-is */
+                if (remaining > 0) {
+                    *write++ = *line_cur++;
+                    remaining--;
+                } else {
+                    /* Need more space */
+                    size_t written = write - out;
+                    cap = (written + (line_end - line_cur) + 1) * 2;
+                    char *new_out = realloc(out, cap);
+                    if (!new_out) {
+                        free(out);
+                        return NULL;
+                    }
+                    write = new_out + written;
+                    out = new_out;
+                    remaining = cap - written;
+                    *write++ = *line_cur++;
+                    remaining--;
+                }
+            }
+        } else {
+            /* Not a table row or in code block - copy line as-is */
+            size_t line_len = line_end - line_start;
+            if (line_len > remaining) {
+                size_t written = write - out;
+                cap = (written + line_len + 1) * 2;
+                char *new_out = realloc(out, cap);
+                if (!new_out) {
+                    free(out);
+                    return NULL;
+                }
+                write = new_out + written;
+                out = new_out;
+                remaining = cap - written;
+            }
+            memcpy(write, line_start, line_len);
+            write += line_len;
+            remaining -= line_len;
+        }
+
+        /* Copy line ending */
+        if (has_newline) {
+            if (remaining > 2) {
+                if (has_crlf) {
+                    *write++ = '\r';
+                    *write++ = '\n';
+                    remaining -= 2;
+                    read = line_end + 2;
+                } else if (line_end[0] == '\r') {
+                    *write++ = '\r';
+                    remaining--;
+                    read = line_end + 1;
+                } else {
+                    *write++ = '\n';
+                    remaining--;
+                    read = line_end + 1;
+                }
+            } else {
+                /* Need more space */
+                size_t written = write - out;
+                cap = (written + 10) * 2;
+                char *new_out = realloc(out, cap);
+                if (!new_out) {
+                    free(out);
+                    return NULL;
+                }
+                write = new_out + written;
+                out = new_out;
+                remaining = cap - written;
+                if (has_crlf) {
+                    *write++ = '\r';
+                    *write++ = '\n';
+                    remaining -= 2;
+                    read = line_end + 2;
+                } else if (line_end[0] == '\r') {
+                    *write++ = '\r';
+                    remaining--;
+                    read = line_end + 1;
+                } else {
+                    *write++ = '\n';
+                    remaining--;
+                    read = line_end + 1;
+                }
+            }
+        } else {
+            read = line_end;
+        }
+    }
+
+    *write = '\0';
+    return out;
+}
+
+/**
  * Preprocess alpha list markers (a., b., c. and A., B., C.)
  * Converts them to numbered markers (1., 2., 3.) and adds markers for post-processing
  */
@@ -3014,6 +3248,44 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
 
         if (headerless_tables_processed) {
             text_ptr = headerless_tables_processed;
+        }
+    }
+
+    /* Preprocess table rows to convert consecutive pipes (|||) to << markers for colspan
+     * This must run after headerless table processing but before caption processing
+     */
+    char *table_colspans_processed = NULL;
+    char *normalized_for_colspans = NULL;
+    if (options->enable_tables) {
+        /* Normalize text_ptr for table colspan preprocessing if it doesn't end with newline */
+        size_t pre_colspans_len = strlen(text_ptr);
+        bool needs_newline_for_colspans = (pre_colspans_len > 0 &&
+                                           text_ptr[pre_colspans_len - 1] != '\n' &&
+                                           text_ptr[pre_colspans_len - 1] != '\r');
+        if (needs_newline_for_colspans) {
+            normalized_for_colspans = malloc(pre_colspans_len + 2);
+            if (normalized_for_colspans) {
+                memcpy(normalized_for_colspans, text_ptr, pre_colspans_len);
+                normalized_for_colspans[pre_colspans_len] = '\n';
+                normalized_for_colspans[pre_colspans_len + 1] = '\0';
+            }
+        }
+
+        PROFILE_START(table_colspans_preprocess);
+        table_colspans_processed = apex_preprocess_table_colspans(normalized_for_colspans ? normalized_for_colspans : text_ptr);
+        PROFILE_END(table_colspans_preprocess);
+
+        /* Handle cleanup */
+        if (normalized_for_colspans) {
+            if (table_colspans_processed) {
+                free(normalized_for_colspans);
+            } else {
+                free(normalized_for_colspans);
+            }
+        }
+
+        if (table_colspans_processed) {
+            text_ptr = table_colspans_processed;
         }
     }
 
