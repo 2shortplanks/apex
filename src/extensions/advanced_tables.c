@@ -529,8 +529,11 @@ static void process_table_spans(cmark_node *table) {
                              * If the target_cell has content, we're merging an empty cell with content (colspan).
                              * Both cases are valid for creating colspan. */
 
-                            /* Check if target_cell is empty (consecutive empty cells) */
-                            bool target_is_empty = is_colspan_cell(target_cell);
+                            /* Check if target_cell is empty (has no content at all).
+                             * IMPORTANT: We only merge empty cells that are part of consecutive empty cells (|||).
+                             * Empty cells with whitespace between pipes (|    |) should NOT be merged. */
+                            cmark_node *target_child = cmark_node_first_child(target_cell);
+                            bool target_is_empty = (target_child == NULL);
 
                             /* Check if the next cell (after current) has content.
                              * If target has content AND next also has content, don't merge (isolated empty cell).
@@ -544,15 +547,21 @@ static void process_table_spans(cmark_node *table) {
                             bool next_has_content = false;
                             if (next_cell && cmark_node_get_type(next_cell) == CMARK_NODE_TABLE_CELL) {
                                 cmark_node *next_child = cmark_node_first_child(next_cell);
-                                next_has_content = (next_child != NULL && !is_colspan_cell(next_cell));
+                                next_has_content = (next_child != NULL);
                             }
 
                             /* Merge if:
-                             * 1. Target is empty (consecutive empty cells merge together), OR
-                             * 2. Target has content AND next is empty/end (empty cells after content merge with content), OR
-                             * 3. Current cell has << marker (explicit colspan marker, always merge) */
-                            /* For << markers (explicit colspan), always merge regardless of next cell content */
-                            bool should_merge = target_is_empty || (!target_is_empty && !next_has_content) || is_colspan;
+                             * 1. Current cell has << marker (explicit colspan marker, always merge), OR
+                             * 2. Target is empty AND next is also empty (consecutive empty cells from |||), OR
+                             * 3. Target has content AND next is empty/end (empty cells after content from | header |||)
+                             * 
+                             * Do NOT merge if:
+                             * - Target has content AND next also has content (isolated empty cell like | A | | B |)
+                             * - Target is empty but next has content (empty cell before content, like | | A |) */
+                            /* For << markers (explicit colspan), always merge regardless of other conditions */
+                            bool should_merge = is_colspan || 
+                                (target_is_empty && !next_has_content) || 
+                                (!target_is_empty && !next_has_content);
 
                             if (should_merge) {
                                 /* Target cell is empty or has << marker - merge them (colspan) */

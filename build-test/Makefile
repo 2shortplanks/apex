@@ -237,17 +237,17 @@ apex_test_runner/fast:
 .PHONY : apex_test_runner/fast
 
 #=============================================================================
-# Target rules for targets named man_page_copy
+# Target rules for targets named man_pages
 
 # Build rule for target.
-man_page_copy: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 man_page_copy
-.PHONY : man_page_copy
+man_pages: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 man_pages
+.PHONY : man_pages
 
 # fast build rule for target.
-man_page_copy/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/man_page_copy.dir/build.make CMakeFiles/man_page_copy.dir/build
-.PHONY : man_page_copy/fast
+man_pages/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/man_pages.dir/build.make CMakeFiles/man_pages.dir/build
+.PHONY : man_pages/fast
 
 #=============================================================================
 # Target rules for targets named cmark-gfm
@@ -608,6 +608,36 @@ src/extensions/emoji.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/emoji.c.s
 .PHONY : src/extensions/emoji.c.s
 
+src/extensions/fenced_divs.o: src/extensions/fenced_divs.c.o
+.PHONY : src/extensions/fenced_divs.o
+
+# target to build an object file
+src/extensions/fenced_divs.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/fenced_divs.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/fenced_divs.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/fenced_divs.c.o
+.PHONY : src/extensions/fenced_divs.c.o
+
+src/extensions/fenced_divs.i: src/extensions/fenced_divs.c.i
+.PHONY : src/extensions/fenced_divs.i
+
+# target to preprocess a source file
+src/extensions/fenced_divs.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/fenced_divs.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/fenced_divs.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/fenced_divs.c.i
+.PHONY : src/extensions/fenced_divs.c.i
+
+src/extensions/fenced_divs.s: src/extensions/fenced_divs.c.s
+.PHONY : src/extensions/fenced_divs.s
+
+# target to generate assembly for a file
+src/extensions/fenced_divs.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/fenced_divs.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/fenced_divs.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/fenced_divs.c.s
+.PHONY : src/extensions/fenced_divs.c.s
+
 src/extensions/header_ids.o: src/extensions/header_ids.c.o
 .PHONY : src/extensions/header_ids.o
 
@@ -758,6 +788,36 @@ src/extensions/includes.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/includes.c.s
 .PHONY : src/extensions/includes.c.s
 
+src/extensions/index.o: src/extensions/index.c.o
+.PHONY : src/extensions/index.o
+
+# target to build an object file
+src/extensions/index.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/index.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/index.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/index.c.o
+.PHONY : src/extensions/index.c.o
+
+src/extensions/index.i: src/extensions/index.c.i
+.PHONY : src/extensions/index.i
+
+# target to preprocess a source file
+src/extensions/index.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/index.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/index.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/index.c.i
+.PHONY : src/extensions/index.c.i
+
+src/extensions/index.s: src/extensions/index.c.s
+.PHONY : src/extensions/index.s
+
+# target to generate assembly for a file
+src/extensions/index.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/index.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/index.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/index.c.s
+.PHONY : src/extensions/index.c.s
+
 src/extensions/inline_footnotes.o: src/extensions/inline_footnotes.c.o
 .PHONY : src/extensions/inline_footnotes.o
 
@@ -787,6 +847,36 @@ src/extensions/inline_footnotes.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/inline_footnotes.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/inline_footnotes.c.s
 .PHONY : src/extensions/inline_footnotes.c.s
+
+src/extensions/inline_tables.o: src/extensions/inline_tables.c.o
+.PHONY : src/extensions/inline_tables.o
+
+# target to build an object file
+src/extensions/inline_tables.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/inline_tables.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/inline_tables.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/inline_tables.c.o
+.PHONY : src/extensions/inline_tables.c.o
+
+src/extensions/inline_tables.i: src/extensions/inline_tables.c.i
+.PHONY : src/extensions/inline_tables.i
+
+# target to preprocess a source file
+src/extensions/inline_tables.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/inline_tables.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/inline_tables.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/inline_tables.c.i
+.PHONY : src/extensions/inline_tables.c.i
+
+src/extensions/inline_tables.s: src/extensions/inline_tables.c.s
+.PHONY : src/extensions/inline_tables.s
+
+# target to generate assembly for a file
+src/extensions/inline_tables.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/extensions/inline_tables.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/extensions/inline_tables.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/extensions/inline_tables.c.s
+.PHONY : src/extensions/inline_tables.c.s
 
 src/extensions/math.o: src/extensions/math.c.o
 .PHONY : src/extensions/math.o
@@ -1058,6 +1148,96 @@ src/html_renderer.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/html_renderer.c.s
 .PHONY : src/html_renderer.c.s
 
+src/plugins.o: src/plugins.c.o
+.PHONY : src/plugins.o
+
+# target to build an object file
+src/plugins.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins.c.o
+.PHONY : src/plugins.c.o
+
+src/plugins.i: src/plugins.c.i
+.PHONY : src/plugins.i
+
+# target to preprocess a source file
+src/plugins.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins.c.i
+.PHONY : src/plugins.c.i
+
+src/plugins.s: src/plugins.c.s
+.PHONY : src/plugins.s
+
+# target to generate assembly for a file
+src/plugins.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins.c.s
+.PHONY : src/plugins.c.s
+
+src/plugins_env.o: src/plugins_env.c.o
+.PHONY : src/plugins_env.o
+
+# target to build an object file
+src/plugins_env.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_env.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_env.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_env.c.o
+.PHONY : src/plugins_env.c.o
+
+src/plugins_env.i: src/plugins_env.c.i
+.PHONY : src/plugins_env.i
+
+# target to preprocess a source file
+src/plugins_env.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_env.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_env.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_env.c.i
+.PHONY : src/plugins_env.c.i
+
+src/plugins_env.s: src/plugins_env.c.s
+.PHONY : src/plugins_env.s
+
+# target to generate assembly for a file
+src/plugins_env.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_env.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_env.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_env.c.s
+.PHONY : src/plugins_env.c.s
+
+src/plugins_remote.o: src/plugins_remote.c.o
+.PHONY : src/plugins_remote.o
+
+# target to build an object file
+src/plugins_remote.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_remote.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_remote.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_remote.c.o
+.PHONY : src/plugins_remote.c.o
+
+src/plugins_remote.i: src/plugins_remote.c.i
+.PHONY : src/plugins_remote.i
+
+# target to preprocess a source file
+src/plugins_remote.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_remote.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_remote.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_remote.c.i
+.PHONY : src/plugins_remote.c.i
+
+src/plugins_remote.s: src/plugins_remote.c.s
+.PHONY : src/plugins_remote.s
+
+# target to generate assembly for a file
+src/plugins_remote.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex.dir/build.make CMakeFiles/apex.dir/src/plugins_remote.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_static.dir/build.make CMakeFiles/apex_static.dir/src/plugins_remote.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/plugins_remote.c.s
+.PHONY : src/plugins_remote.c.s
+
 src/pretty_html.o: src/pretty_html.c.o
 .PHONY : src/pretty_html.o
 
@@ -1088,6 +1268,174 @@ src/pretty_html.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_framework.dir/build.make CMakeFiles/apex_framework.dir/src/pretty_html.c.s
 .PHONY : src/pretty_html.c.s
 
+tests/test_basic.o: tests/test_basic.c.o
+.PHONY : tests/test_basic.o
+
+# target to build an object file
+tests/test_basic.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.o
+.PHONY : tests/test_basic.c.o
+
+tests/test_basic.i: tests/test_basic.c.i
+.PHONY : tests/test_basic.i
+
+# target to preprocess a source file
+tests/test_basic.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.i
+.PHONY : tests/test_basic.c.i
+
+tests/test_basic.s: tests/test_basic.c.s
+.PHONY : tests/test_basic.s
+
+# target to generate assembly for a file
+tests/test_basic.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_basic.c.s
+.PHONY : tests/test_basic.c.s
+
+tests/test_extensions.o: tests/test_extensions.c.o
+.PHONY : tests/test_extensions.o
+
+# target to build an object file
+tests/test_extensions.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.o
+.PHONY : tests/test_extensions.c.o
+
+tests/test_extensions.i: tests/test_extensions.c.i
+.PHONY : tests/test_extensions.i
+
+# target to preprocess a source file
+tests/test_extensions.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.i
+.PHONY : tests/test_extensions.c.i
+
+tests/test_extensions.s: tests/test_extensions.c.s
+.PHONY : tests/test_extensions.s
+
+# target to generate assembly for a file
+tests/test_extensions.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_extensions.c.s
+.PHONY : tests/test_extensions.c.s
+
+tests/test_helpers.o: tests/test_helpers.c.o
+.PHONY : tests/test_helpers.o
+
+# target to build an object file
+tests/test_helpers.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.o
+.PHONY : tests/test_helpers.c.o
+
+tests/test_helpers.i: tests/test_helpers.c.i
+.PHONY : tests/test_helpers.i
+
+# target to preprocess a source file
+tests/test_helpers.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.i
+.PHONY : tests/test_helpers.c.i
+
+tests/test_helpers.s: tests/test_helpers.c.s
+.PHONY : tests/test_helpers.s
+
+# target to generate assembly for a file
+tests/test_helpers.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_helpers.c.s
+.PHONY : tests/test_helpers.c.s
+
+tests/test_ial.o: tests/test_ial.c.o
+.PHONY : tests/test_ial.o
+
+# target to build an object file
+tests/test_ial.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.o
+.PHONY : tests/test_ial.c.o
+
+tests/test_ial.i: tests/test_ial.c.i
+.PHONY : tests/test_ial.i
+
+# target to preprocess a source file
+tests/test_ial.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.i
+.PHONY : tests/test_ial.c.i
+
+tests/test_ial.s: tests/test_ial.c.s
+.PHONY : tests/test_ial.s
+
+# target to generate assembly for a file
+tests/test_ial.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_ial.c.s
+.PHONY : tests/test_ial.c.s
+
+tests/test_links.o: tests/test_links.c.o
+.PHONY : tests/test_links.o
+
+# target to build an object file
+tests/test_links.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.o
+.PHONY : tests/test_links.c.o
+
+tests/test_links.i: tests/test_links.c.i
+.PHONY : tests/test_links.i
+
+# target to preprocess a source file
+tests/test_links.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.i
+.PHONY : tests/test_links.c.i
+
+tests/test_links.s: tests/test_links.c.s
+.PHONY : tests/test_links.s
+
+# target to generate assembly for a file
+tests/test_links.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_links.c.s
+.PHONY : tests/test_links.c.s
+
+tests/test_metadata.o: tests/test_metadata.c.o
+.PHONY : tests/test_metadata.o
+
+# target to build an object file
+tests/test_metadata.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.o
+.PHONY : tests/test_metadata.c.o
+
+tests/test_metadata.i: tests/test_metadata.c.i
+.PHONY : tests/test_metadata.i
+
+# target to preprocess a source file
+tests/test_metadata.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.i
+.PHONY : tests/test_metadata.c.i
+
+tests/test_metadata.s: tests/test_metadata.c.s
+.PHONY : tests/test_metadata.s
+
+# target to generate assembly for a file
+tests/test_metadata.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_metadata.c.s
+.PHONY : tests/test_metadata.c.s
+
+tests/test_output.o: tests/test_output.c.o
+.PHONY : tests/test_output.o
+
+# target to build an object file
+tests/test_output.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.o
+.PHONY : tests/test_output.c.o
+
+tests/test_output.i: tests/test_output.c.i
+.PHONY : tests/test_output.i
+
+# target to preprocess a source file
+tests/test_output.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.i
+.PHONY : tests/test_output.c.i
+
+tests/test_output.s: tests/test_output.c.s
+.PHONY : tests/test_output.s
+
+# target to generate assembly for a file
+tests/test_output.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_output.c.s
+.PHONY : tests/test_output.c.s
+
 tests/test_runner.o: tests/test_runner.c.o
 .PHONY : tests/test_runner.o
 
@@ -1112,6 +1460,30 @@ tests/test_runner.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_runner.c.s
 .PHONY : tests/test_runner.c.s
 
+tests/test_tables.o: tests/test_tables.c.o
+.PHONY : tests/test_tables.o
+
+# target to build an object file
+tests/test_tables.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.o
+.PHONY : tests/test_tables.c.o
+
+tests/test_tables.i: tests/test_tables.c.i
+.PHONY : tests/test_tables.i
+
+# target to preprocess a source file
+tests/test_tables.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.i
+.PHONY : tests/test_tables.c.i
+
+tests/test_tables.s: tests/test_tables.c.s
+.PHONY : tests/test_tables.s
+
+# target to generate assembly for a file
+tests/test_tables.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/apex_test_runner.dir/build.make CMakeFiles/apex_test_runner.dir/tests/test_tables.c.s
+.PHONY : tests/test_tables.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1125,7 +1497,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... man_page_copy"
+	@echo "... man_pages"
 	@echo "... apex"
 	@echo "... apex_cli"
 	@echo "... apex_framework"
@@ -1166,6 +1538,9 @@ help:
 	@echo "... src/extensions/emoji.o"
 	@echo "... src/extensions/emoji.i"
 	@echo "... src/extensions/emoji.s"
+	@echo "... src/extensions/fenced_divs.o"
+	@echo "... src/extensions/fenced_divs.i"
+	@echo "... src/extensions/fenced_divs.s"
 	@echo "... src/extensions/header_ids.o"
 	@echo "... src/extensions/header_ids.i"
 	@echo "... src/extensions/header_ids.s"
@@ -1181,9 +1556,15 @@ help:
 	@echo "... src/extensions/includes.o"
 	@echo "... src/extensions/includes.i"
 	@echo "... src/extensions/includes.s"
+	@echo "... src/extensions/index.o"
+	@echo "... src/extensions/index.i"
+	@echo "... src/extensions/index.s"
 	@echo "... src/extensions/inline_footnotes.o"
 	@echo "... src/extensions/inline_footnotes.i"
 	@echo "... src/extensions/inline_footnotes.s"
+	@echo "... src/extensions/inline_tables.o"
+	@echo "... src/extensions/inline_tables.i"
+	@echo "... src/extensions/inline_tables.s"
 	@echo "... src/extensions/math.o"
 	@echo "... src/extensions/math.i"
 	@echo "... src/extensions/math.s"
@@ -1211,12 +1592,45 @@ help:
 	@echo "... src/html_renderer.o"
 	@echo "... src/html_renderer.i"
 	@echo "... src/html_renderer.s"
+	@echo "... src/plugins.o"
+	@echo "... src/plugins.i"
+	@echo "... src/plugins.s"
+	@echo "... src/plugins_env.o"
+	@echo "... src/plugins_env.i"
+	@echo "... src/plugins_env.s"
+	@echo "... src/plugins_remote.o"
+	@echo "... src/plugins_remote.i"
+	@echo "... src/plugins_remote.s"
 	@echo "... src/pretty_html.o"
 	@echo "... src/pretty_html.i"
 	@echo "... src/pretty_html.s"
+	@echo "... tests/test_basic.o"
+	@echo "... tests/test_basic.i"
+	@echo "... tests/test_basic.s"
+	@echo "... tests/test_extensions.o"
+	@echo "... tests/test_extensions.i"
+	@echo "... tests/test_extensions.s"
+	@echo "... tests/test_helpers.o"
+	@echo "... tests/test_helpers.i"
+	@echo "... tests/test_helpers.s"
+	@echo "... tests/test_ial.o"
+	@echo "... tests/test_ial.i"
+	@echo "... tests/test_ial.s"
+	@echo "... tests/test_links.o"
+	@echo "... tests/test_links.i"
+	@echo "... tests/test_links.s"
+	@echo "... tests/test_metadata.o"
+	@echo "... tests/test_metadata.i"
+	@echo "... tests/test_metadata.s"
+	@echo "... tests/test_output.o"
+	@echo "... tests/test_output.i"
+	@echo "... tests/test_output.s"
 	@echo "... tests/test_runner.o"
 	@echo "... tests/test_runner.i"
 	@echo "... tests/test_runner.s"
+	@echo "... tests/test_tables.o"
+	@echo "... tests/test_tables.i"
+	@echo "... tests/test_tables.s"
 .PHONY : help
 
 

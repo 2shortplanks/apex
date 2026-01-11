@@ -2,6 +2,7 @@
 commit_message.txt
 tag_message.txt
 build/
+build-test/
 cmake-build-*/
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/
@@ -63,3 +64,6 @@ documentation/transform_for_app.md
 /documentation/html/apex-app-docs.html
 /documentation/app-settings-table.md
 /build-asan
+/build-test/apex.1
+/build-test/apex_test_runner
+/build-test/apex

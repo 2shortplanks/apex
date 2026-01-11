@@ -556,7 +556,12 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
         has_alignment_colons = (strstr(html, ":</td>") != NULL || strstr(html, ":</th>") != NULL);
         /* Also check for rowspan markers (^^) - these need processing even without attributes */
         bool has_rowspan_markers = (strstr(html, "^^") != NULL);
-        if (!has_alignment_colons && !has_rowspan_markers) {
+        /* Check for empty first header cell (<th></th> in thead) - this indicates row-header detection is needed */
+        /* Simple check: if we have <thead> with a <th></th> pattern, we need to process for row-header detection */
+        /* Note: We always process tables with <thead> to check for row-header detection, since this happens
+         * during HTML processing and we can't detect it from AST attributes alone */
+        bool needs_row_header_detection = (strstr(html, "<thead>") != NULL);
+        if (!has_alignment_colons && !has_rowspan_markers && !needs_row_header_detection) {
             /* Absolutely nothing to process - return immediately */
             return (char *)html;
         }
@@ -1559,7 +1564,17 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                 continue; /* Don't set in_row, skip to next iteration (won't copy <tr>) */
             }
             /* Otherwise, this is a normal row (or tfoot row) - copy <tr> and process cells */
+            /* Set in_row BEFORE processing cells so detection code can run */
             in_row = true;
+            /* Copy the <tr> tag */
+            while (*read && *read != '>') {
+                *write++ = *read++;
+                written++;
+            }
+            if (*read == '>') {
+                *write++ = *read++;
+                written++;
+            }
         } else if (in_row && strncmp(read, "</tr>", 5) == 0) {
             in_row = false;
         } else if (strncmp(read, "<p>", 3) == 0) {
@@ -1682,9 +1697,13 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
             }
         }
 
-        /* Check for cell opening tags */
-        if (in_row && (strncmp(read, "<td", 3) == 0 || strncmp(read, "<th", 3) == 0)) {
-            bool is_th = strncmp(read, "<th", 3) == 0;
+        /* Check for cell opening tags - process both header and body cells
+         * IMPORTANT: Check for <thead> and <tbody> first to avoid matching them as <th> or <td> cells */
+        if ((in_row || in_thead) && 
+            (strncmp(read, "<td", 3) == 0 || strncmp(read, "<th", 3) == 0) &&
+            strncmp(read, "<thead>", 7) != 0 && strncmp(read, "<tbody>", 7) != 0 &&
+            strncmp(read, "<tfoot>", 7) != 0) {
+            bool is_th = strncmp(read, "<th", 3) == 0 && strncmp(read, "<thead>", 7) != 0;
             /* Extract cell content for debugging and matching - only if we need it */
             char cell_preview[100] = {0};
 
@@ -1704,31 +1723,59 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                 const char *content_start = strchr(read, '>');
                 if (content_start) {
                     const char *content_end = strstr(content_start + 1, close_tag);
-                    if (content_end && content_end - content_start - 1 < 99) {
+                    if (content_end) {
                         /* Extract just the content between > and </td>/</th> */
+                        /* For empty cells like <th></th>, content_end is right after content_start */
                         size_t len = content_end - content_start - 1;
-                        strncpy(cell_preview, content_start + 1, len);
-                        cell_preview[len] = '\0';
-                        /* Trim trailing whitespace and newlines */
-                        while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
-                            cell_preview[--len] = '\0';
+                        if (len >= 0 && len < 99) {
+                            strncpy(cell_preview, content_start + 1, len);
+                            cell_preview[len] = '\0';
+                            /* Trim trailing whitespace and newlines */
+                            while (len > 0 && (cell_preview[len-1] == '\n' || cell_preview[len-1] == '\r' || isspace((unsigned char)cell_preview[len-1]))) {
+                                cell_preview[--len] = '\0';
+                            }
+                        } else if (len == 0) {
+                            /* Empty cell like <th></th> - set cell_preview to empty string */
+                            cell_preview[0] = '\0';
                         }
                     }
                 }
             }
 
             /* Detect header row with empty first cell to enable row-header column.
-             * We only consider the first header row's first cell (<thead>, row_idx == 0, col_idx == 0). */
+             * We only consider the first header row's first cell (<thead>, first row, col_idx == 0).
+             * row_idx starts at -1 and is incremented to 0 for the first <tr> (header row).
+             * After the first <tr> increment, row_idx is 0 for the header row.
+             * Note: Comments suggest row_idx is 1-based, but code shows it's 0-based (starts at -1, becomes 0). */
             if (in_table && !in_tbody && !in_tfoot && in_thead &&
                 table_idx >= 0 && table_idx < 50 &&
-                row_idx == 0 && col_idx == 0 && is_th && need_cell_content) {
-                bool header_first_cell_empty = true;
-                size_t plen = strlen(cell_preview);
-                for (size_t i = 0; i < plen; i++) {
-                    if (!isspace((unsigned char)cell_preview[i])) {
-                        header_first_cell_empty = false;
-                        break;
+                row_idx == 0 && col_idx == 0 && is_th) {
+                /* Check if this cell is empty - extract directly from HTML for reliability.
+                 * read points to the start of the <th tag, so we need to find the > immediately after it. */
+                bool header_first_cell_empty = false;
+                /* Find the > that closes this <th tag - it should be right after <th or <th with attributes */
+                const char *tag_end = strchr(read, '>');
+                if (tag_end && tag_end > read && tag_end < read + 20) {
+                    /* Found the > for this <th tag - now find the matching </th> immediately following */
+                    const char *content_start = tag_end + 1;
+                    const char *content_end = strstr(content_start, "</th>");
+                    if (content_end && content_end < read + 100) {
+                        /* Check if content between > and </th> is empty or whitespace only */
+                        /* For empty cells like <th></th>, content_end should be right after content_start */
+                        header_first_cell_empty = true;
+                        for (const char *p = content_start; p < content_end; p++) {
+                            if (!isspace((unsigned char)*p)) {
+                                header_first_cell_empty = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        /* No closing tag found in reasonable distance - treat as empty */
+                        header_first_cell_empty = true;
                     }
+                } else {
+                    /* No > found in reasonable distance - treat as empty (shouldn't happen) */
+                    header_first_cell_empty = true;
                 }
                 if (header_first_cell_empty) {
                     table_has_row_header_first_col[table_idx] = true;
@@ -2229,6 +2276,42 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                 col_idx == 0) {
                 make_row_header = true;
             }
+            
+            /* Also detect empty first header cell here as a fallback, in case the earlier detection didn't run.
+             * This runs for header cells (is_th) when processing the first cell (col_idx == 0) in the first row (row_idx == 0).
+             * We need to check BEFORE col_idx is incremented, so this check happens early in the cell processing. */
+            if (!make_row_header && 
+                in_table && !in_tbody && !in_tfoot && in_thead &&
+                table_idx >= 0 && table_idx < 50 &&
+                row_idx == 0 && col_idx == 0 && is_th) {
+                /* Check if this cell is empty - extract directly from HTML for reliability */
+                bool is_empty = false;
+                const char *close_tag = "</th>";
+                const char *tag_end = strchr(read, '>');
+                if (tag_end && tag_end > read && tag_end < read + 20) {
+                    const char *content_start = tag_end + 1;
+                    const char *content_end = strstr(content_start, close_tag);
+                    if (content_end && content_end < read + 100) {
+                        /* Check if content between > and </th> is empty or whitespace only */
+                        is_empty = true;
+                        for (const char *p = content_start; p < content_end; p++) {
+                            if (!isspace((unsigned char)*p)) {
+                                is_empty = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        /* No closing tag found in reasonable distance - treat as empty */
+                        is_empty = true;
+                    }
+                } else {
+                    /* No > found in reasonable distance - treat as empty (shouldn't happen) */
+                    is_empty = true;
+                }
+                if (is_empty && !table_has_row_header_first_col[table_idx]) {
+                    table_has_row_header_first_col[table_idx] = true;
+                }
+            }
 
             if (make_row_header) {
                 const char *tag_end = strchr(read, '>');
@@ -2459,6 +2542,36 @@ char *apex_inject_table_attributes(const char *html, cmark_node *document, int c
                     }
                 }
             }  /* End of should_process_alignment check */
+
+            /* For normal cells (no special processing), copy the entire cell tag and content.
+             * This ensures cells are properly output while still advancing read correctly. */
+            if (!should_remove_cell && !matching && !make_row_header) {
+                const char *cell_close_tag = is_th ? "</th>" : "</td>";
+                /* Copy opening tag */
+                while (*read && *read != '>') {
+                    *write++ = *read++;
+                    written++;
+                }
+                if (*read == '>') {
+                    *write++ = *read++;
+                    written++;
+                }
+                /* Copy content until closing tag */
+                while (*read && strncmp(read, cell_close_tag, 5) != 0) {
+                    *write++ = *read++;
+                    written++;
+                }
+                /* Copy closing tag */
+                if (strncmp(read, cell_close_tag, 5) == 0) {
+                    for (int i = 0; i < 5; i++) {
+                        *write++ = *read++;
+                        written++;
+                    }
+                }
+                col_idx++;
+                prev_cell_matching = matching;
+                continue;
+            }
 
             col_idx++;
             prev_cell_matching = matching;  /* Track this cell for next cell's colspan check */

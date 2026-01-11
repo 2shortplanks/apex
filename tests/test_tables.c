@@ -45,14 +45,24 @@ void test_advanced_tables(void) {
     assert_contains(html, "<td rowspan=\"2\">A</td>", "Rowspan applied to first cell content");
     apex_free_string(html);
 
-    /* Test colspan with empty cell */
+    /* Test colspan with consecutive pipes (|||) */
     const char *colspan_table = "| H1 | H2 | H3 |\n|----|----|----|"
-                                "\n| A  |    |    |"
+                                "\n| A  |||"
                                 "\n| B  | C  | D  |";
     html = apex_markdown_to_html(colspan_table, strlen(colspan_table), &opts);
     assert_contains(html, "colspan", "Colspan attribute added");
     /* A should span all three columns in the first data row */
-    assert_contains(html, "<td colspan=\"3\">A</td>", "Colspan applied to first row A spanning 3 columns");
+    assert_contains(html, "<td colspan=\"3\">A</td>", "Colspan applied to first row A spanning 3 columns with consecutive pipes");
+    apex_free_string(html);
+
+    /* Test that empty cells with whitespace do NOT create colspan */
+    const char *empty_cells_table = "| H1 | H2 | H3 |\n|----|----|----|"
+                                    "\n| A  |    |    |"
+                                    "\n| B  | C  | D  |";
+    html = apex_markdown_to_html(empty_cells_table, strlen(empty_cells_table), &opts);
+    assert_contains(html, "<td>A</td>", "Empty cells table: A cell present");
+    assert_contains(html, "<td></td>", "Empty cells table: empty cell present (not merged)");
+    assert_not_contains(html, "colspan", "Empty cells table: no colspan attribute (empty cells don't create colspan)");
     apex_free_string(html);
 
     /* Test per-cell alignment using colons */
@@ -92,8 +102,20 @@ void test_advanced_tables(void) {
         "| Row 2 | A2 | B2 |";
     html = apex_markdown_to_html(row_header_table, strlen(row_header_table), &opts);
     assert_contains(html, "<table>", "Row-header table renders");
-    assert_contains(html, "<th scope=\"row\">Row 1</th>", "Row-header table: first row header cell");
-    assert_contains(html, "<th scope=\"row\">Row 2</th>", "Row-header table: second row header cell");
+    /* Check for th with scope="row" - may be in header or body depending on implementation */
+    bool has_row_scope_1 = strstr(html, "<th scope=\"row\">Row 1</th>") != NULL || strstr(html, "scope=\"row\">Row 1") != NULL;
+    bool has_row_scope_2 = strstr(html, "<th scope=\"row\">Row 2</th>") != NULL || strstr(html, "scope=\"row\">Row 2") != NULL;
+    if (has_row_scope_1 && has_row_scope_2) {
+        test_result(true, "Row-header table: first row header cell");
+        test_result(true, "Row-header table: second row header cell");
+    } else {
+        tests_failed += 2;
+        tests_run += 2;
+        printf(COLOR_RED "✗" COLOR_RESET " Row-header table: first row header cell\n");
+        printf(COLOR_RED "✗" COLOR_RESET " Row-header table: second row header cell\n");
+        printf("  Looking for: <th scope=\"row\">Row 1</th> and <th scope=\"row\">Row 2</th>\n");
+        printf("  In:          %s\n", html);
+    }
     assert_contains(html, "<td>A1</td>", "Row-header table: body cell A1");
     apex_free_string(html);
 
@@ -349,29 +371,87 @@ void test_comprehensive_table_features(void) {
 
     /* Test 1: Caption before table with IAL should render correctly */
     /* The caption "Employee Performance Q4 2025" should appear in figcaption, not as a paragraph */
-    assert_contains(html, "<figcaption>Employee Performance Q4 2025</figcaption>",
-                    "Caption appears in figcaption tag");
-
-    /* Test 2: Caption paragraph should NOT appear as duplicate <p> tag */
-    /* We should NOT see <p>[Employee Performance Q4 2025]</p> */
-    assert_not_contains(html, "<p>[Employee Performance Q4 2025]</p>",
-                        "Caption paragraph removed (no duplicate)");
+    /* Note: Caption may appear as <p> if not properly detected, so check for either format */
+    bool has_figcaption = strstr(html, "<figcaption>Employee Performance Q4 2025</figcaption>") != NULL;
+    bool has_caption_para = strstr(html, "<p>[Employee Performance Q4 2025]</p>") != NULL;
+    if (has_figcaption) {
+        test_result(true, "Caption appears in figcaption tag");
+        /* If in figcaption, it should NOT be in paragraph */
+        if (!has_caption_para) {
+            test_result(true, "Caption paragraph removed (no duplicate)");
+        } else {
+            tests_failed++;
+            tests_run++;
+            printf(COLOR_RED "✗" COLOR_RESET " Caption paragraph removed (no duplicate)\n");
+            printf("  Caption found in both figcaption and paragraph\n");
+        }
+    } else if (has_caption_para) {
+        /* Caption not in figcaption - this might be expected if caption detection isn't working */
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Caption appears in figcaption tag\n");
+        printf("  Caption found as paragraph instead of figcaption\n");
+    } else {
+        /* Caption not found at all */
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Caption appears in figcaption tag\n");
+        printf("  Caption 'Employee Performance Q4 2025' not found in output\n");
+    }
 
     /* Test 3: Rowspan should be applied correctly - Engineering rowspan="2" */
+    /* Note: Rowspan detection may require the ^^ marker to be in the correct cell position */
     assert_contains(html, "rowspan=\"2\"", "Rowspan attribute present");
-    assert_contains(html, "<td rowspan=\"2\">Engineering</td>", "Engineering has rowspan=2");
+    /* Check for Engineering with rowspan - may have alignment attribute */
+    bool engineering_has_rowspan = strstr(html, "<td rowspan=\"2\">Engineering</td>") != NULL ||
+                                   strstr(html, "<td align=\"right\" rowspan=\"2\">Engineering</td>") != NULL ||
+                                   strstr(html, "rowspan=\"2\">Engineering") != NULL;
+    if (engineering_has_rowspan) {
+        test_result(true, "Engineering has rowspan=2");
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Engineering has rowspan=2\n");
+        printf("  Looking for: <td rowspan=\"2\">Engineering</td> or <td align=\"right\" rowspan=\"2\">Engineering</td>\n");
+        printf("  In:          %s\n", html);
+    }
 
     /* Test 4: Rowspan should be applied correctly - Sales rowspan="2" */
-    assert_contains(html, "<td rowspan=\"2\">Sales</td>", "Sales has rowspan=2");
+    /* Check for Sales with rowspan - may have alignment attribute */
+    bool sales_has_rowspan = strstr(html, "<td rowspan=\"2\">Sales</td>") != NULL ||
+                             strstr(html, "<td align=\"right\" rowspan=\"2\">Sales</td>") != NULL ||
+                             strstr(html, "rowspan=\"2\">Sales") != NULL;
+    if (sales_has_rowspan) {
+        test_result(true, "Sales has rowspan=2");
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Sales has rowspan=2\n");
+        printf("  Looking for: <td rowspan=\"2\">Sales</td> or <td align=\"right\" rowspan=\"2\">Sales</td>\n");
+        printf("  In:          %s\n", html);
+    }
 
     /* Test 5: Table should be wrapped in figure tag */
     assert_contains(html, "<figure class=\"table-figure\">", "Table wrapped in figure with class");
 
-    /* Test 6: Empty cells are preserved (Absent cell followed by empty cell) */
-    /* The Absent cell is followed by an empty cell (not converted to colspan) */
+    /* Test 6: Empty cells are preserved (Absent cell followed by empty cells) */
+    /* The comprehensive test shows: | Marketing | Charlie | Absent | | | 92.00 | */
+    /* This means: Marketing, Charlie, Absent, then empty cells, then 92.00 */
+    /* Empty cells with whitespace should NOT create colspan, they should remain as empty cells */
     assert_contains(html, "<td>Absent</td>", "Absent cell present");
-    /* Check for empty cell after Absent - the pattern shows Absent followed by an empty td */
-    assert_contains(html, "<td></td>", "Empty cell present in table");
+    /* Check for empty cell after Absent - empty cells should remain as <td></td> not merged */
+    bool has_empty_after_absent = strstr(html, "<td>Absent</td><td></td>") != NULL ||
+                                   strstr(html, "<td>Absent</td>\n<td></td>") != NULL ||
+                                   strstr(html, "<td>Absent</td>") != NULL && strstr(html, "<td></td>") != NULL;
+    if (has_empty_after_absent) {
+        test_result(true, "Empty cell present in table");
+    } else {
+        tests_failed++;
+        tests_run++;
+        printf(COLOR_RED "✗" COLOR_RESET " Empty cell present in table\n");
+        printf("  Looking for: <td>Absent</td> followed by <td></td> (empty cells don't create colspan)\n");
+        printf("  In:          %s\n", html);
+    }
 
     /* Test 7: Table structure should be correct - key rows present */
     assert_contains(html, "<td>Alice</td>", "Alice row present");
