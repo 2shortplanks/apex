@@ -499,6 +499,9 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
     bool in_inline_code = false;
     int code_block_backticks = 0;  /* Count of consecutive backticks for code blocks */
     bool in_liquid = false;
+    bool in_markdown_link_url = false;  /* Track if we're inside [text](url) URL part */
+    int bracket_count = 0;  /* Count unmatched [ for markdown links */
+    int paren_count = 0;  /* Count unmatched ( inside markdown link URLs */
 
     while (*r) {
         const char *loop_start = r;
@@ -592,6 +595,38 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
 
         /* Skip processing inside code blocks or inline code */
         if (in_code_block || in_inline_code) {
+            *w++ = *r++;
+            continue;
+        }
+
+        /* Track markdown links: [text](url) - skip autolinking inside URL part */
+        if (*r == '[' && !in_markdown_link_url) {
+            bracket_count++;
+        } else if (*r == ']' && bracket_count > 0) {
+            /* Check if next character is '(' - if so, we're entering a link URL */
+            if (r[1] == '(') {
+                in_markdown_link_url = true;
+                paren_count = 1;  /* Count the opening '(' */
+                /* Copy ']' and '(' */
+                *w++ = *r++; /* ']' */
+                *w++ = *r++; /* '(' */
+                continue;
+            }
+            bracket_count--;
+            if (bracket_count < 0) bracket_count = 0;
+        } else if (*r == '(' && in_markdown_link_url) {
+            /* Nested '(' inside URL - track it */
+            paren_count++;
+        } else if (*r == ')' && in_markdown_link_url) {
+            /* End of markdown link URL (or nested level) */
+            paren_count--;
+            if (paren_count == 0) {
+                in_markdown_link_url = false;
+            }
+        }
+
+        /* Skip autolinking if we're inside a markdown link URL */
+        if (in_markdown_link_url) {
             *w++ = *r++;
             continue;
         }
@@ -840,8 +875,29 @@ static char *apex_preprocess_autolinks(const char *text, const apex_options *opt
                 /* Also skip if @ is immediately after [ (citation syntax) */
                 if (at_pos < token_end && at_pos > r && (at_pos + 1) < token_end &&
                     !(at_pos > text && at_pos[-1] == '[')) {  /* Not [@ */
-                    /* Basic validation: has chars before @ and after @ */
-                    is_email_start = true;
+                    /* Require that the character immediately before @ is alphanumeric.
+                     * This prevents matching @ in URLs like https://example.com/@user */
+                    if (at_pos > r && isalnum((unsigned char)at_pos[-1])) {
+                        /* Validate that email has a TLD (at least one dot followed by alphanumeric) */
+                        const char *after_at = at_pos + 1;
+                        bool has_tld = false;
+                        while (after_at < token_end) {
+                            if (*after_at == '.' && (after_at + 1) < token_end && 
+                                isalnum((unsigned char)after_at[1])) {
+                                has_tld = true;
+                                break;
+                            }
+                            if (!isalnum((unsigned char)*after_at) && *after_at != '-' && *after_at != '_') {
+                                break;
+                            }
+                            after_at++;
+                        }
+                        
+                        if (has_tld) {
+                            /* Basic validation passed: has chars before @, @, and TLD after @ */
+                            is_email_start = true;
+                        }
+                    }
                 }
             }
         }
