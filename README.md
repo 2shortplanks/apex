@@ -1,5 +1,5 @@
 
-[![Version: 0.1.50](https://img.shields.io/badge/Version-0.1.50-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: 0.1.51](https://img.shields.io/badge/Version-0.1.51-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 # Apex
@@ -47,10 +47,6 @@ one tool.
 - **Relaxed tables**: Support for tables without separator
 
   rows (Kramdown-style)
-
-- **Per-cell alignment**: Control alignment of individual table
-
-  cells using colons (`:Left`, `Right:`, `:Center:`). Enabled by default in unified mode, can be controlled with `--per-cell-alignment` or `--no-per-cell-alignment` flags.
 
 - **Headerless tables**: Support for tables that start with
 
@@ -434,7 +430,7 @@ apex input.md --mode kramdown
 ### All Options
 
 ```
-Apex Markdown Processor v0.1.50
+Apex Markdown Processor v0.1.51
 One Markdown processor to rule them all
 
 Project homepage: https://github.com/ApexMarkdown/apex
@@ -499,6 +495,7 @@ Options:
   --pretty               Pretty-print HTML with indentation and whitespace
   --reject               Reject all Critic Markup changes (revert edits)
   --[no-]relaxed-tables  Enable or disable relaxed table parsing (no separator rows required)
+  --[no-]per-cell-alignment  Enable or disable per-cell alignment markers (colons at start/end of cells, enabled by default in unified mode)
   --script VALUE         Inject <script> tags before </body> (standalone) or at end of HTML (snippet).
                           VALUE can be a path, URL, or shorthand (mermaid, mathjax, katex). Can be used multiple times or as a comma-separated list.
   --show-tooltips         Show tooltips on citations

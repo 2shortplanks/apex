@@ -97,6 +97,39 @@ All notable changes to Apex will be documented in this file.
 - Fix Table: Caption syntax not being processed when file uses CR line endings by updating table caption preprocessing to handle CR, LF, and CRLF line endings correctly
 - --errors-only flag now correctly suppresses all passing test output, including negative tests that pass
 
+## 0.1.52
+
+### Changed
+
+- Per-cell alignment is now enabled by default only in unified mode, disabled in all other modes (CommonMark, GFM, MultiMarkdown, Kramdown)
+
+### New
+
+- Table preprocessing converts consecutive pipes without whitespace (|||) to << markers for colspan detection, distinguishing between whitespace-separated empty cells (|  |  |) which remain separate and consecutive pipes (|||) which create colspans.
+- Table cells can now specify alignment by adding colons at the start and/or end of cell content: leading colon (:) for left-align, trailing colon (:) for right-align, or both (:content:) for center-align. The colons are stripped from the output and replaced with style="text-align: ..." attributes.
+- Added --per-cell-alignment and --no-per-cell-alignment CLI flags to enable or disable per-cell alignment markers in tables
+- Added tests to verify colspan behavior with consecutive pipes vs empty cells with whitespace
+
+### Improved
+
+- Colspan attribute injection in HTML post-processing now includes fallback matching that checks nearby rows when position-based matching fails, ensuring colspan attributes are applied correctly even when row indices shift due to removed cells.
+- HTML post-processing now removes cells containing &lt;&lt; markers (entity-encoded <<) that were missed by AST-level removal.
+- Cell text extraction for attribute matching now recursively checks nested text nodes (paragraphs, etc.) to properly match cells with complex content structures.
+- Colspan merge logic now preserves cell alignment styles when cells are merged together, ensuring alignment attributes are maintained correctly when cells span multiple columns.
+- Per-cell alignment processing is now conditional and only runs when the feature is enabled, improving performance when disabled
+- Row-header detection in tables now correctly identifies empty first header cells
+
+### Fixed
+
+- Colspan detection now only triggers on cells with << markers (from consecutive pipes), not plain empty cells, so whitespace-separated pipes create separate empty cells as intended.
+- Cells with << markers now always merge with previous cell to create colspan, even when followed by additional content in subsequent cells.
+- Colspan now only merges consecutive empty cells (|||), not empty cells with whitespace between pipes (|    |)
+- Email autolinking no longer converts @ symbols in URLs to email addresses (e.g., Mastodon profile links like https://hachyderm.io/@ttscoff)
+- Email autolinking now requires that the @ symbol is preceded by an alphanumeric character (not space or punctuation)
+- Email autolinking now requires a TLD (top-level domain) to match, so only [user]@[domain].[tld] format is autolinked
+- Email autolinking is now skipped inside markdown link URLs [text](url) to prevent incorrect conversions
+- Row-header tables (tables with empty first header cell) now correctly convert first-column body cells to `<th scope="row">` even when `relaxed_tables` is disabled
+
 ## [0.1.48] - 2026-01-03
 
 ### Fixed
@@ -2062,6 +2095,7 @@ Based on [cmark-gfm](https://github.com/github/cmark-gfm) by GitHub
 
 Developed for [Marked](https://marked2app.com) by Brett Terpstra
 
+[0.1.52]: https://github.com/ttscoff/apex/releases/tag/v0.1.52
 [0.1.51]: https://github.com/ttscoff/apex/releases/tag/v0.1.51
 [0.1.50]: https://github.com/ttscoff/apex/releases/tag/v0.1.50
 [0.1.49]: https://github.com/ttscoff/apex/releases/tag/v0.1.49
