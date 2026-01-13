@@ -15,6 +15,7 @@
 #include <sys/time.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 
 /* Remote plugin directory helpers (from plugins_remote.c) */
 typedef struct apex_remote_plugin apex_remote_plugin;
@@ -228,10 +229,118 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "If no file is specified, reads from stdin.\n");
 }
 
+/* ANSI art logo - 16 lines, 40 characters display width */
+static const char *logo_ansi[] = {
+    "\x1b[107;40m\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m%\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m&\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;m%\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m&\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m%\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;m#\x1b[38;5;m#\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m%\x1b[38;5;m(\x1b[38;5;m#\x1b[38;5;m%\x1b[38;5;m%\x1b[38;5;m#\x1b[38;5;m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m(\x1b[38;5;005m(\x1b[38;5;005m/\x1b[38;5;m/\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m%\x1b[38;5;m,\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m*\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m/\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m(\x1b[38;5;007m%\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;007m#\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m(\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;m(\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m(\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;m(\x1b[38;5;m \x1b[38;5;m,\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;008m#\x1b[38;5;008m(\x1b[38;5;m.\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;007m#\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m(\x1b[38;5;008m#\x1b[38;5;008m#\x1b[38;5;008m#\x1b[38;5;008m(\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m(\x1b[38;5;m/\x1b[38;5;m,\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m(\x1b[38;5;007m#\x1b[38;5;m(\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;m(\x1b[38;5;m.\x1b[38;5;m \x1b[38;5;m*\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;008m#\x1b[38;5;008m#\x1b[38;5;008m(\x1b[38;5;008m(\x1b[38;5;m(\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;005m(\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;005m(\x1b[38;5;013m#\x1b[38;5;m/\x1b[38;5;m.\x1b[38;5;m.\x1b[38;5;m(\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;m(\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;013m(\x1b[38;5;013m#\x1b[38;5;013m(\x1b[38;5;013m(\x1b[38;5;005m(\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;005m/\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;013m(\x1b[38;5;m/\x1b[38;5;m,\x1b[38;5;m \x1b[38;5;m*\x1b[38;5;013m(\x1b[38;5;013m(\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;m/\x1b[38;5;m,\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;013m#\x1b[38;5;013m(\x1b[38;5;013m(\x1b[38;5;013m(\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;m*\x1b[38;5;m*\x1b[38;5;m*\x1b[38;5;m ",
+    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[0m",
+    NULL
+};
+
+/* Plain text logo for non-color terminals */
+static const char *logo_plain[] = {
+    "                                        ",
+    "                   %/*                  ",
+    "                   .&%%%%%%*            ",
+    "                   .&###%#####(((#      ",
+    "                   .%(#%%####((//#      ",
+    "                   .%,    *(((((/#      ",
+    "                   (%/                  ",
+    "                 /#%%%#                 ",
+    "                (#######(               ",
+    "              (####( ,###(.             ",
+    "        /#/  #####/   (###(* .(/,       ",
+    "      (#(//######(. *######(((/*(*      ",
+    "    .(#/..(#####(  ./////(#(((/  //*    ",
+    "   /(/, *((####/,         /#(((// ////  ",
+    " .////////////*            ////////**** ",
+    "                                        ",
+    NULL
+};
+
+#define LOGO_WIDTH 40
+#define LOGO_HEIGHT 16
+#define MIN_WIDTH_FOR_LOGO 80  /* logo (40) + spacing (3) + version text (~35) */
+
+/* Get terminal width, returns 0 if cannot determine */
+static int get_terminal_width(void) {
+    struct winsize ws;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0 && ws.ws_col > 0) {
+        return ws.ws_col;
+    }
+    return 0;
+}
+
+/* Check if terminal supports color output */
+static bool supports_color(void) {
+    /* Respect NO_COLOR convention */
+    if (getenv("NO_COLOR") != NULL) {
+        return false;
+    }
+    /* Check if stdout is a TTY */
+    if (!isatty(STDOUT_FILENO)) {
+        return false;
+    }
+    /* Check TERM for known color-capable terminals */
+    const char *term = getenv("TERM");
+    if (term == NULL || strcmp(term, "dumb") == 0) {
+        return false;
+    }
+    return true;
+}
+
 static void print_version(void) {
-    printf("Apex %s\n", apex_version_string());
-    printf("Copyright (c) 2025 Brett Terpstra\n");
-    printf("Licensed under MIT License\n");
+    int term_width = get_terminal_width();
+    bool use_color = supports_color();
+    bool show_logo = (term_width >= MIN_WIDTH_FOR_LOGO) && isatty(STDOUT_FILENO);
+    
+    /* Version info lines */
+    char version_line[64];
+    snprintf(version_line, sizeof(version_line), "Apex %s", apex_version_string());
+    const char *copyright_line = "Copyright (c) 2025 Brett Terpstra";
+    const char *license_line = "Licensed under MIT License";
+    
+    if (show_logo) {
+        const char **logo = use_color ? logo_ansi : logo_plain;
+        /* Print logo with version info on the right side */
+        /* Version info appears on lines 2, 3, 4 (0-indexed: 1, 2, 3) */
+        for (int i = 0; i < LOGO_HEIGHT; i++) {
+            printf("%s", logo[i]);
+            if (use_color) {
+                printf("\x1b[0m");  /* Reset after each line */
+            }
+            /* Add version info on specific lines */
+            if (i == 1) {
+                printf("   %s", version_line);
+            } else if (i == 2) {
+                printf("   %s", copyright_line);
+            } else if (i == 3) {
+                printf("   %s", license_line);
+            }
+            printf("\n");
+        }
+        if (use_color) {
+            printf("\x1b[0m");  /* Final reset */
+        }
+    } else {
+        /* Simple text-only output */
+        printf("%s\n", version_line);
+        printf("%s\n", copyright_line);
+        printf("%s\n", license_line);
+    }
 }
 
 /* Helper to append a script tag string to a dynamic NULL-terminated array.
