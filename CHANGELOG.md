@@ -2,6 +2,25 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.53] - 2026-01-13
+
+### New
+
+- Display ASCII art logo alongside version info when running `apex --version` in a wide enough terminal (>=80 columns)
+- --code-highlight TOOL flag for syntax highlighting via external tools (pygments, skylighting, or abbreviations p, s)
+- --code-line-numbers flag to include line numbers in syntax-highlighted code blocks (requires --code-highlight)
+- --css flag now accepts multiple stylesheets via repeated flags or comma-separated list (e.g., --css style.css --css syntax.css or --css style.css,syntax.css)
+- Automatic GitHub-style syntax highlighting CSS embedded when --code-highlight is used (covers both Pygments and Skylighting class names)
+- Add test runner `--badge` mode that outputs pass/fail count (e.g., "981/981") for badge generation
+
+### Improved
+
+- Version output automatically detects terminal capabilities and falls back to text-only when logo cannot display (narrow terminal, piped output, NO_COLOR set)
+- --embed-css now embeds all specified stylesheets as inline <style> blocks
+- Test output in errors-only mode (`-e`) now only prints suite titles for suites with failures
+
+[0.1.53]: https://github.com/ApexMarkdown/apex/releases/tag/v0.1.53
+
 ## [0.1.52] - 2026-01-11
 
 ### Changed
