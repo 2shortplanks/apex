@@ -1,5 +1,5 @@
 <!--README-->
-[![Version: <!--VER-->0.1.52<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.52<!--END VER-->-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 981/981](https://img.shields.io/badge/Tests-981/981-a5da78)<!--END TESTS_BADGE-->
+[![Version: <!--VER-->0.1.53<!--END VER-->](https://img.shields.io/badge/Version-<!--VER-->0.1.53<!--END VER-->-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 981/981](https://img.shields.io/badge/Tests-981/981-a5da78)<!--END TESTS_BADGE-->
 
 <!--GITHUB-->
 # Apex
@@ -14,8 +14,7 @@ them all.
 ![](apex-header-2-rb@2x.webp)
 <!--END GITHUB-->
 
-<!--JEKYLL {% img alignright /uploads/2025/12/apexicon.png
-300 300 "Apex Icon" %}-->There are so many variations of
+<!--JEKYLL {% img alignright /uploads/2025/12/apexicon.png 300 300 "Apex Icon" %}-->There are so many variations of
 Markdown, extending its features in all kinds of ways. But
 picking one flavor means giving up the features of another
 flavor. So I'm building Apex with the goal of making all of
@@ -26,13 +25,8 @@ one tool.
 
 ### Compatibility Modes
 
-- **Multiple compatibility modes**: CommonMark, GFM,
-
-  MultiMarkdown, Kramdown, and Unified (all features)
-
-- **Mode-specific features**: Each mode enables appropriate
-
-  extensions for maximum compatibility
+- **Multiple compatibility modes**: CommonMark, GFM, MultiMarkdown, Kramdown, and Unified (all features)
+- **Mode-specific features**: Each mode enables appropriate extensions for maximum compatibility
 
 ### Markdown Extensions
 

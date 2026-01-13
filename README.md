@@ -1,5 +1,5 @@
 
-[![Version: 0.1.52](https://img.shields.io/badge/Version-0.1.52-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 981/981](https://img.shields.io/badge/Tests-981/981-a5da78)<!--END TESTS_BADGE-->
+[![Version: 0.1.53](https://img.shields.io/badge/Version-0.1.53-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 981/981](https://img.shields.io/badge/Tests-981/981-a5da78)<!--END TESTS_BADGE-->
 
 
 # Apex
@@ -25,13 +25,8 @@ one tool.
 
 ### Compatibility Modes
 
-- **Multiple compatibility modes**: CommonMark, GFM,
-
-  MultiMarkdown, Kramdown, and Unified (all features)
-
-- **Mode-specific features**: Each mode enables appropriate
-
-  extensions for maximum compatibility
+- **Multiple compatibility modes**: CommonMark, GFM, MultiMarkdown, Kramdown, and Unified (all features)
+- **Mode-specific features**: Each mode enables appropriate extensions for maximum compatibility
 
 ### Markdown Extensions
 
