@@ -58,6 +58,11 @@ indices: true
 group-index-by-letter: true
 bibliography: references.bib
 csl: apa.csl
+
+# Syntax highlighting (optional)
+code-highlight: pygments
+code-line-numbers: true
+highlight-language-only: true
 ---
 ```
 
@@ -194,6 +199,8 @@ Boolean keys accept any of the following values (case-insensitive):
 - `standalone` - Generate a full HTML document (`<html>`, `<head>`, `<body>`)
 - `hardbreaks` - Treat newlines as `<br>`
 - `plugins` - Enable plugin processing (see **apex-plugins**(7))
+- `code-line-numbers` - Include line numbers in syntax-highlighted code blocks
+- `highlight-language-only` - Only highlight code blocks that have a language specified
 
 ## String options
 
@@ -217,6 +224,8 @@ String keys take a free-form string value (sometimes with a constrained set of o
   - BCP 47 or similar language tag (e.g. `en`, `en-US`, `fr`); sets the HTML `lang` attribute
 - `quoteslanguage` / `Quotes Language`
   - Human-readable language name used for quote styling (e.g. `english`, `french`, `german`)
+- `code-highlight`
+  - External syntax highlighting tool: `pygments` (or `p`/`pyg`), `skylighting` (or `s`/`sky`), or `false`/`none` to disable
 
 You can also use arbitrary keys for your own templates and transforms; Apex simply passes them through to the metadata system so they can be referenced via `[%key]` and `[%key:transform]`.
 

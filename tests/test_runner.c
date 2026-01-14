@@ -31,6 +31,7 @@ void test_metadata(void);
 void test_mmd_metadata_keys(void);
 void test_metadata_transforms(void);
 void test_metadata_control_options(void);
+void test_syntax_highlight_options(void);
 void test_wiki_links(void);
 void test_image_embedding(void);
 void test_image_width_height_conversion(void);
@@ -89,6 +90,7 @@ static test_suite suites[] = {
     { "metadata_transforms",           test_metadata_transforms },
     { "mmd_metadata_keys",             test_mmd_metadata_keys },
     { "metadata_control_options",      test_metadata_control_options },
+    { "syntax_highlight_options",      test_syntax_highlight_options },
     { "wiki_links",                    test_wiki_links },
     { "math",                          test_math },
     { "critic_markup",                 test_critic_markup },

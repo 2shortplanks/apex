@@ -616,5 +616,250 @@ void test_metadata_control_options(void) {
 }
 
 /**
+ * Test syntax highlighting options via metadata
+ */
+void test_syntax_highlight_options(void) {
+    int suite_failures = suite_start();
+    print_suite_title("Syntax Highlighting Options Tests", false, true);
+
+    apex_options opts;
+    apex_metadata_item *metadata = NULL;
+    apex_metadata_item *item;
+
+    /* Test code-highlight option: pygments (full name) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("pygments");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "pygments", "code-highlight: pygments sets code_highlighter");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: skylighting (full name) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("skylighting");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "skylighting", "code-highlight: skylighting sets code_highlighter");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: p (abbreviation for pygments) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("p");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "pygments", "code-highlight: p (abbreviation) sets pygments");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: s (abbreviation for skylighting) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("s");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "skylighting", "code-highlight: s (abbreviation) sets skylighting");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: pyg (abbreviation for pygments) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("pyg");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "pygments", "code-highlight: pyg (abbreviation) sets pygments");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: sky (abbreviation for skylighting) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("sky");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "skylighting", "code-highlight: sky (abbreviation) sets skylighting");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: false disables */
+    opts = apex_options_default();
+    opts.code_highlighter = "pygments";  /* Start with it enabled */
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("false");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.code_highlighter == NULL, true, "code-highlight: false disables highlighting");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-highlight option: none disables */
+    opts = apex_options_default();
+    opts.code_highlighter = "pygments";  /* Start with it enabled */
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("none");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.code_highlighter == NULL, true, "code-highlight: none disables highlighting");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-line-numbers option: true */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-line-numbers");
+    item->value = strdup("true");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.code_line_numbers, true, "code-line-numbers: true enables line numbers");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code-line-numbers option: false */
+    opts = apex_options_default();
+    opts.code_line_numbers = true;  /* Start enabled */
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-line-numbers");
+    item->value = strdup("false");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.code_line_numbers, false, "code-line-numbers: false disables line numbers");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test code_line_numbers option with underscore (alternate key format) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code_line_numbers");
+    item->value = strdup("yes");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.code_line_numbers, true, "code_line_numbers (underscore): yes enables line numbers");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test highlight-language-only option: true */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("highlight-language-only");
+    item->value = strdup("true");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.highlight_language_only, true, "highlight-language-only: true enables language-only mode");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test highlight-language-only option: false */
+    opts = apex_options_default();
+    opts.highlight_language_only = true;  /* Start enabled */
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("highlight-language-only");
+    item->value = strdup("false");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.highlight_language_only, false, "highlight-language-only: false disables language-only mode");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test highlight_language_only option with underscore (alternate key format) */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("highlight_language_only");
+    item->value = strdup("1");
+    item->next = NULL;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_bool(opts.highlight_language_only, true, "highlight_language_only (underscore): 1 enables language-only mode");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test combined syntax highlighting options */
+    opts = apex_options_default();
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-highlight");
+    item->value = strdup("pygments");
+    item->next = NULL;
+    metadata = item;
+
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("code-line-numbers");
+    item->value = strdup("true");
+    item->next = metadata;
+    metadata = item;
+
+    item = malloc(sizeof(apex_metadata_item));
+    item->key = strdup("highlight-language-only");
+    item->value = strdup("true");
+    item->next = metadata;
+    metadata = item;
+
+    apex_apply_metadata_to_options(metadata, &opts);
+    assert_option_string(opts.code_highlighter, "pygments", "Combined: code-highlight set");
+    assert_option_bool(opts.code_line_numbers, true, "Combined: code-line-numbers set");
+    assert_option_bool(opts.highlight_language_only, true, "Combined: highlight-language-only set");
+    apex_free_metadata(metadata);
+    metadata = NULL;
+
+    /* Test via YAML front matter in document */
+    apex_options yaml_opts = apex_options_for_mode(APEX_MODE_UNIFIED);
+    char *html;
+
+    /* Note: We can't fully test external highlighting without the tools installed,
+     * but we can verify that the options are parsed from YAML metadata correctly.
+     * The actual highlighting would require pygments/skylighting to be installed. */
+
+    /* Test that code blocks are rendered when no highlighting tool is available */
+    const char *code_doc = "---\ncode-highlight: pygments\n---\n\n```python\nprint('hello')\n```";
+    html = apex_markdown_to_html(code_doc, strlen(code_doc), &yaml_opts);
+    /* Should have code block regardless of whether pygments is available */
+    assert_contains(html, "<pre", "Code block has pre tag");
+    assert_contains(html, "<code", "Code block has code tag");
+    assert_contains(html, "print", "Code content preserved");
+    apex_free_string(html);
+
+    bool had_failures = suite_end(suite_failures);
+    print_suite_title("Syntax Highlighting Options Tests", had_failures, false);
+}
+
+/**
  * Test ARIA labels and accessibility attributes
  */

@@ -153,6 +153,7 @@ typedef struct {
     /* Syntax highlighting options */
     const char *code_highlighter;   /* External tool: "pygments", "skylighting", or NULL for no highlighting */
     bool code_line_numbers;         /* Enable line numbers in syntax-highlighted code blocks */
+    bool highlight_language_only;   /* Only highlight code blocks that have a language specified */
 
     /* Source file information for plugins */
     /* When Apex is invoked on a file, this is the full path to that file. */

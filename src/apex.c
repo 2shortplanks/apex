@@ -2546,6 +2546,7 @@ apex_options apex_options_default(void) {
     /* Syntax highlighting options */
     opts.code_highlighter = NULL;   /* Default: no external syntax highlighting */
     opts.code_line_numbers = false; /* Default: no line numbers */
+    opts.highlight_language_only = false; /* Default: highlight all code blocks */
 
     /* Source file information (used by plugins via APEX_FILE_PATH) */
     opts.input_file_path = NULL;
@@ -3776,7 +3777,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     /* Apply external syntax highlighting if requested */
     if (options->code_highlighter && html) {
         PROFILE_START(syntax_highlight);
-        char *highlighted = apex_apply_syntax_highlighting(html, options->code_highlighter, options->code_line_numbers);
+        char *highlighted = apex_apply_syntax_highlighting(html, options->code_highlighter, options->code_line_numbers, options->highlight_language_only);
         PROFILE_END(syntax_highlight);
         if (highlighted && highlighted != html) {
             free(html);

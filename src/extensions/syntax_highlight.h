@@ -26,11 +26,12 @@
  * @param html The HTML output containing code blocks to highlight
  * @param tool The highlighting tool name ("pygments" or "skylighting")
  * @param line_numbers Whether to include line numbers in output
+ * @param language_only When true, only highlight blocks that have a language specified
  * @return Newly allocated HTML with highlighted code blocks, or NULL on error.
  *         If the tool is not found or fails, returns a copy of the original HTML
  *         with a warning printed to stderr.
  */
-char *apex_apply_syntax_highlighting(const char *html, const char *tool, bool line_numbers);
+char *apex_apply_syntax_highlighting(const char *html, const char *tool, bool line_numbers, bool language_only);
 
 /**
  * Check if a syntax highlighting tool is available in PATH.

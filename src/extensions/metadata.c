@@ -2698,6 +2698,36 @@ void apex_apply_metadata_to_options(apex_metadata_item *metadata, apex_options *
         } else if (strcasecmp(key, "wikilink-extension") == 0 || strcasecmp(key, "wikilink_extension") == 0) {
             options->wikilink_extension = value;
         }
+        /* Syntax highlighting options */
+        else if (strcasecmp(key, "code-highlight") == 0 || strcasecmp(key, "code_highlight") == 0) {
+            /* Accept full names and abbreviations */
+            char *lower = strdup(value);
+            if (lower) {
+                for (char *p = lower; *p; p++) {
+                    *p = (char)tolower((unsigned char)*p);
+                }
+                if (strcmp(lower, "pygments") == 0 || strcmp(lower, "p") == 0 || strcmp(lower, "pyg") == 0) {
+                    options->code_highlighter = "pygments";
+                } else if (strcmp(lower, "skylighting") == 0 || strcmp(lower, "s") == 0 || strcmp(lower, "sky") == 0) {
+                    options->code_highlighter = "skylighting";
+                } else if (is_false_value(lower) || strcmp(lower, "none") == 0) {
+                    options->code_highlighter = NULL;
+                }
+                free(lower);
+            }
+        } else if (strcasecmp(key, "code-line-numbers") == 0 || strcasecmp(key, "code_line_numbers") == 0) {
+            if (is_true_value(value)) {
+                options->code_line_numbers = true;
+            } else if (is_false_value(value)) {
+                options->code_line_numbers = false;
+            }
+        } else if (strcasecmp(key, "highlight-language-only") == 0 || strcasecmp(key, "highlight_language_only") == 0) {
+            if (is_true_value(value)) {
+                options->highlight_language_only = true;
+            } else if (is_false_value(value)) {
+                options->highlight_language_only = false;
+            }
+        }
 
         item = item->next;
     }

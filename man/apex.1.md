@@ -69,6 +69,11 @@ original code block in the document.
 Requires **--code-highlight**. When used with Pygments, adds
 `linenos=1` option. When used with Skylighting, adds `-n` flag.
 
+**--highlight-language-only**
+: Only apply syntax highlighting to code blocks that have a language
+specified (via ` ```language ` or IAL). Code blocks without a language
+will be left unhighlighted. Requires **--code-highlight**.
+
 **--script** *VALUE*
 :   Inject `<script>` tags either before `</body>` in standalone mode or at the end of the HTML fragment in snippet mode. *VALUE* can be a path, a URL, or one of the following shorthands: `mermaid`, `mathjax`, `katex`, `highlightjs`, `highlight.js`, `prism`, `prismjs`, `htmx`, `alpine`, `alpinejs`. Can be used multiple times or with a comma-separated list (e.g., `--script mermaid,mathjax`).
 
@@ -118,6 +123,11 @@ output replaces the original code block in the document.
 : Include line numbers in syntax-highlighted code blocks.
 Requires **--code-highlight**. When used with Pygments, adds
 `linenos=1` option. When used with Skylighting, adds `-n` flag.
+
+**--highlight-language-only**
+: Only apply syntax highlighting to code blocks that have a language
+specified (via ` ```language ` or IAL). Code blocks without a language
+will be left unhighlighted. Requires **--code-highlight**.
 
 **--includes**, **--no-includes**
 : Enable or disable file inclusion. Enabled by default in

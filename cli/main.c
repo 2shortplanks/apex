@@ -166,6 +166,7 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --captions POSITION    Table caption position: above or below (default: below)\n");
     fprintf(stderr, "  --code-highlight TOOL  Use external tool for syntax highlighting (pygments, skylighting, or abbreviations p, s)\n");
     fprintf(stderr, "  --code-line-numbers    Include line numbers in syntax-highlighted code blocks (requires --code-highlight)\n");
+    fprintf(stderr, "  --highlight-language-only  Only highlight code blocks that have a language specified (requires --code-highlight)\n");
     fprintf(stderr, "  --combine              Concatenate Markdown files (expanding includes) into a single Markdown stream\n");
     fprintf(stderr, "                         When a SUMMARY.md file is provided, treat it as a GitBook index and combine\n");
     fprintf(stderr, "                         the linked files in order. Output is raw Markdown suitable for piping back into Apex.\n");
@@ -232,10 +233,9 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "If no file is specified, reads from stdin.\n");
 }
 
-/* ANSI art logo - 16 lines, 40 characters display width */
+/* ANSI art logo - 15 lines, 40 characters display width */
 static const char *logo_ansi[] = {
-    "\x1b[107;40m\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
-    "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m%\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
+    "\x1b[107;40m\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m%\x1b[38;5;m/\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
     "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m&\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;007m%\x1b[38;5;m%\x1b[38;5;m*\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
     "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m&\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m%\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;007m#\x1b[38;5;m#\x1b[38;5;m#\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m(\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
     "\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m.\x1b[38;5;m%\x1b[38;5;m(\x1b[38;5;m#\x1b[38;5;m%\x1b[38;5;m%\x1b[38;5;m#\x1b[38;5;m#\x1b[38;5;013m#\x1b[38;5;013m#\x1b[38;5;013m(\x1b[38;5;005m(\x1b[38;5;005m/\x1b[38;5;m/\x1b[38;5;m#\x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m \x1b[38;5;m ",
@@ -255,7 +255,6 @@ static const char *logo_ansi[] = {
 
 /* Plain text logo for non-color terminals */
 static const char *logo_plain[] = {
-    "                                        ",
     "                   %/*                  ",
     "                   .&%%%%%%*            ",
     "                   .&###%#####(((#      ",
@@ -275,7 +274,7 @@ static const char *logo_plain[] = {
 };
 
 #define LOGO_WIDTH 40
-#define LOGO_HEIGHT 16
+#define LOGO_HEIGHT 15
 #define MIN_WIDTH_FOR_LOGO 80  /* logo (40) + spacing (3) + version text (~35) */
 
 /* Get terminal width, returns 0 if cannot determine */
@@ -309,28 +308,28 @@ static void print_version(void) {
     int term_width = get_terminal_width();
     bool use_color = supports_color();
     bool show_logo = (term_width >= MIN_WIDTH_FOR_LOGO) && isatty(STDOUT_FILENO);
-    
+
     /* Version info lines */
     char version_line[64];
     snprintf(version_line, sizeof(version_line), "Apex %s", apex_version_string());
     const char *copyright_line = "Copyright (c) 2025 Brett Terpstra";
     const char *license_line = "Licensed under MIT License";
-    
+
     if (show_logo) {
         const char **logo = use_color ? logo_ansi : logo_plain;
         /* Print logo with version info on the right side */
-        /* Version info appears on lines 2, 3, 4 (0-indexed: 1, 2, 3) */
+        /* Version info appears on lines 1, 2, 3 (0-indexed: 0, 1, 2) */
         for (int i = 0; i < LOGO_HEIGHT; i++) {
             printf("%s", logo[i]);
             if (use_color) {
                 printf("\x1b[0m");  /* Reset after each line */
             }
             /* Add version info on specific lines */
-            if (i == 1) {
+            if (i == 0) {
                 printf("   %s", version_line);
-            } else if (i == 2) {
+            } else if (i == 1) {
                 printf("   %s", copyright_line);
-            } else if (i == 3) {
+            } else if (i == 2) {
                 printf("   %s", license_line);
             }
             printf("\n");
@@ -1047,7 +1046,7 @@ int main(int argc, char *argv[]) {
                 return 1;
             }
             options.standalone = true;  /* Imply standalone if CSS is specified */
-            
+
             /* Parse comma-separated stylesheet paths */
             const char *arg = argv[i];
             const char *start = arg;
@@ -1056,7 +1055,7 @@ int main(int argc, char *argv[]) {
                 while (*arg && *arg != ',') {
                     arg++;
                 }
-                
+
                 /* Extract this stylesheet path */
                 size_t len = arg - start;
                 if (len > 0) {
@@ -1069,7 +1068,7 @@ int main(int argc, char *argv[]) {
                     while (len > 0 && (start[len - 1] == ' ' || start[len - 1] == '\t')) {
                         len--;
                     }
-                    
+
                     if (len > 0) {
                         /* Allocate or reallocate stylesheet files array */
                         if (!stylesheet_files) {
@@ -1087,7 +1086,7 @@ int main(int argc, char *argv[]) {
                             }
                             stylesheet_files = new_files;
                         }
-                        
+
                         /* Allocate and copy the stylesheet path */
                         stylesheet_files[stylesheet_count] = malloc(len + 1);
                         if (!stylesheet_files[stylesheet_count]) {
@@ -1099,7 +1098,7 @@ int main(int argc, char *argv[]) {
                         stylesheet_count++;
                     }
                 }
-                
+
                 /* Skip comma and any following whitespace */
                 if (*arg == ',') {
                     arg++;
@@ -1286,6 +1285,8 @@ int main(int argc, char *argv[]) {
             }
         } else if (strcmp(argv[i], "--code-line-numbers") == 0) {
             options.code_line_numbers = true;
+        } else if (strcmp(argv[i], "--highlight-language-only") == 0) {
+            options.highlight_language_only = true;
         } else if (strcmp(argv[i], "--alpha-lists") == 0) {
             options.allow_alpha_lists = true;
         } else if (strcmp(argv[i], "--no-alpha-lists") == 0) {

@@ -240,7 +240,7 @@ static char *highlight_code_block(const char *code, const char *language,
 /**
  * Apply syntax highlighting to code blocks in HTML.
  */
-char *apex_apply_syntax_highlighting(const char *html, const char *tool, bool line_numbers) {
+char *apex_apply_syntax_highlighting(const char *html, const char *tool, bool line_numbers, bool language_only) {
     if (!html || !tool) return html ? strdup(html) : NULL;
 
     /* Check if tool is available */
@@ -346,6 +346,22 @@ char *apex_apply_syntax_highlighting(const char *html, const char *tool, bool li
                             language[lang_len] = '\0';
                         }
                     }
+                }
+            }
+
+            /* If language_only is set and no language was found, skip this block */
+            if (language_only && !language[0]) {
+                /* Copy the original block as-is */
+                const char *block_end = strstr(code_tag_end + 1, "</code></pre>");
+                if (block_end) {
+                    size_t block_len = (block_end + 13) - pre_start;
+                    if (block_len <= remaining) {
+                        memcpy(write, pre_start, block_len);
+                        write += block_len;
+                        remaining -= block_len;
+                    }
+                    read = block_end + 13;
+                    continue;
                 }
             }
 
