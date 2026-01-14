@@ -41,7 +41,7 @@ void test_math(void) {
     assert_not_contains(html, "class=\"math", "No math span created inside Liquid tag");
     assert_not_contains(html, "mailto:", "No email autolink created inside Liquid tag");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Math Support Tests", had_failures, false);
 }
@@ -129,7 +129,7 @@ void test_critic_markup(void) {
         test_result(false, "Reject mode has comments or markup tags");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Critic Markup Tests", had_failures, false);
 }
@@ -168,7 +168,7 @@ void test_processor_modes(void) {
     html = apex_markdown_to_html(markdown, strlen(markdown), &unified_opts);
     assert_contains(html, "<h1", "Unified mode works");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Processor Modes Tests", had_failures, false);
 }
@@ -358,7 +358,7 @@ void test_file_includes(void) {
         test_result(false, "Regex with no match should return empty");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("File Includes Tests", had_failures, false);
 }
@@ -443,7 +443,7 @@ void test_definition_lists(void) {
     assert_contains(html, "<dd>", "Definition with reference link");
     assert_contains(html, "<a href=\"https://example.com\"", "Reference link in definition has href");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Definition Lists Tests", had_failures, false);
 }
@@ -510,7 +510,7 @@ void test_callouts(void) {
         test_result(false, "Regular blockquote incorrectly treated as callout");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Callouts Tests", had_failures, false);
 }
@@ -579,7 +579,7 @@ void test_blockquote_lists(void) {
     assert_contains(html, "<blockquote>", "Blockquote with definition list");
     /* Definition lists may or may not be parsed depending on mode */
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Blockquote Lists Tests", had_failures, false);
 }
@@ -636,7 +636,7 @@ void test_html_markdown_attributes(void) {
     // Without markdown attribute, HTML content is typically preserved
     assert_contains(html, "<div>", "HTML preserved without markdown attribute");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("HTML Markdown Attributes Tests", had_failures, false);
 }
@@ -945,7 +945,7 @@ void test_fenced_divs(void) {
     assert_contains(html, "Second div", "Second div content");
     assert_contains(html, "Third div", "Third div content");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Fenced Divs Tests", had_failures, false);
 }
@@ -1015,7 +1015,7 @@ void test_abbreviations(void) {
     assert_contains(html, "Old Style", "Old syntax in mixed");
     assert_contains(html, "New Style", "New syntax in mixed");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Abbreviations Tests", had_failures, false);
 }
@@ -1120,7 +1120,7 @@ void test_mmd6_features(void) {
     assert_contains(html, "Multi\nLine\nHeader</h1>", "Multi-line setext header content in unified mode");
     assert_contains(html, "title=\"Title\"", "Link title with single quotes works in unified mode");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("MMD 6 Features Tests", had_failures, false);
 }
@@ -1166,7 +1166,7 @@ void test_emoji(void) {
     assert_contains(html, "⚠", "Warning emoji");
     assert_contains(html, "👍", "Plus one emoji");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Emoji Tests", had_failures, false);
 }
@@ -1235,7 +1235,7 @@ void test_special_markers(void) {
     assert_contains(html, "Section 1", "First section");
     assert_contains(html, "Section 3", "Last section");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Special Markers Tests", had_failures, false);
 }
@@ -1292,7 +1292,7 @@ void test_advanced_footnotes(void) {
     assert_contains(html, "footnote", "Formatted inline footnote");
     /* Note: Markdown in inline footnotes handled by cmark-gfm */
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Advanced Footnotes Tests", had_failures, false);
 }
@@ -1615,7 +1615,7 @@ void test_mixed_lists(void) {
         test_result(false, "--no-mixed-lists does not disable mixed list merging");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Mixed List Markers Tests", had_failures, false);
 }
@@ -1711,7 +1711,7 @@ void test_unsafe_mode(void) {
         test_result(false, "Script tags not handled in unsafe mode");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Unsafe Mode Tests", had_failures, false);
 }

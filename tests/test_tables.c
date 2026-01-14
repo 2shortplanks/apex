@@ -200,7 +200,7 @@ void test_advanced_tables(void) {
     assert_contains(html, "id=\"before-table\"", "Table IAL ID with caption before");
     assert_contains(html, "class=\"before-class\"", "Table IAL class with caption before");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Advanced Tables Tests", had_failures, false);
 }
@@ -324,7 +324,7 @@ void test_relaxed_tables(void) {
         test_result(false, "Mismatched column counts incorrectly treated as table");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Relaxed Tables Tests", had_failures, false);
 }
@@ -474,7 +474,7 @@ void test_comprehensive_table_features(void) {
     assert_contains(html, "Eve", "Eve row present");
 
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Comprehensive Test File Table Features", had_failures, false);
 }
@@ -571,7 +571,7 @@ void test_table_no_trailing_newline(void) {
     }
 
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Table No Trailing Newline Test", had_failures, false);
 }
@@ -788,7 +788,7 @@ void test_inline_tables(void) {
     assert_contains(html, "<!--TABLE-->", "Empty TABLE marker: comment preserved");
     assert_contains(html, "After", "Empty TABLE marker: after text preserved");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Inline Tables Tests", had_failures, false);
 }

@@ -144,7 +144,7 @@ void test_ial(void) {
     html = apex_markdown_to_html(spaced_ial, strlen(spaced_ial), &opts);
     assert_contains(html, "class=\"spaced-class\"", "Inline IAL with spaces");
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("IAL Tests", had_failures, false);
 }
@@ -249,7 +249,7 @@ void test_bracketed_spans(void) {
         test_result(false, "Bracketed spans incorrectly enabled when flag is off");
     }
     apex_free_string(html);
-    
+
     bool had_failures = suite_end(suite_failures);
     print_suite_title("Bracketed Spans Tests", had_failures, false);
 }
