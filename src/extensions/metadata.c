@@ -2637,6 +2637,69 @@ void apex_apply_metadata_to_options(apex_metadata_item *metadata, apex_options *
             } else if (is_false_value(value)) {
                 options->hardbreaks = false;
             }
+        } else if (strcasecmp(key, "widont") == 0) {
+            if (is_true_value(value)) {
+                options->enable_widont = true;
+            } else if (is_false_value(value)) {
+                options->enable_widont = false;
+            }
+        } else if (strcasecmp(key, "code-is-poetry") == 0 || strcasecmp(key, "code_is_poetry") == 0) {
+            if (is_true_value(value)) {
+                options->code_is_poetry = true;
+                options->highlight_language_only = true;
+            } else if (is_false_value(value)) {
+                options->code_is_poetry = false;
+            }
+        } else if (strcasecmp(key, "markdown-in-html") == 0 || strcasecmp(key, "markdown_in_html") == 0) {
+            if (is_true_value(value)) {
+                options->enable_markdown_in_html = true;
+            } else if (is_false_value(value)) {
+                options->enable_markdown_in_html = false;
+            }
+        } else if (strcasecmp(key, "random-footnote-ids") == 0 || strcasecmp(key, "random_footnote_ids") == 0) {
+            if (is_true_value(value)) {
+                options->random_footnote_ids = true;
+            } else if (is_false_value(value)) {
+                options->random_footnote_ids = false;
+            }
+        } else if (strcasecmp(key, "hashtags") == 0) {
+            if (is_true_value(value)) {
+                options->enable_hashtags = true;
+            } else if (is_false_value(value)) {
+                options->enable_hashtags = false;
+            }
+        } else if (strcasecmp(key, "style-hashtags") == 0 || strcasecmp(key, "style_hashtags") == 0) {
+            if (is_true_value(value)) {
+                options->style_hashtags = true;
+            } else if (is_false_value(value)) {
+                options->style_hashtags = false;
+            }
+        } else if (strcasecmp(key, "proofreader") == 0) {
+            if (is_true_value(value)) {
+                options->proofreader_mode = true;
+                options->enable_critic_markup = true;
+                options->critic_mode = 2; /* markup mode */
+            } else if (is_false_value(value)) {
+                options->proofreader_mode = false;
+            }
+        } else if (strcasecmp(key, "hr-page-break") == 0 || strcasecmp(key, "hr_page_break") == 0) {
+            if (is_true_value(value)) {
+                options->hr_page_break = true;
+            } else if (is_false_value(value)) {
+                options->hr_page_break = false;
+            }
+        } else if (strcasecmp(key, "title-from-h1") == 0 || strcasecmp(key, "title_from_h1") == 0) {
+            if (is_true_value(value)) {
+                options->title_from_h1 = true;
+            } else if (is_false_value(value)) {
+                options->title_from_h1 = false;
+            }
+        } else if (strcasecmp(key, "page-break-before-footnotes") == 0 || strcasecmp(key, "page_break_before_footnotes") == 0) {
+            if (is_true_value(value)) {
+                options->page_break_before_footnotes = true;
+            } else if (is_false_value(value)) {
+                options->page_break_before_footnotes = false;
+            }
         }
         /* String options */
         else if (strcasecmp(key, "bibliography") == 0) {

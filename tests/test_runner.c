@@ -68,6 +68,7 @@ void test_header_ids(void);
 void test_indices(void);
 void test_citations(void);
 void test_aria_labels(void);
+void test_marked_integration_features(void);
 
 /**
  * Test suite registry
@@ -127,6 +128,8 @@ static test_suite suites[] = {
     { "indices",                       test_indices },
     { "citations",                     test_citations },
     { "aria_labels",                   test_aria_labels },
+    { "marked_integration",            test_marked_integration_features },
+    { "marked",                        test_marked_integration_features },
 };
 
 static const size_t suite_count = sizeof(suites) / sizeof(suites[0]);

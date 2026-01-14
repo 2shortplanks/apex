@@ -226,6 +226,16 @@ static void print_usage(const char *program_name) {
     fprintf(stderr, "  --title TITLE          Document title (requires --standalone, default: \"Document\")\n");
     fprintf(stderr, "  --[no-]transforms      Enable or disable metadata variable transforms [%%key:transform]\n");
     fprintf(stderr, "  --[no-]unsafe          Allow or disallow raw HTML in output\n");
+    fprintf(stderr, "  --widont               Prevent short widows in headings by inserting non-breaking spaces between trailing words\n");
+    fprintf(stderr, "  --code-is-poetry       Treat unlanguaged code blocks as poetry (adds 'poetry' class, implies --highlight-language-only)\n");
+    fprintf(stderr, "  --[no-]markdown-in-html  Enable or disable markdown processing inside HTML blocks with markdown attributes\n");
+    fprintf(stderr, "  --random-footnote-ids  Use hash-based footnote IDs to avoid collisions when combining documents\n");
+    fprintf(stderr, "  --hashtags             Convert #tags into span-wrapped hashtags\n");
+    fprintf(stderr, "  --style-hashtags       Use 'mkstyledtag' class instead of 'mkhashtag' for hashtags\n");
+    fprintf(stderr, "  --proofreader          Treat ==highlight== and ~~delete~~ as CriticMarkup highlight/deletion\n");
+    fprintf(stderr, "  --hr-page-break        Replace <hr> elements with Marked-style page break divs\n");
+    fprintf(stderr, "  --title-from-h1        Use the first H1 as the document title when none is specified\n");
+    fprintf(stderr, "  --page-break-before-footnotes  Insert a page break before the footnotes section\n");
     fprintf(stderr, "  -v, --version          Show version information\n");
     fprintf(stderr, "  --[no-]wikilinks       Enable or disable wiki link syntax [[PageName]]\n");
     fprintf(stderr, "  --wikilink-space MODE  Space replacement for wiki links: dash, none, underscore, space (default: dash)\n");
@@ -1330,6 +1340,31 @@ int main(int argc, char *argv[]) {
             options.enable_emoji_autocorrect = true;
         } else if (strcmp(argv[i], "--no-emoji-autocorrect") == 0) {
             options.enable_emoji_autocorrect = false;
+        } else if (strcmp(argv[i], "--widont") == 0) {
+            options.enable_widont = true;
+        } else if (strcmp(argv[i], "--code-is-poetry") == 0) {
+            options.code_is_poetry = true;
+            options.highlight_language_only = true;
+        } else if (strcmp(argv[i], "--markdown-in-html") == 0) {
+            options.enable_markdown_in_html = true;
+        } else if (strcmp(argv[i], "--no-markdown-in-html") == 0) {
+            options.enable_markdown_in_html = false;
+        } else if (strcmp(argv[i], "--random-footnote-ids") == 0) {
+            options.random_footnote_ids = true;
+        } else if (strcmp(argv[i], "--hashtags") == 0) {
+            options.enable_hashtags = true;
+        } else if (strcmp(argv[i], "--style-hashtags") == 0) {
+            options.style_hashtags = true;
+        } else if (strcmp(argv[i], "--proofreader") == 0) {
+            options.proofreader_mode = true;
+            options.enable_critic_markup = true;
+            options.critic_mode = 2;  /* Ensure markup mode */
+        } else if (strcmp(argv[i], "--hr-page-break") == 0) {
+            options.hr_page_break = true;
+        } else if (strcmp(argv[i], "--title-from-h1") == 0) {
+            options.title_from_h1 = true;
+        } else if (strcmp(argv[i], "--page-break-before-footnotes") == 0) {
+            options.page_break_before_footnotes = true;
         } else if (strcmp(argv[i], "--wikilink-space") == 0) {
             if (++i >= argc) {
                 fprintf(stderr, "Error: --wikilink-space requires an argument (dash, none, underscore, or space)\n");

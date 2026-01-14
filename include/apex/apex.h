@@ -17,8 +17,8 @@ extern "C" {
 
 #define APEX_VERSION_MAJOR 0
 #define APEX_VERSION_MINOR 1
-#define APEX_VERSION_PATCH 53
-#define APEX_VERSION_STRING "0.1.53"
+#define APEX_VERSION_PATCH 54
+#define APEX_VERSION_STRING "0.1.54"
 
 /**
  * Processor compatibility modes
@@ -154,6 +154,18 @@ typedef struct {
     const char *code_highlighter;   /* External tool: "pygments", "skylighting", or NULL for no highlighting */
     bool code_line_numbers;         /* Enable line numbers in syntax-highlighted code blocks */
     bool highlight_language_only;   /* Only highlight code blocks that have a language specified */
+
+    /* Marked / integration-specific options */
+    bool enable_widont;                 /* Apply widont to headings (prevent short widows) */
+    bool code_is_poetry;                /* Treat unlanguaged code blocks as poetry */
+    bool enable_markdown_in_html;       /* Process markdown inside HTML when enabled */
+    bool random_footnote_ids;           /* Use hash-based/randomized footnote IDs */
+    bool enable_hashtags;               /* Convert #tags to span-marked hashtags */
+    bool style_hashtags;                /* Use styled hashtag class instead of basic */
+    bool proofreader_mode;              /* Convert == / ~~ to CriticMarkup syntax */
+    bool hr_page_break;                 /* Replace <hr> with page break divs */
+    bool title_from_h1;                 /* Use first H1 as document title fallback */
+    bool page_break_before_footnotes;   /* Insert page break before footnotes section */
 
     /* Source file information for plugins */
     /* When Apex is invoked on a file, this is the full path to that file. */

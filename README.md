@@ -1,5 +1,5 @@
 
-[![Version: 0.1.53](https://img.shields.io/badge/Version-0.1.53-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 981/981](https://img.shields.io/badge/Tests-981/981-a5da78)<!--END TESTS_BADGE-->
+[![Version: 0.1.53](https://img.shields.io/badge/Version-0.1.53-528c9e)](https://github.com/ApexMarkdown/apex/releases/latest) ![](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!--TESTS_BADGE-->![Tests passing 1085/1085](https://img.shields.io/badge/Tests-1085/1085-a5da78)<!--END TESTS_BADGE-->
 
 
 # Apex
@@ -299,7 +299,7 @@ apex input.md --mode kramdown
 ### All Options
 
 ```
-Apex Markdown Processor v0.1.52
+Apex Markdown Processor v0.1.53
 One Markdown processor to rule them all
 
 Project homepage: https://github.com/ApexMarkdown/apex
@@ -317,6 +317,7 @@ Options:
   --captions POSITION    Table caption position: above or below (default: below)
   --code-highlight TOOL  Use external tool for syntax highlighting (pygments, skylighting, or abbreviations p, s)
   --code-line-numbers    Include line numbers in syntax-highlighted code blocks (requires --code-highlight)
+  --highlight-language-only  Only highlight code blocks that have a language specified (requires --code-highlight)
   --combine              Concatenate Markdown files (expanding includes) into a single Markdown stream
                          When a SUMMARY.md file is provided, treat it as a GitBook index and combine
                          the linked files in order. Output is raw Markdown suitable for piping back into Apex.
@@ -376,6 +377,16 @@ Options:
   --title TITLE          Document title (requires --standalone, default: "Document")
   --[no-]transforms      Enable or disable metadata variable transforms [%key:transform]
   --[no-]unsafe          Allow or disallow raw HTML in output
+  --widont               Prevent short widows in headings by inserting non-breaking spaces between trailing words
+  --code-is-poetry       Treat unlanguaged code blocks as poetry (adds 'poetry' class, implies --highlight-language-only)
+  --[no-]markdown-in-html  Enable or disable markdown processing inside HTML blocks with markdown attributes
+  --random-footnote-ids  Use hash-based footnote IDs to avoid collisions when combining documents
+  --hashtags             Convert #tags into span-wrapped hashtags
+  --style-hashtags       Use 'mkstyledtag' class instead of 'mkhashtag' for hashtags
+  --proofreader          Treat ==highlight== and ~~delete~~ as CriticMarkup highlight/deletion
+  --hr-page-break        Replace <hr> elements with Marked-style page break divs
+  --title-from-h1        Use the first H1 as the document title when none is specified
+  --page-break-before-footnotes  Insert a page break before the footnotes section
   -v, --version          Show version information
   --[no-]wikilinks       Enable or disable wiki link syntax [[PageName]]
   --wikilink-space MODE  Space replacement for wiki links: dash, none, underscore, space (default: dash)

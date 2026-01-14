@@ -6,7 +6,7 @@ if(POLICY CMP0000)
 endif()
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "Minimum CMake policy version" FORCE)
 
-project(apex VERSION 0.1.53 LANGUAGES C)
+project(apex VERSION 0.1.54 LANGUAGES C)
 
 # Set C standard
 set(CMAKE_C_STANDARD 99)
@@ -339,6 +339,7 @@ add_executable(apex_test_runner
     tests/test_ial.c
     tests/test_extensions.c
     tests/test_output.c
+    tests/test_marked_integration.c
 )
 target_link_libraries(apex_test_runner apex_static)
 target_compile_definitions(apex_test_runner PRIVATE TEST_FIXTURES_DIR="${CMAKE_SOURCE_DIR}/tests/fixtures/includes")

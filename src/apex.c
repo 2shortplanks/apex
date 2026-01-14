@@ -2548,6 +2548,18 @@ apex_options apex_options_default(void) {
     opts.code_line_numbers = false; /* Default: no line numbers */
     opts.highlight_language_only = false; /* Default: highlight all code blocks */
 
+    /* Marked / integration-specific options (unified defaults) */
+    opts.enable_widont = false;
+    opts.code_is_poetry = false;
+    opts.enable_markdown_in_html = true; /* Enabled by default in unified mode */
+    opts.random_footnote_ids = false;
+    opts.enable_hashtags = false;
+    opts.style_hashtags = false;
+    opts.proofreader_mode = false;
+    opts.hr_page_break = false;
+    opts.title_from_h1 = false;
+    opts.page_break_before_footnotes = false;
+
     /* Source file information (used by plugins via APEX_FILE_PATH) */
     opts.input_file_path = NULL;
 
@@ -2595,6 +2607,8 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_autolink = false;  /* CommonMark: no autolinks */
             opts.enable_citations = false;  /* CommonMark: no citations */
             opts.enable_emoji_autocorrect = false;  /* CommonMark: no emoji autocorrect */
+            /* Disable HTML markdown processing in strict CommonMark */
+            opts.enable_markdown_in_html = false;
             break;
 
         case APEX_MODE_GFM:
@@ -2626,6 +2640,8 @@ apex_options apex_options_for_mode(apex_mode_t mode) {
             opts.enable_autolink = true;  /* GFM: autolinks enabled */
             opts.enable_citations = false;  /* GFM: no citations */
             opts.enable_emoji_autocorrect = false;  /* GFM: no emoji autocorrect by default */
+            /* Disable HTML markdown processing in GFM mode */
+            opts.enable_markdown_in_html = false;
             break;
 
         case APEX_MODE_MULTIMARKDOWN:
@@ -2881,6 +2897,1001 @@ static bool profiling_enabled(void) {
             options->progress_callback(stage, percent, options->progress_user_data); \
         } \
     } while (0)
+
+/**
+ * Add 'poetry' class to code blocks without a language class.
+ * Handles both fenced code blocks (<pre><code class="language-X">) and
+ * indented code blocks (<pre><code>).
+ * Returns a newly allocated string, or NULL on error.
+ */
+static char *apex_add_poetry_class_to_code_blocks(const char *html) {
+    if (!html) return NULL;
+
+    size_t len = strlen(html);
+    size_t capacity = len * 2 + 1;
+    char *output = malloc(capacity);
+    if (!output) return NULL;
+
+    const char *read = html;
+    char *write = output;
+    size_t remaining = capacity;
+
+    while (*read) {
+        /* Look for <pre><code pattern */
+        const char *pre_code = strstr(read, "<pre><code");
+        if (!pre_code) {
+            /* Copy the rest */
+            size_t tail_len = strlen(read);
+            if (tail_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tail_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, tail_len);
+            write += tail_len;
+            remaining -= tail_len;
+            break;
+        }
+
+        /* Copy up to the <pre><code */
+        size_t chunk_len = (size_t)(pre_code - read);
+        if (chunk_len >= remaining) {
+            size_t written = (size_t)(write - output);
+            capacity = (written + chunk_len + 100) * 2;
+            char *new_output = realloc(output, capacity);
+            if (!new_output) {
+                free(output);
+                return NULL;
+            }
+            output = new_output;
+            write = output + written;
+            remaining = capacity - written;
+        }
+        memcpy(write, read, chunk_len);
+        write += chunk_len;
+        remaining -= chunk_len;
+
+        /* Check if this code block has a language class */
+        const char *code_tag = pre_code + 9;  /* Skip "<pre><code" */
+        bool has_language = false;
+
+        /* Look for class="language- or class='language- */
+        const char *class_pos = strstr(code_tag, "class=");
+        if (class_pos) {
+            /* Check if it's a language class */
+            const char *lang_check = strstr(class_pos, "language-");
+            if (lang_check) {
+                has_language = true;
+            }
+        }
+
+        /* Find the closing > of the <code> tag */
+        const char *code_end = strchr(code_tag, '>');
+        if (!code_end) {
+            /* Malformed, copy rest as-is */
+            size_t tail_len = strlen(pre_code);
+            if (tail_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tail_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, pre_code, tail_len);
+            write += tail_len;
+            remaining -= tail_len;
+            break;
+        }
+
+        if (!has_language) {
+            /* No language class, add poetry class */
+            /* Copy <pre><code */
+            size_t prefix_len = (size_t)(code_end - pre_code);
+            if (prefix_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + prefix_len + 20) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, pre_code, prefix_len);
+            write += prefix_len;
+            remaining -= prefix_len;
+
+            /* Add class="poetry" */
+            const char *poetry_class = " class=\"poetry\"";
+            size_t poetry_len = strlen(poetry_class);
+            if (poetry_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + poetry_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, poetry_class, poetry_len);
+            write += poetry_len;
+            remaining -= poetry_len;
+
+            /* Copy the closing > */
+            if (remaining < 10) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            *write++ = '>';
+            remaining--;
+            read = code_end + 1;
+        } else {
+            /* Has language class, copy as-is */
+            size_t tag_len = (size_t)(code_end + 1 - pre_code);
+            if (tag_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tag_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, pre_code, tag_len);
+            write += tag_len;
+            remaining -= tag_len;
+            read = code_end + 1;
+        }
+    }
+
+    *write = '\0';
+    return output;
+}
+
+/**
+ * Extract text from the first H1 heading in HTML (strips HTML tags).
+ * Returns a newly allocated string, or NULL if no H1 found or on error.
+ * Caller must free the returned string.
+ */
+static char *apex_extract_first_h1_text(const char *html) {
+    if (!html) return NULL;
+
+    /* Find first <h1> tag */
+    const char *h1_start = strstr(html, "<h1");
+    if (!h1_start) return NULL;
+
+    /* Find the closing > of the opening tag */
+    const char *tag_end = strchr(h1_start, '>');
+    if (!tag_end) return NULL;
+
+    /* Find the closing </h1> tag */
+    const char *h1_close = strstr(tag_end + 1, "</h1>");
+    if (!h1_close) return NULL;
+
+    /* Extract text between tags, stripping HTML */
+    size_t text_len = (size_t)(h1_close - tag_end - 1);
+    char *text = malloc(text_len + 1);
+    if (!text) return NULL;
+
+    const char *read = tag_end + 1;
+    char *write = text;
+    bool in_tag = false;
+    size_t written = 0;
+
+    while (read < h1_close && written < text_len) {
+        if (*read == '<') {
+            in_tag = true;
+        } else if (*read == '>') {
+            in_tag = false;
+        } else if (!in_tag) {
+            *write++ = *read;
+            written++;
+        }
+        read++;
+    }
+    *write = '\0';
+
+    /* Trim whitespace */
+    while (written > 0 && (text[written - 1] == ' ' || text[written - 1] == '\t' || text[written - 1] == '\n' || text[written - 1] == '\r')) {
+        text[--written] = '\0';
+    }
+    char *start = text;
+    while (*start == ' ' || *start == '\t' || *start == '\n' || *start == '\r') {
+        start++;
+    }
+    if (start != text) {
+        memmove(text, start, strlen(start) + 1);
+    }
+
+    if (strlen(text) == 0) {
+        free(text);
+        return NULL;
+    }
+
+    return text;
+}
+
+/**
+ * Compute a simple 8-character hexadecimal hash from document content.
+ * Uses djb2 hash algorithm. Returns a newly allocated string.
+ */
+static char *apex_compute_document_hash(const char *content, size_t len) {
+    if (!content || len == 0) return NULL;
+
+    /* djb2 hash */
+    unsigned long hash = 5381;
+    for (size_t i = 0; i < len; i++) {
+        hash = ((hash << 5) + hash) + (unsigned char)content[i]; /* hash * 33 + c */
+    }
+
+    /* Convert to 8-character hex string */
+    char *hash_str = malloc(9);
+    if (!hash_str) return NULL;
+    snprintf(hash_str, 9, "%08lx", hash);
+    return hash_str;
+}
+
+/**
+ * Add hash prefix to footnote IDs to avoid collisions when combining documents.
+ * Returns a newly allocated string, or NULL on error.
+ */
+static char *apex_add_hash_to_footnote_ids(const char *html, const char *hash_prefix) {
+    if (!html || !hash_prefix) return NULL;
+
+    size_t len = strlen(html);
+    size_t hash_len = strlen(hash_prefix);
+    /* Allow for expansion: each fn- or fnref- gets hash- prefix added */
+    size_t capacity = len + (hash_len + 1) * 100 + 1;  /* Estimate 100 footnotes max */
+    char *output = malloc(capacity);
+    if (!output) return NULL;
+
+    const char *read = html;
+    char *write = output;
+    size_t remaining = capacity;
+
+    while (*read) {
+        /* Look for id="fn- or id="fnref- */
+        if (strncmp(read, "id=\"fn-", 7) == 0) {
+            /* Copy up to fn- */
+            size_t prefix_len = 7;  /* "id=\"fn-" */
+            if (prefix_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + prefix_len + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, prefix_len);
+            write += prefix_len;
+            remaining -= prefix_len;
+            read += prefix_len;
+
+            /* Insert hash prefix */
+            if (hash_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, hash_prefix, hash_len);
+            write += hash_len;
+            remaining -= hash_len;
+            *write++ = '-';
+            remaining--;
+        } else if (strncmp(read, "id=\"fnref-", 10) == 0) {
+            /* Copy up to fnref- */
+            size_t prefix_len = 10;  /* "id=\"fnref-" */
+            if (prefix_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + prefix_len + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, prefix_len);
+            write += prefix_len;
+            remaining -= prefix_len;
+            read += prefix_len;
+
+            /* Insert hash prefix */
+            if (hash_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, hash_prefix, hash_len);
+            write += hash_len;
+            remaining -= hash_len;
+            *write++ = '-';
+            remaining--;
+        } else if (strncmp(read, "href=\"#fn-", 10) == 0) {
+            /* Copy up to #fn- */
+            size_t prefix_len = 10;  /* "href=\"#fn-" */
+            if (prefix_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + prefix_len + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, prefix_len);
+            write += prefix_len;
+            remaining -= prefix_len;
+            read += prefix_len;
+
+            /* Insert hash prefix */
+            if (hash_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, hash_prefix, hash_len);
+            write += hash_len;
+            remaining -= hash_len;
+            *write++ = '-';
+            remaining--;
+        } else if (strncmp(read, "href=\"#fnref-", 13) == 0) {
+            /* Copy up to #fnref- */
+            size_t prefix_len = 13;  /* "href=\"#fnref-" */
+            if (prefix_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + prefix_len + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, prefix_len);
+            write += prefix_len;
+            remaining -= prefix_len;
+            read += prefix_len;
+
+            /* Insert hash prefix */
+            if (hash_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + hash_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, hash_prefix, hash_len);
+            write += hash_len;
+            remaining -= hash_len;
+            *write++ = '-';
+            remaining--;
+        } else {
+            /* Normal character, copy as-is */
+            if (remaining < 10) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            *write++ = *read++;
+            remaining--;
+        }
+    }
+
+    *write = '\0';
+    return output;
+}
+
+/**
+ * Replace <hr> elements in HTML with Marked-style page break divs.
+ * Returns a newly allocated string, or NULL on error.
+ */
+static char *apex_replace_hr_with_pagebreak(const char *html) {
+    if (!html) return NULL;
+
+    size_t len = strlen(html);
+    /* Page break divs are significantly longer than <hr>, allow generous expansion */
+    size_t capacity = len * 4 + 1;
+    char *output = malloc(capacity);
+    if (!output) return NULL;
+
+    const char *read = html;
+    char *write = output;
+    size_t remaining = capacity;
+
+    const char *replacement =
+        "<div class=\"mkpagebreak manualbreak\" "
+        "title=\"Page break created from HR\" "
+        "data-description=\"PAGE (HR)\" "
+        "style=\"page-break-after:always\">"
+        "<span style=\"display:none\">&nbsp;</span></div>";
+    size_t repl_len = strlen(replacement);
+
+    while (*read) {
+        const char *hr = strstr(read, "<hr");
+        if (!hr) {
+            /* Copy the rest */
+            size_t tail_len = strlen(read);
+            if (tail_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tail_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, read, tail_len);
+            write += tail_len;
+            remaining -= tail_len;
+            break;
+        }
+
+        /* Copy up to the <hr */
+        size_t chunk_len = (size_t)(hr - read);
+        if (chunk_len >= remaining) {
+            size_t written = (size_t)(write - output);
+            capacity = (written + chunk_len + repl_len + 1) * 2;
+            char *new_output = realloc(output, capacity);
+            if (!new_output) {
+                free(output);
+                return NULL;
+            }
+            output = new_output;
+            write = output + written;
+            remaining = capacity - written;
+        }
+        memcpy(write, read, chunk_len);
+        write += chunk_len;
+        remaining -= chunk_len;
+
+        /* Find end of the <hr ...> tag */
+        const char *tag_end = strchr(hr, '>');
+        if (!tag_end) {
+            /* Malformed tag, copy the rest as-is */
+            size_t tail_len = strlen(hr);
+            if (tail_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tail_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, hr, tail_len);
+            write += tail_len;
+            remaining -= tail_len;
+            break;
+        }
+
+        /* Skip the entire <hr ...> tag */
+        read = tag_end + 1;
+
+        /* Write replacement */
+        if (repl_len >= remaining) {
+            size_t written = (size_t)(write - output);
+            capacity = (written + repl_len + 1) * 2;
+            char *new_output = realloc(output, capacity);
+            if (!new_output) {
+                free(output);
+                return NULL;
+            }
+            output = new_output;
+            write = output + written;
+            remaining = capacity - written;
+        }
+        memcpy(write, replacement, repl_len);
+        write += repl_len;
+        remaining -= repl_len;
+    }
+
+    *write = '\0';
+    return output;
+}
+
+/**
+ * Apply widont to headings: replace spaces with &nbsp; between trailing words
+ * when their combined length (including spaces) is <= 10 characters.
+ * Returns a newly allocated string, or NULL on error.
+ */
+static char *apex_apply_widont_to_headings(const char *html) {
+    if (!html) return NULL;
+
+    size_t len = strlen(html);
+    size_t capacity = len * 2 + 1;  /* Allow for expansion with &nbsp; */
+    char *output = malloc(capacity);
+    if (!output) return NULL;
+
+    const char *read = html;
+    char *write = output;
+    size_t remaining = capacity;
+
+    while (*read) {
+        /* Look for heading tags: <h1>, <h2>, ..., <h6> */
+        if (read[0] == '<' && read[1] == 'h' && read[2] >= '1' && read[2] <= '6') {
+            const char *tag_start = read;
+            int level = read[2] - '0';
+
+            /* Find the closing > of the opening tag (may have attributes) */
+            const char *tag_end = strchr(tag_start, '>');
+            if (!tag_end) {
+                /* Malformed tag, copy rest as-is */
+                size_t tail_len = strlen(read);
+                if (tail_len >= remaining) {
+                    size_t written = (size_t)(write - output);
+                    capacity = (written + tail_len + 1) * 2;
+                    char *new_output = realloc(output, capacity);
+                    if (!new_output) {
+                        free(output);
+                        return NULL;
+                    }
+                    output = new_output;
+                    write = output + written;
+                    remaining = capacity - written;
+                }
+                memcpy(write, read, tail_len);
+                write += tail_len;
+                remaining -= tail_len;
+                break;
+            }
+
+            /* Copy the opening tag */
+            size_t tag_len = (size_t)(tag_end + 1 - tag_start);
+            if (tag_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + tag_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, tag_start, tag_len);
+            write += tag_len;
+            remaining -= tag_len;
+
+            read = tag_end + 1;
+
+            /* Find the closing </hN> tag */
+            char close_tag[6];
+            snprintf(close_tag, sizeof(close_tag), "</h%d>", level);
+            const char *close_pos = strstr(read, close_tag);
+            if (!close_pos) {
+                /* No closing tag found, copy rest as-is */
+                size_t tail_len = strlen(read);
+                if (tail_len >= remaining) {
+                    size_t written = (size_t)(write - output);
+                    capacity = (written + tail_len + 1) * 2;
+                    char *new_output = realloc(output, capacity);
+                    if (!new_output) {
+                        free(output);
+                        return NULL;
+                    }
+                    output = new_output;
+                    write = output + written;
+                    remaining = capacity - written;
+                }
+                memcpy(write, read, tail_len);
+                write += tail_len;
+                remaining -= tail_len;
+                break;
+            }
+
+            /* Extract heading text (between opening and closing tags) */
+            size_t heading_text_len = (size_t)(close_pos - read);
+            if (heading_text_len > 0) {
+                /* Extract plain text (ignoring HTML tags) to calculate word lengths */
+                char *plain_text = malloc(heading_text_len + 1);
+                if (!plain_text) {
+                    free(output);
+                    return NULL;
+                }
+                const char *p = read;
+                char *pt_write = plain_text;
+                bool in_tag = false;
+                while (p < close_pos) {
+                    if (*p == '<') {
+                        in_tag = true;
+                    } else if (*p == '>') {
+                        in_tag = false;
+                    } else if (!in_tag) {
+                        *pt_write++ = *p;
+                    }
+                    p++;
+                }
+                *pt_write = '\0';
+                size_t plain_len = (size_t)(pt_write - plain_text);
+
+                if (plain_len > 0) {
+                    /* Work backwards to find trailing words that need widont.
+                     * We want to include words until the combined length > 10,
+                     * so that the trailing portion won't be a short widow (<= 10 chars).
+                     */
+                    size_t word_end = plain_len;
+                    size_t word_start = plain_len;
+                    size_t combined_len = 0;
+                    size_t first_word_start = plain_len;
+
+                    /* Find words from the end */
+                    for (size_t i = plain_len; i > 0; i--) {
+                        char c = plain_text[i - 1];
+                        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                            if (word_start < plain_len) {
+                                /* Found a word */
+                                size_t word_len = word_end - word_start;
+                                if (combined_len == 0) {
+                                    /* First word from the end */
+                                    first_word_start = word_start;
+                                    combined_len = word_len;
+                                } else {
+                                    /* Add this word to the trailing group */
+                                    size_t new_combined = combined_len + 1 + word_len;  /* +1 for space */
+                                    combined_len = new_combined;
+                                    first_word_start = word_start;
+                                    /* If we've exceeded 10 chars, we're done - we have enough to prevent a short widow */
+                                    if (new_combined > 10) {
+                                        break;  /* Stop here */
+                                    }
+                                }
+                                word_end = i - 1;
+                                word_start = i - 1;
+                            } else {
+                                word_end = i - 1;
+                                word_start = i - 1;
+                            }
+                        } else {
+                            if (word_start == plain_len) {
+                                word_end = i;
+                            }
+                            word_start = i - 1;
+                        }
+                    }
+
+                    /* Handle the first word if we haven't processed it yet */
+                    if (word_start < plain_len && combined_len == 0) {
+                        size_t word_len = word_end - word_start;
+                        first_word_start = word_start;
+                        combined_len = word_len;
+                    } else if (word_start < plain_len && combined_len > 0 && combined_len <= 10) {
+                        /* If we haven't exceeded 10 yet, try to add the first word */
+                        size_t word_len = word_end - word_start;
+                        size_t new_combined = combined_len + 1 + word_len;
+                        combined_len = new_combined;
+                        first_word_start = word_start;
+                    }
+
+                    /* If we found words to combine (combined_len > 0 and first_word_start < plain_len)
+                     * Apply widont if:
+                     * 1. The trailing portion is <= 10 chars (needs protection from short widow)
+                     * 2. OR we've included enough words to exceed 10 (the algorithm includes the word
+                     *    that pushes us over 10, so combined_len > 10 means we have a protected trailing portion) */
+                    if (combined_len > 0 && first_word_start < plain_len) {
+                        /* Map plain text position back to HTML position */
+                        /* We need to find where first_word_start corresponds in the HTML */
+                        size_t plain_pos = 0;
+                        size_t html_pos = 0;
+                        bool in_html_tag = false;
+                        size_t trailing_start_html = 0;
+
+                        /* Find the HTML position corresponding to first_word_start in plain text */
+                        const char *html_p = read;
+                        while (html_p < close_pos && plain_pos < first_word_start) {
+                            if (*html_p == '<') {
+                                in_html_tag = true;
+                            } else if (*html_p == '>') {
+                                in_html_tag = false;
+                            } else if (!in_html_tag) {
+                                plain_pos++;
+                            }
+                            html_p++;
+                            html_pos++;
+                        }
+                        trailing_start_html = html_pos;
+
+                        /* Now copy heading text, replacing spaces with &nbsp; in trailing section */
+                        const char *html_p2 = read;
+                        size_t html_pos2 = 0;
+                        bool in_tag2 = false;
+                        while (html_p2 < close_pos) {
+                            char c = *html_p2;
+                            if (c == '<') {
+                                in_tag2 = true;
+                                if (remaining < 10) {
+                                    size_t written = (size_t)(write - output);
+                                    capacity = (written + 100) * 2;
+                                    char *new_output = realloc(output, capacity);
+                                    if (!new_output) {
+                                        free(plain_text);
+                                        free(output);
+                                        return NULL;
+                                    }
+                                    output = new_output;
+                                    write = output + written;
+                                    remaining = capacity - written;
+                                }
+                                *write++ = c;
+                                remaining--;
+                            } else if (c == '>') {
+                                in_tag2 = false;
+                                if (remaining < 10) {
+                                    size_t written = (size_t)(write - output);
+                                    capacity = (written + 100) * 2;
+                                    char *new_output = realloc(output, capacity);
+                                    if (!new_output) {
+                                        free(plain_text);
+                                        free(output);
+                                        return NULL;
+                                    }
+                                    output = new_output;
+                                    write = output + written;
+                                    remaining = capacity - written;
+                                }
+                                *write++ = c;
+                                remaining--;
+                            } else if (in_tag2) {
+                                if (remaining < 10) {
+                                    size_t written = (size_t)(write - output);
+                                    capacity = (written + 100) * 2;
+                                    char *new_output = realloc(output, capacity);
+                                    if (!new_output) {
+                                        free(plain_text);
+                                        free(output);
+                                        return NULL;
+                                    }
+                                    output = new_output;
+                                    write = output + written;
+                                    remaining = capacity - written;
+                                }
+                                *write++ = c;
+                                remaining--;
+                            } else {
+                                /* Not in HTML tag */
+                                if (html_pos2 >= trailing_start_html) {
+                                    /* We're in the trailing section */
+                                    if (c == ' ' || c == '\t') {
+                                        /* Replace with &nbsp; */
+                                        const char *nbsp = "&nbsp;";
+                                        size_t nbsp_len = strlen(nbsp);
+                                        if (nbsp_len >= remaining) {
+                                            size_t written = (size_t)(write - output);
+                                            capacity = (written + nbsp_len + 100) * 2;
+                                            char *new_output = realloc(output, capacity);
+                                            if (!new_output) {
+                                                free(plain_text);
+                                                free(output);
+                                                return NULL;
+                                            }
+                                            output = new_output;
+                                            write = output + written;
+                                            remaining = capacity - written;
+                                        }
+                                        memcpy(write, nbsp, nbsp_len);
+                                        write += nbsp_len;
+                                        remaining -= nbsp_len;
+                                    } else {
+                                        if (remaining < 10) {
+                                            size_t written = (size_t)(write - output);
+                                            capacity = (written + 100) * 2;
+                                            char *new_output = realloc(output, capacity);
+                                            if (!new_output) {
+                                                free(plain_text);
+                                                free(output);
+                                                return NULL;
+                                            }
+                                            output = new_output;
+                                            write = output + written;
+                                            remaining = capacity - written;
+                                        }
+                                        *write++ = c;
+                                        remaining--;
+                                    }
+                                } else {
+                                    /* Not in trailing section, copy as-is */
+                                    if (remaining < 10) {
+                                        size_t written = (size_t)(write - output);
+                                        capacity = (written + 100) * 2;
+                                        char *new_output = realloc(output, capacity);
+                                        if (!new_output) {
+                                            free(plain_text);
+                                            free(output);
+                                            return NULL;
+                                        }
+                                        output = new_output;
+                                        write = output + written;
+                                        remaining = capacity - written;
+                                    }
+                                    *write++ = c;
+                                    remaining--;
+                                }
+                                html_pos2++;
+                            }
+                            html_p2++;
+                        }
+                        free(plain_text);
+                    } else {
+                        /* No widont needed, copy heading text as-is */
+                        if (heading_text_len >= remaining) {
+                            size_t written = (size_t)(write - output);
+                            capacity = (written + heading_text_len + 1) * 2;
+                            char *new_output = realloc(output, capacity);
+                            if (!new_output) {
+                                free(plain_text);
+                                free(output);
+                                return NULL;
+                            }
+                            output = new_output;
+                            write = output + written;
+                            remaining = capacity - written;
+                        }
+                        memcpy(write, read, heading_text_len);
+                        write += heading_text_len;
+                        remaining -= heading_text_len;
+                        free(plain_text);
+                    }
+                } else {
+                    /* Empty plain text, copy heading as-is */
+                    if (heading_text_len >= remaining) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + heading_text_len + 1) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(plain_text);
+                            free(output);
+                            return NULL;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    memcpy(write, read, heading_text_len);
+                    write += heading_text_len;
+                    remaining -= heading_text_len;
+                    free(plain_text);
+                }
+            } else {
+                /* Empty heading, copy as-is */
+                if (heading_text_len >= remaining) {
+                    size_t written = (size_t)(write - output);
+                    capacity = (written + heading_text_len + 1) * 2;
+                    char *new_output = realloc(output, capacity);
+                    if (!new_output) {
+                        free(output);
+                        return NULL;
+                    }
+                    output = new_output;
+                    write = output + written;
+                    remaining = capacity - written;
+                }
+                memcpy(write, read, heading_text_len);
+                write += heading_text_len;
+                remaining -= heading_text_len;
+            }
+
+            /* Copy the closing tag */
+            size_t close_tag_len = strlen(close_tag);
+            if (close_tag_len >= remaining) {
+                size_t written = (size_t)(write - output);
+                capacity = (written + close_tag_len + 1) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+            }
+            memcpy(write, close_tag, close_tag_len);
+            write += close_tag_len;
+            remaining -= close_tag_len;
+            read = close_pos + close_tag_len;
+        } else {
+            /* Not a heading tag, copy character */
+            if (remaining > 0) {
+                *write++ = *read++;
+                remaining--;
+            } else {
+                size_t written = (size_t)(write - output);
+                capacity = (written + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return NULL;
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
+                *write++ = *read++;
+                remaining--;
+            }
+        }
+    }
+
+    *write = '\0';
+    return output;
+}
 
 char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options *options) {
     if (!markdown || len == 0) {
@@ -3219,12 +4230,16 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
         }
     }
 
-    /* Process ==highlight== syntax before parsing */
-    PROFILE_START(highlights);
-    char *highlights_processed = apex_process_highlights(text_ptr);
-    PROFILE_END(highlights);
-    if (highlights_processed) {
-        text_ptr = highlights_processed;
+    /* Process ==highlight== syntax before parsing
+     * Skip if proofreader mode is enabled (proofreader will handle it via CriticMarkup) */
+    char *highlights_processed = NULL;
+    if (!options->proofreader_mode) {
+        PROFILE_START(highlights);
+        highlights_processed = apex_process_highlights(text_ptr);
+        PROFILE_END(highlights);
+        if (highlights_processed) {
+            text_ptr = highlights_processed;
+        }
     }
 
     /* Process superscript and subscript syntax before parsing */
@@ -3426,12 +4441,379 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     }
 
     /* Process HTML markdown attributes before parsing (preprocessing) */
-    PROFILE_START(html_markdown);
     char *html_markdown_processed = NULL;
-    html_markdown_processed = apex_process_html_markdown(text_ptr);
-    PROFILE_END(html_markdown);
-    if (html_markdown_processed) {
-        text_ptr = html_markdown_processed;
+    if (options->enable_markdown_in_html) {
+        PROFILE_START(html_markdown);
+        html_markdown_processed = apex_process_html_markdown(text_ptr);
+        PROFILE_END(html_markdown);
+        if (html_markdown_processed) {
+            text_ptr = html_markdown_processed;
+        }
+    }
+
+    /* Process hashtags: convert #tags to span-wrapped hashtags */
+    char *hashtags_processed = NULL;
+    if (options->enable_hashtags && text_ptr) {
+        PROFILE_START(hashtags);
+        size_t len = strlen(text_ptr);
+        size_t capacity = len * 3 + 1;  /* Allow expansion with span tags */
+        char *output = malloc(capacity);
+        if (output) {
+            const char *read = text_ptr;
+            char *write = output;
+            size_t remaining = capacity;
+            bool in_code_block = false;
+            int indent_count = 0;
+            bool at_line_start = true;
+
+            while (*read) {
+                /* Track code blocks (4+ spaces or tab at line start) */
+                if (at_line_start) {
+                    if (*read == '\t') {
+                        in_code_block = true;
+                        indent_count = 0;
+                    } else if (*read == ' ') {
+                        indent_count++;
+                        if (indent_count >= 4) {
+                            in_code_block = true;
+                        }
+                    } else if (*read != '\n' && *read != '\r') {
+                        at_line_start = false;
+                        indent_count = 0;
+                    }
+                }
+
+                if (*read == '\n') {
+                    at_line_start = true;
+                    indent_count = 0;
+                    in_code_block = false;
+                }
+
+                /* Skip hashtag processing inside code blocks */
+                if (in_code_block) {
+                    if (remaining < 10) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + 100) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(output);
+                            output = NULL;
+                            break;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    *write++ = *read++;
+                    remaining--;
+                    continue;
+                }
+
+                /* Check for hashtag pattern: # followed by alphanumeric, not preceded by non-whitespace */
+                /* Pattern: (?<=\s|^)#[a-zA-Z0-9][^# \n,;.!\)\]]* */
+                if (*read == '#' && (read == text_ptr || read[-1] == ' ' || read[-1] == '\t' || read[-1] == '\n')) {
+                    const char *tag_start = read;
+                    read++;  /* Skip # */
+
+                    /* Check if it's a valid hashtag start (alphanumeric) */
+                    if ((*read >= 'a' && *read <= 'z') || (*read >= 'A' && *read <= 'Z') || (*read >= '0' && *read <= '9')) {
+                        /* Find the end of the hashtag */
+                        const char *tag_end = read;
+                        while (*tag_end && *tag_end != '#' && *tag_end != ' ' && *tag_end != '\n' &&
+                               *tag_end != ',' && *tag_end != ';' && *tag_end != '.' && *tag_end != '!' &&
+                               *tag_end != ')' && *tag_end != ']') {
+                            tag_end++;
+                        }
+
+                        /* Check for special case: #tag# format (wrapped in #) */
+                        if (*tag_end == '#') {
+                            tag_end++;  /* Include the closing # */
+                        }
+
+                        if (tag_end > read) {
+                            /* Valid hashtag found */
+                            size_t tag_len = (size_t)(tag_end - tag_start);
+                            const char *class_name = options->style_hashtags ? "mkstyledtag" : "mkhashtag";
+                            size_t span_prefix_len = strlen("<span class=\"") + strlen(class_name) + strlen("\">");
+                            size_t span_suffix_len = strlen("</span>");
+                            size_t needed = span_prefix_len + tag_len + span_suffix_len;
+
+                            if (needed >= remaining) {
+                                size_t written = (size_t)(write - output);
+                                capacity = (written + needed + 100) * 2;
+                                char *new_output = realloc(output, capacity);
+                                if (!new_output) {
+                                    free(output);
+                                    output = NULL;
+                                    break;
+                                }
+                                output = new_output;
+                                write = output + written;
+                                remaining = capacity - written;
+                            }
+
+                            /* Write opening span */
+                            memcpy(write, "<span class=\"", 13);
+                            write += 13;
+                            remaining -= 13;
+                            memcpy(write, class_name, strlen(class_name));
+                            write += strlen(class_name);
+                            remaining -= strlen(class_name);
+                            memcpy(write, "\">", 2);
+                            write += 2;
+                            remaining -= 2;
+
+                            /* Write the hashtag */
+                            memcpy(write, tag_start, tag_len);
+                            write += tag_len;
+                            remaining -= tag_len;
+
+                            /* Write closing span */
+                            memcpy(write, "</span>", 7);
+                            write += 7;
+                            remaining -= 7;
+
+                            read = tag_end;
+                            continue;
+                        }
+                    }
+                    /* Not a valid hashtag, copy the # */
+                    if (remaining < 10) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + 100) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(output);
+                            output = NULL;
+                            break;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    *write++ = *tag_start;
+                    remaining--;
+                    read = tag_start + 1;
+                } else {
+                    /* Normal character, copy as-is */
+                    if (remaining < 10) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + 100) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(output);
+                            output = NULL;
+                            break;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    *write++ = *read++;
+                    remaining--;
+                }
+            }
+            if (output) {
+                *write = '\0';
+                hashtags_processed = output;
+            }
+        }
+        PROFILE_END(hashtags);
+        if (hashtags_processed) {
+            text_ptr = hashtags_processed;
+        }
+    }
+
+    /* Process proofreader mode: convert == and ~~ to CriticMarkup syntax */
+    char *proofreader_processed = NULL;
+    if (options->proofreader_mode && text_ptr) {
+        PROFILE_START(proofreader);
+        size_t len = strlen(text_ptr);
+        size_t capacity = len * 2 + 1;  /* Allow expansion */
+        char *output = malloc(capacity);
+        if (output) {
+            const char *read = text_ptr;
+            char *write = output;
+            size_t remaining = capacity;
+            bool in_code_block = false;
+            bool in_inline_code = false;
+            int backtick_count = 0;
+
+            while (*read) {
+                /* Track code blocks and inline code to skip processing inside them */
+                if (*read == '`') {
+                    backtick_count++;
+                    if (backtick_count >= 3) {
+                        /* Code block fence */
+                        in_code_block = !in_code_block;
+                        backtick_count = 0;
+                    } else if (!in_code_block) {
+                        /* Check for inline code */
+                        const char *next = read + 1;
+                        if (*next != '`') {
+                            in_inline_code = !in_inline_code;
+                            backtick_count = 0;
+                        }
+                    }
+                } else {
+                    backtick_count = 0;
+                }
+
+                if (in_code_block || in_inline_code) {
+                    /* Inside code, copy as-is */
+                    if (remaining < 10) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + 100) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(output);
+                            output = NULL;
+                            break;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    *write++ = *read++;
+                    remaining--;
+                } else if (read[0] == '=' && read[1] == '=') {
+                    /* Found ==, convert to {== */
+                    const char *start = read;
+                    read += 2;
+                    /* Find matching == */
+                    const char *end = strstr(read, "==");
+                    if (end) {
+                        /* Found matching ==, wrap in {==...==} */
+                        size_t content_len = (size_t)(end - read);
+                        size_t needed = 2 + content_len + 2;  /* {== + content + ==} */
+                        if (needed >= remaining) {
+                            size_t written = (size_t)(write - output);
+                            capacity = (written + needed + 100) * 2;
+                            char *new_output = realloc(output, capacity);
+                            if (!new_output) {
+                                free(output);
+                                output = NULL;
+                                break;
+                            }
+                            output = new_output;
+                            write = output + written;
+                            remaining = capacity - written;
+                        }
+                        *write++ = '{';
+                        *write++ = '=';
+                        *write++ = '=';
+                        remaining -= 3;
+                        memcpy(write, read, content_len);
+                        write += content_len;
+                        remaining -= content_len;
+                        *write++ = '=';
+                        *write++ = '=';
+                        *write++ = '}';
+                        remaining -= 3;
+                        read = end + 2;
+                    } else {
+                        /* No matching ==, copy as-is */
+                        if (remaining < 10) {
+                            size_t written = (size_t)(write - output);
+                            capacity = (written + 100) * 2;
+                            char *new_output = realloc(output, capacity);
+                            if (!new_output) {
+                                free(output);
+                                output = NULL;
+                                break;
+                            }
+                            output = new_output;
+                            write = output + written;
+                            remaining = capacity - written;
+                        }
+                        *write++ = *start++;
+                        *write++ = *start;
+                        remaining -= 2;
+                        read = start + 1;
+                    }
+                } else if (read[0] == '~' && read[1] == '~') {
+                    /* Found ~~, convert to {-- */
+                    const char *start = read;
+                    read += 2;
+                    /* Find matching ~~ */
+                    const char *end = strstr(read, "~~");
+                    if (end) {
+                        /* Found matching ~~, wrap in {--...--} */
+                        size_t content_len = (size_t)(end - read);
+                        size_t needed = 2 + content_len + 2;  /* {-- + content + --} */
+                        if (needed >= remaining) {
+                            size_t written = (size_t)(write - output);
+                            capacity = (written + needed + 100) * 2;
+                            char *new_output = realloc(output, capacity);
+                            if (!new_output) {
+                                free(output);
+                                output = NULL;
+                                break;
+                            }
+                            output = new_output;
+                            write = output + written;
+                            remaining = capacity - written;
+                        }
+                        *write++ = '{';
+                        *write++ = '-';
+                        *write++ = '-';
+                        remaining -= 3;
+                        memcpy(write, read, content_len);
+                        write += content_len;
+                        remaining -= content_len;
+                        *write++ = '-';
+                        *write++ = '-';
+                        *write++ = '}';
+                        remaining -= 3;
+                        read = end + 2;
+                    } else {
+                        /* No matching ~~, copy as-is */
+                        if (remaining < 10) {
+                            size_t written = (size_t)(write - output);
+                            capacity = (written + 100) * 2;
+                            char *new_output = realloc(output, capacity);
+                            if (!new_output) {
+                                free(output);
+                                output = NULL;
+                                break;
+                            }
+                            output = new_output;
+                            write = output + written;
+                            remaining = capacity - written;
+                        }
+                        *write++ = *start++;
+                        *write++ = *start;
+                        remaining -= 2;
+                        read = start + 1;
+                    }
+                } else {
+                    /* Normal character, copy as-is */
+                    if (remaining < 10) {
+                        size_t written = (size_t)(write - output);
+                        capacity = (written + 100) * 2;
+                        char *new_output = realloc(output, capacity);
+                        if (!new_output) {
+                            free(output);
+                            output = NULL;
+                            break;
+                        }
+                        output = new_output;
+                        write = output + written;
+                        remaining = capacity - written;
+                    }
+                    *write++ = *read++;
+                    remaining--;
+                }
+            }
+            if (output) {
+                *write = '\0';
+                proofreader_processed = output;
+            }
+        }
+        PROFILE_END(proofreader);
+        if (proofreader_processed) {
+            text_ptr = proofreader_processed;
+        }
     }
 
     /* Process Critic Markup before parsing (preprocessing) */
@@ -3621,6 +5003,84 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
             free(html);
             html = processed_html;
         }
+    }
+
+    /* Replace <hr> elements with Marked-style page breaks if requested */
+    if (options->hr_page_break && html) {
+        PROFILE_START(hr_page_break);
+        char *processed_html = apex_replace_hr_with_pagebreak(html);
+        PROFILE_END(hr_page_break);
+        if (processed_html && processed_html != html) {
+            free(html);
+            html = processed_html;
+        }
+    }
+
+    /* Apply widont to headings if requested */
+    if (options->enable_widont && html) {
+        PROFILE_START(widont);
+        char *processed_html = apex_apply_widont_to_headings(html);
+        PROFILE_END(widont);
+        if (processed_html && processed_html != html) {
+            free(html);
+            html = processed_html;
+        }
+    }
+
+    /* Add poetry class to code blocks without language if requested */
+    if (options->code_is_poetry && html) {
+        PROFILE_START(code_is_poetry);
+        char *processed_html = apex_add_poetry_class_to_code_blocks(html);
+        PROFILE_END(code_is_poetry);
+        if (processed_html && processed_html != html) {
+            free(html);
+            html = processed_html;
+        }
+    }
+
+    /* Add hash prefix to footnote IDs if requested */
+    if (options->random_footnote_ids && html && working_text) {
+        PROFILE_START(footnote_hash_ids);
+        /* Compute hash from original markdown content */
+        char *hash_prefix = apex_compute_document_hash(working_text, strlen(working_text));
+        if (hash_prefix) {
+            char *processed_html = apex_add_hash_to_footnote_ids(html, hash_prefix);
+            if (processed_html && processed_html != html) {
+                free(html);
+                html = processed_html;
+            }
+            free(hash_prefix);
+        }
+        PROFILE_END(footnote_hash_ids);
+    }
+
+    /* Insert page break before footnotes section if requested */
+    if (options->page_break_before_footnotes && html) {
+        PROFILE_START(page_break_before_footnotes);
+        const char *marker = "<section class=\"footnotes\"";
+        char *pos = strstr(html, marker);
+        if (pos) {
+            const char *replacement =
+                "<div class=\"mkpagebreak manualbreak\" "
+                "title=\"Page break created before footnotes\" "
+                "data-description=\"PAGE (Footnotes)\" "
+                "style=\"page-break-after:always\">"
+                "<span style=\"display:none\">&nbsp;</span></div>";
+            size_t html_len = strlen(html);
+            size_t prefix_len = (size_t)(pos - html);
+            size_t repl_len = strlen(replacement);
+            size_t new_len = html_len + repl_len;
+            char *with_break = malloc(new_len + 1);
+            if (with_break) {
+                memcpy(with_break, html, prefix_len);
+                memcpy(with_break + prefix_len, replacement, repl_len);
+                memcpy(with_break + prefix_len + repl_len, pos, html_len - prefix_len);
+                with_break[new_len] = '\0';
+                free(html);
+                html = with_break;
+            }
+        }
+        PROFILE_END(page_break_before_footnotes);
     }
 
     /* Extract metadata values needed for standalone HTML and post-processing BEFORE freeing metadata */
@@ -3955,7 +5415,9 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     if (metadata_replaced) free(metadata_replaced);
     if (autolinks_processed) free(autolinks_processed);
     if (html_markdown_processed) free(html_markdown_processed);
+    if (hashtags_processed) free(hashtags_processed);
     if (critic_processed) free(critic_processed);
+    if (proofreader_processed) free(proofreader_processed);
     if (liquid_protected) free(liquid_protected);
     if (liquid_tags) {
         for (size_t i = 0; i < liquid_tag_count; i++) {
@@ -4018,6 +5480,16 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     /* Free plugin manager after all phases complete */
     if (plugin_manager) {
         apex_plugins_free(plugin_manager);
+    }
+
+    /* Extract title from first H1 if requested and no title is set */
+    char *h1_title = NULL;
+    if (local_opts.title_from_h1 && local_opts.standalone && html &&
+        (!local_opts.document_title || local_opts.document_title[0] == '\0')) {
+        h1_title = apex_extract_first_h1_text(html);
+        if (h1_title) {
+            local_opts.document_title = h1_title;
+        }
     }
 
     /* Wrap in complete HTML document if requested */
@@ -4212,6 +5684,7 @@ char *apex_markdown_to_html(const char *markdown, size_t len, const apex_options
     if (html_footer_metadata) free(html_footer_metadata);
     if (language_metadata) free(language_metadata);
     if (quotes_lang_metadata) free(quotes_lang_metadata);
+    if (h1_title) free(h1_title);
 
     /* Remove blank lines within tables (applies to both pretty and non-pretty) */
     if (html) {
@@ -4652,6 +6125,17 @@ char *apex_wrap_html_document(const char *content, const char *title, const char
             "    del { background: #fbb6c2; text-decoration: line-through; }\n"
             "    mark { background: #fff3cd; }\n"
             "    .critic.comment { background: #e7e7e7; color: #666; font-style: italic; }\n"
+            "    .mkhashtag { color: #666; }\n"
+            "    .mkstyledtag {\n"
+            "      display: inline-block;\n"
+            "      background: #e0e0e0;\n"
+            "      padding: 3px 9px;\n"
+            "      border-radius: 20px;\n"
+            "      font-size: 0.9em;\n"
+            "      line-height: 1.4;\n"
+            "      color: #333;\n"
+            "      margin: 0 2px;\n"
+            "    }\n"
             "  </style>\n";
         size_t styles_len = strlen(styles);
         if (styles_len >= remaining) {

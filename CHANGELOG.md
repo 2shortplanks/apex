@@ -2,6 +2,27 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.54] - 2026-01-14
+
+### New
+
+- --highlight-language-only flag to only highlight code blocks that have a language specified (via ```language or IAL), leaving plain code blocks unhighlighted
+- Config file support for code-highlight option (accepts pygments, skylighting, or abbreviations p/pyg, s/sky)
+- Config file support for code-line-numbers option (boolean)
+- Config file support for highlight-language-only option (boolean)
+- Display 256-color ANSI art logo alongside version info when running `apex --version` in a wide terminal (>=70 columns)
+
+### Improved
+
+- Version output detects terminal capabilities and falls back gracefully (narrow terminal, piped output, NO_COLOR set)
+- Logo uses transparent background, blending with user's terminal colors instead of forcing black rectangle
+
+### Fixed
+
+- Blank line above ASCII art in --version output
+
+[0.1.54]: https://github.com/ApexMarkdown/apex/releases/tag/v0.1.54
+
 ## [0.1.53] - 2026-01-13
 
 ### New

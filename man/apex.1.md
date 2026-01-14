@@ -149,6 +149,44 @@ document. Enabled by default in unified mode.
 **--hardbreaks**
 :   Treat newlines as hard breaks.
 
+**--widont**
+:   Prevent short widows in headings by inserting non-breaking spaces
+    (`&nbsp;`) between trailing words when their combined length is 10
+    characters or less. Applies to h1-h6 headings.
+
+**--code-is-poetry**
+:   Treat code blocks without a language as poetry by adding the `poetry`
+    class. Automatically enables **--highlight-language-only**.
+
+**--markdown-in-html**, **--no-markdown-in-html**
+:   Enable or disable markdown processing inside HTML blocks with
+    `markdown` attributes. Enabled by default in unified mode.
+
+**--random-footnote-ids**
+:   Use hash-based footnote IDs (e.g., `fn-a7b3c9d2-1`) instead of
+    sequential IDs to avoid collisions when combining multiple documents.
+
+**--hashtags**
+:   Convert `#tags` into span-wrapped hashtags with the `mkhashtag` class.
+
+**--style-hashtags**
+:   Use the `mkstyledtag` class instead of `mkhashtag` for hashtags.
+    Requires **--hashtags**.
+
+**--proofreader**
+:   Treat `==highlight==` and `~~delete~~` as CriticMarkup highlight and
+    deletion syntax. Automatically enables CriticMarkup processing.
+
+**--hr-page-break**
+:   Replace `<hr>` elements with Marked-style page break divs.
+
+**--title-from-h1**
+:   Use the first H1 heading as the document title when no title is
+    specified via **--title** or metadata. Requires **--standalone**.
+
+**--page-break-before-footnotes**
+:   Insert a page break before the footnotes section.
+
 **--no-footnotes**
 :   Disable footnote support.
 

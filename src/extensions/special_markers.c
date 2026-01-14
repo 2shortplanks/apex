@@ -72,13 +72,29 @@ char *apex_process_special_markers(const char *text) {
 
         /* Check for <!--BREAK--> */
         if (strncmp(read, "<!--BREAK-->", 12) == 0) {
-            const char *replacement = "<div class=\"page-break\" style=\"page-break-after: always;\"></div>";
+            const char *replacement =
+                "\n\n<div class=\"mkpagebreak manualbreak\" "
+                "title=\"Page break created by marker\" "
+                "data-description=\"PAGE (Marker)\" "
+                "style=\"page-break-after:always\">"
+                "<span style=\"display:none\">&nbsp;</span></div>\n\n";
             size_t repl_len = strlen(replacement);
-            if (repl_len < remaining) {
-                memcpy(write, replacement, repl_len);
-                write += repl_len;
-                remaining -= repl_len;
+            if (repl_len >= remaining) {
+                /* Expand buffer */
+                size_t written = (size_t)(write - output);
+                capacity = (written + repl_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return strdup(text);
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
             }
+            memcpy(write, replacement, repl_len);
+            write += repl_len;
+            remaining -= repl_len;
             read += 12;
             continue;
         }
@@ -110,13 +126,29 @@ char *apex_process_special_markers(const char *text) {
 
         /* Check for {::pagebreak /} (Leanpub style) */
         if (strncmp(read, "{::pagebreak /}", 15) == 0) {
-            const char *replacement = "<div class=\"page-break\" style=\"page-break-after: always;\"></div>";
+            const char *replacement =
+                "\n\n<div class=\"mkpagebreak manualbreak\" "
+                "title=\"Page break created by marker\" "
+                "data-description=\"PAGE (Marker)\" "
+                "style=\"page-break-after:always\">"
+                "<span style=\"display:none\">&nbsp;</span></div>\n\n";
             size_t repl_len = strlen(replacement);
-            if (repl_len < remaining) {
-                memcpy(write, replacement, repl_len);
-                write += repl_len;
-                remaining -= repl_len;
+            if (repl_len >= remaining) {
+                /* Expand buffer */
+                size_t written = (size_t)(write - output);
+                capacity = (written + repl_len + 100) * 2;
+                char *new_output = realloc(output, capacity);
+                if (!new_output) {
+                    free(output);
+                    return strdup(text);
+                }
+                output = new_output;
+                write = output + written;
+                remaining = capacity - written;
             }
+            memcpy(write, replacement, repl_len);
+            write += repl_len;
+            remaining -= repl_len;
             read += 15;
             continue;
         }
