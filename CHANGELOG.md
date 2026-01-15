@@ -2,6 +2,23 @@
 
 All notable changes to Apex will be documented in this file.
 
+## [0.1.57] - 2026-01-15
+
+### New
+
+- Definition lists now support blank lines between the term and first definition, and between multiple definitions. Terms are preserved across blank lines and definition lists remain open across blank lines instead of closing prematurely.
+
+### Improved
+
+- Expanded test coverage
+
+### Fixed
+
+- Definition lists with blank lines between definitions no longer create separate <dl> blocks - all definitions for a term are now grouped in a single definition list.
+- Terms with blank lines before their definitions are now correctly converted to <dt> tags instead of being rendered as paragraphs.
+
+[0.1.57]: https://github.com/ApexMarkdown/apex/releases/tag/v0.1.57
+
 ## [0.1.56] - 2026-01-14
 
 ### New
